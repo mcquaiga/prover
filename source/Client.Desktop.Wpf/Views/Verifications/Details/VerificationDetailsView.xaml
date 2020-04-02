@@ -33,6 +33,7 @@
 
         <StackPanel Orientation="Vertical">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
+            <reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />
         </StackPanel>
 
 
@@ -42,12 +43,15 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>-->
 
                 <ItemsControl
                     x:Name="TestPointItems"
                     Grid.Row="0"
-                    DataContext="{Binding}"
-                    ItemsSource="{Binding Tests}">
+                    DataContext="{Binding}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" />

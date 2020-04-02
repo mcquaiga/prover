@@ -39,7 +39,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
             var viewModel = evcTest.ToViewModel();
 
             _testDefinitions.ForEach(td => BuildTestPointViewModel(evcTest.Device, viewModel, td));
-            viewModel.SetupVerifiedObserver();
+            viewModel.Initialize();
             return viewModel;
         }
 

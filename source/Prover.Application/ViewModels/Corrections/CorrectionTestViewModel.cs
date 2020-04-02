@@ -3,10 +3,14 @@ using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Devices.Core.Items.ItemGroups;
+using DynamicData;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -24,20 +28,36 @@ namespace Prover.Application.ViewModels.Corrections
             _setVerified = ReactiveCommand.Create<bool, bool>(v => v);
             _setVerified
                 .LogDebug(x => $"{GetType()} - Verified = {x}")
-                .ToPropertyEx(this, x => x.Verified);
+                .ToPropertyEx(this, x => x.Verified, false);
 
             _setVerified.DisposeWith(Cleanup);
+
+            //this.WhenAnyValue(x => x.Verified)
+            //    //.LogDebug(x => $"{GetType().Name} - Verified = {x}")
+            //    .Subscribe();
         }
 
         public extern bool Verified { [ObservableAsProperty] get; }
 
-        public void SetVerified(bool verified)
+        protected void SetVerified(bool verified)
         {
-            verified = SetOverrideVerify(verified);
+            //verified = SetOverrideVerify(verified);
             _setVerified.Execute(verified);
         }
 
-        protected virtual bool SetOverrideVerify(bool verified) => verified;
+        protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
+        {
+            if (verifications == null || !verifications.Any()) return;
+
+            verifications.AsObservableChangeSet()
+                .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(200), propertyChangeThrottle: TimeSpan.FromMilliseconds(100))
+                .ToCollection()
+                .Select(x => x.All(y => y.Verified))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToPropertyEx(this, x => x.Verified, false);
+        }
+
+        //protected virtual bool SetOverrideVerify(bool verified) => verified;
     }
 
     public interface IAssertExpectedActual

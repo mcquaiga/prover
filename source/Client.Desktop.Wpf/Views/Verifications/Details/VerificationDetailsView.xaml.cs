@@ -1,4 +1,5 @@
-﻿using System.Reactive.Disposables;
+﻿using System.Linq;
+using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
 using Client.Desktop.Wpf.Extensions;
@@ -26,12 +27,16 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestPointItems.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestPointItems.ItemsSource, 
+                    value => value.OfType<VerificationTestPointViewModel>()).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.DeviceInfo, v => v.SiteInfoContent.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.VolumeTest, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
 
-                this.CleanUpDefaults().DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.CustomVerificationContent.ViewModel,
+                    value => value.FirstOrDefault(x => !x.IsTypeOf(typeof(VerificationTestPointViewModel)))).DisposeWith(d);
 
+                this.CleanUpDefaults().DisposeWith(d);
                 Disposable.Create(() =>
                 {
                     if (TestPointItems != null)

@@ -15,17 +15,18 @@ namespace Devices.Core.Items
         //    return factory.CreateInstance(items);
         //}
 
+    
         public static DeviceInstance CreateInstance(this DeviceType deviceType,
             IDictionary<string, string> itemValuesDictionary)
         {
-            var items = deviceType.ToItemValuesEnumerable(itemValuesDictionary);
+            var items = deviceType.ToItemValues(itemValuesDictionary);
             return deviceType.Factory.CreateInstance(items);
         }
 
         public static DeviceInstance CreateInstance(this DeviceType deviceType,
             IDictionary<int, string> itemValuesDictionary)
         {
-            var items = deviceType.ToItemValuesEnumerable(itemValuesDictionary);
+            var items = deviceType.ToItemValues(itemValuesDictionary);
             return deviceType.Factory.CreateInstance(items);
         }
 
@@ -108,7 +109,7 @@ namespace Devices.Core.Items
             return items.Where(i => i.IsTemperatureTest == true);
         }
 
-        public static IEnumerable<ItemValue> ToItemValuesEnumerable(this DeviceType deviceType,
+        public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
             IDictionary<int, string> itemValuesDictionary)
         {
             return deviceType.Items.Join(itemValuesDictionary,
@@ -117,11 +118,11 @@ namespace Devices.Core.Items
                 (im, value) => ItemValue.Create(im, value.Value));
         }
 
-        public static IEnumerable<ItemValue> ToItemValuesEnumerable(this DeviceType deviceType,
+        public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
             IDictionary<string, string> itemValuesDictionary)
         {
             var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
-            return deviceType.ToItemValuesEnumerable(dict);
+            return deviceType.ToItemValues(dict);
         }
 
         public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)

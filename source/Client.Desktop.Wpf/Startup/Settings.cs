@@ -12,7 +12,7 @@ using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {
-    public class Settings : IHaveStartupTask, IHostedService
+    public class Settings : IStartupTask, IHostedService
     {
         private readonly IServiceProvider _provider;
 

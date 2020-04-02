@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reactive.Disposables;
+using System.Windows;
 using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
@@ -31,14 +32,13 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
                                 var success = baseType.GetGenericTypeDefinition() == typeof(CorrectionTestViewModel<>);
                                 return success;
                             }
-
-                            //if (t.IsTypeOrInheritsOf(typeof(VolumeViewModelBase)))
-                            //{
-                            //    return true;
-                            //}
                             return false;
                         })).DisposeWith(d);
-                    //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentHost.ViewModel, value => value ?? null).DisposeWith(d);
+
+                    //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
+                    //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentSection.Visibility, 
+                    //    value => value != null ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+
                     this.CleanUpDefaults().DisposeWith(d);
 
                     Disposable.Create(() =>

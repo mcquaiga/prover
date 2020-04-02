@@ -46,9 +46,9 @@ namespace Client.Desktop.Wpf.Extensions
             //    .ForEach(ti => services.AddSingleton(typeof(IMainMenuItem), ti));
         }
 
-        public static void AddStartTask<T>(this IServiceCollection services) where T : class, IHaveStartupTask
+        public static void AddStartTask<T>(this IServiceCollection services) where T : class, IStartupTask
         {
-            services.AddSingleton<IHaveStartupTask, T>();
+            services.AddSingleton<IStartupTask, T>();
         }
 
         public static void AddViewsAndViewModels(this IServiceCollection services)

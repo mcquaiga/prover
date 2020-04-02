@@ -10,67 +10,47 @@
     d:DesignHeight="450"
     x:TypeArguments="rotary:RotaryVolumeViewModel"
     mc:Ignorable="d">
-    <Grid HorizontalAlignment="Stretch">
-        <StackPanel Orientation="Horizontal">
+    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
 
-            <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
-                <controls:ValueDescriptionControl
-                    x:Name="AppliedInputControl"
-                    IsReadOnly="False"
-                    Label="Applied Input"
-                    TabIndex="0" />
+        <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
+            <controls:ValueDescriptionControl
+                x:Name="AppliedInputControl"
+                IsReadOnly="False"
+                Label="Applied Input"
+                TabIndex="0" />
 
-                <controls:ValueDescriptionControl
-                    x:Name="UncorrectedPulseCountControl"
-                    IsReadOnly="False"
-                    Label="Uncor Pulses"
-                    TabIndex="1" />
+            <controls:ValueDescriptionControl
+                x:Name="UncorrectedPulseCountControl"
+                IsReadOnly="False"
+                Label="Uncor Pulses"
+                TabIndex="1" />
 
-                <controls:ValueDescriptionControl
-                    x:Name="CorrectedPulseCountControl"
-                    IsReadOnly="False"
-                    Label="Cor Pulses"
-                    TabIndex="2" />
-            </StackPanel>
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-
-            <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-            <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-
-            <StackPanel Orientation="Vertical">
-                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}" Text="Rotary Meter" />
-                <controls:PercentageControlNew
-                    x:Name="RotaryPercentErrorControl"
-                    Margin="5"
-                    HorizontalAlignment="Center" />
-                <StackPanel Margin="5">
-                    <TextBlock
-                        x:Name="RotaryMeterTypeText"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
-                        <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />
-                    </StackPanel>
-
-                </StackPanel>
-            </StackPanel>
-
+            <controls:ValueDescriptionControl
+                x:Name="CorrectedPulseCountControl"
+                IsReadOnly="False"
+                Label="Cor Pulses"
+                TabIndex="2" />
         </StackPanel>
 
-    </Grid>
+        <Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />
+
+        <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
+
+        <Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />
+        <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
+
+        <Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />
+
+        <reactiveUi:ViewModelViewHost x:Name="RotaryMeterTestContent" />
+
+    </StackPanel>
 </reactiveUi:ReactiveUserControl>

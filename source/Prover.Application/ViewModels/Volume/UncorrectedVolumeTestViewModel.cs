@@ -1,4 +1,5 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
@@ -16,29 +17,29 @@ namespace Prover.Application.ViewModels.Volume
         public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues,
             VolumeItems endValues) : base(Tolerance, startValues, endValues)
         {
-            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, x => x.AppliedInput, (s, e, a) =>
-                    VolumeCalculator.TotalVolume(s.UncorrectedReading, e.UncorrectedReading))
-                .ToPropertyEx(this, x => x.ActualValue)
-                .DisposeWith(Cleanup);
+            this.WhenAnyValue(x => x.EndValues)
+                .Subscribe(items => EndUncorrectedReading = items.UncorrectedReading);
+
+            this.WhenAnyValue(x => x.StartValues, x => x.EndUncorrectedReading, 
+                    (start, end) => VolumeCalculator.TotalVolume(start.UncorrectedReading, end, start.UncorrectedMultiplier))
+                .ToPropertyEx(this, x => x.ActualValue).DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.AppliedInput)
                 .Select(driveType.UnCorrectedInputVolume)
-                .ToPropertyEx(this, x => x.ExpectedValue)
-                .DisposeWith(Cleanup);
+                .ToPropertyEx(this, x => x.ExpectedValue).DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.ExpectedValue)
-                .ToPropertyEx(this, x => x.UncorrectedInputVolume)
-                .DisposeWith(Cleanup);
+                .ToPropertyEx(this, x => x.UncorrectedInputVolume).DisposeWith(Cleanup);
         }
+
+        [Reactive] public decimal EndUncorrectedReading { get; set; }
 
         [Reactive] public decimal AppliedInput { get; set; }
 
         public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
-
-
+        
         protected override void Disposing()
         {
-           
         }
     }
 }

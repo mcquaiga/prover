@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -45,7 +46,19 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-
+        <!--<Border
+            x:Name="VolumeContentSection"
+            Grid.Row="2"
+            Padding="4"
+            Style="{StaticResource SubSectionDividerBorder}">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
+                    <reactiveUi:ViewModelViewHost x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                </StackPanel>
+                <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+            </StackPanel>
+        </Border>-->
     </Grid>
 
 

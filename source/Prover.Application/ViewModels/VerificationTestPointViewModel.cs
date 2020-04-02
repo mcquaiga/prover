@@ -41,15 +41,17 @@ namespace Prover.Application.ViewModels
         public void AddTest(VerificationViewModel test)
         {
             VerificationTests.Add(test);
+            Initialize();
         }
 
         public void Initialize()
         {
-            VerificationTests.AsObservableChangeSet()
-                .AutoRefresh(model => model.Verified)
-                .ToCollection()            
-                .Select(x => x.All(y => y.Verified))
-                .ToPropertyEx(this, x => x.Verified);
+            RegisterVerificationsForVerified(VerificationTests);
+            //VerificationTests.AsObservableChangeSet()
+            //    .AutoRefresh(model => model.Verified, TimeSpan.FromMilliseconds(25))
+            //    .ToCollection()            
+            //    .Select(x => x.All(y => y.Verified))
+            //    .ToPropertyEx(this, x => x.Verified);
         }
 
         protected override void Disposing()

@@ -26,30 +26,32 @@
             DockPanel.Dock="Top"
             Mode="PrimaryDark">
 
-            <Grid x:Name="HeaderDockPanel">
+            <Grid x:Name="HeaderDockPanel" Height="65">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel
                     x:Name="NavigationBar"
                     Grid.Column="0"
-                    Margin="15"
+                    Margin="5"
                     Orientation="Horizontal">
 
                     <Button
                         x:Name="GoHomeButton"
                         Width="48"
-                        Height="48">
+                        Height="48"
+                        Margin="8,0,4,0">
                         <materialDesign:PackIcon Foreground="White" Kind="Home" />
                     </Button>
 
                     <Button
                         x:Name="GoBackButton"
                         Width="48"
-                        Height="48">
+                        Height="48"
+                        Margin="4,0">
                         <materialDesign:PackIcon Foreground="White" Kind="ArrowBack" />
                     </Button>
 
@@ -63,7 +65,8 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline4TextBlock}"><Run Text="EVC Prover" /></TextBlock>
+                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"><Run Text="EVC Prover" />
+                </TextBlock>
 
                 <ItemsControl
                     x:Name="ToolbarItemsControl"

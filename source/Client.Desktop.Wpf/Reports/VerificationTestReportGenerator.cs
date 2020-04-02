@@ -34,17 +34,16 @@ namespace Client.Desktop.Wpf.Reports
            
             var locator = ViewLocator.Current;
 
-            var reportViewModel = new ReportViewModel(_screenManager);
-            reportViewModel.ContentViewModel = verificationTest;
+            var reportViewModel = new ReportViewModel(_screenManager) {ContentViewModel = verificationTest};
             await _screenManager.ChangeView(reportViewModel);
 
             //var filePath = CreateFileName(verificationTest);
 
-            // var fixedDoc = new FixedDocument();
-            // fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
-            // fixedDoc.Pages.Add(CreatePage(reportView));
+            //var fixedDoc = new FixedDocument();
+            //fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
+            //fixedDoc.Pages.Add(CreatePage(reportView));
 
-            // WriteDocument(fixedDoc, filePath);
+            //WriteDocument(fixedDoc, filePath);
         }
 
         public async Task GenerateAndViewReport(EvcVerificationTest verificationTest)

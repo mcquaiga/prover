@@ -26,14 +26,14 @@ namespace Client.Desktop.Wpf.ViewModels
             Router.CurrentViewModel.Subscribe(vm => _currentViewModel = vm);
         }
 
-        public async Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel)
+        public async Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
             await Router.Navigate.Execute(viewModel);
             return viewModel;
         }
 
-        public async Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
+        public async Task<TViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
         {
             var model = _services.GetService<TViewModel>();
             await Router.Navigate.Execute(model);

@@ -27,7 +27,7 @@ namespace Devices.Romet.Tests
             _deviceType = repo.GetByName("Adem");
             AdemItemFile = JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("Adem.json"));
 
-            _itemValues = _deviceType.ToItemValuesEnumerable(AdemItemFile).ToList();
+            _itemValues = _deviceType.ToItemValues(AdemItemFile).ToList();
             _instance = _deviceType.Factory.CreateInstance(_itemValues);
         }
 

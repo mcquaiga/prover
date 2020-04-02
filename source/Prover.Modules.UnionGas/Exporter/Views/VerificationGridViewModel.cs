@@ -25,8 +25,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             EvcVerificationTestService verificationTestService,
             VerificationTestReportGenerator reportService,
             ILoginService<EmployeeDTO> loginService,
-            IExportVerificationTest exporter)
+            IExportVerificationTest exporter,
+            ExporterViewModel exporterViewModel)
         {
+            LoginService = loginService;
+            ExporterViewModel = exporterViewModel;
+            IsLoggedOnObservable = loginService.LoggedIn;
             Test = verificationTest;
 
             DeviceInfo = new DeviceInfoViewModel(verificationTest.Device);
@@ -35,13 +39,14 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             void SetupRx()
             {
-                PrintReport =
-                    ReactiveCommand.CreateFromTask(async () =>
+                PrintReport = ReactiveCommand.CreateFromTask(async () =>
                     {
                         var viewModel = await viewModelService.GetVerificationTest(Test);
                         await reportService.GenerateAndViewReport(viewModel);
                     }).DisposeWith(_cleanup);
 
+                var canAddUser = loginService.LoggedIn;
+                
                 AddSignedOnUser = ReactiveCommand.CreateFromTask(async () =>
                 {
                     if (loginService.User != null)
@@ -51,14 +56,14 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     }
 
                     return loginService.User?.Id;
-                }, loginService.LoggedIn).DisposeWith(_cleanup);
+                }, canAddUser).DisposeWith(_cleanup);
+                canAddUser.Subscribe();
 
                 AddSignedOnUser
                     .ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(_cleanup);
 
-                var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime,
-                    (ex, a) => ex == null && a == null);
 
+                var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime, (ex, a) => ex == null && a == null);
                 AddJobId = ReactiveCommand.CreateFromTask(async () =>
                 {
                     var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
@@ -70,20 +75,22 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
                     return jobId;
                 }, canAddJobId).DisposeWith(_cleanup);
-                AddJobId.ToPropertyEx(this, x => x.JobId, Test.JobId).DisposeWith(_cleanup);
+                
+                AddJobId
+                    .ToPropertyEx(this, x => x.JobId, Test.JobId).DisposeWith(_cleanup);
 
-                var canExport = 
-                    this.WhenAnyValue(x => x.JobId, x => x.EmployeeId, (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
 
+                var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId, (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
                 ExportVerification = ReactiveCommand.CreateFromTask(async () =>
                 {
                     var success = await exporter.Export(Test);
                     
                     return Test.ExportedDateTime;
                 }, canExport).DisposeWith(_cleanup);
-               
+                
                 ExportVerification
                     .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, deferSubscription: true).DisposeWith(_cleanup);
+
 
                 ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
                 {
@@ -97,11 +104,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
                     return Test.ArchivedDateTime;
                 }).DisposeWith(_cleanup);
+                
                 ArchiveVerification
                     .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, deferSubscription: true).DisposeWith(_cleanup);
 
             }
         }
+
+        public ILoginService<EmployeeDTO> LoginService { get; set; }
+        public ExporterViewModel ExporterViewModel { get; }
+        public IObservable<bool> IsLoggedOnObservable { get; set; }
 
         public ReactiveCommand<Unit, Unit> PrintReport { get; protected set; }
         public ReactiveCommand<Unit, string> AddSignedOnUser { get; protected set; }

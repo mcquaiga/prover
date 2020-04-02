@@ -45,7 +45,7 @@
                 Grid.Row="0"
                 materialDesign:TextFieldAssist.DecorationVisibility="{Binding Path=IsReadOnly, Converter={StaticResource BoolToHiddenConverter}}"
                 BorderThickness="0"
-                FontSize="{Binding ValueFontSize, FallbackValue=24}"
+                FontSize="{Binding ValueFontSize, FallbackValue=20}"
                 Foreground="{StaticResource PrimaryText}"
                 IsReadOnly="{Binding Path=IsReadOnly}"
                 Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

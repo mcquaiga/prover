@@ -15,7 +15,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.VisibleTests, v => v.VisibleItemsListBox.ItemsSource).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.VisibleTests.Count, v => v.TestCountTextBlock.Text).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.VisibleTests.Count, v => v.TestCountTextBlock.Text,
+                    value => value == 1 ? $"{value} test" : $"{value} tests").DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
 

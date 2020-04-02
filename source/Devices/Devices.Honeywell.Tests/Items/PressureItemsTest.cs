@@ -46,7 +46,7 @@ namespace Devices.Honeywell.Tests.Items
             var device = _repo.GetByName("Mini-Max");
             var instance = device.CreateInstance(MiniMaxItemFile);
 
-            var myItems = device.ToItemValuesEnumerable(MiniMaxPressureItemFile);
+            var myItems = device.ToItemValues(MiniMaxPressureItemFile);
             var pItems = device.GetGroupValues<PressureItems>(myItems);
             var pItems2 = instance.ItemGroup<PressureItems>();
 

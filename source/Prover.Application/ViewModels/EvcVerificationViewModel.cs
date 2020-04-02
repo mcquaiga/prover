@@ -32,9 +32,7 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public string EmployeeId { get; set; }
 
-
-        public ICollection<VerificationViewModel> VerificationTests { get; set; } =
-            new List<VerificationViewModel>();
+        public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
         public SiteInformationViewModel DeviceInfo { get; set; }
 
@@ -43,16 +41,9 @@ namespace Prover.Application.ViewModels
         public void Initialize()
         {
             DeviceInfo = new SiteInformationViewModel(Device, this);
-        }
+            RegisterVerificationsForVerified(VerificationTests);
 
-        public void SetupVerifiedObserver()
-        {
-            VerificationTests.AsObservableChangeSet()
-                .AutoRefresh(model => model.Verified) 
-                .ToCollection()                    
-                .Select(x => x.All(y => y.Verified))
-                //.Subscribe(v => Verified = v);
-                .ToPropertyEx(this, x => x.Verified);
+            
         }
 
         protected override void Disposing()

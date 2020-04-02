@@ -20,7 +20,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid
-        Margin="10,5"
+        Margin="15,2"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch">
 
@@ -32,8 +32,9 @@
             ZIndex="1">
             <TextBlock
                 x:Name="WaitingForLoginMessage"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="left"
                 VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignBody1TextBlock}"
                 Text="Signing in..." />
         </StackPanel>
 
@@ -43,8 +44,8 @@
             VerticalAlignment="Center">
             <Button
                 x:Name="LoginButton"
-                Width="75"
-                Margin="5"
+                Width="90"
+                Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 materialDesign:RippleAssist.IsCentered="True"
@@ -54,24 +55,34 @@
 
         <StackPanel
             x:Name="LoggedInContent"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             Orientation="Vertical"
             Visibility="Collapsed">
-            <StackPanel Margin="4,4,4,12" Orientation="Horizontal">
+            <StackPanel
+                Margin="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
                 <materialDesign:PackIcon
-                    Width="32"
-                    Height="32"
+                    Width="24"
+                    Height="24"
+                    Margin="0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Kind="Account" />
                 <TextBlock
                     x:Name="WelcomeTextBlock"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                    Text="Hi " />
+                    FontSize="14"
+                    Style="{StaticResource MaterialDesignBody1TextBlock}" />
             </StackPanel>
             <Button
                 x:Name="LogoutButton"
+                Width="90"
+                Height="28"
+                HorizontalAlignment="Right"
                 Content="Sign out"
                 Style="{StaticResource MaterialDesignRaisedLightButton}" />
         </StackPanel>

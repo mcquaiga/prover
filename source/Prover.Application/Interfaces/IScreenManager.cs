@@ -5,8 +5,8 @@ namespace Prover.Application.Interfaces
 {
     public interface IScreenManager : IScreen
     {
-        Task<IRoutableViewModel> ChangeView(IRoutableViewModel viewModel);
-        Task<IRoutableViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel;
+        Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel;
+        Task<TViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel;
 
         IDialogServiceManager DialogManager { get; }
 

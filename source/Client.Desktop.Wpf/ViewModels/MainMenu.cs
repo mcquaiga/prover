@@ -12,7 +12,7 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         public static IMainMenuItem VerificationsMainMenu
             => new MainMenu("New QA Test Run", PackIconKind.ClipboardCheck, order: 1,
-                openFunc: s => s.ChangeView<QaTestRunViewModel>());
+                openFunc: async s => await s.ChangeView<QaTestRunViewModel>());
 
         /*         
             public static IMainMenuItem CertificatesMainMenu

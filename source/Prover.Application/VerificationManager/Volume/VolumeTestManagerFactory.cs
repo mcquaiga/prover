@@ -49,8 +49,7 @@ namespace Prover.Application.VerificationManager.Volume
             switch (verificationTest.VolumeTest)
             {
                 case RotaryVolumeViewModel rotary:
-                    return new RotaryVolumeManager(logger, _deviceManager, tachometerService, pulseOutputListener,
-                        motorControl, rotary);
+                    return new RotaryVolumeManager(logger, _deviceManager, tachometerService, pulseOutputListener, motorControl, rotary);
             }
 
             throw new NotImplementedException("Missing VolumeManager implementation");

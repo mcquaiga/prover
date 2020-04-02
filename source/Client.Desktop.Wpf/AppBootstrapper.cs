@@ -78,7 +78,7 @@ namespace Client.Desktop.Wpf
 
         private async Task ExecuteStartUpTasks()
         {
-            var startTasks = AppHost.Services.GetServices<IHaveStartupTask>().ToObservable()
+            var startTasks = AppHost.Services.GetServices<IStartupTask>().ToObservable()
                 .ForEachAsync(async t => await t.ExecuteAsync(CancellationTokenSource.Token));
 
             await startTasks;

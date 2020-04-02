@@ -23,10 +23,27 @@ namespace Devices.Romet.Core.Items.ItemGroups
         private const int Unc_Channel_Units = 816;
         private const int Cor_Channel_Units = 817;
 
+        public override ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues)
+        {
+            var values = itemValues.ToList();
+
+            Channels = new List<ChannelItems>
+            {
+                CreateChannel(values, PulseOutputChannel.Channel_A, null, Channel_A_Scaling, Channel_A_Type),
+                CreateChannel(values, PulseOutputChannel.Channel_B, null, Channel_B_Scaling, Channel_B_Type)
+                //CreateChannel(values, PulseOutputChannel.Channel_C, null, Channel_C_Scaling, Channel_C_Units)
+            };
+
+            //base.SetValues(deviceType, values);
+
+            return this;
+        }
+
         protected override ChannelItems CreateChannel(ICollection<ItemValue> values, PulseOutputChannel channel,
             int? countItemNumber, int scalingItemNumber, int unitsItemNumber)
         {
-            var channelType = (PulseOutputType) Enum.Parse(typeof(PulseOutputType), values.GetItem(unitsItemNumber).GetDescription());
+            var channelType = (PulseOutputType) Enum.Parse(typeof(PulseOutputType),
+                values.GetItem(unitsItemNumber).GetDescription());
             var channelUnits = GetChannelUnits(channelType, values);
 
             return new RometChannelItems
@@ -36,7 +53,7 @@ namespace Devices.Romet.Core.Items.ItemGroups
                 Scaling = values.GetItemValueAsDecimal(scalingItemNumber),
                 ChannelType = channelType,
                 Multiplier = channelUnits.DecimalValue() ?? 0,
-                Units = 
+                Units = channelUnits.GetDescription()
             };
         }
 
@@ -53,26 +70,14 @@ namespace Devices.Romet.Core.Items.ItemGroups
             }
         }
 
-        public override ItemGroup SetValues(DeviceType deviceType, IEnumerable<ItemValue> itemValues)
-        {
-            var values = itemValues.ToList();
-
-            Channels = new List<ChannelItems>
-            {
-                CreateChannel(values, PulseOutputChannel.Channel_A, null, Channel_A_Scaling, Channel_A_Type),
-                CreateChannel(values, PulseOutputChannel.Channel_B, null, Channel_B_Scaling, Channel_B_Type),
-                //CreateChannel(values, PulseOutputChannel.Channel_C, null, Channel_C_Scaling, Channel_C_Units)
-            };
-
-            //base.SetValues(deviceType, values);
-
-            return this;
-        }
+        #region Nested type: RometChannelItems
 
         public class RometChannelItems : ChannelItems
         {
             public decimal Multiplier { get; set; }
             public string Units { get; set; }
         }
+
+        #endregion
     }
 }

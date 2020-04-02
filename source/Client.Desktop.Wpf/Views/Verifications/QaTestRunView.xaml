@@ -17,7 +17,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Views/Verifications/Styles.xaml" />
-
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
                 <ResourceDictionary>
                     <Style BasedOn="{StaticResource MaterialDesignFloatingHintComboBox}" TargetType="{x:Type ComboBox}">
                         <Setter Property="FontSize" Value="18" />
@@ -106,20 +107,25 @@
                     <ListView
                         x:Name="DeviceTypes"
                         DisplayMemberPath="Name"
-                        FontSize="18">
-                        <!--<ListBox.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            FontSize="14"
-                                            FontWeight="Bold"
-                                            Text="{Binding Name}" />
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListBox.GroupStyle>-->
+                        FontSize="18"
+                        Style="{StaticResource MaterialDesignListView}">
+                        <ListView.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="true" />
+                                            <!--<Condition Property="Selector.IsSelectionActive" Value="true" />-->
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                                    </MultiTrigger>
+                                </Style.Triggers>
+                                <Setter Property="Margin" Value="0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
+
                 </GroupBox>
                 <!--<GroupBox
                     Grid.Row="1"

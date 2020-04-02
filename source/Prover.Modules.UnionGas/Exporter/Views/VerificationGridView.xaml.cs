@@ -27,7 +27,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 this.OneWayBind(ViewModel, vm => vm.ArchivedDateTime, v => v.ArchiveTestButton.Visibility,
                     value => value == null ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.PrintReport, v => v.PrintTestReportButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.ExporterViewModel.PrintReport, v => v.PrintTestReportButton, vm => vm.Test).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.ExportedDateTime, v => v.IsExportedTextBlock.Text,
                     value => value != null ? "EXPORTED" : "").DisposeWith(d); 

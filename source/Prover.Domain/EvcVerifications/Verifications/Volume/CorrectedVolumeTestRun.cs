@@ -30,7 +30,7 @@ namespace Prover.Domain.EvcVerifications.Verifications.Volume
 
         public void Calculate()
         {
-            ActualValue = VolumeCalculator.TotalVolume(StartValues.CorrectedReading, EndValues.CorrectedReading);
+            ActualValue = VolumeCalculator.TotalVolume(StartValues.CorrectedReading, EndValues.CorrectedReading, StartValues.CorrectedMultiplier);
             ExpectedValue = VolumeCalculator.TrueCorrected(TotalCorrectionFactor, UncorrectedInputVolume);
 
             PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);

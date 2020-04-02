@@ -58,8 +58,11 @@ namespace Prover.Infrastructure
                     return device.CreateInstance(temp.Values);
                 });
 
-            db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ExportedDateTime);
-            db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ArchivedDateTime);
+            //if (db.CollectionExists("EvcVerificationTest"))
+            //{
+            //    db.GetCollection<EvcVerificationTest>()?.EnsureIndex(test => test.ExportedDateTime);
+            //    db.GetCollection<EvcVerificationTest>()?.EnsureIndex(test => test.ArchivedDateTime);
+            //}
 
             mapper.Entity<DeviceType>().Ignore(d => d.Factory);
         }

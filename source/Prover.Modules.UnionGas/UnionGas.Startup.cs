@@ -24,7 +24,7 @@ namespace Prover.Modules.UnionGas
     {
         public static IMainMenuItem ExporterMainMenu
             => new MainMenu("Export Test Run", PackIconKind.CloudUpload,
-                screen => screen.ChangeView<ExporterViewModel>(), 4);
+                async screen => await screen.ChangeView<ExporterViewModel>(), 4);
     }
 
     public class Startup : IConfigureModule
@@ -35,14 +35,15 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
-            services.AddSingleton<Func<EvcVerificationTest, VerificationGridViewModel>>(c => (evcTest) =>
+            services.AddSingleton<Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel>>(c => (evcTest, vm) =>
             {
                 return new VerificationGridViewModel(evcTest,
                     c.GetService<IVerificationTestService>(),
                     c.GetService<EvcVerificationTestService>(),
                     c.GetService<VerificationTestReportGenerator>(),
                     c.GetService<ILoginService<EmployeeDTO>>(),
-                    c.GetService<IExportVerificationTest>()
+                    c.GetService<IExportVerificationTest>(),
+                    vm
                 );
             });
 

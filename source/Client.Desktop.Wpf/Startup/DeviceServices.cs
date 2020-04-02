@@ -1,29 +1,22 @@
 ﻿using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository.JsonRepository;
-using Devices.Romet.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
-using System;
 using Prover.Application.VerificationManager;
 using Prover.Application.VerificationManager.Volume;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Shared.Interfaces;
-
 using System;
-
 using System.Threading;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {
-    internal class DeviceServices : IHaveStartupTask
+    internal class DeviceServices : IStartupTask
     {
         public DeviceServices(IServiceProvider provider) => _provider = provider;
 

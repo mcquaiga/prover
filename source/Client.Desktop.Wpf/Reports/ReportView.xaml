@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Client.Desktop.Wpf.Reports"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     d:DesignHeight="450"
@@ -11,6 +12,34 @@
     x:TypeArguments="local:ReportViewModel"
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <reactiveUi:ViewModelViewHost x:Name="ReportHostContentControl" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <materialDesign:ColorZone
+            Grid.Row="0"
+            Padding="8"
+            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+            Mode="PrimaryLight">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    Text="QA Test Run Report" />
+                <Button
+                    x:Name="SaveReport"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource MaterialDesignIconButton}">
+                    <materialDesign:PackIcon Kind="ContentSave" />
+                </Button>
+            </Grid>
+
+        </materialDesign:ColorZone>
+        <reactiveUi:ViewModelViewHost x:Name="ReportHostContentControl" Grid.Row="1" />
     </Grid>
 </reactiveUi:ReactiveUserControl>

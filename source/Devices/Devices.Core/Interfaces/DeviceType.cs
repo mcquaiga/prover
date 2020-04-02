@@ -10,14 +10,13 @@ namespace Devices.Core.Interfaces
 {
     public abstract class DeviceType
     {
-        //protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
-
-        protected virtual ItemGroupFactoryBase ItemFactory { get; }
-
         protected DeviceType(IEnumerable<ItemMetadata> itemDefinitions) =>
             Items = new List<ItemMetadata>(itemDefinitions);
 
         protected DeviceType() => Items = new List<ItemMetadata>();
+        //protected readonly HashSet<ItemMetadata> ItemDefinitions = new HashSet<ItemMetadata>();
+
+        protected virtual ItemGroupFactoryBase ItemFactory { get; }
 
         public Guid Id { get; set; }
         public virtual bool? CanUseIrDaPort { get; set; }
@@ -42,6 +41,8 @@ namespace Devices.Core.Interfaces
             return ItemInfoAttributeHelpers.GetItemIdentifiers(itemType);
         }
 
+        public override string ToString() => Name;
+
         private static IEnumerable<ItemValue> ToItemValuesEnumerable(DeviceType deviceType,
             IDictionary<int, string> itemValuesDictionary)
         {
@@ -49,11 +50,6 @@ namespace Devices.Core.Interfaces
                 x => x.Number,
                 y => y.Key,
                 (im, value) => ItemValue.Create(im, value.Value));
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

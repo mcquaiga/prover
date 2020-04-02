@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Client.Desktop.Wpf.Reports;
 using Devices.Core.Interfaces;
@@ -23,7 +24,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class ExporterViewModel : ReactiveObject, IRoutableViewModel
+    public class ExporterViewModel : ViewModelBase, IRoutableViewModel
     {
         private readonly IExportVerificationTest _exporter;
 
@@ -34,14 +35,14 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             VerificationTestReportGenerator reportService,
             IExportVerificationTest exporter,
             ILoginService<EmployeeDTO> loginService,
-            Func<EvcVerificationTest, VerificationGridViewModel> verificationViewModelFactory)
+            Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel> verificationViewModelFactory)
         {
             _exporter = exporter;
             ScreenManager = screenManager;
             HostScreen = screenManager;
 
-            DeviceTypes = deviceRepository.GetAll().ToList();
-            DeviceTypes.Add(new AllDeviceType {Id = Guid.Empty, Name = "All"});
+            DeviceTypes = deviceRepository.GetAll().OrderBy(d => d.Name).ToList();
+            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" }).ToList();
 
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, DeviceType>(f => f);
 
@@ -51,22 +52,29 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             var sorter = deviceFilter.Merge(includeExportedFilter).Merge(includeArchivedFilter)
                 .Select(_ => SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime));
-           
+
+            PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async (test) =>
+            {
+                var viewModel = await verificationTestService.GetVerificationTest(test);
+                var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
+                reportViewModel.ContentViewModel = viewModel;
+            }).DisposeWith(Cleanup);
+
             service.FetchTests()
                 .Connect()
-           
                 .Sort(SortExpressionComparer<EvcVerificationTest>.Descending(t => t.TestDateTime), resetThreshold: 0)
                 .Filter(deviceFilter)
                 .Filter(includeExportedFilter)
                 .Filter(includeArchivedFilter)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Transform(verificationViewModelFactory.Invoke)
+                .Transform(x => verificationViewModelFactory.Invoke(x, this))
                 .Bind(out var allNotExported)
                 .DisposeMany()
-                .Subscribe();
+                .Subscribe()
+                .DisposeWith(Cleanup);
             VisibleTests = allNotExported;
         }
-        public ReactiveCommand<VerificationGridViewModel, Unit> PrintReport { get; protected set; }
+        public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, string> AddSignedOnUser { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, DateTime?> ArchiveVerification { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, DateTime?> ExportVerification { get; protected set; }
@@ -78,7 +86,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ReadOnlyObservableCollection<VerificationGridViewModel> VisibleTests { get; }
 
-        public ICollection<DeviceType> DeviceTypes { get; }
+        public ICollection<DeviceType> DeviceTypes { get; } = new List<DeviceType>();
 
         public IScreenManager ScreenManager { get; }
         public string UrlPathSegment => "/Exporter";

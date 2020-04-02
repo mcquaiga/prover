@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
@@ -14,11 +15,10 @@ namespace Prover.Application.ViewModels.Volume.Rotary
         {
         }
 
-        public CorrectedVolumeTestViewModel Corrected { get; set; }
-        public UncorrectedVolumeTestViewModel Uncorrected { get; set; }
-        public RotaryMeterTestViewModel RotaryMeterTest { get; set; }
+        public CorrectedVolumeTestViewModel Corrected => AllTests().OfType<CorrectedVolumeTestViewModel>().FirstOrDefault();
+        public UncorrectedVolumeTestViewModel Uncorrected => AllTests().OfType<UncorrectedVolumeTestViewModel>().FirstOrDefault();
+        public RotaryMeterTestViewModel RotaryMeterTest => AllTests().OfType<RotaryMeterTestViewModel>().FirstOrDefault();
 
-        protected override ICollection<VerificationViewModel> GetSpecificTests() =>
-            new List<VerificationViewModel> {RotaryMeterTest, Corrected, Uncorrected};
+        protected override ICollection<VerificationViewModel> GetSpecificTests() => AllTests();
     }
 }

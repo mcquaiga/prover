@@ -26,16 +26,22 @@ namespace Prover.Application.ViewModels.Volume
         [Reactive] public VolumeItems StartValues { get; set; }
         [Reactive] public VolumeItems EndValues { get; set; }
 
-        public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
-        public ReactiveCommand<Unit, Unit> FinishTest { get; protected set; }
+        //public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
+        //public ReactiveCommand<Unit, Unit> FinishTest { get; protected set; }
 
         public virtual IVolumeInputType DriveType { get; set; }
 
-        public virtual ICollection<VerificationViewModel> AllTests() => GetSpecificTests().ToList();
+        public virtual ICollection<VerificationViewModel> AllTests() => _allTests;
 
         protected override void Disposing()
         {
             AllTests().ForEach(t => t.DisposeWith(Cleanup));
+        }
+
+        public void AddVerificationTest(VerificationViewModel verification)
+        {
+            _allTests.Add(verification);
+            RegisterVerificationsForVerified(_allTests);
         }
 
         protected abstract ICollection<VerificationViewModel> GetSpecificTests();

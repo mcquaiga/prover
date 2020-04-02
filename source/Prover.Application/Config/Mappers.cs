@@ -55,15 +55,14 @@ namespace Prover.Application.Config
                 cfg.CreateMap<VerificationTestPoint, VerificationTestPointViewModel>()
                     .AfterMap((model, vm, con) =>
                     {
-                        vm.Initialize();
+                        //vm.Initialize();
                     });
                 
                 cfg.CreateMap<EvcVerificationViewModel, EvcVerificationTest>();
                 cfg.CreateMap<EvcVerificationTest, EvcVerificationViewModel>()
                     .AfterMap((model, vm, con) =>
                     {
-                        vm.Initialize();
-                        vm.SetupVerifiedObserver();
+                        //vm.Initialize();
                     });
             });
 

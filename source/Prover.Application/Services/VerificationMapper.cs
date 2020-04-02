@@ -121,7 +121,7 @@ namespace Prover.Application.Services
 
             evcViewModel.VerificationTests.Clear();
             testPoints.ForEach(evcViewModel.VerificationTests.Add);
-            evcViewModel.SetupVerifiedObserver();
+            evcViewModel.Initialize();
             return evcViewModel;
         }
     }
