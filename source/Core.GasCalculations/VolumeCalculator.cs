@@ -14,9 +14,9 @@ namespace Core.GasCalculations
             return Round.Volume(rate * appliedInput);
         }
 
-        public static decimal TotalVolume(decimal startReading, decimal endReading)
+        public static decimal TotalVolume(decimal startReading, decimal endReading, decimal multiplier)
         {
-            return Round.Volume(endReading - startReading);
+            return Round.Volume((endReading - startReading) * multiplier);
         }
 
         //public static class Mechanical

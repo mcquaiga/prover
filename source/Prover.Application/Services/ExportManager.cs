@@ -9,9 +9,28 @@ namespace Prover.Application.Services
 {
     public class ExportManager : IExportVerificationTest
     {
-        public async Task<bool> Export(EvcVerificationTest instrumentForExport) => true;
+        private readonly EvcVerificationTestService _testRunService;
 
-        public async Task<bool> Export(IEnumerable<EvcVerificationTest> instrumentsForExport) => true;
+        public ExportManager(EvcVerificationTestService testRunService)
+        {
+            _testRunService = testRunService;
+        }
 
+        public async Task<bool> Export(EvcVerificationTest verificationTest)
+        {
+            verificationTest.ExportedDateTime = DateTime.Now;
+            await _testRunService.AddOrUpdateVerificationTest(verificationTest);
+            return true;
+        }
+
+        public async Task<bool> Export(IEnumerable<EvcVerificationTest> verificationTests)
+        {
+            foreach (var test in verificationTests)
+            {
+                test.ExportedDateTime = DateTime.Now;
+                await _testRunService.AddOrUpdateVerificationTest(test);
+            }
+            return true;
+        }
     }
 }

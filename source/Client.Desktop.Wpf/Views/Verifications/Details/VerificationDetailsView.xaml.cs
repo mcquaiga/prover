@@ -26,7 +26,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.Tests, v => v.TestPointItems.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestPointItems.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.DeviceInfo, v => v.SiteInfoContent.ViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.VolumeTest, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
 

@@ -45,7 +45,7 @@ namespace Prover.Application.VerificationManager.Volume
 
             PulseListenerService.StartListening()
                 .Where(p =>
-                    p.Items.Units == PulseOutputUnitType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+                    p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(InitiateTestCompletion)
                 .DisposeWith(Cleanup);

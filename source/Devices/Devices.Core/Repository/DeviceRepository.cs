@@ -25,6 +25,7 @@ namespace Devices.Core.Repository
         DeviceType GetById(Guid id);
         DeviceType GetByName(string name);
         void Save();
+        Task<DeviceRepository> Load(ICollection<IDeviceTypeDataSource<DeviceType>> sources);
         Task<DeviceRepository> UpdateCachedTypes();
         Task<DeviceRepository> UpdateCachedTypes(IDeviceTypeDataSource<DeviceType> dataSource);
         Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources);

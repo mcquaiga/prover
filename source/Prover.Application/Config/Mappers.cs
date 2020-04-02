@@ -52,15 +52,18 @@ namespace Prover.Application.Config
                 cfg.CreateMap<RotaryMeterTest, RotaryMeterTestViewModel>();
 
                 cfg.CreateMap<VerificationTestPointViewModel, VerificationTestPoint>();
-                cfg.CreateMap<VerificationTestPoint, VerificationTestPointViewModel>();
-
-
-
+                cfg.CreateMap<VerificationTestPoint, VerificationTestPointViewModel>()
+                    .AfterMap((model, vm, con) =>
+                    {
+                        vm.Initialize();
+                    });
+                
                 cfg.CreateMap<EvcVerificationViewModel, EvcVerificationTest>();
                 cfg.CreateMap<EvcVerificationTest, EvcVerificationViewModel>()
                     .AfterMap((model, vm, con) =>
                     {
                         vm.Initialize();
+                        vm.SetupVerifiedObserver();
                     });
             });
 

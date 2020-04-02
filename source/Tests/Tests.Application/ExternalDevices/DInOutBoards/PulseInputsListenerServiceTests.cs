@@ -71,7 +71,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
             _channelAItems = new PulseOutputItems.ChannelItems
             {
                 Name = PulseOutputChannel.Channel_A,
-                Units = PulseOutputUnitType.UncVol,
+                ChannelType = PulseOutputType.UncVol,
                 Count = 0,
                 Scaling = 62.5m
             };
@@ -79,7 +79,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
             _channelBItems = new PulseOutputItems.ChannelItems
             {
                 Name = PulseOutputChannel.Channel_B,
-                Units = PulseOutputUnitType.CorVol,
+                ChannelType = PulseOutputType.CorVol,
                 Count = 0,
                 Scaling = 62.5m
             };

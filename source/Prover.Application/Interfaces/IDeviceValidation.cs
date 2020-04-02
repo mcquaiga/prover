@@ -1,11 +1,21 @@
 ﻿using System.Threading.Tasks;
 using Devices.Core.Interfaces;
+using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 
 namespace Prover.Application.Interfaces
 {
-    public interface IDeviceValidation
+    public enum VerificationTestStep
     {
-        Task<bool> Validate(IDeviceSessionManager deviceManager, DeviceInstance device);
+        OnInitialize,
+        OnSubmit,
+        OnVolumeStart,
+        OnVolumeEnd
+    }
+
+    public interface IVerificationCustomActions
+    {
+        VerificationTestStep RunOnStep { get; }
+        Task<bool> Run(IDeviceSessionManager deviceManager, DeviceInstance device, EvcVerificationViewModel verification);
     }
 }

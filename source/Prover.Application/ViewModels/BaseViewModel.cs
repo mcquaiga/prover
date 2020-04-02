@@ -6,16 +6,14 @@ using ReactiveUI;
 
 namespace Prover.Application.ViewModels
 {
-    public abstract class ViewModelBase : ReactiveObject, IDisposable, IActivatableViewModel
+    public abstract class ViewModelBase : ReactiveObject, IDisposable
     {
-        private readonly Guid _id = Guid.NewGuid();
-        private readonly ILogger Logger;
+        protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
+
+        protected readonly ILogger Logger;
 
         protected ViewModelBase(ILogger logger = null) => Logger = logger ?? NullLogger.Instance;
 
-        protected CompositeDisposable Cleanup { get; } = new CompositeDisposable();
-
-        public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
         public void Dispose()
         {
@@ -29,14 +27,13 @@ namespace Prover.Application.ViewModels
         }
     }
 
-    public abstract class ViewModelWithIdBase : ViewModelBase, IActivatableViewModel
+    public abstract class ViewModelWithIdBase : ViewModelBase
     {
         protected ViewModelWithIdBase() : this(Guid.NewGuid())
         {
         }
 
         protected ViewModelWithIdBase(Guid id) => Id = id;
-
 
         public Guid Id { get; protected set; }
     }

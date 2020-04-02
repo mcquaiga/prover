@@ -27,7 +27,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public QaTestRunViewModel(
             ILogger<QaTestRunViewModel> logger, 
             IScreenManager screenManager,
-            VerificationTestService verificationService,
+            IVerificationTestService verificationService,
             IDeviceRepository deviceRepository
             ) : base(screenManager)
         {

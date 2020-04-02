@@ -7,7 +7,7 @@ namespace Client.Desktop.Wpf.Extensions
     public static class AppConfigurationEx
     {
         private const string LiteDbKey = "Storage:LiteDb";
-        private const string AppDataKey = "AppData";
+        private const string AppDataKey = "AppDataDir";
 
         private const string DefaultAppData = ".\\";
 

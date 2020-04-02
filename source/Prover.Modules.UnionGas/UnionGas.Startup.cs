@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Client.Desktop.Wpf.Extensions;
+using Client.Desktop.Wpf.Reports;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
+using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
 using Prover.Modules.UnionGas.Exporter.Views;
@@ -32,34 +35,47 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
+            services.AddSingleton<Func<EvcVerificationTest, VerificationGridViewModel>>(c => (evcTest) =>
+            {
+                return new VerificationGridViewModel(evcTest,
+                    c.GetService<IVerificationTestService>(),
+                    c.GetService<EvcVerificationTestService>(),
+                    c.GetService<VerificationTestReportGenerator>(),
+                    c.GetService<ILoginService<EmployeeDTO>>(),
+                    c.GetService<IExportVerificationTest>()
+                );
+            });
 
             AddWebService(services);
             
             if (builder.HostingEnvironment.IsDevelopment()) 
-                AddDevelopmentServices(services);
+                DevelopmentServices(services);
             else
             {
-                AddProductionServices(services);
+                ProductionServices(services);
             }
-            
-            services.AddScoped<IExportVerificationTest, ExportToMasaManager>();
         }
 
-        private void AddDevelopmentServices(IServiceCollection services)
+        private void DevelopmentServices(IServiceCollection services)
         {
             AddLocalLoginService(services);
+            services.AddSingleton<IExportVerificationTest, ExportManager>();
+            services.AddSingleton<IVerificationCustomActions, DevVerificationInitializer>();
         }
 
-        private void AddProductionServices(IServiceCollection services)
+        private void ProductionServices(IServiceCollection services)
         {
             services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
-            services.AddSingleton<IDeviceValidation, MasaCompanyNumberValidator>();
+            services.AddSingleton<IVerificationCustomActions, MasaVerificationInitialization>();
+            services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
         }
 
         private void AddWebService(IServiceCollection services, string remoteAddress = null)
         {
             services.AddSingleton<DCRWebServiceSoap>(c =>
-                new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap, remoteAddress));
+                string.IsNullOrEmpty(remoteAddress) 
+                    ? new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap) 
+                    : new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap, remoteAddress));
         }
 
         private void AddLocalLoginService(IServiceCollection services)
@@ -80,34 +96,3 @@ namespace Prover.Modules.UnionGas
         }
     }
 }
-
-//services.AddSingleton<Func<DeviceInstance, UnionGasEvcVerification>>(c =>
-//    device => new UnionGasEvcVerification(device, c.GetService<ILoginService<EmployeeDTO>>().User?.Id));
-
-//services.AddSingleton<IAsyncRepository<UnionGasEvcVerification>>(c => new LiteDbAsyncRepository<UnionGasEvcVerification>(c.GetService<ILiteDatabase>()));
-//services.AddSingleton(c => new EvcVerificationTestService<UnionGasEvcVerification>(c.GetService<IAsyncRepository<UnionGasEvcVerification>>()));
-
-////services.AddSingleton(c => (Func<UnionGasEvcVerificationViewModel, VerificationTestService<UnionGasEvcVerification, UnionGasEvcVerificationViewModel>, ITestManager>)
-////    c.GetService<Func<EvcVerificationViewModel, VerificationTestService<EvcVerificationTest, EvcVerificationViewModel>, ITestManager>>());
-
-//services.AddSingleton<Func<UnionGasEvcVerificationViewModel, VerificationTestService<UnionGasEvcVerification, UnionGasEvcVerificationViewModel>, ITestManager>>(c =>
-//            (test, service) => new TestManager(
-//                c.GetService<ILogger<TestManager>>(),
-//                c.GetService<IDeviceSessionManager>(),
-//                test,
-//                c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>())
-//);
-//services.AddSingleton(c => (Func<UnionGasEvcVerificationViewModel, IVolumeTestManager>)
-//    c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>());
-
-//services.AddSingleton<VerificationTestService<UnionGasEvcVerification, UnionGasEvcVerificationViewModel>>();
-
-//services.Replace(ServiceDescriptor.Singleton(c => (VerificationTestService<IEvcVerificationTest, EvcVerificationViewModel>) 
-//    c.GetService<VerificationTestService<UnionGasEvcVerification, UnionGasEvcVerificationViewModel>>()));
-
-
-//        builder.RegisterType<CompanyNumberValidationManager>()
-//            .As<IEvcDeviceValidationAction>()
-//            .AsSelf();
-
-//        builder.RegisterType<UserLoggedInValidator>().As<IValidator>();

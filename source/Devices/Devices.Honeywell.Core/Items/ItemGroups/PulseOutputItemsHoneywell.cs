@@ -42,7 +42,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
         }
 
 
-        protected PulseOutputChannelHoneywell CreateChannel(ICollection<ItemValue> values, PulseOutputChannel channel,
+        protected virtual ChannelItems CreateChannel(ICollection<ItemValue> values, PulseOutputChannel channel,
             int? countItemNumber, int scalingItemNumber, int unitsItemNumber)
         {
             return new PulseOutputChannelHoneywell
@@ -50,7 +50,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
                 Name = channel,
                 Count = countItemNumber.HasValue ? values.GetItemValueAsInt(countItemNumber.Value) : 0,
                 Scaling = values.GetItemValueAsDecimal(scalingItemNumber),
-                Units = (PulseOutputUnitType) Enum.Parse(typeof(PulseOutputUnitType),
+                ChannelType = (PulseOutputType) Enum.Parse(typeof(PulseOutputType),
                     values.GetItem(unitsItemNumber).GetDescription())
             };
         }
@@ -62,7 +62,7 @@ namespace Devices.Honeywell.Core.Items.ItemGroups
             public override PulseOutputChannel Name { get; set; }
             public override int Count { get; set; }
             public override decimal Scaling { get; set; }
-            public override PulseOutputUnitType Units { get; set; }
+            public override PulseOutputType ChannelType { get; set; }
         }
 
         #endregion

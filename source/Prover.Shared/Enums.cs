@@ -9,6 +9,15 @@ namespace Prover.Shared
         Channel_C
     }
 
+    public enum PulseOutputType
+    {
+        CorVol,
+        PCorVol,
+        UncVol,
+        NoOut,
+        Time
+    }
+
     public enum CompositionType
     {
         T,
@@ -16,12 +25,14 @@ namespace Prover.Shared
         PTZ,
         Fixed
     }
+
     public enum RotaryMeterMountType
     {
         B3,
         LMMA,
         RM
     }
+
     public enum CorrectionFactorType
     {
         Fixed = 1,
@@ -66,15 +77,8 @@ namespace Prover.Shared
         mmHG
     }
 
-    public enum PulseOutputUnitType
-    {
-        CorVol,
-        PCorVol,
-        UncVol,
-        NoOut,
-        Time
-    }
-   
+
+
     public enum TemperatureUnitType
     {
         C,

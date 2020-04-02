@@ -26,7 +26,7 @@ namespace Tests.Application.Services
         private readonly Mock<IAsyncRepository<EvcVerificationTest>> _repoMock =
             new Mock<IAsyncRepository<EvcVerificationTest>>();
 
-        private VerificationTestService _service;
+        private IVerificationTestService _service;
 
         [TestMethod]
         public async Task CreateVerificationTestFromViewModelTest()

@@ -20,7 +20,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
                 {
                     this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}").DisposeWith(d);
 
-                    this.OneWayBind(ViewModel, vm => vm.TestsCollection, v => v.TestItems.ItemsSource, 
+                    this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestItems.ItemsSource, 
                         tests => tests.Where(t =>
                         {
                             var isOf = t.IsTypeOrInheritsOf(typeof(CorrectionTestViewModel<>));

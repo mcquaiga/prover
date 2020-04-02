@@ -18,8 +18,8 @@ namespace Prover.Application.Interfaces
 
     public interface IExportVerificationTest
     {
-        Task<bool> Export(EvcVerificationTest instrumentForExport);
-        Task<bool> Export(IEnumerable<EvcVerificationTest> instrumentsForExport);
+        Task<bool> Export(EvcVerificationTest verificationTest);
+        Task<bool> Export(IEnumerable<EvcVerificationTest> verificationTests);
         //Task<bool> ExportFailedTest(string companyNumber);
     }
 }

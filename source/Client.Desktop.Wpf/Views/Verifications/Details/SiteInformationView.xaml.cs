@@ -70,11 +70,11 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
                 //Pulse Outputs
                 var channelA = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
-                ChannelAUnitsTextBlock.Text = channelA.Units.ToString();
+                ChannelAUnitsTextBlock.Text = channelA.ChannelType.ToString();
                 ChannelAScalingTextBlock.Text = channelA.Scaling.ToString();
 
                 var channelB = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_B);
-                ChannelBUnitsTextBlock.Text = channelB.Units.ToString();
+                ChannelBUnitsTextBlock.Text = channelB.ChannelType.ToString();
                 ChannelBScalingTextBlock.Text = channelB.Scaling.ToString();
 
                 this.CleanUpDefaults().DisposeWith(d);

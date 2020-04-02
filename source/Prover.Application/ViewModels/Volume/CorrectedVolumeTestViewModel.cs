@@ -26,14 +26,12 @@ namespace Prover.Application.ViewModels.Volume
                 .ToPropertyEx(this, x => x.ActualValue)
                 .DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume).CombineLatest(
-                    this.WhenAnyValue(x => x.TotalCorrectionFactor),
-                    (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
-                .ToPropertyEx(this, x => x.ExpectedValue)
+            trueCorrectedFactor.TrueCorrectedObservable
+                .ToPropertyEx(this, x => x.TotalCorrectionFactor, trueCorrectedFactor.TotalCorrectionFactor, deferSubscription: true)
                 .DisposeWith(Cleanup);
 
-            trueCorrectedFactor.TrueCorrectedObservable
-                .ToPropertyEx(this, x => x.TotalCorrectionFactor)
+            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume, x => x.TotalCorrectionFactor, (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
+                .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.StartValues)

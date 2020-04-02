@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Packaging;
@@ -30,22 +31,20 @@ namespace Client.Desktop.Wpf.Reports
         public async Task GenerateAndViewReport(EvcVerificationViewModel verificationTest)
         {
             //await _screenManager.ChangeView(verificationTest);
-            return;
-
-
+           
             var locator = ViewLocator.Current;
 
-            var reportView = locator.ResolveView(verificationTest);
-            reportView.ViewModel = verificationTest;
+            var reportViewModel = new ReportViewModel(_screenManager);
+            reportViewModel.ContentViewModel = verificationTest;
+            await _screenManager.ChangeView(reportViewModel);
 
-            //reportView.
+            //var filePath = CreateFileName(verificationTest);
 
-            var filePath = CreateFileName(verificationTest);
+            // var fixedDoc = new FixedDocument();
+            // fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
+            // fixedDoc.Pages.Add(CreatePage(reportView));
 
-            var fixedDoc = new FixedDocument();
-            fixedDoc.DocumentPaginator.PageSize = new Size(96 * 11, 96 * 8.5);
-            fixedDoc.Pages.Add(CreatePage(reportView));
-            WriteDocument(fixedDoc, filePath);
+            // WriteDocument(fixedDoc, filePath);
         }
 
         public async Task GenerateAndViewReport(EvcVerificationTest verificationTest)
@@ -80,12 +79,12 @@ namespace Client.Desktop.Wpf.Reports
         //    //PdfSharp.Pdf.Xps.XpsModel.XpsDocument.Open(lMemoryStream);
         //}
 
-        private PageContent CreatePage(IViewFor testControl)
+        private PageContent CreatePage(object testControl)
         {
             var pageContent = new PageContent();
             var fixedPage = new FixedPage { Width = 96 * 11, Height = 96 * 8.5 };
             //Create first page of document
-            fixedPage.Children.Add((UIElement)testControl);
+            fixedPage.Children.Add((UserControl)testControl);
             ((IAddChild)pageContent).AddChild(fixedPage);
             return pageContent;
         }

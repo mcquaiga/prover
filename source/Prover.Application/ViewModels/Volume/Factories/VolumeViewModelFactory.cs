@@ -72,11 +72,11 @@ namespace Prover.Application.ViewModels.Volume.Factories
             var pulseOutputs = device.ItemGroup<PulseOutputItems>();
 
             uncorModel.PulseOutputTest = new PulseOutputTestViewModel(
-                pulseOutputs.ChannelByUnitType(PulseOutputUnitType.UncVol),
+                pulseOutputs.ChannelByUnitType(PulseOutputType.UncVol),
                 uncorModel);
 
             corModel.PulseOutputTest = new PulseOutputTestViewModel(
-                pulseOutputs.ChannelByUnitType(PulseOutputUnitType.CorVol),
+                pulseOutputs.ChannelByUnitType(PulseOutputType.CorVol),
                 corModel);
         }
 

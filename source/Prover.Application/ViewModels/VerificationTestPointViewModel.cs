@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Devices.Core.Items;
 using DynamicData;
 using Prover.Application.ViewModels.Corrections;
@@ -10,28 +11,27 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class VerificationTestPointViewModel : ViewModelWithIdBase
+    public class VerificationTestPointViewModel : VerificationViewModel
     {
-
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
 
         public IObservable<IChangeSet<ItemValue, int>> Connect() => _items.Connect();
 
-        public VerificationTestPointViewModel()
-        {
-        }
+        public VerificationTestPointViewModel() { }
 
         [Reactive] public int TestNumber { get; set; }
 
-        public ICollection<VerificationViewModel> TestsCollection { get; set; } = new List<VerificationViewModel>();
+        //public extern bool Verified { [ObservableAsProperty] get; }
 
-        public PressureFactorViewModel Pressure => TestsCollection.OfType<PressureFactorViewModel>().FirstOrDefault();
+        public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
-        public TemperatureFactorViewModel Temperature => TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
+        public PressureFactorViewModel Pressure => VerificationTests.OfType<PressureFactorViewModel>().FirstOrDefault();
 
-        public SuperFactorViewModel SuperFactor => TestsCollection.OfType<SuperFactorViewModel>().FirstOrDefault();
+        public TemperatureFactorViewModel Temperature => VerificationTests.OfType<TemperatureFactorViewModel>().FirstOrDefault();
 
-        public VolumeViewModelBase Volume => TestsCollection.OfType<VolumeViewModelBase>().FirstOrDefault();
+        public SuperFactorViewModel SuperFactor => VerificationTests.OfType<SuperFactorViewModel>().FirstOrDefault();
+
+        public VolumeViewModelBase Volume => VerificationTests.OfType<VolumeViewModelBase>().FirstOrDefault();
 
         public void UpdateItemValues(ICollection<ItemValue> itemValues)
         {
@@ -40,13 +40,22 @@ namespace Prover.Application.ViewModels
 
         public void AddTest(VerificationViewModel test)
         {
-            TestsCollection.Add(test);
+            VerificationTests.Add(test);
+        }
+
+        public void Initialize()
+        {
+            VerificationTests.AsObservableChangeSet()
+                .AutoRefresh(model => model.Verified)
+                .ToCollection()            
+                .Select(x => x.All(y => y.Verified))
+                .ToPropertyEx(this, x => x.Verified);
         }
 
         protected override void Disposing()
         {
-            TestsCollection.ForEach(t => t.DisposeWith(Cleanup));
-            TestsCollection.Clear();
+            VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
+            VerificationTests.Clear();
         }
     }
 }

@@ -34,10 +34,22 @@
                 TargetType="{x:Type TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
-            <!--
-             <Setter Property="FontSize" Value="16" />
-                <Setter Property="Opacity" Value=".80" />
-                <Setter Property="Foreground" Value="Black" />-->
+            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
+            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+            <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Verified}" Value="True">
+                        <Setter Property="Kind" Value="Check" />
+                        <Setter Property="Foreground" Value="{StaticResource PassColour}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Verified}" Value="False">
+                        <Setter Property="Kind" Value="AlertCircleOutline" />
+                        <Setter Property="Foreground" Value="{StaticResource FailColour}" />
+                    </DataTrigger>
+                </Style.Triggers>
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
 
             <Style BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}" TargetType="{x:Type TextBlock}" />
         </ResourceDictionary>
@@ -47,12 +59,20 @@
             <StackPanel Margin="0,6">
 
                 <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <materialDesign:PackIcon
+                        x:Name="VerifiedStatusIcon"
+                        Width="36"
+                        Height="36"
+                        Margin="10"
+                        Style="{StaticResource PassFailIcon}" />
+                    <TextBlock
+                        x:Name="DeviceNameTextBlock"
+                        Margin="0,10,0,5"
+                        HorizontalAlignment="Center"
+                        FontSize="28" />
+                </StackPanel>
 
-                <TextBlock
-                    x:Name="DeviceNameTextBlock"
-                    Margin="0,10,0,5"
-                    HorizontalAlignment="Center"
-                    FontSize="28" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock x:Name="CompositionTypeTextBlock" FontWeight="Light" />

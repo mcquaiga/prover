@@ -16,6 +16,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
@@ -80,86 +81,147 @@
                 <Setter Property="Height" Value="36" />
                 <Setter Property="Width" Value="36" />
             </Style>
+
+            <ControlTemplate x:Key="ValueLabelTemplate" TargetType="ContentControl">
+                <StackPanel Margin="4" Orientation="Vertical">
+                    <TextBlock Style="{DynamicResource LabelStyle}" Text="{TemplateBinding Content}" />
+                    <TextBlock
+                        x:Name="SiteNumber1TextBlock"
+                        Style="{DynamicResource ValueStyle}"
+                        Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                </StackPanel>
+
+            </ControlTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
-                <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="7*" />
-                <ColumnDefinition Width="300" />
-            </Grid.ColumnDefinitions>
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-            <materialDesign:PackIcon
-                x:Name="VerifiedStatusIcon"
-                Grid.Column="0"
-                Width="36"
-                Height="36"
-                Margin="15"
-                Style="{StaticResource PassFailIcon}" />
+        <materialDesign:PackIcon
+            x:Name="VerifiedStatusIcon"
+            Grid.Column="0"
+            Width="36"
+            Height="36"
+            Margin="15"
+            Style="{StaticResource PassFailIcon}" />
 
-            <StackPanel
-                Grid.Column="1"
-                Margin="16,6"
+        <StackPanel
+            Grid.Column="1"
+            Margin="16,6"
+            HorizontalAlignment="Left"
+            Orientation="Vertical">
+
+            <TextBlock x:Name="TestDateTimeTextBlock" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+
+            <TextBlock
+                x:Name="DeviceTypeTextBlock"
                 HorizontalAlignment="Left"
-                Orientation="Vertical">
+                FontSize="24"
+                Text="{Binding Test.Device.DeviceType.Name, FallbackValue='Mini-Max'}" />
 
-                <TextBlock
-                    x:Name="DeviceTypeTextBlock"
-                    HorizontalAlignment="Left"
-                    FontSize="24"
-                    Text="{Binding Test.Device.DeviceType.Name, FallbackValue='Mini-Max'}" />
-
-                <TextBlock
-                    x:Name="CompositionTypeTextBlock"
-                    HorizontalAlignment="Left"
-                    Text="{Binding CompositionType, FallbackValue='PTZ'}" />
-
-                <TextBlock
-                    x:Name="DriveTypeTextBlock"
-                    HorizontalAlignment="Left"
-                    Text="{Binding Test.DriveType.InputType, FallbackValue='Rotary'}" />
-
-
-                <!--<TextBlock
-                    HorizontalAlignment="Center"
-                    Style="{DynamicResource LabelStyle}"
-                    Text="{Binding DriveDescription}" />-->
-            </StackPanel>
-            <UniformGrid
-                Grid.Column="2"
-                Margin="5,2"
+            <TextBlock
+                x:Name="CompositionTypeTextBlock"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Columns="2">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{DynamicResource LabelStyle}" Text="Inventory #" />
-                    <TextBlock
-                        x:Name="SiteNumber2TextBlock"
-                        Style="{DynamicResource ValueStyle}"
-                        Text="{Binding DeviceInfo.CompanyNumber}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{DynamicResource LabelStyle}" Text="Serial #" />
-                    <TextBlock
-                        x:Name="SerialNumberTextBlock"
-                        Style="{DynamicResource ValueStyle}"
-                        Text="{Binding DeviceInfo.SiteInfo.SerialNumber}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{DynamicResource LabelStyle}" Text="Job #" />
-                    <TextBlock
-                        x:Name="JobIdTextBlock"
-                        Style="{DynamicResource ValueStyle}"
-                        Text="{Binding Test.JobId, FallbackValue=9999999}" />
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{DynamicResource LabelStyle}" Text="Date/Time" />
-                    <TextBlock x:Name="TestDateTimeTextBlock" Style="{DynamicResource ValueStyle}" />
-                </StackPanel>
-            </UniformGrid>
+                Text="{Binding CompositionType, FallbackValue='PTZ'}" />
 
-        </Grid>
-    </DockPanel>
+            <TextBlock
+                x:Name="DriveTypeTextBlock"
+                HorizontalAlignment="Left"
+                Text="{Binding Test.DriveType.InputType, FallbackValue='Rotary'}" />
+
+        </StackPanel>
+        <UniformGrid
+            Grid.Column="2"
+            Margin="5,2"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Rows="2">
+            <ContentControl
+                x:Name="Site1NumberControl"
+                Content="Site 1 #"
+                Tag="{Binding DeviceInfo.SiteInfo.SiteId1}"
+                Template="{StaticResource ValueLabelTemplate}" />
+            <ContentControl
+                x:Name="Site2NumberControl"
+                Content="Site 2 #"
+                Tag="{Binding DeviceInfo.SiteInfo.SiteId2}"
+                Template="{StaticResource ValueLabelTemplate}" />
+
+            <ContentControl
+                x:Name="SerialNumberControl"
+                Content="Serial #"
+                Tag="{Binding DeviceInfo.SiteInfo.SerialNumber}"
+                Template="{StaticResource ValueLabelTemplate}" />
+
+            <ContentControl
+                x:Name="EmployeeIdControl"
+                Content="Employee #"
+                Tag="{Binding EmployeeId}"
+                Template="{StaticResource ValueLabelTemplate}" />
+
+            <ContentControl
+                x:Name="JobIdControl"
+                Content="Job #"
+                Tag="{Binding JobId}"
+                Template="{StaticResource ValueLabelTemplate}" />
+
+        </UniformGrid>
+        <StackPanel
+            Grid.Column="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock x:Name="IsArchivedTextBlock" />
+            <TextBlock x:Name="IsExportedTextBlock" />
+        </StackPanel>
+        <StackPanel
+            x:Name="ActionButtonsSection"
+            Grid.Column="4"
+            Margin="5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+
+            <Button
+                x:Name="EditJobIdButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Edit Job #">
+                <materialDesign:PackIcon Kind="PencilAdd" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
+
+            <Button
+                x:Name="AddUserToTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Add currently logged in user">
+                <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
+
+            <Button
+                x:Name="ExportTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Export">
+                <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
+            <Button
+                x:Name="PrintTestReportButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="View QA Test Report">
+                <materialDesign:PackIcon Kind="Printer" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
+            <Button
+                x:Name="ArchiveTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Archive Test">
+                <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
+
+        </StackPanel>
+    </Grid>
+
 </reactiveUi:ReactiveUserControl>

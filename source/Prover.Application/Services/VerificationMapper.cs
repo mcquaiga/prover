@@ -29,7 +29,7 @@ namespace Prover.Application.Services
 
         public static EvcVerificationTest MapViewModelToModel(EvcVerificationViewModel viewModel)
         {
-            var testPoints = viewModel.Tests.ToList().Select(vm =>
+            var testPoints = viewModel.VerificationTests.OfType<VerificationTestPointViewModel>().ToList().Select(vm =>
             {
                 var tp = _mapper.Map<VerificationTestPointViewModel, VerificationTestPoint>(vm);
 
@@ -84,11 +84,11 @@ namespace Prover.Application.Services
                     var pressure = _mapper.Map<PressureFactorViewModel>(point.GetTest<PressureCorrectionTest>());
                     
                     if (pressure != null)
-                        pointViewModel.TestsCollection.Add(pressure);
+                        pointViewModel.VerificationTests.Add(pressure);
 
                     var temp = _mapper.Map<TemperatureFactorViewModel>(point.GetTest<TemperatureCorrectionTest>());
                     if (temp != null)
-                        pointViewModel.TestsCollection.Add(temp);
+                        pointViewModel.VerificationTests.Add(temp);
 
                     var superModel = point.GetTest<SuperCorrectionTest>();
                     if (superModel != null)
@@ -96,7 +96,7 @@ namespace Prover.Application.Services
                         var super = _mapper.Map<SuperFactorViewModel>(superModel);
                         super.Setup(temp, pressure);
 
-                        pointViewModel.TestsCollection.Add(super);
+                        pointViewModel.VerificationTests.Add(super);
                     }
 
                     if (point.HasVolume())
@@ -114,12 +114,14 @@ namespace Prover.Application.Services
                             return result;
                         }).ToList();
                     }
+                    pointViewModel.Initialize();
 
                     return pointViewModel;
                 }).ToList();
 
-            evcViewModel.Tests.Clear();
-            testPoints.ForEach(evcViewModel.Tests.Add);
+            evcViewModel.VerificationTests.Clear();
+            testPoints.ForEach(evcViewModel.VerificationTests.Add);
+            evcViewModel.SetupVerifiedObserver();
             return evcViewModel;
         }
     }

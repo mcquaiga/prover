@@ -8,17 +8,17 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
 
 namespace Prover.Application.Validation
 {
-    public class DeviceItemValidation : IDeviceValidation
-    {
-        public Task<bool> Validate(IDeviceSessionManager deviceManager, DeviceInstance device) => throw new NotImplementedException();
-    }
 
-    public abstract class ItemValueValidation<TValue> : IDeviceValidation
+    public abstract class ItemValueValidation<TValue> : IVerificationCustomActions
     {
-        public async Task<bool> Validate(IDeviceSessionManager deviceManager, DeviceInstance device)
+        public abstract VerificationTestStep RunOnStep { get; }
+
+        public async Task<bool> Run(IDeviceSessionManager deviceManager, DeviceInstance device,
+            EvcVerificationViewModel verification)
         {
             var itemValue = GetDeviceValue(device);
 

@@ -37,7 +37,7 @@ namespace Client.Desktop.Wpf.Startup
                     c.GetService<IDeviceSessionManager>(),
                     test,
                     volumeManager,
-                    c.GetService<IDeviceVerificationValidator>()));
+                    c.GetService<IVerificationActionsExecutioner>()));
 
             //services.AddSingleton<Func<DeviceType, ITestManager>>(c => (deviceType) =>
             //{
@@ -66,7 +66,8 @@ namespace Client.Desktop.Wpf.Startup
             services.AddPulseOutputListeners();
             services.AddTachometer();
 
-            services.AddSingleton<IDeviceVerificationValidator, DeviceVerificationValidator>();
+            services.AddSingleton<IDeviceRepository, DeviceRepository>();
+            services.AddSingleton<IVerificationActionsExecutioner, VerificationCustomActionsExecutioner>();
             services.AddSingleton<DeviceSessionDialogManager>();
 
             services.AddStartTask<DeviceServices>();
@@ -78,9 +79,6 @@ namespace Client.Desktop.Wpf.Startup
             //_provider.GetService<DaqBoardChannelFactory>();
 
             _provider.GetService<DeviceSessionDialogManager>();
-
-            var repo = _provider.GetService<DeviceRepository>();
-            await repo.Load(new[] { MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance });
         }
 
         private readonly IServiceProvider _provider;

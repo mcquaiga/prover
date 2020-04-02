@@ -2,8 +2,6 @@ using Prover.Shared;
 
 namespace Devices.Core.Items.ItemGroups
 {
-
-
     public class VolumeItems : ItemGroup
     {
         public virtual decimal CorrectedMultiplier { get; set; }

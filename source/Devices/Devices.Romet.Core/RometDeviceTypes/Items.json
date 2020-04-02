@@ -221,77 +221,52 @@
       {
         "id": "0",
         "description": "CF1",
-        "numericvalue": "1"
+        "numericValue": "1"
       },
       {
         "id": "1",
         "description": "CF5",
-        "numericvalue": "5"
+        "numericValue": "5"
       },
       {
         "id": "2",
         "description": "CF10",
-        "numericvalue": "10"
+        "numericValue": "10"
       },
       {
         "id": "3",
         "description": "CF100",
-        "numericvalue": "100"
+        "numericValue": "100"
       },
       {
         "id": "4",
         "description": "CF1000",
-        "numericvalue": "1000"
+        "numericValue": "1000"
       },
       {
         "id": "5",
         "description": "m3x.1",
-        "numericvalue": "0.1"
+        "numericValue": "0.1"
       },
       {
         "id": "6",
         "description": "m3x1",
-        "numericvalue": "1"
+        "numericValue": "1"
       },
       {
         "id": "7",
         "description": "m3x10",
-        "numericvalue": "10"
+        "numericValue": "10"
       },
       {
         "id": "8",
         "description": "m3x100",
-        "numericvalue": "100"
+        "numericValue": "100"
       },
       {
         "id": "9",
-        "description": "m3x1000",
-        "numericvalue": "1000"
-      },
-      {
-        "id": "10",
-        "description": "CF10000",
-        "numericvalue": "10000"
-      },
-      {
-        "id": "11",
-        "description": "CF0",
-        "numericvalue": "0"
-      },
-      {
-        "id": "12",
-        "description": "CF50",
-        "numericvalue": "50"
-      },
-      {
-        "id": "13",
-        "description": "CF500",
-        "numericvalue": "500"
-      },
-      {
-        "id": "14",
-        "description": "Rotary",
-        "numericvalue": "14"
+        "description": "m3x0.01",
+        "numericValue": "0.01"
       }
     ]
   },
@@ -325,7 +300,7 @@
   {
     "number": "115",
     "code": "PULSER_SCALING",
-    "shortDescription": "Pulse Scaling",
+    "shortDescription": "Pulse Spacing",
     "description": "Output Pulse Spacing"
   },
   {
@@ -408,14 +383,24 @@
   },
   {
     "number": "816",
-    "code": "PULSER_A",
-    "shortDescription": "Pulser A #",
-    "description": "Pulser A # o"
+    "code": "UNC_PULSE_VOL_UNITS",
+    "shortDescription": "Unc. Pulse Volume",
+    "description": "Uncorrected Pulse Volume Units",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
   },
   {
     "number": "817",
-    "code": "PULSER_B",
-    "shortDescription": "Pulser B #",
-    "description": "Pulser B # o"
+    "code": "COR_PULSE_VOL_UNITS",
+    "shortDescription": "Cor. Pulse Volume",
+    "description": "Corrected Pulse Volume Units",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
   }
 ]

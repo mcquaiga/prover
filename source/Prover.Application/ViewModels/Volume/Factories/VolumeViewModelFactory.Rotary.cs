@@ -20,7 +20,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
 
             var rotary = new RotaryMeterTestViewModel(device.ItemGroup<RotaryMeterItems>());
             vm.RotaryMeterTest = rotary;
-            testPoint.TestsCollection.Add(vm);
+            testPoint.VerificationTests.Add(vm);
         }
     }
 }

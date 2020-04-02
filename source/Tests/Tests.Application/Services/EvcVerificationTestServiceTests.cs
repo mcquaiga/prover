@@ -31,7 +31,7 @@ namespace Tests.Application.Services
         private IDeviceRepository _repo;
 
         private IAsyncRepository<EvcVerificationTest> _testRepo;
-        private VerificationTestService _viewModelService;
+        private IVerificationTestService _viewModelService;
         private EvcVerificationTestService _modelService;
 
         [TestMethod]

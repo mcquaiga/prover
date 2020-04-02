@@ -10,20 +10,20 @@ namespace Prover.Application.Extensions
     {
         public static PressureFactorViewModel GetPressureTest(this VerificationTestPointViewModel testPoint)
         {
-            return testPoint.TestsCollection.OfType<PressureFactorViewModel>().FirstOrDefault();
+            return testPoint.VerificationTests.OfType<PressureFactorViewModel>().FirstOrDefault();
         }
 
-        public static TemperatureFactorViewModel GetTemperatureTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<TemperatureFactorViewModel>().FirstOrDefault();
+        public static TemperatureFactorViewModel GetTemperatureTest(this VerificationTestPointViewModel testPoint) => testPoint.VerificationTests.OfType<TemperatureFactorViewModel>().FirstOrDefault();
 
-        public static VolumeViewModelBase GetVolumeTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<VolumeViewModelBase>().FirstOrDefault();
+        public static VolumeViewModelBase GetVolumeTest(this VerificationTestPointViewModel testPoint) => testPoint.VerificationTests.OfType<VolumeViewModelBase>().FirstOrDefault();
 
-        public static SuperFactorViewModel GetSuperFactorTest(this VerificationTestPointViewModel testPoint) => testPoint.TestsCollection.OfType<SuperFactorViewModel>().FirstOrDefault();
+        public static SuperFactorViewModel GetSuperFactorTest(this VerificationTestPointViewModel testPoint) => testPoint.VerificationTests.OfType<SuperFactorViewModel>().FirstOrDefault();
 
-        public static VolumeViewModelBase GetVolumeTest(this EvcVerificationViewModel test) => test.Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
+        public static VolumeViewModelBase GetVolumeTest(this EvcVerificationViewModel test) => test.VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
 
         public static ICollection<VerificationViewModel> GetCorrectionTests(this VerificationTestPointViewModel test)
         {
-            return test.TestsCollection.Where(testType =>
+            return test.VerificationTests.Where(testType =>
             {
                 var memberInfo = testType.GetType().BaseType;
                 return memberInfo != null && (memberInfo.IsGenericType &&

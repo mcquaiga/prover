@@ -20,6 +20,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
 
                 this.Bind(ViewModel, vm => vm.IncludeExportedTests, v => v.IncludeExportedCheckBox.IsChecked).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.IncludeArchived, v => v.IncludeArchivedCheckBox.IsChecked).DisposeWith(d);
             });
         }
     }

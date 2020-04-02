@@ -58,7 +58,10 @@
                     Margin="5"
                     HorizontalAlignment="Center" />
                 <StackPanel Margin="5">
-                    <TextBlock x:Name="RotaryMeterTypeText" HorizontalAlignment="Center" />
+                    <TextBlock
+                        x:Name="RotaryMeterTypeText"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
                     <StackPanel Orientation="Horizontal">
                         <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
                         <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />

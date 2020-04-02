@@ -66,7 +66,7 @@ namespace Prover.Application.Services
             if (_inputChannels.Any()) return;
 
             _inputChannels = pulseOutputItems.Channels
-                .Where(p => p.Units == PulseOutputUnitType.CorVol || p.Units == PulseOutputUnitType.UncVol)
+                .Where(p => p.ChannelType == PulseOutputType.CorVol || p.ChannelType == PulseOutputType.UncVol)
                 .Select(pout => new PulseChannelListener(pout, _channelFactoryFunc.Invoke(pout.Name)))
                 .ToList();
 

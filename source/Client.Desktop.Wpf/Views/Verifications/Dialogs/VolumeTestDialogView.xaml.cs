@@ -20,20 +20,20 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
             {
                 UncorrectedTargetValueTextBlock.Text = ViewModel.TargetUncorrectedPulses.ToString();
                 UncorrectedChannelNameTextBlock.Text = ViewModel.PulseListenerService.PulseChannels
-                    .FirstOrDefault(p => p.Items.Units == PulseOutputUnitType.UncVol)?.Channel.ToString();
+                    .FirstOrDefault(p => p.Items.ChannelType == PulseOutputType.UncVol)?.Channel.ToString();
 
                 ViewModel.PulseListenerService.PulseCountUpdates
-                    .Where(p => p.Items.Units == PulseOutputUnitType.UncVol)
+                    .Where(p => p.Items.ChannelType == PulseOutputType.UncVol)
                     .Select(p => p.PulseCount.ToString())
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .BindTo(this, view => view.UncorrectedPulseValueTextBlock.Text)
                     .DisposeWith(d);
 
                 CorrectedChannelNameTextBlock.Text = ViewModel.PulseListenerService.PulseChannels
-                    .FirstOrDefault(p => p.Items.Units == PulseOutputUnitType.CorVol)?.Channel.ToString();
+                    .FirstOrDefault(p => p.Items.ChannelType == PulseOutputType.CorVol)?.Channel.ToString();
 
                 ViewModel.PulseListenerService.PulseCountUpdates
-                    .Where(p => p.Items.Units == PulseOutputUnitType.CorVol)
+                    .Where(p => p.Items.ChannelType == PulseOutputType.CorVol)
                     .Select(p => p.PulseCount.ToString())
                     .ObserveOn(RxApp.MainThreadScheduler)
                     .BindTo(this, view => view.CorrectedPulseValueTextBlock.Text)

@@ -22,11 +22,12 @@ namespace Prover.Application.ViewModels.Corrections
         protected VerificationViewModel()
         {
             _setVerified = ReactiveCommand.Create<bool, bool>(v => v);
-            _setVerified.ToPropertyEx(this, x => x.Verified);
+            _setVerified
+                .LogDebug(x => $"{GetType()} - Verified = {x}")
+                .ToPropertyEx(this, x => x.Verified);
 
             _setVerified.DisposeWith(Cleanup);
         }
-
 
         public extern bool Verified { [ObservableAsProperty] get; }
 
@@ -60,7 +61,7 @@ namespace Prover.Application.ViewModels.Corrections
 
             this.WhenAnyValue(x => x.PercentError)
                 .Select(p => p.IsBetween(PassTolerance))
-                .ToPropertyEx(this, x => x.Verified, deferSubscription: true)
+                .ToPropertyEx(this, x => x.Verified)
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)

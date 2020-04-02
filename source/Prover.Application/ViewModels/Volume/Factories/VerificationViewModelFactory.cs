@@ -39,7 +39,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
             var viewModel = evcTest.ToViewModel();
 
             _testDefinitions.ForEach(td => BuildTestPointViewModel(evcTest.Device, viewModel, td));
-
+            viewModel.SetupVerifiedObserver();
             return viewModel;
         }
 
@@ -52,25 +52,27 @@ namespace Prover.Application.ViewModels.Volume.Factories
                 TestNumber = definition.Level
             };
 
-            viewModel.Tests.Add(tpViewModel);
+            viewModel.VerificationTests.Add(tpViewModel);
 
             if (device.HasLivePressure())
-                tpViewModel.TestsCollection.Add(
+                tpViewModel.VerificationTests.Add(
                     MakePressureVieWModel(device.CreateItemGroup<PressureItems>(), definition.PressureGaugePercent,
                         -100));
 
             if (device.HasLiveTemperature())
-                tpViewModel.TestsCollection.Add(
+                tpViewModel.VerificationTests.Add(
                     MakeTemperatureViewModel(device.CreateItemGroup<TemperatureItems>(), definition.TemperatureGauge));
 
             if (device.HasLiveSuper())
-                tpViewModel.TestsCollection.Add(
+                tpViewModel.VerificationTests.Add(
                     MakeSuperFactorViewModel(device.CreateItemGroup<SuperFactorItems>(),
                         tpViewModel.GetTemperatureTest(),
                         tpViewModel.GetPressureTest()));
 
             if (definition.IsVolumeTest)
                 VolumeViewModelFactory.Create(device, viewModel, tpViewModel);
+
+            tpViewModel.Initialize();
         }
 
         private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge, decimal atmPressure)

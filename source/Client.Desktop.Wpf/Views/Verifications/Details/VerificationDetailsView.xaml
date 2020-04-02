@@ -31,7 +31,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
+        <StackPanel Orientation="Vertical">
+            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
+        </StackPanel>
+
 
         <Viewbox Grid.Column="1" Stretch="Uniform">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

@@ -20,14 +20,14 @@ namespace Prover.Application.VerificationManager
         private readonly ILogger<VerificationTestManagerFactory> _logger;
         private readonly IDeviceSessionManager _deviceSessionManager;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager> _volumeTestManagerFactory;
-        private readonly IDeviceVerificationValidator _deviceValidator;
+        private readonly IVerificationActionsExecutioner _deviceValidator;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> _testManagerFactory;
 
         public VerificationTestManagerFactory(ILogger<VerificationTestManagerFactory> logger,
             IDeviceSessionManager deviceSessionManager,
             Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> testManagerFactory,
             Func<EvcVerificationViewModel, IVolumeTestManager> volumeTestManagerFactory,
-            IDeviceVerificationValidator deviceValidator)
+            IVerificationActionsExecutioner deviceValidator)
         {
             _logger = logger;
             _deviceSessionManager = deviceSessionManager;
@@ -39,10 +39,11 @@ namespace Prover.Application.VerificationManager
         public async Task<ITestManager> StartNew(VerificationTestService verificationService, DeviceType deviceType)
         {
             var device = await _deviceSessionManager.StartSession(deviceType);
-            await _deviceValidator.RunValidations(device);
-
             var testViewModel = verificationService.NewTest(_deviceSessionManager.Device);
             var volumeManager = _volumeTestManagerFactory.Invoke(testViewModel);
+
+            await _deviceValidator.RunCustomActions(VerificationTestStep.OnInitialize, testViewModel, device);
+
             return _testManagerFactory.Invoke(testViewModel, volumeManager);
         }
     }
@@ -51,7 +52,7 @@ namespace Prover.Application.VerificationManager
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
-        private readonly IDeviceVerificationValidator _deviceValidator;
+        private readonly IVerificationActionsExecutioner _deviceValidator;
         private readonly ILogger _logger;
 
         public TestManager(
@@ -59,7 +60,7 @@ namespace Prover.Application.VerificationManager
             IDeviceSessionManager deviceSessionManager,
             EvcVerificationViewModel verificationViewModel,
             IVolumeTestManager volumeTestManager,
-            IDeviceVerificationValidator deviceValidator)
+            IVerificationActionsExecutioner deviceValidator)
         {
             TestViewModel = verificationViewModel;
             _deviceManager = deviceSessionManager;

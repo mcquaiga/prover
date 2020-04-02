@@ -14,7 +14,7 @@ namespace Prover.Application.Services
 
         public bool IsTestComplete(ICollection<PulseChannel> pulseChannels)
         {
-            var uncChannel = pulseChannels.FirstOrDefault(p => p.Items.Units == PulseOutputUnitType.UncVol);
+            var uncChannel = pulseChannels.FirstOrDefault(p => p.Items.ChannelType == PulseOutputType.UncVol);
 
             if (MaxUncorrectedPulses() == uncChannel?.PulseCount) return true;
 

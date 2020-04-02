@@ -12,7 +12,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
 {
     public static class DcrWebServiceEx
     {
-        public static async Task<MeterDTO> FindMeterByCompanyNumber(this DCRWebServiceSoap webService,
+        public static async Task<MeterDTO> FindMeterByInventoryNumber(this DCRWebServiceSoap webService,
             string companyNumber, ILogger logger = null)
         {
             logger ??= NullLogger.Instance;

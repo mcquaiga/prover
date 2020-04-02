@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Devices.Core.Interfaces;
+using DynamicData;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
@@ -12,7 +14,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
-    public class EvcVerificationViewModel : ViewModelWithIdBase, IDisposable
+    public class EvcVerificationViewModel : VerificationViewModel
     {
         [Reactive] public DeviceInstance Device { get; set; }
 
@@ -30,26 +32,34 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public string EmployeeId { get; set; }
 
-        public ICollection<VerificationTestPointViewModel> Tests { get; set; } =
-            new List<VerificationTestPointViewModel>();
 
-        [Reactive]
-        public ICollection<VerificationViewModel> OtherTests { get; set; } = new List<VerificationViewModel>();
+        public ICollection<VerificationViewModel> VerificationTests { get; set; } =
+            new List<VerificationViewModel>();
 
         public SiteInformationViewModel DeviceInfo { get; set; }
 
-        public VolumeViewModelBase VolumeTest => Tests.FirstOrDefault(t => t.Volume != null)?.Volume;
+        public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
         
         public void Initialize()
         {
             DeviceInfo = new SiteInformationViewModel(Device, this);
         }
 
+        public void SetupVerifiedObserver()
+        {
+            VerificationTests.AsObservableChangeSet()
+                .AutoRefresh(model => model.Verified) 
+                .ToCollection()                    
+                .Select(x => x.All(y => y.Verified))
+                //.Subscribe(v => Verified = v);
+                .ToPropertyEx(this, x => x.Verified);
+        }
+
         protected override void Disposing()
         {
-            Tests.ForEach(t => t.DisposeWith(Cleanup));
-            OtherTests.ForEach(t => t.DisposeWith(Cleanup));
-            Tests.Clear();
+            VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
+            //VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
+            VerificationTests.Clear();
         }
 
         //public string UrlPathSegment { get; } = "EvcVerificationTest";

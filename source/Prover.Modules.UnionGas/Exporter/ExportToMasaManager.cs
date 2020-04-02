@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -14,46 +13,38 @@ using Prover.Shared.Interfaces;
 namespace Prover.Modules.UnionGas.Exporter
 {
     /// <summary>
-    /// Defines the <see cref="ExportToMasaManager" />
+    ///     Defines the <see cref="ExportToMasaManager" />
     /// </summary>
     public class ExportToMasaManager : IExportVerificationTest
     {
-        #region Fields
-
         /// <summary>
-        /// Defines the Log
+        ///     Defines the Log
         /// </summary>
         private static readonly ILogger Log;
 
         /// <summary>
-        /// Defines the _dcrWebService
+        ///     Defines the _dcrWebService
         /// </summary>
         private readonly DCRWebServiceSoap _dcrWebService;
 
         /// <summary>
-        /// Defines the _loginService
+        ///     Defines the _loginService
         /// </summary>
         private readonly ILoginService<EmployeeDTO> _loginService;
 
         /// <summary>
-        /// Defines the _testRunService
+        ///     Defines the _testRunService
         /// </summary>
         private readonly EvcVerificationTestService _testRunService;
 
-        #endregion
-
-        #region Constructors
-
-        public ExportToMasaManager(EvcVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService, DCRWebServiceSoap dcrWebService)
+        public ExportToMasaManager(EvcVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
+            DCRWebServiceSoap dcrWebService)
         {
             _testRunService = testRunService;
             _dcrWebService = dcrWebService;
             _loginService = loginService;
         }
 
-        #endregion
-
-        #region Methods
         public async Task<bool> Export(IEnumerable<EvcVerificationTest> testsForExport)
         {
             var forExport = testsForExport as EvcVerificationTest[] ?? testsForExport.ToArray();
@@ -74,24 +65,21 @@ namespace Prover.Modules.UnionGas.Exporter
             return true;
         }
 
-        public Task<bool> Export(EvcVerificationTest instrumentForExport)
+        public Task<bool> Export(EvcVerificationTest verificationTest)
         {
-            var instrumentList = new List<EvcVerificationTest> { instrumentForExport };
+            var instrumentList = new List<EvcVerificationTest> {verificationTest};
             return Export(instrumentList);
         }
 
         public async Task<bool> ExportFailedTest(string companyNumber)
         {
-            var meterDto = await _dcrWebService.FindMeterByCompanyNumber(companyNumber, Log);
+            var meterDto = await _dcrWebService.FindMeterByInventoryNumber(companyNumber, Log);
 
             if (meterDto == null)
                 throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
             var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.Id);
-            return await _dcrWebService.SendQaTestResults(new[] { failedTest });
+            return await _dcrWebService.SendQaTestResults(new[] {failedTest});
         }
-        #endregion
-
-
     }
 }
