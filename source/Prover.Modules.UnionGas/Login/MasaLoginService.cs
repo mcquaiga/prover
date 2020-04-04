@@ -2,7 +2,9 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
@@ -17,7 +19,7 @@ namespace Prover.Modules.UnionGas.Login
     /// <summary>
     ///     Defines the <see cref="MasaLoginService" />
     /// </summary>
-    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IDisposable
+    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IHostedService, IDisposable
     {
         /// <summary>
         ///     Defines the _log
@@ -29,15 +31,18 @@ namespace Prover.Modules.UnionGas.Login
         /// </summary>
         private readonly IUserService<EmployeeDTO> _webService;
 
+        private readonly IHostApplicationLifetime _applicationLifetime;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MasaLoginService" /> class.
         /// </summary>
         /// <param name="log"></param>
         /// <param name="employeeService"></param>
-        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService)
+        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService, IHostApplicationLifetime applicationLifetime)
         {
             _log = log ?? NullLogger<MasaLoginService>.Instance;
             _webService = employeeService;
+            _applicationLifetime = applicationLifetime;
         }
 
         public override async Task<string> GetLoginDetails()
@@ -55,5 +60,21 @@ namespace Prover.Modules.UnionGas.Login
         }
 
         protected override string UserId => User?.Id;
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
+            //_applicationLifetime.ApplicationStarted.Register(async () =>
+            //{
+            //    var username = await GetLoginDetails();
+
+            //    await Login(username);
+            //});
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
+        }
     }
 }

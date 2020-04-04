@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -10,22 +11,13 @@ using Client.Desktop.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Extensions
 {
     public static class ServiceExtensions
     {
-
-        public static void AddDialogViews(this IServiceCollection services)
-        {
-            //foreach (var ti in GetAssembly.DefinedTypes.Where(t => t.Name.Contains("Dialog"))
-            //    .Where(ti =>
-            //        ti.BaseType?.IsGenericType == true &&
-            //        ti.BaseType?.GetGenericTypeDefinition() == typeof(ReactiveDialog<>).GetGenericTypeDefinition() &&
-            //        !ti.IsAbstract))
-            //    services.TryAddTransient(ti, ti);
-        }
 
         public static void AddMainMenuItems(this IServiceCollection services)
         {
@@ -58,8 +50,6 @@ namespace Client.Desktop.Wpf.Extensions
             AddViews();
             AddViewModels();
 
-            //AddReactiveObjects(services, assembly);
-
             void AddViews()
             {
                 // for each type that implements IViewFor
@@ -89,16 +79,40 @@ namespace Client.Desktop.Wpf.Extensions
 
             void AddViewModels()
             {
-                foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+                //foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
                     //var a = Assembly.Load(ass);
-                foreach (var ti in ass.DefinedTypes
-                    .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
-                    if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
+                    foreach (var ti in assembly.DefinedTypes.Where(ti => ti.ImplementedInterfaces.Contains(typeof(IRoutableViewModel)) && !ti.IsAbstract))
                     {
-                        services.TryAddTransient(ti, ti);
-                        services.TryAddTransient(typeof(IRoutableViewModel), ti);
+                        if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
+                        {
+                            services.TryAddTransient(ti, ti);
+                            services.TryAddTransient(typeof(IRoutableViewModel), ti);
+                        }
                     }
+
+                //    foreach (var ti in assembly.DefinedTypes.Where(ti =>
+                //        (ti.IsSubclassOf(typeof(ReactiveObject)) || ti.IsSubclassOf(typeof(ViewModelBase))) && !ti.IsAbstract))
+                //    {
+                //        if (!ti.ImplementedInterfaces.Contains(typeof(IScreen)))
+                //        {
+                //            services.TryAddTransient(ti, ti);
+                //            services.TryAddTransient(typeof(ReactiveObject), ti);
+                //        }
+                //}
+                       
             }
+        }
+
+     
+
+        public static void AddAllTypes<T>(this IServiceCollection services, Assembly[] assemblies = null,
+            ServiceLifetime lifetime = ServiceLifetime.Transient)
+        {
+            assemblies ??= new[] {Assembly.GetCallingAssembly()};
+
+            var typesFromAssemblies = assemblies.SelectMany(a => a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(T))));
+            foreach (var type in typesFromAssemblies)
+                services.Add(new ServiceDescriptor(typeof(T), type, lifetime));
         }
 
         public static void ConfigureModules(this HostBuilderContext builder, IServiceCollection services)

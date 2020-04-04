@@ -1,11 +1,17 @@
 ﻿using System.Reactive;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.Interactions
 {
     public static class MessageInteractions
     {
+
+        public static Interaction<IDialogViewModel, Unit> ShowDialog { get; } 
+            = new Interaction<IDialogViewModel, Unit>();
+
         public static Interaction<string, Unit> ShowMessage { get; } = new Interaction<string, Unit>();
+
         public static Interaction<string, Unit> ShowError { get; } = new Interaction<string, Unit>();
 
         public static Interaction<string, bool> ShowYesNo { get; } = new Interaction<string, bool>();

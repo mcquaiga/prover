@@ -12,12 +12,12 @@ using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -28,50 +28,75 @@ namespace Prover.Modules.UnionGas.Exporter.Views
     {
         private readonly IExportVerificationTest _exporter;
 
-        public ExporterViewModel(IScreenManager screenManager, 
+        public ExporterViewModel(IScreenManager screenManager,
             EvcVerificationTestService service,
-            IVerificationTestService verificationTestService, 
+            IVerificationTestService verificationTestService,
             IDeviceRepository deviceRepository,
             VerificationTestReportGenerator reportService,
             IExportVerificationTest exporter,
             ILoginService<EmployeeDTO> loginService,
-            Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel> verificationViewModelFactory)
+            Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel> verificationViewModelFactory,
+            TestsByJobNumberViewModel testsByJobNumberViewModel)
         {
             _exporter = exporter;
             ScreenManager = screenManager;
+            TestsByJobNumberViewModel = testsByJobNumberViewModel;
             HostScreen = screenManager;
 
             DeviceTypes = deviceRepository.GetAll().OrderBy(d => d.Name).ToList();
-            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" }).ToList();
+            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType {Id = Guid.Empty, Name = "All"}).ToList();
 
-            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter);
-
-            var includeExportedFilter = this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
-            var includeArchivedFilter = this.WhenAnyValue(x => x.IncludeArchived).Select(BuildIncludeArchivedFilter);
-
-            //var sorter = FilterByTypeCommand.Merge(includeExportedFilter).Merge(includeArchivedFilter)
-            //    .Select(_ => SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime));
-
-            PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async (test) =>
+            PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
             {
                 var viewModel = await verificationTestService.GetVerificationTest(test);
                 var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
                 reportViewModel.ContentViewModel = viewModel;
             }).DisposeWith(Cleanup);
 
-            service.FetchTests().Connect()
+            FilterByTypeCommand =
+                ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter);
+
+            var includeExportedFilter =
+                this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
+            
+            var includeArchivedFilter = 
+                this.WhenAnyValue(x => x.IncludeArchived).Select(BuildIncludeArchivedFilter);
+
+            var reSorter = FilterByTypeCommand.Merge(includeExportedFilter).Merge(includeArchivedFilter)
+                .Select(_ => Unit.Default);
+            var sortExpression = SortExpressionComparer<VerificationGridViewModel>
+                    .Ascending(t => !string.IsNullOrEmpty(t.JobId) ? t.JobId : "ZZZZZZZ")
+                    .ThenByAscending(t => t.Test.TestDateTime);
+
+            var filteredTests = service.FetchTests().Connect()
                 .Filter(FilterByTypeCommand)
                 .Filter(includeExportedFilter)
-                .Filter(includeArchivedFilter)
-                .Sort(SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime), resetThreshold: 0)
-                .ObserveOn(RxApp.MainThreadScheduler)
+                .Filter(includeArchivedFilter);
+            
+            filteredTests
                 .Transform(x => verificationViewModelFactory.Invoke(x, this))
-                .Bind(out var allNotExported)
+                .Sort(sortExpression, reSorter)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out var visibleTests)
                 .DisposeMany()
                 .Subscribe()
                 .DisposeWith(Cleanup);
-            VisibleTests = allNotExported;
+            
+            VisibleTests = visibleTests;
+
+            filteredTests
+                .Filter(x => !string.IsNullOrEmpty(x.JobId))
+                //.DistinctValues(x => !string.IsNullOrEmpty(x.JobId) ? x.JobId : "")
+                .DistinctValues(x => x.JobId)
+                .Bind(out var jobIds)
+                .Subscribe()
+                .DisposeWith(Cleanup);
+            
+            JobIdsList = jobIds;
         }
+
+        public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
+
         public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, string> AddSignedOnUser { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, DateTime?> ArchiveVerification { get; protected set; }
@@ -87,17 +112,19 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public ICollection<DeviceType> DeviceTypes { get; } = new List<DeviceType>();
 
         public IScreenManager ScreenManager { get; }
+        public TestsByJobNumberViewModel TestsByJobNumberViewModel { get; }
         public string UrlPathSegment => "/Exporter";
         public IScreen HostScreen { get; }
 
         private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType) => t =>
             t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
 
+        private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include) =>
+            test => include || test.ArchivedDateTime == null;
+
         private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include) =>
             test => include || test.ExportedDateTime == null;
 
-        private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include) =>
-            test => include || test.ArchivedDateTime == null;
         #region Nested type: AllDeviceType
 
         private class AllDeviceType : DeviceType

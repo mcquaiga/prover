@@ -121,6 +121,7 @@ namespace Prover.Application.Services
 
                 HasInitialized = true;
             });
+            await Task.CompletedTask;
         }
 
         /// <summary>

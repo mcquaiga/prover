@@ -10,7 +10,6 @@
     xmlns:verifications="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
     d:DesignHeight="400"
     d:DesignWidth="800"
-    md:DialogServiceViews.IsRegistered="True"
     x:TypeArguments="verifications:QaTestRunViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>

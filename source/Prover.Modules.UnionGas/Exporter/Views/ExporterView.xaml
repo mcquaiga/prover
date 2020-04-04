@@ -23,7 +23,7 @@
 
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="212">
+                <DockPanel MinWidth="300" VerticalAlignment="Stretch">
                     <ToggleButton
                         Margin="8"
                         HorizontalAlignment="Right"
@@ -31,30 +31,53 @@
                         IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"
                         Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-                    <Grid>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel
-                            Grid.Row="0"
-                            Margin="5"
-                            Orientation="Vertical">
-                            <TextBlock Text="Export Failed Test" />
-                            <TextBox Width="Auto" Text="{Binding FailedCompanyNumber}" />
+                        <StackPanel Grid.Row="0" Margin="8">
+                            <TextBlock Text="Export Tests by Job #" />
+                            <ComboBox
+                                x:Name="JobIdsComboBox"
+                                Width="Auto"
+                                DisplayMemberPath="."
+                                Style="{StaticResource MaterialDesignComboBox}" />
                             <Button
-                                Command="{Binding ExportFailedTestCommand}"
-                                Content="Export Failed"
+                                x:Name="ExportTestsByJobNumberButton"
+                                Margin="10"
+                                HorizontalAlignment="Right"
+                                CommandParameter="{Binding Path=SelectedItem, ElementName=JobIdsComboBox}"
+                                Content="Export"
                                 Style="{StaticResource MaterialDesignFlatAccentButton}" />
                         </StackPanel>
 
-                        <!--<ContentControl
-                        x:Name="TestsByJobNumber"
-                        Grid.Row="1"
-                        Margin="5"
-                        ="{Binding TestsByJobNumber}" />-->
+                        <StackPanel
+                            Grid.Row="1"
+                            Margin="8"
+                            Orientation="Vertical">
+                            <TextBlock Text="Export Failed Test" />
+                            <TextBox
+                                Width="Auto"
+                                materialDesign:HintAssist.Hint="Enter Inventory #"
+                                Text="{Binding FailedCompanyNumber}" />
+                            <Button
+                                x:Name="ExportFailedTestButton"
+                                Margin="10"
+                                HorizontalAlignment="Right"
+                                Command="{Binding ExportFailedTestCommand}"
+                                Content="Export"
+                                Style="{StaticResource MaterialDesignFlatAccentButton}" />
+                        </StackPanel>
+
+                        <reactiveUi:ViewModelViewHost
+                            x:Name="TestsByJobNumberContentControl"
+                            Grid.Row="2"
+                            Margin="8" />
+
+
                     </Grid>
 
                 </DockPanel>
@@ -127,12 +150,31 @@
 
                             </StackPanel>
                         </StackPanel>
+                        <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <StackPanel>
+                                <CheckBox
+                                    x:Name="IncludeExportedCheckBox"
+                                    Margin="8"
+                                    VerticalAlignment="Center"
+                                    Content="Include Exported"
+                                    FontSize="14"
+                                    Style="{StaticResource MaterialDesignDarkCheckBox}" />
+                                <CheckBox
+                                    x:Name="IncludeArchivedCheckBox"
+                                    Margin="8"
+                                    VerticalAlignment="Center"
+                                    Content="Include Archived"
+                                    FontSize="14"
+                                    Style="{StaticResource MaterialDesignDarkCheckBox}" />
+                            </StackPanel>
+                        </materialDesign:PopupBox>
                         <StackPanel
                             Grid.Column="2"
                             Margin="15,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Orientation="Horizontal">
+
                             <CheckBox
                                 x:Name="IncludeExportedCheckBox"
                                 Margin="8"
@@ -149,6 +191,7 @@
                                 Style="{StaticResource MaterialDesignDarkCheckBox}" />
 
                         </StackPanel>
+
                         <TextBlock
                             x:Name="TestCountTextBlock"
                             Grid.Column="3"
@@ -173,11 +216,19 @@
                     x:Name="VisibleItemsListBox"
                     Grid.Row="1"
                     Margin="5"
-                    HorizontalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+
+                <!--
                     HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch" />
-
-
+                    VerticalContentAlignment="Stretch"
+                -->
 
             </Grid>
 

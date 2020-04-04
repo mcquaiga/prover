@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -9,7 +8,7 @@ using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Shared.Interfaces;
 
-namespace Prover.Modules.UnionGas.MasaWebService
+namespace Prover.Modules.UnionGas.VerificationActions
 {
     internal class MasaVerificationActions : IInitializeAction, ISubmitAction, IDisposable
     {

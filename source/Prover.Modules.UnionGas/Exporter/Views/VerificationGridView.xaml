@@ -83,13 +83,9 @@
             </Style>
 
             <ControlTemplate x:Key="ValueLabelTemplate" TargetType="ContentControl">
-
                 <StackPanel Margin="4" Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelStyle}" Text="{TemplateBinding Content}" />
-                    <TextBlock
-                        x:Name="SiteNumber1TextBlock"
-                        Style="{StaticResource ValueStyle}"
-                        Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                    <TextBlock Style="{StaticResource ValueStyle}" Text="{TemplateBinding Content}" />
                 </StackPanel>
 
             </ControlTemplate>
@@ -117,26 +113,21 @@
             Grid.Column="1"
             Margin="16,6"
             HorizontalAlignment="Left"
-            Orientation="Vertical">
+            Orientation="Horizontal">
+            <StackPanel
+                Margin="16,6"
+                HorizontalAlignment="Left"
+                Orientation="Vertical">
+                <TextBlock
+                    x:Name="DeviceTypeTextBlock"
+                    HorizontalAlignment="Left"
+                    FontSize="24" />
 
+                <TextBlock x:Name="CompositionTypeTextBlock" HorizontalAlignment="Left" />
+
+                <TextBlock x:Name="DriveTypeTextBlock" HorizontalAlignment="Left" />
+            </StackPanel>
             <TextBlock x:Name="TestDateTimeTextBlock" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
-
-            <TextBlock
-                x:Name="DeviceTypeTextBlock"
-                HorizontalAlignment="Left"
-                FontSize="24"
-                Text="{Binding Test.Device.DeviceType.Name, FallbackValue='Mini-Max'}" />
-
-            <TextBlock
-                x:Name="CompositionTypeTextBlock"
-                HorizontalAlignment="Left"
-                Text="{Binding CompositionType, FallbackValue='PTZ'}" />
-
-            <TextBlock
-                x:Name="DriveTypeTextBlock"
-                HorizontalAlignment="Left"
-                Text="{Binding Test.DriveType.InputType, FallbackValue='Rotary'}" />
-
         </StackPanel>
         <UniformGrid
             Grid.Column="2"
@@ -144,28 +135,25 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             Rows="1">
+
             <ContentControl
                 x:Name="Site2NumberControl"
-                Content="Inventory #"
-                Tag="{Binding DeviceInfo.SiteInfo.SiteId2}"
+                Tag="Inventory #"
                 Template="{StaticResource ValueLabelTemplate}" />
             <ContentControl
                 x:Name="SerialNumberControl"
-                Content="Serial #"
-                Tag="{Binding DeviceInfo.SiteInfo.SerialNumber}"
+                Tag="Serial #"
                 Template="{StaticResource ValueLabelTemplate}" />
 
 
             <ContentControl
                 x:Name="EmployeeIdControl"
-                Content="Employee #"
-                Tag="{Binding EmployeeId}"
+                Tag="Employee #"
                 Template="{StaticResource ValueLabelTemplate}" />
 
             <ContentControl
                 x:Name="JobIdControl"
-                Content="Job #"
-                Tag="{Binding JobId}"
+                Tag="Job #"
                 Template="{StaticResource ValueLabelTemplate}" />
 
 

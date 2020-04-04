@@ -16,9 +16,9 @@ using ReactiveUI.Validation.Contexts;
 
 namespace Client.Desktop.Wpf.Dialogs
 {
-    public static class DialogMessageInteractions
+    public partial class DialogServiceManager
     {
-        public static void Register(IDialogServiceManager dialogManager)
+        public void RegisterInteractions(IDialogServiceManager dialogManager)
         {
             MessageInteractions.ShowMessage.RegisterHandler(async i =>
             {
@@ -36,6 +36,12 @@ namespace Client.Desktop.Wpf.Dialogs
             {
                 await dialogManager.ShowMessage(i.Input, "Error");
                 i.SetOutput(Unit.Default);
+            });
+
+            MessageInteractions.ShowDialog.RegisterHandler(async viewModel =>
+            {
+                await ShowViewModel(viewModel.Input);
+                viewModel.SetOutput(Unit.Default);
             });
 
             MessageInteractions.GetInputString.RegisterHandler(async i =>
@@ -100,7 +106,7 @@ namespace Client.Desktop.Wpf.Dialogs
                 return Observable.Return((IViewFor)null);
             }, outputScheduler: RxApp.MainThreadScheduler);
 
-            DialogMessageInteractions.Register(this);
+            RegisterInteractions(this);
             interactionsRegistery?.Invoke(this);
         }
         

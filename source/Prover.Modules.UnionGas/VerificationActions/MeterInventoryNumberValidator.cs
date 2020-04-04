@@ -8,8 +8,9 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.MasaWebService;
 
-namespace Prover.Modules.UnionGas.MasaWebService
+namespace Prover.Modules.UnionGas.VerificationActions
 {
     internal class MeterInventoryNumberValidator
     {

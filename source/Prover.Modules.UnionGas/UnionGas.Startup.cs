@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
@@ -14,8 +16,10 @@ using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
 using Prover.Modules.UnionGas.Exporter.Views;
+using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
+using Prover.Modules.UnionGas.VerificationActions;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas
@@ -27,7 +31,7 @@ namespace Prover.Modules.UnionGas
                 async screen => await screen.ChangeView<ExporterViewModel>(), 4);
     }
 
-    public class Startup : IConfigureModule
+    public class UnionGasModule : IConfigureModule
     {
         public void Configure(HostBuilderContext builder, IServiceCollection services)
         {
@@ -35,6 +39,7 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
+         
             services.AddSingleton<Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel>>(c =>
                 (evcTest, exporter)
                     => new VerificationGridViewModel(
@@ -46,9 +51,13 @@ namespace Prover.Modules.UnionGas
                         exporter
                     ));
 
-            services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
+           
+            services.AddSingleton<MasaLoginService>();
+            services.AddSingleton<ILoginService<EmployeeDTO>>(c => c.GetRequiredService<MasaLoginService>());
+            services.AddHostedService<MasaLoginService>();
+
             services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
-            
+            services.AddTransient<TestsByJobNumberViewModel>();
             AddVerificationActions(services);
 
             if (builder.HostingEnvironment.IsDevelopment())
@@ -82,12 +91,12 @@ namespace Prover.Modules.UnionGas
 
         private void DevelopmentServices(IServiceCollection services)
         {
+            
             services.AddSingleton<DevelopmentWebService>();
             services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
             services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
             services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<DevelopmentWebService>());
         }
 
-      
     }
 }

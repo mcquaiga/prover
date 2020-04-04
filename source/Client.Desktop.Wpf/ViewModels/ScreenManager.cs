@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Prover.Application.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    internal class ScreenManager : IScreenManager
+    internal class ScreenManager : ReactiveObject, IScreenManager
     {
         public IDialogServiceManager DialogManager { get; }
-        public RoutingState Router { get; }
+        [Reactive] public RoutingState Router { get; set; }
         public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager,
             Func<IScreenManager, IRoutableViewModel> homeViewModelFactory)
         {
