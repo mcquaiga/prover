@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Client.Desktop.Wpf.Common;
+using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf
 {
@@ -37,6 +38,7 @@ namespace Client.Desktop.Wpf
 
                 App = new App { AppHost = _host, ShutdownMode = ShutdownMode.OnExplicitShutdown };
                 App.InitializeComponent();
+
                 splashScreen.Owner = LoadMainWindow();
                 splashScreen.Close();
             }
@@ -80,7 +82,7 @@ namespace Client.Desktop.Wpf
             var model = _host.Services.GetService<MainViewModel>();
             _mainWindow = _host.Services.GetService<MainWindow>();
             _mainWindow.ViewModel = model;
-
+            
             model.ShowHome();
 
             _mainWindow.Closed += (sender, args) => { ShutdownApp(); };

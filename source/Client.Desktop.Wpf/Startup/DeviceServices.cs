@@ -72,6 +72,7 @@ namespace Client.Desktop.Wpf.Startup
             //_provider.GetService<DaqBoardChannelFactory>();
 
             _provider.GetService<DeviceSessionDialogManager>();
+            await Task.CompletedTask;
         }
 
         private readonly IServiceProvider _provider;
