@@ -53,7 +53,7 @@ jobs:
       displayName: Publish Binaries Artifact
       inputs:
         PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-        ArtifactName: 'Binaries'
+        ArtifactName: 'v$(Build.BuildNumber)-$(Build.SourceBranchName)'
         publishLocation: 'Container'
 
     - task: PublishBuildArtifacts@1
