@@ -4,7 +4,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading;
 using Client.Desktop.Wpf.Dialogs;
-using Client.Desktop.Wpf.ViewModels.Devices;
 using Client.Desktop.Wpf.Views.Devices;
 using Client.Desktop.Wpf.Views.Verifications.Dialogs;
 using Devices.Communications.Status;
@@ -16,7 +15,7 @@ using Prover.Application.Services.LiveReadCorrections;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Desktop.Wpf.ViewModels.Dialogs
+namespace Client.Desktop.Wpf.ViewModels.Devices
 {
     public class DeviceSessionDialogManager : DialogViewModel
     {

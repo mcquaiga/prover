@@ -17,12 +17,11 @@ namespace Devices.Core.Interfaces
         protected DeviceInstance(DeviceType deviceType)
         {
             DeviceType = deviceType;
-            Items = new DeviceItems(this);
         }
 
         public DeviceType DeviceType { get; }
 
-        public DeviceItems Items { get; private set; }
+        public DeviceItems Items => this.Items();
 
         public ICollection<ItemValue> Values => ItemValues.ToList();
 
@@ -51,21 +50,12 @@ namespace Devices.Core.Interfaces
         {
             GroupCache.Clear();
             SetValues(itemValues);
-            Items = new DeviceItems(this);
         }
 
         protected abstract void SetValues(IEnumerable<ItemValue> itemValues);
     }
 
-    public class DeviceItems
-    {
-        private readonly DeviceInstance _device;
-        public DeviceItems(DeviceInstance device) => _device = device;
-        public SiteInformationItems SiteInfo => _device.ItemGroup<SiteInformationItems>();
-        public PressureItems Pressure => _device.ItemGroup<PressureItems>();
-        public TemperatureItems Temperature => _device.ItemGroup<TemperatureItems>();
-        public SuperFactorItems SuperFactor => _device.ItemGroup<SuperFactorItems>();
-        public PulseOutputItems PulseOutput => _device.ItemGroup<PulseOutputItems>();
-        public VolumeItems Volume => _device.ItemGroup<VolumeItems>();
-    }
+    
+
+    
 }

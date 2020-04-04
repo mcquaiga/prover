@@ -10,11 +10,15 @@ namespace Prover.Application.ViewModels
 {
     public class CalculationsViewModel : ReactiveObject, ICalculateTrueCorrectedFactor
     {
+        public VerificationTestPointViewModel TestPoint { get; }
+
         protected CalculationsViewModel(VerificationTestPointViewModel testPoint)
         {
-            //Pressure = testPoint.GetPressureTest();
-            //Temperature = testPoint.GetTemperatureTest();
-            //SuperFactor = testPoint.GetSuperFactorTest();
+            //TestPoint = testPoint;
+
+            //Pressure = testPoint.Pressure;
+            //Temperature = testPoint.Temperature;
+            //SuperFactor = testPoint.SuperFactor;
         }
 
         public CalculationsViewModel(TemperatureFactorViewModel temperature)
@@ -42,8 +46,7 @@ namespace Prover.Application.ViewModels
             Temperature = temperature;
             SuperFactor = super;
 
-            TrueCorrectedObservable = this.WhenAnyValue(x => x.Pressure.ExpectedValue,
-                x => x.Temperature.ExpectedValue, x => x.SuperFactor.SquaredFactor,
+            TrueCorrectedObservable = this.WhenAnyValue(x => x.Pressure.ExpectedValue, x => x.Temperature.ExpectedValue, x => x.SuperFactor.SquaredFactor,
                 (p, t, s) => Calculators.TotalCorrectionFactor(t, p, s));
 
             Setup();
@@ -60,6 +63,7 @@ namespace Prover.Application.ViewModels
         public TemperatureFactorViewModel Temperature { get; }
 
         public PressureFactorViewModel Pressure { get; }
+
         public IObservable<decimal> TrueCorrectedObservable { get; }
 
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }

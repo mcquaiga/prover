@@ -100,7 +100,7 @@ namespace Client.Desktop.Wpf.Communications
             await Connect();
             var cancelToken = await DeviceInteractions.DownloadingItems.Handle(this);
             var itemValues = await _activeClient.GetItemsAsync(itemsToDownload);
-            await Disconnect();
+
             return itemValues;
         }
 

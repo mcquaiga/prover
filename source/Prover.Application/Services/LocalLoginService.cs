@@ -1,53 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
+using System.Linq;
 using System.Threading.Tasks;
-using Prover.Shared.Interfaces;
+using Devices.Core.Interfaces;
 
 namespace Prover.Application.Services
 {
-    public class User
-    {
-        public string EmployeeName { get; set; }
-        public string EmployeeNbr { get; set; }
-        public string Id { get; set; }
-    }
+    //public class User
+    //{
+    //    public string EmployeeName { get; set; }
+    //    public string EmployeeNbr { get; set; }
+    //    public string Id { get; set; }
+    //}
 
-    public class LocalLoginService<TUser> : ILoginService<TUser>
-        where TUser : class, new()
-    {
-        private readonly ISubject<bool> _isLoggedIn = new Subject<bool>();
-        private readonly Func<ICollection<TUser>, string, TUser> _lookupFunc;
+    //public class LocalLoginService<TUser> : LoginServiceBase<TUser>
+    //    where TUser : class, new()
+    //{
+    //    private readonly Func<ICollection<TUser>, string, TUser> _lookupFunc;
+    //    private readonly Func<TUser, string> _userIdLookupFunc;
 
+    //    private readonly ICollection<TUser> _users;
 
-        public LocalLoginService(ICollection<TUser> users, Func<ICollection<TUser>, string, TUser> lookupFunc)
-        {
-            _lookupFunc = lookupFunc;
-            _users = users;
-        }
+    //    public LocalLoginService(ICollection<TUser> users, Func<ICollection<TUser>, string, TUser> lookupFunc,
+    //        Func<TUser, string> userIdLookupFunc)
+    //    {
+    //        _lookupFunc = lookupFunc;
+    //        _userIdLookupFunc = userIdLookupFunc;
+    //        _users = users;
+    //    }
 
-        private readonly ICollection<TUser> _users;
+    //    public override async Task<bool> Login(string username, string password = null)
+    //    {
+    //        await Task.Delay(TimeSpan.FromSeconds(1));
 
-        public TUser User { get; private set; }
-        public IObservable<bool> LoggedIn => _isLoggedIn;
+    //        User = _lookupFunc.Invoke(_users, username);
 
-        public async Task<bool> Login(string username = null, string password = null)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(2));
+    //        LoggedInSubject.OnNext(User != null);
 
-            User = _lookupFunc.Invoke(_users, username);
+    //        return User != null;
+    //    }
 
-            _isLoggedIn.OnNext(User != null);
-            return User != null;
-        }
+    //    public override async Task Logout()
+    //    {
+    //        await Task.Delay(TimeSpan.FromSeconds(1));
+    //        await base.Logout();
+    //    }
 
-        public async Task<bool> Logout()
-        {
-            await Task.CompletedTask;
-
-            User = null;
-            _isLoggedIn.OnNext(false);
-            return true;
-        }
-    }
+    //    protected override string UserId => _userIdLookupFunc.Invoke(User);
+    //}
 }

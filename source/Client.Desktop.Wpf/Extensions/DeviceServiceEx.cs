@@ -10,7 +10,7 @@ using Prover.Application.Services;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 
-namespace Client.Desktop.Wpf.Startup
+namespace Client.Desktop.Wpf.Extensions
 {
     internal static class DeviceServiceEx
     {

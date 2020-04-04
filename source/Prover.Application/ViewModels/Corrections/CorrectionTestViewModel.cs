@@ -121,8 +121,8 @@ namespace Prover.Application.ViewModels.Corrections
 
         [Reactive] public T Items { get; set; }
         [Reactive] public int PassTolerance { get; protected set; }
-        [Reactive] public int ExpectedValue { get; set; }
-        public extern int ActualValue { [ObservableAsProperty] get; }
+        [Reactive] public int ActualValue { get; set; }
+        public extern int ExpectedValue { [ObservableAsProperty] get; }
         public extern int Deviation { [ObservableAsProperty] get; }
         public extern bool Verified { [ObservableAsProperty] get; }
     }

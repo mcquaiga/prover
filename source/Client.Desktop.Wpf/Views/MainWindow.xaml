@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogs="clr-namespace:Client.Desktop.Wpf.Dialogs"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxui="http://reactiveui.net"
@@ -12,10 +13,9 @@
     Width="964"
     Height="750"
     x:TypeArguments="viewModels:MainViewModel"
+    Style="{StaticResource DialogWindowStyle}"
     mc:Ignorable="d">
-
     <Window.Resources />
-
 
     <DockPanel>
 
@@ -87,28 +87,20 @@
         </materialDesign:ColorZone>
 
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <materialDesign:DialogHost x:Name="DialogHost" Identifier="ActiveItemDialog">
-                <materialDesign:DialogHost.DialogContent>
-                    <ContentControl x:Name="DialogContent" />
-                </materialDesign:DialogHost.DialogContent>
-
-                <materialDesign:DialogHost.Content>
-
-                    <rxui:RoutedViewHost
-                        x:Name="RoutedViewHost"
-                        HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch"
-                        DockPanel.Dock="Bottom" />
-
-                </materialDesign:DialogHost.Content>
-            </materialDesign:DialogHost>
-
+            <rxui:RoutedViewHost
+                x:Name="RoutedViewHost"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                DockPanel.Dock="Bottom" />
             <Grid
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 d:LayoutOverrides="Width">
-                <materialDesign:Snackbar x:Name="NotificationSnackBar" IsActive="{Binding ShowNotificationSnackBar}">
+                <!--<materialDesign:Snackbar x:Name="NotificationSnackBar" IsActive="{Binding ShowNotificationSnackBar}">
                     <materialDesign:SnackbarMessage HorizontalAlignment="Center" Content="{Binding NotificationMessage}" />
+                </materialDesign:Snackbar>-->
+                <materialDesign:Snackbar x:Name="NotificationSnackBar">
+                    <materialDesign:SnackbarMessage HorizontalAlignment="Center" />
                 </materialDesign:Snackbar>
             </Grid>
         </Grid>

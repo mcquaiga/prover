@@ -83,11 +83,12 @@
             </Style>
 
             <ControlTemplate x:Key="ValueLabelTemplate" TargetType="ContentControl">
+
                 <StackPanel Margin="4" Orientation="Vertical">
-                    <TextBlock Style="{DynamicResource LabelStyle}" Text="{TemplateBinding Content}" />
+                    <TextBlock Style="{StaticResource LabelStyle}" Text="{TemplateBinding Content}" />
                     <TextBlock
                         x:Name="SiteNumber1TextBlock"
-                        Style="{DynamicResource ValueStyle}"
+                        Style="{StaticResource ValueStyle}"
                         Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
                 </StackPanel>
 
@@ -95,12 +96,12 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid HorizontalAlignment="Stretch">
+    <Grid Margin="10,2" HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width=".5*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
@@ -140,25 +141,20 @@
         <UniformGrid
             Grid.Column="2"
             Margin="5,2"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
-            Rows="2">
-            <ContentControl
-                x:Name="Site1NumberControl"
-                Content="Site 1 #"
-                Tag="{Binding DeviceInfo.SiteInfo.SiteId1}"
-                Template="{StaticResource ValueLabelTemplate}" />
+            Rows="1">
             <ContentControl
                 x:Name="Site2NumberControl"
-                Content="Site 2 #"
+                Content="Inventory #"
                 Tag="{Binding DeviceInfo.SiteInfo.SiteId2}"
                 Template="{StaticResource ValueLabelTemplate}" />
-
             <ContentControl
                 x:Name="SerialNumberControl"
                 Content="Serial #"
                 Tag="{Binding DeviceInfo.SiteInfo.SerialNumber}"
                 Template="{StaticResource ValueLabelTemplate}" />
+
 
             <ContentControl
                 x:Name="EmployeeIdControl"
@@ -171,6 +167,7 @@
                 Content="Job #"
                 Tag="{Binding JobId}"
                 Template="{StaticResource ValueLabelTemplate}" />
+
 
         </UniformGrid>
         <StackPanel

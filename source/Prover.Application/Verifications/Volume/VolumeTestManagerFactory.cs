@@ -7,7 +7,7 @@ using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Shared.Interfaces;
 
-namespace Prover.Application.VerificationManager.Volume
+namespace Prover.Application.Verifications.Volume
 {
     public interface IVolumeTestManagerFactory
     {

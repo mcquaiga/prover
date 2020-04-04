@@ -117,11 +117,10 @@
                                         <DataTemplate>
                                             <Button
                                                 Margin="4,0"
-                                                Command="{Binding Path=ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
+                                                Command="{Binding ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
                                                 CommandParameter="{Binding}"
                                                 Content="{Binding Name}"
-                                                FontSize="16"
-                                                Style="{StaticResource MaterialDesignFlatButton}" />
+                                                FontSize="16" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -176,37 +175,7 @@
                     Margin="5"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch">
-                    <ListBox.ItemContainerStyle>
-                        <Style>
-                            <Style.Resources>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-
-                                            <Setter Property="Visibility" Value="Visible" />
-                                            <Setter Property="Cursor" Value="Hand" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-
-                            </Style.Resources>
-                        </Style>
-
-
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate x:Name="VerificationGridItem">
-                            <StackPanel Orientation="Horizontal">
-                                <reactiveUi:ViewModelViewHost
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    ViewModel="{Binding}" />
-
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    VerticalContentAlignment="Stretch" />
 
 
 

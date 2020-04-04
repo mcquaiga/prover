@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
@@ -41,7 +42,7 @@ namespace Client.Desktop.Wpf.Startup
             var repo = _provider.GetService<IDeviceRepository>();
             await repo.Load(new[] { MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance });
 
-            //await SeedDatabase(250);
+            //await SeedDatabase(50);
         }
 
         #endregion
@@ -85,13 +86,12 @@ namespace Client.Desktop.Wpf.Startup
             for (int i = 0; i < records; i++)
             {
                 var testVm = testService.NewTest(device);
-
                 var tempItems = deviceType.ToItemValues(ItemFiles.TempLowItems);
                 var firstTest = testVm.VerificationTests.OfType<VerificationTestPointViewModel>().First(v => v.TestNumber == 0);
                 firstTest.Temperature.Items = deviceType.GetGroupValues<TemperatureItems>(tempItems);
                 
-                var model = testService.CreateVerificationTestFromViewModel(testVm);
-                await evcService.AddOrUpdateVerificationTest(model);
+                await testService.AddOrUpdate(testVm);
+                
                 Debug.WriteLine($"Created verification test {i} of {records}.");
             }
             watch.Stop();

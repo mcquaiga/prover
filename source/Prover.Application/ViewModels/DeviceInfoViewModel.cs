@@ -1,6 +1,7 @@
 ﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Domain.EvcVerifications;
+using Prover.Shared;
 using ReactiveUI;
 
 namespace Prover.Application.ViewModels
@@ -10,21 +11,16 @@ namespace Prover.Application.ViewModels
         public DeviceInfoViewModel(DeviceInstance device)
         {
             Device = device;
-            SiteInfo = device.ItemGroup<SiteInformationItems>();
-            Pressure = device.ItemGroup<PressureItems>();
-            Temperature = device.ItemGroup<TemperatureItems>();
-            SuperFactor = device.ItemGroup<SuperFactorItems>();
-            Volume = device.ItemGroup<VolumeItems>();
-            PulseOutput = device.ItemGroup<PulseOutputItems>();
+           
         }
 
         public DeviceInstance Device { get; }
-        public SiteInformationItems SiteInfo { get; protected set; }
-        public PressureItems Pressure { get; protected set; }
-        public TemperatureItems Temperature { get; protected set; }
-        public SuperFactorItems SuperFactor { get; protected set; }
-        public PulseOutputItems PulseOutput { get; protected set; }
-        public VolumeItems Volume { get; protected set; }
+        public SiteInformationItems SiteInfo => Device.Items.SiteInfo;
+        public PressureItems Pressure => Device.Items.Pressure;
+        public TemperatureItems Temperature => Device.Items.Temperature;
+        public SuperFactorItems SuperFactor => Device.Items.SuperFactor;
+        public PulseOutputItems PulseOutput => Device.Items.PulseOutput;
+        public VolumeItems Volume => Device.Items.Volume;
 
         public string CompanyNumber => SiteInfo.SiteId2;
     }
@@ -37,5 +33,8 @@ namespace Prover.Application.ViewModels
         {
             Test = verificationViewModel;
         }
+
+        //public PulseOutputItems.ChannelItems PulseOutputChannelA => PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
+        //public PulseOutputItems.ChannelItems PulseOutputChannelB => PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
     }
 }

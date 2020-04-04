@@ -10,14 +10,13 @@ namespace Prover.Application.ViewModels
     {
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
 
-        protected readonly ILogger Logger;
+        protected readonly ILogger<ViewModelBase> Logger;
 
-        protected ViewModelBase(ILogger logger = null) => Logger = logger ?? NullLogger.Instance;
-
-
+        protected ViewModelBase(ILogger<ViewModelBase> logger = null) => Logger = logger ?? NullLogger<ViewModelBase>.Instance;
+        
         public void Dispose()
         {
-            Logger.LogDebug($"Disposing - {this}");
+            Logger.LogTrace($"Disposing - {this}");
             Disposing();
             Cleanup.Dispose();
         }

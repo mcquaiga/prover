@@ -15,14 +15,8 @@ namespace Client.Desktop.Wpf.Dialogs
 
             this.WhenActivated(d =>
             {
-                //this.OneWayBind(ViewModel, vm => vm.Title, v => v.TitleText.Text);
-                //this.OneWayBind(ViewModel, vm => vm.Message, v => v.MessageText.Text);
-                //this.BindCommand(ViewModel, vm => vm.SetResponse, v => v.YesButton, vm => vm.YesResponse);
-                //this.BindCommand(ViewModel, vm => vm.SetResponse, v => v.NoButton, vm => vm.NoResponse);
-                //this.WhenAnyValue(x => x.Answer)
-                //    .Where(x => x != null)
-                //    .InvokeCommand();
-
+                TitleText.Text = ViewModel.Title;
+                MessageText.Text = ViewModel.Message;
             });
         }
 
@@ -35,7 +29,7 @@ namespace Client.Desktop.Wpf.Dialogs
         private void NoButton_OnClick(object sender, RoutedEventArgs e)
         {
             Answer = false;
-            ViewModel.CloseCommand.Execute().Subscribe();
+            ViewModel.CancelCommand.Execute().Subscribe();
         }
     }
 }

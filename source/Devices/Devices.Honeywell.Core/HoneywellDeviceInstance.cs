@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 
@@ -14,7 +16,7 @@ namespace Devices.Honeywell.Core
         #region Public Methods
         protected override void SetValues(IEnumerable<ItemValue> itemValues)
         {
-            ItemValues.Clear();
+            ItemValues.RemoveWhere(i => itemValues.Any(x => x.Id == i.Id));
             ItemValues.UnionWith(itemValues);
         }
 

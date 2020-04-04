@@ -14,14 +14,11 @@ namespace Prover.Application.ViewModels.Volume
     {
         private const decimal Tolerance = Global.UNCOR_ERROR_THRESHOLD;
 
-        public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues,
-            VolumeItems endValues) : base(Tolerance, startValues, endValues)
+        public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues, VolumeItems endValues) 
+            : base(Tolerance, startValues, endValues)
         {
-            this.WhenAnyValue(x => x.EndValues)
-                .Subscribe(items => EndUncorrectedReading = items.UncorrectedReading);
-
-            this.WhenAnyValue(x => x.StartValues, x => x.EndUncorrectedReading, 
-                    (start, end) => VolumeCalculator.TotalVolume(start.UncorrectedReading, end, start.UncorrectedMultiplier))
+            this.WhenAnyValue(x => x.StartReading, x => x.EndReading, 
+                    (start, end) => VolumeCalculator.TotalVolume(start, end, startValues.UncorrectedMultiplier))
                 .ToPropertyEx(this, x => x.ActualValue).DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.AppliedInput)
@@ -30,9 +27,22 @@ namespace Prover.Application.ViewModels.Volume
 
             this.WhenAnyValue(x => x.ExpectedValue)
                 .ToPropertyEx(this, x => x.UncorrectedInputVolume).DisposeWith(Cleanup);
-        }
 
-        [Reactive] public decimal EndUncorrectedReading { get; set; }
+
+            this.WhenAnyValue(x => x.StartValues)
+                .Subscribe(v => StartReading = v.UncorrectedReading);
+
+            this.WhenAnyValue(x => x.EndValues)
+                .Subscribe(v => EndReading = v.UncorrectedReading);
+
+            this.WhenAnyValue(x => x.StartReading)
+                .Subscribe(startReading => StartValues.UncorrectedReading = startReading);
+
+            this.WhenAnyValue(x => x.EndReading)
+                .Subscribe(endReading => EndValues.UncorrectedReading = endReading);
+
+            Multiplier = startValues.UncorrectedMultiplier;
+        }
 
         [Reactive] public decimal AppliedInput { get; set; }
 

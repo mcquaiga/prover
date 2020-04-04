@@ -3,7 +3,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -63,69 +63,51 @@ namespace Client.Desktop.Wpf.Dialogs
         private readonly SerialDisposable _disposer = new SerialDisposable();
         private readonly ILogger<DialogServiceManager> _logger;
         private readonly IServiceProvider _services;
+        private readonly IViewLocator _viewLocator;
         private Action _onClosed;
 
         public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
             IViewLocator viewLocator = null, Action<IDialogServiceManager> interactionsRegistery = null)
-        : this()
+        //: this()
         {
             _services = services;
+            _viewLocator = viewLocator ?? ViewLocator.Current;
             _logger = logger ?? NullLogger<DialogServiceManager>.Instance;
-            viewLocator ??= ViewLocator.Current;
 
-            ShowDialog = ReactiveCommand.CreateFromObservable<IDialogViewModel, IViewFor>(
-                model =>
+            ShowDialogView = ReactiveCommand.CreateFromTask<IViewFor, DialogSession>(async (view) =>
+            {
+                if (DialogSession != null && !DialogSession.IsEnded)
                 {
-                    var view = viewLocator.ResolveView(model);
-                    if (view == null)
-                        throw new Exception($"Couldn't find view for '{model.GetType()}'.");
-
-                    view.ViewModel = model;
-
-                    return SetupDialogView(view);
-                },
-                outputScheduler: RxApp.MainThreadScheduler);
-
-            ShowDialogView = ReactiveCommand.CreateFromObservable<IViewFor, IViewFor>(
-                SetupDialogView,
-                outputScheduler: RxApp.MainThreadScheduler);
-
-            CloseDialog = ReactiveCommand.CreateFromObservable(() =>
+                    DialogSession.UpdateContent(view);
+                }
+                else
                 {
-                    _disposer.Disposable = Disposable.Empty;
-                    return Observable.Return((IViewFor) null);
-                },
-                outputScheduler: RxApp.MainThreadScheduler);
+                    _ = DialogHost.Show(view,
+                        openedEventHandler: (sender, args) => DialogSession = args.Session,
+                        closingEventHandler: (sender, args) =>
+                        {
+                            DialogSession = null;
+                            _disposer.Disposable = Disposable.Empty;
+                        });
+                }
 
-            this.WhenAnyValue(x => x.DialogViewModel.IsDialogOpen)
-                .Where(open => !open)
-                .Select(_ => Unit.Default)
-                .InvokeCommand(CloseDialog);
+                return DialogSession;
+            }, outputScheduler: RxApp.MainThreadScheduler);
 
-            ShowDialog
-                .Merge(ShowDialogView)
-                .Merge(CloseDialog)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToPropertyEx(this, x => x.DialogContent);
-
-            this.WhenAnyValue(x => x.DialogContent)
-                .Select(v => v?.ViewModel as IDialogViewModel)
-                .ToPropertyEx(this, x => x.DialogViewModel);
+            CloseDialog = ReactiveCommand.CreateFromObservable(() => {
+                DialogSession?.Close();
+                //_disposer.Disposable = Disposable.Empty;
+                return Observable.Return((IViewFor)null);
+            }, outputScheduler: RxApp.MainThreadScheduler);
 
             DialogMessageInteractions.Register(this);
             interactionsRegistery?.Invoke(this);
         }
-
         
-        private ReactiveCommand<IViewFor, IViewFor> ShowDialogView { get; }
-        private ReactiveCommand<IDialogViewModel, IViewFor> ShowDialog { get; }
+        private ReactiveCommand<IViewFor, DialogSession> ShowDialogView { get; }
         private ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
+        [Reactive] public DialogSession DialogSession { get; set; }
 
-        public extern IViewFor DialogContent { [ObservableAsProperty] get; }
-        private extern IDialogViewModel DialogViewModel { [ObservableAsProperty] get; }
-        public extern bool IsDialogOpen { [ObservableAsProperty] get; }
-
-        
 
         public async Task Close()
         {
@@ -143,19 +125,15 @@ namespace Client.Desktop.Wpf.Dialogs
         {
             _onClosed = onClosed;
             var model = _services.GetService<T>();
-            await ShowDialog.Execute(model);
+            await ShowViewModel(model);
         }
 
         public async Task<TResult> ShowInputDialog<TResult>(string message, string title = null)
         {
-            //CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
-            //CloseCommand
-            //    .ToPropertyEx(this, x => x.IsDialogOpen, true);
-
             var inputDialog = new InputDialogViewModel(message, title);
-
-            await ShowDialog.Execute(inputDialog);
-            await CloseDialog.FirstAsync();
+            
+            await ShowViewModel(inputDialog);
+            await inputDialog.CloseCommand.FirstAsync();
 
             return (TResult) (object) inputDialog.InputValue;
         }
@@ -163,52 +141,50 @@ namespace Client.Desktop.Wpf.Dialogs
         public async Task ShowMessage(string message, string title)
         {
             var model = new TextDialogViewModel(message, title);
-
-            await ShowDialog.Execute(model);
+            await ShowViewModel(model);
+            await model.CloseCommand.FirstAsync();
         }
 
         public async Task<bool> ShowQuestion(string question)
         {
-            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
-            CloseCommand
-                .ToPropertyEx(this, x => x.IsDialogOpen, true);
-
+            var viewModel = new DialogViewModel { Message = question };
             var view = new QuestionDialogView
             {
-                ViewModel = this,
+                ViewModel = viewModel,
                 MessageText = {Text = question}
             };
 
             await ShowDialogView.Execute(view);
-
-            await CloseDialog.FirstAsync();
+            await viewModel.CloseCommand.FirstAsync();
 
             return view.Answer ?? false;
         }
 
-        private IObservable<IViewFor> SetupDialogView(IViewFor view)
+        private async Task ShowViewModel(IDialogViewModel viewModel)
         {
+            var view = GenerateView(viewModel);
+
+            await ShowDialogView.Execute(view);
+        }
+
+        private IViewFor GenerateView(IDialogViewModel viewModel)
+        {
+            var view = _viewLocator.ResolveView(viewModel);
+            if (view == null)
+                throw new Exception($"Couldn't find view for '{viewModel.GetType()}'.");
+
+            view.ViewModel = viewModel;
+
             _disposer.Disposable = Disposable.Empty;
             _disposer.Disposable = Disposable.Create(() =>
             {
                 (view as IDisposable)?.Dispose();
                 _onClosed?.Invoke();
             });
-            return Observable.Return(view);
+
+            return view;
         }
     }
 
-    public partial class DialogServiceManager : IDialogViewModel, IValidatableViewModel
-    {
-        private DialogServiceManager()
-        {
-            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false));
-            CloseCommand
-                .ToPropertyEx(this, x => x.IsDialogOpen, true);
-        }
-
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
-
-        public ValidationContext ValidationContext { get; } = new ValidationContext();
-    }
+ 
 }

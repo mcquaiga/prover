@@ -6,8 +6,6 @@ namespace Prover.Application.Interfaces
 {
     public interface IDialogServiceManager
     {
-        IViewFor DialogContent { get; }
-
         Task Close();
 
         Task Show<TView>(TView dialogView, Action onClosed = null) where TView : IViewFor;

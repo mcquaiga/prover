@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
+using Prover.Application.Services;
 using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas.Login
@@ -11,10 +17,8 @@ namespace Prover.Modules.UnionGas.Login
     /// <summary>
     ///     Defines the <see cref="MasaLoginService" />
     /// </summary>
-    public class MasaLoginService : ILoginService<EmployeeDTO>
+    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IDisposable
     {
-        private readonly ISubject<bool> _isLoggedIn = new Subject<bool>();
-
         /// <summary>
         ///     Defines the _log
         /// </summary>
@@ -23,58 +27,33 @@ namespace Prover.Modules.UnionGas.Login
         /// <summary>
         ///     Defines the _webService
         /// </summary>
-        private readonly DCRWebServiceSoap _webService;
+        private readonly IUserService<EmployeeDTO> _webService;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MasaLoginService" /> class.
         /// </summary>
         /// <param name="log"></param>
-        /// <param name="dcrWebService"></param>
-        public MasaLoginService(ILogger<MasaLoginService> log, DCRWebServiceSoap dcrWebService)
+        /// <param name="employeeService"></param>
+        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService)
         {
             _log = log ?? NullLogger<MasaLoginService>.Instance;
-            _webService = dcrWebService;
+            _webService = employeeService;
         }
 
-        public IObservable<bool> LoggedIn => _isLoggedIn;
-
-        public EmployeeDTO User { get; private set; }
-
-
-        public async Task<bool> Login(string username, string password = null)
+        public override async Task<string> GetLoginDetails()
         {
-            User = null;
-
-            if (!string.IsNullOrEmpty(username))
-            {
-                _log.LogDebug($"Getting employee with #{username} from MASA.");
-
-                var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-                var response = await _webService.GetEmployeeAsync(employeeRequest);
-
-                User = response.Body.GetEmployeeResult;
-            }
-
-            _isLoggedIn.OnNext(User != null);
-
-            return !string.IsNullOrEmpty(User?.Id);
+            return await MessageInteractions.GetInputString.Handle("Employee number:");
         }
 
-        /// <summary>
-        ///     The Logout
-        /// </summary>
-        /// <returns>The <see cref="bool" /></returns>
-        public async Task<bool> Logout()
+        public override async Task<bool> Login(string username, string password = null)
         {
-            await Task.CompletedTask;
+            User = await _webService.GetUser(username);
 
-            User = null;
-            _isLoggedIn.OnNext(false);
-            return true;
+            LoggedInSubject.OnNext(User != null);
+
+            return !User?.Id.IsNullOrEmpty() ?? false;
         }
 
-        /// <summary>
-        /// Defines the _eventAggregator
-        /// </summary>
+        protected override string UserId => User?.Id;
     }
 }

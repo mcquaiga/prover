@@ -17,17 +17,21 @@
         <controls:PercentageControlNew x:Name="PercentErrorControl" HorizontalAlignment="Center" />
 
         <UniformGrid Columns="2">
-            <controls:ValueDescriptionControl x:Name="StartReadingControl" Label="Start" />
+            <controls:ValueDescriptionControl
+                x:Name="StartReadingControl"
+                IsReadOnly="False"
+                Label="Start" />
             <controls:ValueDescriptionControl
                 x:Name="EndReadingControl"
                 IsReadOnly="False"
                 Label="End" />
 
-            <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="Actual" />
+            <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="Expected" />
             <controls:ValueDescriptionControl x:Name="ActualValueControl" Label="EVC" />
 
-
+            <controls:ValueDescriptionControl x:Name="PulsesExpectedControl" Label="Pulse Count" />
             <controls:ValueDescriptionControl x:Name="PulsesVerifiedControl" Label="Pulses Ver'd" />
+
         </UniformGrid>
     </StackPanel>
 

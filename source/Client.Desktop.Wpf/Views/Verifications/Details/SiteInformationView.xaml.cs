@@ -3,9 +3,11 @@ using System.Drawing;
 using System.Globalization;
 using System.Reactive.Disposables;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Client.Desktop.Wpf.Extensions;
 using Devices.Core.Interfaces;
+using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using MaterialDesignThemes.Wpf;
 using Prover.Application.ViewModels;
@@ -44,24 +46,24 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                 DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
                     ViewModel.Test.VolumeTest.DriveType.InputType);
 
-                CompanyNumberText.Text = ViewModel.CompanyNumber;
-                SerialNumberText.Text = ViewModel.SiteInfo.SerialNumber;
-                FirmwareText.Text = ViewModel.SiteInfo.FirmwareVersion;
+                CompanyNumberText.Content = ViewModel.CompanyNumber;
+                SerialNumberText.Content = ViewModel.SiteInfo.SerialNumber;
+                FirmwareText.Content = ViewModel.SiteInfo.FirmwareVersion;
 
                 //Volume Info
-                UncorUnitsTextBlock.Text = ViewModel.Volume.UncorrectedUnits;
-                CorUnitsTextBlock.Text = ViewModel.Volume.CorrectedUnits;
-                DriveRateTextBlock.Text = ViewModel.Volume.DriveRateDescription;
+                UncorUnitsTextBlock.Content = ViewModel.Volume.UncorrectedUnits;
+                CorUnitsTextBlock.Content = ViewModel.Volume.CorrectedUnits;
+                DriveRateTextBlock.Content = ViewModel.Volume.DriveRateDescription;
 
 
                 //Pressure
                 if (ViewModel.Pressure != null)
                 {
                     PressureInfoSection.Visibility = Visibility.Visible;
-                    PressureRangeTextBlock.Text = ViewModel.Pressure.Range.ToString();
-                    PressureTransducerTextBlock.Text = ViewModel.Pressure.TransducerType.ToString();
-                    BasePressureTextBlock.Text = ViewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
-                    AtmPressureTextBlock.Text = ViewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
+                    PressureRangeTextBlock.Content = ViewModel.Pressure.Range.ToString();
+                    PressureTransducerTextBlock.Content = ViewModel.Pressure.TransducerType.ToString();
+                    BasePressureTextBlock.Content = ViewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
+                    AtmPressureTextBlock.Content = ViewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -73,26 +75,34 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                 if (ViewModel.Temperature != null)
                 {
                     TemperatureInfoSection.Visibility = Visibility.Visible;
-                    BaseTempTextBlock.Text = ViewModel.Temperature.Base.ToString(CultureInfo.InvariantCulture);
-                    TempUnitsTextBlock.Text = ViewModel.Temperature.Units.ToString();
+                    BaseTempTextBlock.Content = ViewModel.Temperature.Base.ToString(CultureInfo.InvariantCulture);
+                    TempUnitsTextBlock.Content = ViewModel.Temperature.Units.ToString();
                 }
                 else
                 {
                     TemperatureInfoSection.Visibility = Visibility.Collapsed;
                 }
 
-
                 //Pulse Outputs
-                var channelA = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
-                ChannelAUnitsTextBlock.Text = channelA.ChannelType.ToString();
-                ChannelAScalingTextBlock.Text = channelA.Scaling.ToString(CultureInfo.InvariantCulture);
-
-                var channelB = ViewModel.PulseOutput.GetChannel(PulseOutputChannel.Channel_B);
-                ChannelBUnitsTextBlock.Text = channelB.ChannelType.ToString();
-                ChannelBScalingTextBlock.Text = channelB.Scaling.ToString(CultureInfo.InvariantCulture);
+                SetPulseOutputChannel(PulseOutputChannel.Channel_A, ChannelAContentControl, ChannelAUnitsTextBlock);
+                SetPulseOutputChannel(PulseOutputChannel.Channel_B, ChannelBContentControl, ChannelBUnitsTextBlock);
 
                 this.CleanUpDefaults().DisposeWith(d);
             });
+        }
+
+        private void SetPulseOutputChannel(PulseOutputChannel channel, ContentControl channelControl, ContentControl unitsControl)
+        {
+            var channelItems = ViewModel.PulseOutput.GetChannel(channel);
+            channelControl.DataContext = channelItems;
+            
+            if (channelItems is IVolumeUnits units)
+            {
+                unitsControl.Visibility = Visibility.Visible;
+                unitsControl.Content = units.Units.Description;
+                return;
+            }
+            unitsControl.Visibility = Visibility.Collapsed;
         }
     }
 }

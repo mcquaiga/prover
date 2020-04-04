@@ -7,7 +7,7 @@
     xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    x:TypeArguments="dialogs:DialogServiceManager"
+    x:TypeArguments="dialogs:DialogViewModel"
     mc:Ignorable="d">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel

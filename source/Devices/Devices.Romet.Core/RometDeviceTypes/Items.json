@@ -301,7 +301,49 @@
     "number": "115",
     "code": "PULSER_SCALING",
     "shortDescription": "Pulse Spacing",
-    "description": "Output Pulse Spacing"
+    "description": "Output Pulse Spacing",
+    "itemDescriptions": [
+      {
+        "id": "0",
+        "description": "50 ms",
+        "numericValue": "50"
+      },
+      {
+        "id": "1",
+        "description": "750 ms",
+        "numericValue": "750"
+      },
+      {
+        "id": "2",
+        "description": "150 ms",
+        "numericValue": "150"
+      },
+      {
+        "id": "3",
+        "description": "200 ms",
+        "numericValue": "200"
+      },
+      {
+        "id": "4",
+        "description": "250 ms",
+        "numericValue": "250"
+      },
+      {
+        "id": "5",
+        "description": "350 ms",
+        "numericValue": "350"
+      },
+      {
+        "id": "6",
+        "description": "500 ms",
+        "numericValue": "500"
+      },
+      {
+        "id": "7",
+        "description": "Pulse Off",
+        "numericValue": "0"
+      }
+    ] 
   },
   {
     "number": "122",

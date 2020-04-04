@@ -19,8 +19,9 @@ namespace Client.Desktop.Wpf.ViewModels
             ToolbarItems = toolbarItems;
 
             GoNext = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
-            NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack);
+            NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);
             NavigateHome = ReactiveCommand.CreateFromTask(ScreenManager.GoHome);
+            OpenDialog = ReactiveCommand.CreateFromTask(async () => await ScreenManager.DialogManager.ShowMessage("Hey adam!", ""));
         }
 
         public string AppTitle { get; } = App.Title;
@@ -31,6 +32,7 @@ namespace Client.Desktop.Wpf.ViewModels
         public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> GoNext { get; }
         public ReactiveCommand<Unit, Unit> NavigateBack { get; }
         public ReactiveCommand<Unit, Unit> NavigateHome { get; }
+        public ReactiveCommand<Unit, Unit> OpenDialog { get; }
 
         public void Dispose()
         {

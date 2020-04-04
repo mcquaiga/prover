@@ -19,12 +19,8 @@ namespace Prover.Modules.UnionGas.Login
             LoginService = loginService;
             LogIn = ReactiveCommand.CreateFromTask(async () =>
             {
-                var result = await MessageInteractions.GetInputString.Handle("Employee number");
-                
-                if (string.IsNullOrEmpty(result)) 
-                    return false;
-
-                return await loginService.Login(result);
+                var username = await loginService.GetLoginDetails();
+                return await loginService.Login(username);
             });
             LogIn.ThrownExceptions
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -37,8 +33,9 @@ namespace Prover.Modules.UnionGas.Login
 
             LogOut = ReactiveCommand.CreateFromTask(loginService.Logout);
 
-            LogIn.Merge(LogOut)
+            loginService.LoggedIn
                 .Select(x => x ? loginService.User?.EmployeeName : "")
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, vm => vm.DisplayName);
         }
 
@@ -48,6 +45,6 @@ namespace Prover.Modules.UnionGas.Login
 
         public ReactiveCommand<Unit, bool> LogIn { get; }
 
-        public ReactiveCommand<Unit, bool> LogOut { get; }
+        public ReactiveCommand<Unit, Unit> LogOut { get; }
     }
 }

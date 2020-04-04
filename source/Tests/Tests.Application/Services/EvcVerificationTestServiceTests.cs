@@ -12,6 +12,7 @@ using Devices.Romet.Core.Repository;
 using DynamicData;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;

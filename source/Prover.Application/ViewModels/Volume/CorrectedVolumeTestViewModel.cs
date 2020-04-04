@@ -22,9 +22,8 @@ namespace Prover.Application.ViewModels.Volume
         {
             Uncorrected = uncorrected;
 
-
-            this.WhenAnyValue(x => x.StartValues, x => x.EndCorrectedReading, x => x.ExpectedValue,
-                    (start, end, expected) => VolumeCalculator.TotalVolume(start.CorrectedReading, end, start.CorrectedMultiplier))
+            this.WhenAnyValue(x => x.StartReading, x => x.EndReading, 
+                    (start, end) => VolumeCalculator.TotalVolume(start, end, startValues.CorrectedMultiplier))
                 .ToPropertyEx(this, x => x.ActualValue)
                 .DisposeWith(Cleanup);
 
@@ -38,16 +37,21 @@ namespace Prover.Application.ViewModels.Volume
                 .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.StartValues)
-                .Subscribe(v => StartCorrectedReading = v.CorrectedReading);
+                .Subscribe(v => StartReading = v.CorrectedReading);
 
             this.WhenAnyValue(x => x.EndValues)
-                .Subscribe(v => EndCorrectedReading = v.CorrectedReading);
+                .Subscribe(v => EndReading = v.CorrectedReading);
+
+            this.WhenAnyValue(x => x.StartReading)
+                .Subscribe(startReading => StartValues.CorrectedReading = startReading);
+            
+            this.WhenAnyValue(x => x.EndReading)
+                .Subscribe(endReading => EndValues.CorrectedReading = endReading);
+
+            Multiplier = startValues.CorrectedMultiplier;
         }
 
         [Reactive] public UncorrectedVolumeTestViewModel Uncorrected { get; protected set; }
-
-        [Reactive] public decimal StartCorrectedReading { get; set; }
-        [Reactive] public decimal EndCorrectedReading { get; set; }
 
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
     }

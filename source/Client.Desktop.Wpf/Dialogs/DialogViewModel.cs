@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using MaterialDesignThemes.Wpf;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -17,33 +18,34 @@ namespace Client.Desktop.Wpf.Dialogs
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
         protected CancellationTokenSource CancellationTokenSource;
 
-        public DialogViewModel(CancellationTokenSource cancellationTokenSource)
+        public DialogViewModel(CancellationTokenSource cancellationTokenSource = null)
         {
-            CancellationTokenSource = cancellationTokenSource;
+            CancellationTokenSource = cancellationTokenSource ?? new CancellationTokenSource();
 
-            ShowCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(true)).DisposeWith(Cleanup);
-            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(false), this.IsValid()).DisposeWith(Cleanup);
-            CancelCommand = ReactiveCommand.CreateFromObservable(() =>
-            {
-                cancellationTokenSource.Cancel();
-                return Observable.Return(false);
+            //ShowCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(true)).DisposeWith(Cleanup);
+            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(Unit.Default), this.IsValid())
+                .DisposeWith(Cleanup);
+
+            CancelCommand = ReactiveCommand.CreateFromObservable(() => {
+                CancellationTokenSource.Cancel();
+                return Observable.Return(Unit.Default);
+
             }).DisposeWith(Cleanup);
 
-            ShowCommand
-                .Merge(CloseCommand)
-                .Merge(CancelCommand)
-                .ToPropertyEx(this, x => x.IsDialogOpen, true)
+            CloseCommand.Merge(CancelCommand)
+                .InvokeCommand(DialogHost.CloseDialogCommand)
                 .DisposeWith(Cleanup);
         }
+
+        [Reactive] public string Title { get; set; }
+        [Reactive] public string Message { get; set; }
 
         protected DialogViewModel() : this(new CancellationTokenSource())
         {
         }
 
-        public ReactiveCommand<Unit, bool> ShowCommand { get; set; }
-        public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
-        public ReactiveCommand<Unit, bool> CancelCommand { get; set; }
-        public extern bool IsDialogOpen { [ObservableAsProperty] get; }
+        public ReactiveCommand<Unit, Unit> CloseCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> CancelCommand { get; set; }
 
         public void Dispose()
         {

@@ -29,16 +29,8 @@ namespace Prover.Application.Services
             _verificationRepository = verificationRepository;
             VerificationTests = _tests;
         }
-        
 
-        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; } 
-
-        public async Task<EvcVerificationTest> AddOrUpdateVerificationTest(EvcVerificationTest evcVerificationTest)
-        {
-            await _verificationRepository.AddAsync(evcVerificationTest);
-
-            return evcVerificationTest;
-        }
+        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; }
 
         public IObservableCache<EvcVerificationTest, Guid> FetchTests()
         {
@@ -50,14 +42,6 @@ namespace Prover.Application.Services
 
             return VerificationTests;
         }
-
-        //public IObservable<EvcVerificationTest> AllNotExported()
-        //{
-        //    return _verificationRepository.List(test => test.ExportedDateTime == null);
-        //}
-
-        //public EvcVerificationTestCreator Factory(DeviceInstance device) =>
-        //    new EvcVerificationTestCreator(device, AddOrUpdateVerificationTest);
 
         private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
         {

@@ -15,7 +15,7 @@ using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.VerificationManager.Volume
+namespace Prover.Application.Verifications.Volume
 {
     public abstract class AutomatedVolumeTestManagerBase : IVolumeTestManager, IDisposable
     {
@@ -130,7 +130,7 @@ namespace Prover.Application.VerificationManager.Volume
 
                 var pulser = PulseListenerService.PulseChannels.FirstOrDefault(p => p.Channel == pulseTest.Items.Name);
 
-                if (pulser != null) pulseTest.ExpectedValue = pulser.PulseCount;
+                if (pulser != null) pulseTest.ActualValue = pulser.PulseCount;
             }
         }
     }

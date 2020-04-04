@@ -52,8 +52,13 @@ namespace Devices.Romet.Core.Items.ItemGroups
                 Count = countItemNumber.HasValue ? values.GetItemValueAsInt(countItemNumber.Value) : 0,
                 Scaling = values.GetItemValueAsDecimal(scalingItemNumber),
                 ChannelType = channelType,
-                Multiplier = channelUnits.DecimalValue() ?? 0,
-                Units = channelUnits.GetDescription()
+
+                Units = new VolumeUnit()
+                {
+                    Description = channelUnits.GetDescription(), 
+                    Multiplier = channelUnits.DecimalValue() ?? 0,
+                    IsMetric = channelUnits.GetDescription().Contains("m3")
+                }
             };
         }
 
@@ -72,10 +77,9 @@ namespace Devices.Romet.Core.Items.ItemGroups
 
         #region Nested type: RometChannelItems
 
-        public class RometChannelItems : ChannelItems
+        public class RometChannelItems : ChannelItems, IVolumeUnits
         {
-            public decimal Multiplier { get; set; }
-            public string Units { get; set; }
+            public VolumeUnit Units { get; set; }
         }
 
         #endregion

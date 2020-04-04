@@ -1,18 +1,18 @@
 ﻿using Client.Desktop.Wpf.Extensions;
-using Client.Desktop.Wpf.ViewModels.Dialogs;
 using Devices.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
-using Prover.Application.VerificationManager;
-using Prover.Application.VerificationManager.Volume;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Shared.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.ViewModels.Devices;
+using Prover.Application.Verifications;
+using Prover.Application.Verifications.Volume;
 
 namespace Client.Desktop.Wpf.Startup
 {

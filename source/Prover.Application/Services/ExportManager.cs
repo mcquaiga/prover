@@ -9,9 +9,9 @@ namespace Prover.Application.Services
 {
     public class ExportManager : IExportVerificationTest
     {
-        private readonly EvcVerificationTestService _testRunService;
+        private readonly IVerificationTestService _testRunService;
 
-        public ExportManager(EvcVerificationTestService testRunService)
+        public ExportManager(IVerificationTestService testRunService)
         {
             _testRunService = testRunService;
         }
@@ -19,7 +19,7 @@ namespace Prover.Application.Services
         public async Task<bool> Export(EvcVerificationTest verificationTest)
         {
             verificationTest.ExportedDateTime = DateTime.Now;
-            await _testRunService.AddOrUpdateVerificationTest(verificationTest);
+            await _testRunService.AddOrUpdate(verificationTest);
             return true;
         }
 
@@ -28,7 +28,7 @@ namespace Prover.Application.Services
             foreach (var test in verificationTests)
             {
                 test.ExportedDateTime = DateTime.Now;
-                await _testRunService.AddOrUpdateVerificationTest(test);
+                await _testRunService.AddOrUpdate(test);
             }
             return true;
         }

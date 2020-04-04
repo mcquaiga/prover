@@ -1,9 +1,8 @@
 ﻿using System.Reactive;
-using Client.Desktop.Wpf.Dialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Client.Desktop.Wpf.ViewModels.Dialogs
+namespace Client.Desktop.Wpf.Dialogs
 {
     public class QuestionDialogViewModel : DialogViewModel
     {

@@ -4,6 +4,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Client.Desktop.Wpf.Reports;
 using Devices.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -16,17 +17,15 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class VerificationGridViewModel : ReactiveObject
+    public class VerificationGridViewModel : ViewModelBase
     {
-        private CompositeDisposable _cleanup = new CompositeDisposable();
         public VerificationGridViewModel(
+            ILogger<VerificationGridViewModel> logger,
             EvcVerificationTest verificationTest,
-            IVerificationTestService viewModelService,
-            EvcVerificationTestService verificationTestService,
-            VerificationTestReportGenerator reportService,
+            IVerificationTestService verificationTestService,
             ILoginService<EmployeeDTO> loginService,
             IExportVerificationTest exporter,
-            ExporterViewModel exporterViewModel)
+            ExporterViewModel exporterViewModel) : base(logger)
         {
             LoginService = loginService;
             ExporterViewModel = exporterViewModel;
@@ -39,28 +38,24 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             void SetupRx()
             {
-                PrintReport = ReactiveCommand.CreateFromTask(async () =>
-                    {
-                        var viewModel = await viewModelService.GetVerificationTest(Test);
-                        await reportService.GenerateAndViewReport(viewModel);
-                    }).DisposeWith(_cleanup);
+                var canAddUser = loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler);
+                canAddUser
+                    .LogDebug(x => $"CanAddUser = {x}");
 
-                var canAddUser = loginService.LoggedIn;
-                
                 AddSignedOnUser = ReactiveCommand.CreateFromTask(async () =>
                 {
                     if (loginService.User != null)
                     {
                         Test.EmployeeId = loginService.User?.Id;
-                        await verificationTestService.AddOrUpdateVerificationTest(Test);
+                        await verificationTestService.AddOrUpdate(Test);
                     }
 
                     return loginService.User?.Id;
-                }, canAddUser).DisposeWith(_cleanup);
-                canAddUser.Subscribe();
+                }, canAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+                //canAddUser.DefaultIfEmpty(loginService.IsSignedOn).Subscribe();
 
                 AddSignedOnUser
-                    .ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(_cleanup);
+                    .ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(Cleanup);
 
 
                 var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime, (ex, a) => ex == null && a == null);
@@ -70,14 +65,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     if (!string.IsNullOrEmpty(jobId))
                     {
                         Test.JobId = jobId;
-                        await verificationTestService.AddOrUpdateVerificationTest(Test);
+                        await verificationTestService.AddOrUpdate(Test);
                     }
 
                     return jobId;
-                }, canAddJobId).DisposeWith(_cleanup);
+                }, canAddJobId)
+                    .DisposeWith(Cleanup);
                 
                 AddJobId
-                    .ToPropertyEx(this, x => x.JobId, Test.JobId).DisposeWith(_cleanup);
+                    .ToPropertyEx(this, x => x.JobId, Test.JobId)
+                    .DisposeWith(Cleanup);
 
 
                 var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId, (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
@@ -86,10 +83,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     var success = await exporter.Export(Test);
                     
                     return Test.ExportedDateTime;
-                }, canExport).DisposeWith(_cleanup);
+                }, canExport)
+                    .DisposeWith(Cleanup);
                 
                 ExportVerification
-                    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, deferSubscription: true).DisposeWith(_cleanup);
+                    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, deferSubscription: true)
+                    .DisposeWith(Cleanup);
 
 
                 ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
@@ -99,14 +98,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                             "Are you sure you want to archive this test?"))
                     {
                         Test.ArchivedDateTime = DateTime.Now;
-                        var updated = await verificationTestService.AddOrUpdateVerificationTest(Test);
+                        var updated = await verificationTestService.AddOrUpdate(Test);
                     }
 
                     return Test.ArchivedDateTime;
-                }).DisposeWith(_cleanup);
+                }).DisposeWith(Cleanup);
                 
                 ArchiveVerification
-                    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, deferSubscription: true).DisposeWith(_cleanup);
+                    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, deferSubscription: true)
+                    .DisposeWith(Cleanup);
 
             }
         }
@@ -134,8 +134,5 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public string CompositionType => Test.Device.CompositionShort();
 
-        private void SetupRx()
-        {
-        }
     }
 }

@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Devices.Core.Items
 {
+    public interface IVolumeUnits
+    {
+        VolumeUnit Units { get; set; }
+    }
 
     public class VolumeUnit
     {

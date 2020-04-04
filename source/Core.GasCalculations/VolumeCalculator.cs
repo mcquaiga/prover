@@ -1,4 +1,5 @@
-﻿using Prover.Shared.Extensions;
+﻿using System;
+using Prover.Shared.Extensions;
 
 namespace Core.GasCalculations
 {
@@ -13,27 +14,21 @@ namespace Core.GasCalculations
         {
             return Round.Volume(rate * appliedInput);
         }
-
+        
         public static decimal TotalVolume(decimal startReading, decimal endReading, decimal multiplier)
         {
-            return Round.Volume((endReading - startReading) * multiplier);
+            return Round.Volume(TotalVolume(startReading, endReading) * multiplier);
+        }
+        
+        public static decimal TotalVolume(decimal startReading, decimal endReading)
+        {
+            return Round.Volume(endReading - startReading);
         }
 
-        //public static class Mechanical
-        //{
-        //    public static decimal UncorrectedVolume(decimal driveRate, decimal appliedInput)
-        //    {
-        //        return Round.Factor(driveRate * appliedInput);
-        //    }
-        //}
-
-        //public static class Rotary
-        //{
-        //    public static decimal UncorrectedVolume(decimal meterDisplacement, decimal appliedInput)
-        //    {
-        //        return Round.Factor(meterDisplacement * appliedInput);
-        //    }
-        //}
+        public static int PulseCount(decimal totalVolume, decimal? multiplier)
+        {
+            return (int)(decimal.ToInt32(totalVolume) / multiplier ?? 1);
+        }
     }
 
     public class MechanicalVolumeCalculator : VolumeCalculator

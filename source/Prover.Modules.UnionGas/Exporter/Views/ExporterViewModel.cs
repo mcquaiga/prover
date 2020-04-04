@@ -44,14 +44,13 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             DeviceTypes = deviceRepository.GetAll().OrderBy(d => d.Name).ToList();
             DeviceTypes = DeviceTypes.Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" }).ToList();
 
-            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, DeviceType>(f => f);
+            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter);
 
-            var deviceFilter = FilterByTypeCommand.Select(BuildDeviceFilter);
             var includeExportedFilter = this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
             var includeArchivedFilter = this.WhenAnyValue(x => x.IncludeArchived).Select(BuildIncludeArchivedFilter);
 
-            var sorter = deviceFilter.Merge(includeExportedFilter).Merge(includeArchivedFilter)
-                .Select(_ => SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime));
+            //var sorter = FilterByTypeCommand.Merge(includeExportedFilter).Merge(includeArchivedFilter)
+            //    .Select(_ => SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime));
 
             PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async (test) =>
             {
@@ -60,12 +59,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 reportViewModel.ContentViewModel = viewModel;
             }).DisposeWith(Cleanup);
 
-            service.FetchTests()
-                .Connect()
-                .Sort(SortExpressionComparer<EvcVerificationTest>.Descending(t => t.TestDateTime), resetThreshold: 0)
-                .Filter(deviceFilter)
+            service.FetchTests().Connect()
+                .Filter(FilterByTypeCommand)
                 .Filter(includeExportedFilter)
                 .Filter(includeArchivedFilter)
+                .Sort(SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime), resetThreshold: 0)
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Transform(x => verificationViewModelFactory.Invoke(x, this))
                 .Bind(out var allNotExported)
@@ -82,7 +80,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         [Reactive] public bool IncludeExportedTests { get; set; } = false;
         [Reactive] public bool IncludeArchived { get; set; } = false;
 
-        public ReactiveCommand<DeviceType, DeviceType> FilterByTypeCommand { get; protected set; }
+        public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
 
         public ReadOnlyObservableCollection<VerificationGridViewModel> VisibleTests { get; }
 

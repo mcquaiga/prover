@@ -22,6 +22,7 @@
                 Label="End" />
             <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="Actual" />
             <controls:ValueDescriptionControl x:Name="ActualValueControl" Label="EVC" />
+            <controls:ValueDescriptionControl x:Name="PulsesExpectedControl" Label="Pulse Count" />
 
             <controls:ValueDescriptionControl x:Name="PulsesVerifiedControl" Label="Pulses Ver'd" />
         </UniformGrid>

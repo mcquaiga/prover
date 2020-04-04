@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
+﻿using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
@@ -10,18 +6,25 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.Validation
+namespace Prover.Application.Verifications.CustomActions
 {
 
-    public abstract class ItemValueValidation<TValue> : IVerificationCustomActions
+    public abstract class ItemFileValidation<TValue> : IVerificationAction
     {
+        private readonly IDeviceSessionManager _deviceManager;
+
+        protected ItemFileValidation(IDeviceSessionManager deviceManager)
+        {
+            _deviceManager = deviceManager;
+        }
+
         public abstract VerificationTestStep RunOnStep { get; }
 
-        public async Task<bool> Run(IDeviceSessionManager deviceManager, DeviceInstance device,
-            EvcVerificationViewModel verification)
+        public async Task<bool> Execute(EvcVerificationViewModel verification)
         {
+            var device = verification.Device;
             var itemValue = GetDeviceValue(device);
-
+            
             var isValid = await CheckIfValid(device, itemValue);
             
             while (!isValid)
@@ -36,7 +39,7 @@ namespace Prover.Application.Validation
                 isValid =
                     await CheckIfValid(device, itemValue);
 
-                if (isValid) await UpdateDeviceValue(deviceManager, device, newValue);
+                if (isValid) await UpdateDeviceValue(_deviceManager, device, newValue);
             };
 
             return true;

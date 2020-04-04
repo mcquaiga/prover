@@ -25,7 +25,9 @@ namespace Prover.Modules.UnionGas.Exporter
         /// <summary>
         ///     Defines the _dcrWebService
         /// </summary>
-        private readonly DCRWebServiceSoap _dcrWebService;
+        private readonly IExportService<QARunEvcTestResult> _exportService;
+
+        private readonly IMeterService<MeterDTO> _meterService;
 
         /// <summary>
         ///     Defines the _loginService
@@ -35,13 +37,15 @@ namespace Prover.Modules.UnionGas.Exporter
         /// <summary>
         ///     Defines the _testRunService
         /// </summary>
-        private readonly EvcVerificationTestService _testRunService;
+        private readonly IVerificationTestService _testRunService;
 
-        public ExportToMasaManager(EvcVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
-            DCRWebServiceSoap dcrWebService)
+        public ExportToMasaManager(IVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
+            IExportService<QARunEvcTestResult> exportService,
+            IMeterService<MeterDTO> meterService)
         {
             _testRunService = testRunService;
-            _dcrWebService = dcrWebService;
+            _exportService = exportService;
+            _meterService = meterService;
             _loginService = loginService;
         }
 
@@ -50,7 +54,7 @@ namespace Prover.Modules.UnionGas.Exporter
             var forExport = testsForExport as EvcVerificationTest[] ?? testsForExport.ToArray();
             var qaTestRuns = forExport.Select(Translate.RunTranslationForExport).ToList();
 
-            var isSuccess = await _dcrWebService.SendQaTestResults(qaTestRuns, Log);
+            var isSuccess = await _exportService.SubmitQaTestRunResults(qaTestRuns);
 
             if (!isSuccess)
                 throw new Exception(
@@ -59,7 +63,7 @@ namespace Prover.Modules.UnionGas.Exporter
             foreach (var instr in forExport)
             {
                 instr.ExportedDateTime = DateTime.Now;
-                await _testRunService.AddOrUpdateVerificationTest(instr);
+                await _testRunService.AddOrUpdate(instr);
             }
 
             return true;
@@ -73,13 +77,13 @@ namespace Prover.Modules.UnionGas.Exporter
 
         public async Task<bool> ExportFailedTest(string companyNumber)
         {
-            var meterDto = await _dcrWebService.FindMeterByInventoryNumber(companyNumber, Log);
+            var meterDto = await _meterService.FindMeterByInventoryNumber(companyNumber);
 
             if (meterDto == null)
                 throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
             var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.Id);
-            return await _dcrWebService.SendQaTestResults(new[] {failedTest});
+            return await _exportService.SubmitQaTestRunResults(new[] {failedTest});
         }
     }
 }

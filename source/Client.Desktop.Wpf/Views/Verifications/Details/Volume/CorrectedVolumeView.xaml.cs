@@ -21,10 +21,13 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
                 this.OneWayBind(ViewModel, vm => vm.Verified, v => v.PercentErrorControl.Passed).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.StartValues.CorrectedReading, v => v.StartReadingControl.Value).DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.EndCorrectedReading, v => v.EndReadingControl.Value).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.EndReading, v => v.EndReadingControl.Value).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.ExpectedValueControl.Value).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.ExpectedValue, v => v.PulsesExpectedControl.Value).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value, 
                     value => value ? "PASS" : "FAIL").DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Foreground, 

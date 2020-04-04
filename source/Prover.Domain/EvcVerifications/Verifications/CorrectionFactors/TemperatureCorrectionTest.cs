@@ -6,10 +6,10 @@ namespace Prover.Domain.EvcVerifications.Verifications.CorrectionFactors
     {
         #region Public Properties
         protected  TemperatureCorrectionTest() { }
-        public TemperatureCorrectionTest(TemperatureItems items, decimal expectedValue, decimal actualValue, decimal percentError, decimal gauge) 
+        public TemperatureCorrectionTest(TemperatureItems items, decimal expectedValue, decimal actualValue, decimal percentError, decimal gaugeTemperature) 
             : base(items, expectedValue, actualValue, percentError)
         {
-            Gauge = gauge;
+            Gauge = gaugeTemperature;
         }
 
         public decimal Gauge { get; private set; }

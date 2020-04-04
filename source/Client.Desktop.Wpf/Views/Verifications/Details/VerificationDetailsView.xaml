@@ -31,10 +31,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical">
+        <Viewbox Stretch="Uniform">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
-            <reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />
-        </StackPanel>
+            <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
+        </Viewbox>
 
 
         <Viewbox Grid.Column="1" Stretch="Uniform">

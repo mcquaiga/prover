@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Desktop.Wpf.Extensions;
-using Client.Desktop.Wpf.Reports;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
@@ -35,65 +35,59 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
-            services.AddSingleton<Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel>>(c => (evcTest, vm) =>
-            {
-                return new VerificationGridViewModel(evcTest,
-                    c.GetService<IVerificationTestService>(),
-                    c.GetService<EvcVerificationTestService>(),
-                    c.GetService<VerificationTestReportGenerator>(),
-                    c.GetService<ILoginService<EmployeeDTO>>(),
-                    c.GetService<IExportVerificationTest>(),
-                    vm
-                );
-            });
+            services.AddSingleton<Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel>>(c =>
+                (evcTest, exporter)
+                    => new VerificationGridViewModel(
+                        c.GetService<ILogger<VerificationGridViewModel>>(),
+                        evcTest,
+                        c.GetService<IVerificationTestService>(),
+                        c.GetService<ILoginService<EmployeeDTO>>(),
+                        c.GetService<IExportVerificationTest>(),
+                        exporter
+                    ));
 
-            AddWebService(services);
+            services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
+            services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
             
-            if (builder.HostingEnvironment.IsDevelopment()) 
+            AddVerificationActions(services);
+
+            if (builder.HostingEnvironment.IsDevelopment())
                 DevelopmentServices(services);
             else
-            {
-                ProductionServices(services);
-            }
+                AddMasaWebService(services);
+        }
+
+        private void AddVerificationActions(IServiceCollection services)
+        {
+            services.AddSingleton<MeterInventoryNumberValidator>();
+            services.AddSingleton<MasaVerificationActions>();
+            services.AddSingleton<IInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            services.AddSingleton<ISubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
+        }
+
+        private void AddMasaWebService(IServiceCollection services, string remoteAddress = null)
+        {
+            services.AddSingleton<DCRWebServiceSoap>(c =>
+                string.IsNullOrEmpty(remoteAddress)
+                    ? new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap)
+                    : new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap,
+                        remoteAddress));
+
+            services.AddSingleton<MasaService>();
+            services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<MasaService>());
+            services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<MasaService>());
+            services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<MasaService>());
         }
 
         private void DevelopmentServices(IServiceCollection services)
         {
-            AddLocalLoginService(services);
-            services.AddSingleton<IExportVerificationTest, ExportManager>();
-            services.AddSingleton<IVerificationCustomActions, DevVerificationInitializer>();
+            services.AddSingleton<DevelopmentWebService>();
+            services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
+            services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
+            services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<DevelopmentWebService>());
         }
 
-        private void ProductionServices(IServiceCollection services)
-        {
-            services.AddSingleton<ILoginService<EmployeeDTO>, MasaLoginService>();
-            services.AddSingleton<IVerificationCustomActions, MasaVerificationInitialization>();
-            services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
-        }
-
-        private void AddWebService(IServiceCollection services, string remoteAddress = null)
-        {
-            services.AddSingleton<DCRWebServiceSoap>(c =>
-                string.IsNullOrEmpty(remoteAddress) 
-                    ? new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap) 
-                    : new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap, remoteAddress));
-        }
-
-        private void AddLocalLoginService(IServiceCollection services)
-        {
-            var employeesLists = new List<EmployeeDTO>
-            {
-                new EmployeeDTO {EmployeeName = "Adam McQuaig", EmployeeNbr = "123", Id = "1"},
-                new EmployeeDTO {EmployeeName = "Tony", EmployeeNbr = "1234", Id = "2"},
-                new EmployeeDTO {EmployeeName = "Glen", EmployeeNbr = "12345", Id = "3"},
-                new EmployeeDTO {EmployeeName = "Kyle", EmployeeNbr = "123456", Id = "4"}
-            };
-
-            services.AddSingleton<ILoginService<EmployeeDTO>, LocalLoginService<EmployeeDTO>>(c =>
-            {
-                return new LocalLoginService<EmployeeDTO>(employeesLists,
-                    (employees, id) => employees.FirstOrDefault(e => e.EmployeeNbr == id));
-            });
-        }
+      
     }
 }

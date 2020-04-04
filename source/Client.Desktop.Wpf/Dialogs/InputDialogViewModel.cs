@@ -17,7 +17,7 @@ namespace Client.Desktop.Wpf.Dialogs
             this.ValidationRule(
                 viewModel => viewModel.InputValue,
                 value => !string.IsNullOrWhiteSpace(value),
-                "You must specify a username.");
+                "Value cannot be empty.");
         }
 
         public string Message { get; }
