@@ -36,8 +36,8 @@ namespace Prover.Modules.UnionGas.MasaWebService
             {
                 var newCompanyNumber =
                     await MessageInteractions.GetInputString.Handle(
-                        $"Device inventory number value was not found on an open job. {Environment.NewLine}" +
-                        "Enter updated inventory number:");
+                        $"Could not find inventory #{device.CompanyNumber()} on an open job. {Environment.NewLine}" +
+                        "Enter new inventory number or cancel to continue with");
 
                 if (string.IsNullOrEmpty(newCompanyNumber))
                     return null;

@@ -2,23 +2,21 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository.JsonRepository;
-using Devices.Romet.Core.Repository;
 using DynamicData;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
-using Prover.Infrastructure;
-using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Interfaces;
 using Tests.Shared;
 
@@ -27,22 +25,22 @@ namespace Tests.Application.Services
     [TestClass]
     public class EvcVerificationTestServiceTests
     {
-        private DeviceInstance _device;
-        private DeviceType _deviceType;
-        private IDeviceRepository _repo;
+        private static DeviceInstance _device;
+        private static DeviceType _deviceType;
+        private static IDeviceRepository _repo;
 
-        private IAsyncRepository<EvcVerificationTest> _testRepo;
-        private IVerificationTestService _viewModelService;
-        private EvcVerificationTestService _modelService;
+        private static IAsyncRepository<EvcVerificationTest> _testRepo;
+        private static IVerificationTestService _viewModelService;
+        private static EvcVerificationTestService _modelService;
 
         [TestMethod]
         public async Task AddOrUpdateVerificationTestTest()
         {
             var newTest = _viewModelService.NewTest(_device);
+            await _viewModelService.AddOrUpdate(newTest);
 
-            var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
-
-            await _testRepo.AddAsync(model);
+            var model = _viewModelService.CreateModel(newTest);
+            await _viewModelService.AddOrUpdate(model);
 
             var model2 = await _testRepo.GetAsync(model.Id);
             Assert.IsNotNull(model2);
@@ -87,9 +85,9 @@ namespace Tests.Application.Services
         private async Task<EvcVerificationViewModel> CreateAndSaveNewTest()
         {
             var newTest = _viewModelService.NewTest(_device);
-            //newTest.ExportedDateTime = DateTime.Now;
-            var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
-            await _testRepo.AddAsync(model);
+           
+            await _viewModelService.AddOrUpdate(newTest);
+           
             return newTest;
         }
 
@@ -122,33 +120,45 @@ namespace Tests.Application.Services
         [TestMethod]
         public async Task CreateTestAndLoadFromLiteDbTest()
         {
-            var newTest = _viewModelService.NewTest(_device);
-            var model = _viewModelService.CreateVerificationTestFromViewModel(newTest);
-            await _testRepo.AddAsync(model);
-
+            var newTest = await CreateAndSaveNewTest();
+            var model = _viewModelService.CreateModel(newTest);
+            
             var dbObject = await _testRepo.GetAsync(model.Id);
+
+            var tests = dbObject.Tests.OfType<VerificationTestPoint>().ToList();
+            var json = JsonConvert.SerializeObject(tests,
+                new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            Debug.WriteLine(json);
+
             model.WithDeepEqual(dbObject)
                 .IgnoreSourceProperty(s => s.TestDateTime)
                 .Assert();
 
-            var success = dbObject.Tests.OfType<VerificationTestPoint>().Count() == 3;
-            success = success && dbObject.Tests.OfType<VerificationTestPoint>().All(p => p.Tests.Count >= 3);
-            Debug.WriteLine($"Verification test point count  {dbObject.Tests.OfType<VerificationTestPoint>().Count()}");
-            Assert.IsTrue(success);
+            Assert.IsTrue(tests.Count() == newTest.VerificationTests.OfType<VerificationTestPointViewModel>().Count());
+
+            var childCount = tests.SelectMany(t => t.Tests).Count();
+            var modelChildCount = 
+                model.Tests.OfType<VerificationTestPoint>().SelectMany(t => t.Tests).Count();
+            
+            Assert.IsTrue(childCount == modelChildCount);
+ 
         }
 
         [TestInitialize]
         public async Task Init()
         {
-            _repo = new DeviceRepository();
-            await _repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
-            await _repo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
-            _deviceType = _repo.GetByName("Mini-Max");
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
+        }
 
-            _testRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, _repo);
-            _modelService = new EvcVerificationTestService(_testRepo);
-            _viewModelService = new VerificationTestService(_testRepo, new VerificationViewModelFactory(), null, null);
+        [ClassInitialize]
+        public static async Task ClassInitialize(TestContext context)
+        {
+            _repo = StorageInitialize.Repo;
+            _deviceType = _repo.GetByName("Mini-Max");
+
+            _testRepo = StorageInitialize.TestRepo;
+            _modelService = StorageInitialize.ModelService;
+            _viewModelService =StorageInitialize.ViewModelService;
         }
     }
 

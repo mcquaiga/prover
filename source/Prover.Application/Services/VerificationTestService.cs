@@ -58,7 +58,7 @@ namespace Prover.Application.Services
             return evcVerificationTest;
         }
 
-        public EvcVerificationTest CreateVerificationTestFromViewModel(EvcVerificationViewModel viewModel)
+        public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel)
             => VerificationMapper.MapViewModelToModel(viewModel);
 
         public async Task<EvcVerificationViewModel> GetVerificationTest(EvcVerificationTest verificationTest)

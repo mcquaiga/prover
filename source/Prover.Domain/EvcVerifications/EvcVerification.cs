@@ -33,7 +33,7 @@ namespace Prover.Domain.EvcVerifications
 
         public bool Verified { get; set; }
 
-        public string JobId { get; set; }
+        public string JobId { get; set; } 
 
         public string EmployeeId { get; set; }
     }

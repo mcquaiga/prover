@@ -41,17 +41,14 @@ namespace Client.Desktop.Wpf
         public void StopApplication()
         {
             Debug.WriteLine("Stopping Application.");
-        }
-
-        private void AddConfiguration(IConfigurationBuilder config, HostBuilderContext host)
-        {
+            AppHost.StopAsync(ApplicationStopped);
         }
 
         private void AddServices(IServiceCollection services, HostBuilderContext host)
         {
             services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
             services.AddSingleton<UnhandledExceptionHandler>();
-            
+
             Settings.AddServices(services, host);
             Storage.AddServices(services, host);
             UserInterface.AddServices(services, host);
@@ -63,10 +60,11 @@ namespace Client.Desktop.Wpf
             Host.CreateDefaultBuilder()
                 .ConfigureLogging((host, log) =>
                 {
-                    log.AddEventLog();
-#if DEBUG
-                    log.Services.AddSplatLogging();
+                    //log.AddEventLog();
                     log.AddDebug();
+                    log.Services.AddSplatLogging();
+#if DEBUG
+
 #endif
                 })
                 .ConfigureServices((host, services) =>

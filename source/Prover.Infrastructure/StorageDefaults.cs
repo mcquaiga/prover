@@ -30,7 +30,7 @@ namespace Prover.Infrastructure
         public static IRepository<DeviceType> CreateDefaultDeviceTypeRepository() =>
             new DeviceTypeLiteDbRepository(Database);
 
-        public static ILiteDatabase CreateLiteDb(string path)
+        public static ILiteDatabase CreateLiteDb(string path = null)
         {
             if (!Lazy.IsValueCreated && !string.IsNullOrEmpty(path))
                 ConnectionString = path;

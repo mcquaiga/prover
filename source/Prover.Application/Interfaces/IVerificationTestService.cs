@@ -11,7 +11,7 @@ namespace Prover.Application.Interfaces
         Task<bool> AddOrUpdate(EvcVerificationViewModel viewModel);
         Task<EvcVerificationTest> AddOrUpdate(EvcVerificationTest evcVerificationTest);
 
-        EvcVerificationTest CreateVerificationTestFromViewModel(EvcVerificationViewModel viewModel);
+        EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel);
 
         Task<EvcVerificationViewModel> GetVerificationTest(
             EvcVerificationTest verificationTest);

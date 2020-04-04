@@ -56,7 +56,11 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public Task DeleteAsync(Guid id) => throw new NotImplementedException();
 
-        public async Task<T> GetAsync(Guid id) => Context.GetCollection<T>().FindById(id);
+        public async Task<T> GetAsync(Guid id)
+        {
+            await Task.CompletedTask;
+            return Context.GetCollection<T>().FindById(id);
+        }
 
         public IObservable<T> List(Expression<Func<T, bool>> predicate = null)
         {
