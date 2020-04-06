@@ -85,9 +85,9 @@
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <Grid>
+            <Grid VerticalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="60" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -114,6 +114,7 @@
                         <StackPanel
                             Grid.Column="1"
                             Margin="8,2"
+                            VerticalAlignment="Center"
                             Orientation="Vertical">
                             <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
                             <StackPanel Margin="0,2" Orientation="Horizontal">
@@ -157,17 +158,19 @@
                             x:Name="ToolbarViewHost"
                             Grid.Column="2"
                             HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
                             HorizontalContentAlignment="Center" />
 
                         <StackPanel
                             Grid.Column="3"
-                            Margin="40,5"
+                            Margin="15,5"
                             HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
                             Orientation="Horizontal">
 
                             <TextBlock
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
+                                VerticalAlignment="Center"
                                 Style="{StaticResource MaterialDesignBody1TextBlock}">
                                 Selected
                                 <TextBlock x:Name="SelectedCountTextBlock" />
@@ -176,11 +179,14 @@
                             </TextBlock>
 
 
-                            <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <materialDesign:PopupBox
+                                Margin="20,2,8,2"
+                                PlacementMode="LeftAndAlignBottomEdges"
+                                StaysOpen="False">
                                 <StackPanel>
                                     <CheckBox
                                         x:Name="IncludeExportedCheckBox"
-                                        Margin="8"
+                                        Margin="4"
                                         VerticalAlignment="Center"
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
                                         Content="Include Exported"
@@ -188,7 +194,7 @@
                                         Style="{StaticResource MaterialDesignDarkCheckBox}" />
                                     <CheckBox
                                         x:Name="IncludeArchivedCheckBox"
-                                        Margin="8"
+                                        Margin="4"
                                         VerticalAlignment="Center"
                                         CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
                                         Content="Include Archived"

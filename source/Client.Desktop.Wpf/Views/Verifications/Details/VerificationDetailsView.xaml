@@ -25,19 +25,19 @@
             </Border>
         </DataTemplate>-->
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Stretch">
+        <!--<DockPanel.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+        </DockPanel.ColumnDefinitions>-->
 
-        <Viewbox Stretch="Uniform">
+        <Viewbox DockPanel.Dock="Left" Stretch="Uniform">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
 
 
-        <Viewbox Grid.Column="1" Stretch="Uniform">
+        <Viewbox Grid.Column="1" DockPanel.Dock="Right">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -87,5 +87,5 @@
             </Grid>
         </Viewbox>
 
-    </Grid>
+    </DockPanel>
 </reactiveUi:ReactiveUserControl>

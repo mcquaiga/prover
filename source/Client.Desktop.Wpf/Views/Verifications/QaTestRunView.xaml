@@ -31,13 +31,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryLight">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <TextBlock
@@ -49,14 +50,16 @@
                 <StackPanel
                     x:Name="EditTestToolBarControl"
                     Grid.Column="1"
-                    HorizontalAlignment="Right"
+                    HorizontalAlignment="Left"
                     Orientation="Horizontal">
 
                     <Button
-                        x:Name="ViewItemFileButton"
-                        Margin="18,0"
-                        Content="View Item File"
-                        Style="{StaticResource MaterialDesignFlatLightBgButton}" />
+                        x:Name="SubmitTestButton"
+                        Width="Auto"
+                        Margin="25,0,5,0"
+                        HorizontalAlignment="Right"
+                        Content="SUBMIT TEST"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
 
                     <Button
                         x:Name="SaveButton"
@@ -70,15 +73,20 @@
                         Content="{materialDesign:PackIcon Printer}"
                         Style="{StaticResource MaterialDesignIconButton}" />
 
-                    <Button
-                        x:Name="SubmitTestButton"
-                        Width="Auto"
-                        Margin="25,0,5,0"
-                        HorizontalAlignment="Right"
-                        Content="SUBMIT TEST"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
                 </StackPanel>
-
+                <materialDesign:PopupBox
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    PlacementMode="BottomAndAlignRightEdges"
+                    StaysOpen="False">
+                    <StackPanel>
+                        <Button
+                            x:Name="ViewItemFileButton"
+                            Margin="18,0"
+                            Content="View Item File"
+                            Style="{StaticResource MaterialDesignFlatLightBgButton}" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
             </Grid>
         </materialDesign:ColorZone>
 
@@ -203,6 +211,10 @@
                 Style="{StaticResource MaterialDesignFlatButton}" />
         </Grid>
 
-        <reactiveUi:ViewModelViewHost x:Name="TestManagerView" Grid.Row="1" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="TestManagerView"
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch" />
     </Grid>
 </reactiveUi:ReactiveUserControl>

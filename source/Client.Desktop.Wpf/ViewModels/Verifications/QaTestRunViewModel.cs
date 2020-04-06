@@ -20,8 +20,6 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-
-
     public class QaTestRunViewModel : RoutableViewModelBase, IDisposable
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
@@ -96,7 +94,9 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
             this.WhenAnyObservable(x => x.TestManager.TestViewModel.VerifiedObservable)
                 .Where(v => v)
-                .Do(x => NotificationInteractions.SnackBarMessage.Handle("Verification Complete"));
+                .Do(x => NotificationInteractions.SnackBarMessage.Handle("Verification Complete"))
+                .Subscribe()
+                .DisposeWith(Cleanup);
                 //.Select(_ => Unit.Default)
                 //.InvokeCommand(SubmitTest);
 
