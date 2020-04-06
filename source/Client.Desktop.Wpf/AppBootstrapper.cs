@@ -50,7 +50,7 @@ namespace Client.Desktop.Wpf
             services.AddSingleton<UnhandledExceptionHandler>();
 
             Settings.AddServices(services, host);
-            Storage.AddServices(services, host);
+            StorageStartup.AddServices(services, host);
             UserInterface.AddServices(services, host);
             DeviceServices.AddServices(services, host);
             UpdaterService.AddServices(services, host);

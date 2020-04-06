@@ -109,26 +109,37 @@
             Margin="15"
             Style="{StaticResource PassFailIcon}" />
 
-        <StackPanel
+        <Grid
             Grid.Column="1"
             Margin="16,6"
-            HorizontalAlignment="Left"
-            Orientation="Horizontal">
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
             <StackPanel
                 Margin="16,6"
                 HorizontalAlignment="Left"
+                VerticalAlignment="Top"
                 Orientation="Vertical">
                 <TextBlock
                     x:Name="DeviceTypeTextBlock"
                     HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
                     FontSize="24" />
 
                 <TextBlock x:Name="CompositionTypeTextBlock" HorizontalAlignment="Left" />
 
                 <TextBlock x:Name="DriveTypeTextBlock" HorizontalAlignment="Left" />
             </StackPanel>
-            <TextBlock x:Name="TestDateTimeTextBlock" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
-        </StackPanel>
+            <TextBlock
+                x:Name="TestDateTimeTextBlock"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+        </Grid>
         <UniformGrid
             Grid.Column="2"
             Margin="5,2"

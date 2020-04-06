@@ -31,7 +31,7 @@ namespace Prover.Application.Verifications
         public async Task<ITestManager> StartNew(IVerificationTestService verificationService, DeviceType deviceType)
         {
             var device = await _deviceSessionManager.StartSession(deviceType);
-            var testViewModel = verificationService.NewTest(device);
+            var testViewModel = verificationService.NewVerification(device);
 
             await _actionExecutioner.RunActionsOn<IInitializeAction>(testViewModel);
 

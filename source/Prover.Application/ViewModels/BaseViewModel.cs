@@ -34,6 +34,6 @@ namespace Prover.Application.ViewModels
 
         protected ViewModelWithIdBase(Guid id) => Id = id;
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; set; }
     }
 }

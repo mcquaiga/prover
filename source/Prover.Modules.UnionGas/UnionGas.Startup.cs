@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
+using Prover.Infrastructure.KeyValueStore;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
 using Prover.Modules.UnionGas.Exporter.Views;
@@ -54,10 +55,12 @@ namespace Prover.Modules.UnionGas
            
             services.AddSingleton<MasaLoginService>();
             services.AddSingleton<ILoginService<EmployeeDTO>>(c => c.GetRequiredService<MasaLoginService>());
-            services.AddHostedService<MasaLoginService>();
+            //services.AddHostedService<MasaLoginService>();
 
             services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
             services.AddTransient<TestsByJobNumberViewModel>();
+            services.AddSingleton<IRepository<EmployeeDTO>, LiteDbRepository<EmployeeDTO>>();
+            
             AddVerificationActions(services);
 
             if (builder.HostingEnvironment.IsDevelopment())
@@ -91,7 +94,6 @@ namespace Prover.Modules.UnionGas
 
         private void DevelopmentServices(IServiceCollection services)
         {
-            
             services.AddSingleton<DevelopmentWebService>();
             services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
             services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<DevelopmentWebService>());

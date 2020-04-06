@@ -30,58 +30,12 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
             {
                 this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Kind, value => value ? PackIconKind.Check : PackIconKind.AlertCircleOutline).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
+                
+                this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Text, value => $"Employee #{value}").DisposeWith(d);
 
                 //this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed);
 
-                DeviceNameTextBlock.Text = ViewModel.Device.DeviceType.Name;
-                TestDateBlock.Text = $"{ViewModel.Test.TestDateTime:g}";
-
-                JobIdTextBlock.Visibility = !string.IsNullOrEmpty(ViewModel.Test.JobId)
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
-                JobIdTextBlock.Text = $"Job #{ViewModel.Test.JobId ?? ""}";
-
-                CompositionTypeTextBlock.Text = ViewModel.Device.CompositionShort();
-
-                DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
-                    ViewModel.Test.VolumeTest.DriveType.InputType);
-
-                CompanyNumberText.Content = ViewModel.CompanyNumber;
-                SerialNumberText.Content = ViewModel.SiteInfo.SerialNumber;
-                FirmwareText.Content = ViewModel.SiteInfo.FirmwareVersion;
-
-                //Volume Info
-                UncorUnitsTextBlock.Content = ViewModel.Volume.UncorrectedUnits;
-                CorUnitsTextBlock.Content = ViewModel.Volume.CorrectedUnits;
-                DriveRateTextBlock.Content = ViewModel.Volume.DriveRateDescription;
-
-
-                //Pressure
-                if (ViewModel.Pressure != null)
-                {
-                    PressureInfoSection.Visibility = Visibility.Visible;
-                    PressureRangeTextBlock.Content = ViewModel.Pressure.Range.ToString();
-                    PressureTransducerTextBlock.Content = ViewModel.Pressure.TransducerType.ToString();
-                    BasePressureTextBlock.Content = ViewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
-                    AtmPressureTextBlock.Content = ViewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    PressureInfoSection.Visibility = Visibility.Collapsed;
-                }
-
-
-                //Temperature
-                if (ViewModel.Temperature != null)
-                {
-                    TemperatureInfoSection.Visibility = Visibility.Visible;
-                    BaseTempTextBlock.Content = ViewModel.Temperature.Base.ToString(CultureInfo.InvariantCulture);
-                    TempUnitsTextBlock.Content = ViewModel.Temperature.Units.ToString();
-                }
-                else
-                {
-                    TemperatureInfoSection.Visibility = Visibility.Collapsed;
-                }
+                SetWithViewModel(ViewModel);
 
                 //Pulse Outputs
                 SetPulseOutputChannel(PulseOutputChannel.Channel_A, ChannelAContentControl, ChannelAUnitsTextBlock);
@@ -89,6 +43,59 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
                 this.CleanUpDefaults().DisposeWith(d);
             });
+        }
+
+        private void SetWithViewModel(SiteInformationViewModel viewModel)
+        {
+            DeviceNameTextBlock.Text = viewModel.Device.DeviceType.Name;
+            TestDateBlock.Text = $"{viewModel.TestDateTime:g}";
+
+            JobIdTextBlock.Visibility = !string.IsNullOrEmpty(viewModel.Test.JobId)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            JobIdTextBlock.Text = $"Job #{viewModel.Test.JobId ?? ""}";
+
+            CompositionTypeTextBlock.Text = viewModel.Device.CompositionShort();
+
+            DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
+                viewModel.Test.VolumeTest.DriveType.InputType);
+
+            CompanyNumberText.Content = viewModel.CompanyNumber;
+            SerialNumberText.Content = viewModel.SiteInfo.SerialNumber;
+            FirmwareText.Content = viewModel.SiteInfo.FirmwareVersion;
+
+            //Volume Info
+            UncorUnitsTextBlock.Content = viewModel.Volume.UncorrectedUnits;
+            CorUnitsTextBlock.Content = viewModel.Volume.CorrectedUnits;
+            DriveRateTextBlock.Content = viewModel.Volume.DriveRateDescription;
+
+
+            //Pressure
+            if (viewModel.Pressure != null)
+            {
+                PressureInfoSection.Visibility = Visibility.Visible;
+                PressureRangeTextBlock.Content = viewModel.Pressure.Range.ToString();
+                PressureTransducerTextBlock.Content = viewModel.Pressure.TransducerType.ToString();
+                BasePressureTextBlock.Content = viewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
+                AtmPressureTextBlock.Content = viewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                PressureInfoSection.Visibility = Visibility.Collapsed;
+            }
+
+
+            //Temperature
+            if (viewModel.Temperature != null)
+            {
+                TemperatureInfoSection.Visibility = Visibility.Visible;
+                BaseTempTextBlock.Content = viewModel.Temperature.Base.ToString(CultureInfo.InvariantCulture);
+                TempUnitsTextBlock.Content = viewModel.Temperature.Units.ToString();
+            }
+            else
+            {
+                TemperatureInfoSection.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void SetPulseOutputChannel(PulseOutputChannel channel, ContentControl channelControl, ContentControl unitsControl)
@@ -104,5 +111,6 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
             }
             unitsControl.Visibility = Visibility.Collapsed;
         }
+
     }
 }

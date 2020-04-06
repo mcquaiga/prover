@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 
 namespace Prover.Application.Extensions
 {
-    public static class VerificationViewModelExtensions
+    public static class VerificationExtensions
     {
         public static PressureFactorViewModel GetPressureTest(this VerificationTestPointViewModel testPoint)
         {
@@ -35,6 +38,26 @@ namespace Prover.Application.Extensions
         public static VolumeTestRunViewModelBase GetUncorrectedTest(this VolumeViewModelBase volumeTest)
         {
             return (VolumeTestRunViewModelBase) volumeTest.AllTests().FirstOrDefault();
+        }
+
+        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceType deviceType,  int testNumber, Dictionary<string, string> valuesDictionary)
+            where T : ItemGroup, IHaveFactor
+        {
+            var itemValues = deviceType.ToItemValues(valuesDictionary);
+            verification.SetItems<T>(deviceType, testNumber, itemValues);
+        }
+
+        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceType deviceType, int testNumber,
+            IEnumerable<ItemValue> itemValues)
+            where T : ItemGroup, IHaveFactor
+        {
+            var testPoint = verification.VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(v => v.TestNumber == testNumber);
+            if (testPoint == null) 
+                return;
+
+            var testOfT = testPoint.VerificationTests.OfType<CorrectionTestViewModel<T>>().FirstOrDefault();
+            if (testOfT != null)
+                testOfT.Items = deviceType.GetGroupValues<T>(itemValues);
         }
 
         public static string TestDateTimePretty(this EvcVerificationViewModel test)

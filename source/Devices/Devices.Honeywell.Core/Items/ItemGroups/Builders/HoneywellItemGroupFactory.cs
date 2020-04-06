@@ -18,9 +18,9 @@ namespace Devices.Honeywell.Core.Items.ItemGroups.Builders
 
         public override TGroup Create<TGroup>(DeviceType deviceType, IEnumerable<ItemValue> values)
         {
-            var builder = findGroupBuilder(typeof(TGroup), deviceType);
-            if (builder != null)
-                return (TGroup) builder.Build(deviceType, values);
+            //var builder = findGroupBuilder(typeof(TGroup), deviceType);
+            //if (builder != null)
+            //    return (TGroup) builder.Build(deviceType, values);
 
             return (TGroup)BasicGroupBuilder.GetItemGroupInstance(typeof(TGroup), values, deviceType);
         }

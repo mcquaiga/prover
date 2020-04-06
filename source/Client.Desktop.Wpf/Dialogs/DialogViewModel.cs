@@ -13,6 +13,8 @@ using ReactiveUI.Validation.Extensions;
 
 namespace Client.Desktop.Wpf.Dialogs
 {
+   
+
     public class DialogViewModel : ReactiveObject, IDialogViewModel, IDisposable, IValidatableViewModel
     {
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
@@ -21,15 +23,19 @@ namespace Client.Desktop.Wpf.Dialogs
         public DialogViewModel(CancellationTokenSource cancellationTokenSource = null)
         {
             CancellationTokenSource = cancellationTokenSource ?? new CancellationTokenSource();
-
+            Cancelled = CancellationTokenSource.Token;
             //ShowCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(true)).DisposeWith(Cleanup);
-            CloseCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(Unit.Default), this.IsValid())
-                .DisposeWith(Cleanup);
+            CloseCommand = ReactiveCommand.CreateFromObservable(() =>
+            {
+                Response = DialogResult.Accepted;
+                return Observable.Return(Unit.Default);
+            }, this.IsValid()).DisposeWith(Cleanup);
 
-            CancelCommand = ReactiveCommand.CreateFromObservable(() => {
+            CancelCommand = ReactiveCommand.CreateFromObservable(() =>
+            {
+                Response = DialogResult.Cancelled;
                 CancellationTokenSource.Cancel();
                 return Observable.Return(Unit.Default);
-
             }).DisposeWith(Cleanup);
 
             CloseCommand.Merge(CancelCommand)
@@ -37,15 +43,22 @@ namespace Client.Desktop.Wpf.Dialogs
                 .DisposeWith(Cleanup);
         }
 
-        [Reactive] public string Title { get; set; }
-        [Reactive] public string Message { get; set; }
-
         protected DialogViewModel() : this(new CancellationTokenSource())
         {
         }
 
+        public CancellationToken Cancelled { get; protected set; }
+
+        public IObservable<Unit> Closed { get; set; }
+
+        [Reactive] public string Title { get; set; }
+        [Reactive] public string Message { get; set; }
+
         public ReactiveCommand<Unit, Unit> CloseCommand { get; set; }
+        public DialogResult Response { get; protected set; }
         public ReactiveCommand<Unit, Unit> CancelCommand { get; set; }
+
+        public ValidationContext ValidationContext { get; } = new ValidationContext();
 
         public void Dispose()
         {
@@ -55,9 +68,6 @@ namespace Client.Desktop.Wpf.Dialogs
 
         protected virtual void Disposing()
         {
-
         }
-
-        public ValidationContext ValidationContext { get; } = new ValidationContext();
     }
 }

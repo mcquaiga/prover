@@ -18,6 +18,7 @@ namespace Devices.Honeywell.Core
         {
             ItemValues.RemoveWhere(i => itemValues.Any(x => x.Id == i.Id));
             ItemValues.UnionWith(itemValues);
+            ClearCache();
         }
 
     

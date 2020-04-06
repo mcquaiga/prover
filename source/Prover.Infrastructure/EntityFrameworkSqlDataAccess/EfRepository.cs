@@ -44,7 +44,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess
 
         #region Methods
 
-        public virtual async Task<T> AddAsync(T entity)
+        public virtual async Task<T> UpsertAsync(T entity)
         {
             Context.Set<T>().Add(entity);
             await Context.SaveChangesAsync();
@@ -82,7 +82,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess
             return await Context.Set<T>().ToListAsync();
         }
 
-        public IObservable<T> List(Expression<Func<T, bool>> predicate = null) => throw new NotImplementedException();
+        public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => throw new NotImplementedException();
 
         public virtual async Task<T> GetByIdAsync(Guid id)
         {

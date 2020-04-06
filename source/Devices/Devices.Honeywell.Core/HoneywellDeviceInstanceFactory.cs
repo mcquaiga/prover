@@ -50,7 +50,7 @@ namespace Devices.Honeywell.Core
         {
             var values = itemValues as ItemValue[] ?? itemValues.ToArray();
 
-            _deviceBuilder = new HoneywellDeviceBuilder((HoneywellDeviceType) _deviceType, values);
+            _deviceBuilder = new HoneywellDeviceBuilder(_deviceType, values);
 
             //_deviceBuilder
             //    .BuildPtz()

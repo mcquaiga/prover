@@ -34,9 +34,13 @@ namespace Client.Desktop.Wpf.ViewModels
             return viewModel;
         }
 
-        public async Task<TViewModel> ChangeView<TViewModel>() where TViewModel : IRoutableViewModel
+        public async Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel
         {
-            var model = _services.GetService<TViewModel>();
+            var model = 
+                parameters.IsNullOrEmpty() 
+                    ? _services.GetService<TViewModel>() 
+                    : (TViewModel)ActivatorUtilities.CreateInstance(_services, typeof(TViewModel), parameters);
+
             await Router.Navigate.Execute(model);
             return model;
         }

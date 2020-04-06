@@ -24,6 +24,5 @@ namespace Client.Desktop.Wpf.Dialogs
         public string Title { get; }
         [Reactive] public string InputValue { get; set; }
 
-        public ValidationContext ValidationContext { get; } = new ValidationContext();
     }
 }

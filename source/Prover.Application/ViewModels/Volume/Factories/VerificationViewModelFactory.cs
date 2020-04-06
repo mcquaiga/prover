@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
@@ -38,12 +39,16 @@ namespace Prover.Application.ViewModels.Volume.Factories
         {
             var viewModel = evcTest.ToViewModel();
 
-            _testDefinitions.ForEach(td => BuildTestPointViewModel(evcTest.Device, viewModel, td));
-            viewModel.Initialize();
+            var testPoints = _testDefinitions
+                .Select(td => BuildTestPointViewModel(evcTest.Device, viewModel, td))
+                .ToList();
+                
+                //.SelectMany(tests => viewModel.Initialize(tests));
+            viewModel.Initialize(testPoints);
             return viewModel;
         }
 
-        private void BuildTestPointViewModel(DeviceInstance device,
+        private VerificationViewModel BuildTestPointViewModel(DeviceInstance device,
             EvcVerificationViewModel viewModel,
             CorrectionTestDefinition definition)
         {
@@ -51,8 +56,6 @@ namespace Prover.Application.ViewModels.Volume.Factories
             {
                 TestNumber = definition.Level
             };
-
-            viewModel.VerificationTests.Add(tpViewModel);
 
             if (device.HasLivePressure())
                 tpViewModel.VerificationTests.Add(
@@ -73,6 +76,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
                 VolumeViewModelFactory.Create(device, viewModel, tpViewModel);
 
             tpViewModel.Initialize();
+            return tpViewModel;
         }
 
         private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge, decimal atmPressure)

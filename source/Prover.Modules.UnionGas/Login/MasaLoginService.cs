@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -19,7 +20,7 @@ namespace Prover.Modules.UnionGas.Login
     /// <summary>
     ///     Defines the <see cref="MasaLoginService" />
     /// </summary>
-    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IHostedService, IDisposable
+    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IDisposable
     {
         /// <summary>
         ///     Defines the _log
@@ -31,18 +32,13 @@ namespace Prover.Modules.UnionGas.Login
         /// </summary>
         private readonly IUserService<EmployeeDTO> _webService;
 
-        private readonly IHostApplicationLifetime _applicationLifetime;
+        private readonly IRepository<EmployeeDTO> _employeeCache;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MasaLoginService" /> class.
-        /// </summary>
-        /// <param name="log"></param>
-        /// <param name="employeeService"></param>
-        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService, IHostApplicationLifetime applicationLifetime)
+        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService, IRepository<EmployeeDTO> employeeCache)
         {
             _log = log ?? NullLogger<MasaLoginService>.Instance;
             _webService = employeeService;
-            _applicationLifetime = applicationLifetime;
+            _employeeCache = employeeCache;
         }
 
         public override async Task<string> GetLoginDetails()
@@ -50,31 +46,21 @@ namespace Prover.Modules.UnionGas.Login
             return await MessageInteractions.GetInputString.Handle("Employee number:");
         }
 
+        public override IEnumerable<EmployeeDTO> GetUsers() => _employeeCache?.GetAll();
+
         public override async Task<bool> Login(string username, string password = null)
         {
             User = await _webService.GetUser(username);
 
             LoggedInSubject.OnNext(User != null);
 
+            _employeeCache.Add(User);
+
             return !User?.Id.IsNullOrEmpty() ?? false;
         }
 
         protected override string UserId => User?.Id;
 
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-            //_applicationLifetime.ApplicationStarted.Register(async () =>
-            //{
-            //    var username = await GetLoginDetails();
-
-            //    await Login(username);
-            //});
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-        }
+  
     }
 }

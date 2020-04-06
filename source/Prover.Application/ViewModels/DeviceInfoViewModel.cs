@@ -24,17 +24,4 @@ namespace Prover.Application.ViewModels
 
         public string CompanyNumber => SiteInfo.SiteId2;
     }
-
-    public class SiteInformationViewModel : DeviceInfoViewModel
-    {
-        public EvcVerificationViewModel Test { get; }
-
-        public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel) : base(device)
-        {
-            Test = verificationViewModel;
-        }
-
-        //public PulseOutputItems.ChannelItems PulseOutputChannelA => PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
-        //public PulseOutputItems.ChannelItems PulseOutputChannelB => PulseOutput.GetChannel(PulseOutputChannel.Channel_A);
-    }
 }

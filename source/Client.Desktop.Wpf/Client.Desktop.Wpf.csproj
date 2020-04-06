@@ -35,12 +35,15 @@
     <Compile Remove="Modules\**" />
     <Compile Remove="Screens\**" />
     <Compile Remove="ViewModels\Certificates\**" />
+    <Compile Remove="Views\Certificates\**" />
     <EmbeddedResource Remove="Modules\**" />
     <EmbeddedResource Remove="Screens\**" />
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
+    <EmbeddedResource Remove="Views\Certificates\**" />
     <None Remove="Modules\**" />
     <None Remove="Screens\**" />
     <None Remove="ViewModels\Certificates\**" />
+    <None Remove="Views\Certificates\**" />
     <Resource Include="Resources\clipboard-check-blue.ico">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -49,6 +52,7 @@
     <Page Remove="Modules\**" />
     <Page Remove="Screens\**" />
     <Page Remove="ViewModels\Certificates\**" />
+    <Page Remove="Views\Certificates\**" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -218,7 +222,6 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
-    <Folder Include="Views\Certificates\" />
   </ItemGroup>
 
   <ItemGroup>

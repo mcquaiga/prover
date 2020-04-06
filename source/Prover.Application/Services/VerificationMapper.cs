@@ -13,7 +13,7 @@ using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 
 namespace Prover.Application.Services
 {
-    internal static class VerificationMapper
+    public static class VerificationMapper
     {
         private static readonly Mapper _mapper = Mappers.Setup();
 
@@ -116,12 +116,12 @@ namespace Prover.Application.Services
                     }
                     pointViewModel.Initialize();
 
-                    return pointViewModel;
+                    return (VerificationViewModel) pointViewModel;
                 }).ToList();
 
-            evcViewModel.VerificationTests.Clear();
-            testPoints.ForEach(evcViewModel.VerificationTests.Add);
-            evcViewModel.Initialize();
+            //evcViewModel.VerificationTests.Clear();
+            //testPoints.ForEach(evcViewModel.VerificationTests.Add);
+            evcViewModel.Initialize(testPoints.ToList());
             return evcViewModel;
         }
     }

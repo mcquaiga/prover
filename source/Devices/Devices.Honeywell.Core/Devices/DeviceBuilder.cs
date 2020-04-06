@@ -22,7 +22,7 @@ namespace Devices.Honeywell.Core.Devices
             return DeviceInstance;
         }
 
-        public virtual DeviceBuilder Reset()
+        protected virtual DeviceBuilder Reset()
         {
             DeviceInstance = new HoneywellDeviceInstance(DeviceType);
             return this;
@@ -30,7 +30,7 @@ namespace Devices.Honeywell.Core.Devices
 
         //public abstract DeviceBuilder BuildAttributes();
 
-        public abstract DeviceBuilder SetItemValues(IEnumerable<ItemValue> values);
+        protected abstract DeviceBuilder SetItemValues(IEnumerable<ItemValue> values);
 
         #endregion
     }

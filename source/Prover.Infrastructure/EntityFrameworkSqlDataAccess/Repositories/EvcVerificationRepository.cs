@@ -21,7 +21,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 
         #region Public Methods
 
-        public override async Task<EvcVerificationTest> AddAsync(EvcVerificationTest entity)
+        public override async Task<EvcVerificationTest> UpsertAsync(EvcVerificationTest entity)
         {
             await Context.EvcVerifications.AddAsync((EvcVerificationSql)entity);
             await Context.SaveChangesAsync();

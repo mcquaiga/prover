@@ -43,7 +43,7 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public LiteDbAsyncRepository(ILiteDatabase context) => Context = context;
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<T> UpsertAsync(T entity)
         {
             var success = Context.GetCollection<T>().Upsert(entity);
             All?.OnNext(entity);
@@ -62,33 +62,30 @@ namespace Prover.Infrastructure.KeyValueStore
             return Context.GetCollection<T>().FindById(id);
         }
 
-        public IObservable<T> List(Expression<Func<T, bool>> predicate = null)
-        {
-           return predicate == null
-                ? Context.GetCollection<T>().FindAll().ToObservable()
-                : Context.GetCollection<T>().Find(predicate).ToObservable();
-        }
-
-        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
-        {
-            return await Task.Run(() => Context.GetCollection<T>().Find(spec.Criteria).ToList());
-        }
-
         public async Task<IReadOnlyList<T>> ListAsync()
         {
             return await Task.Run(() => Context.GetCollection<T>().FindAll().ToList());
         }
 
+        public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => predicate != null
+            ? Context.GetCollection<T>().Find(predicate)
+            : Context.GetCollection<T>().FindAll();
+
         public async Task UpdateAsync(T entity)
         {
             try
             {
-                Context.GetCollection<T>().Upsert(entity);
-                All?.OnNext(entity);
+                await Observable.StartAsync(async () =>
+                {
+                    Context.GetCollection<T>().Upsert(entity);
+                    All?.OnNext(entity);
+                    await Task.CompletedTask;
+                });
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                throw;
             }
         }
     }

@@ -28,9 +28,9 @@ namespace Client.Desktop.Wpf.ViewModels.Dashboard
 
         public VerificationStats GetVerificationStats(DateTime? fromDate = null, DateTime? toDateTime = null)
         {
-            var tests = _verificationRepository.List(test => test.TestDateTime.Between(fromDate.Value, toDateTime.Value)).ToListObservable();
+            var tests = _verificationRepository.Query(test => test.TestDateTime.Between(fromDate.Value, toDateTime.Value));
 
-            return new VerificationStats(tests);
+            return new VerificationStats(tests.ToList());
         }
     }
 

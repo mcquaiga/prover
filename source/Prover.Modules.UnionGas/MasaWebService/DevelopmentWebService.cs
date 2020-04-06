@@ -45,7 +45,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
                 {
                     InventoryCode = inventoryNumber,
                     JobNumber = RandomNumberGenerator.GetInt32(1, 10000),
-                    SerialNumber = _deviceSession.Device.Items.SiteInfo.SerialNumber
+                    SerialNumber = _deviceSession?.Device.Items.SiteInfo.SerialNumber ?? "1234"
                 };
             }
 

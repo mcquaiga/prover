@@ -2,12 +2,10 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Client.Desktop.Wpf.Reports;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
@@ -58,36 +56,38 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     .ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(Cleanup);
 
 
-                var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime, (ex, a) => ex == null && a == null);
+                var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime,
+                    (ex, a) => ex == null && a == null);
                 AddJobId = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
-                    if (!string.IsNullOrEmpty(jobId))
                     {
-                        Test.JobId = jobId;
-                        await verificationTestService.AddOrUpdate(Test);
-                    }
+                        var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
+                        if (!string.IsNullOrEmpty(jobId))
+                        {
+                            Test.JobId = jobId;
+                            await verificationTestService.AddOrUpdate(Test);
+                        }
 
-                    return jobId;
-                }, canAddJobId)
+                        return jobId;
+                    }, canAddJobId)
                     .DisposeWith(Cleanup);
-                
+
                 AddJobId
                     .ToPropertyEx(this, x => x.JobId, Test.JobId)
                     .DisposeWith(Cleanup);
 
 
-                var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId, (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
+                var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId,
+                    (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
                 ExportVerification = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    var success = await exporter.Export(Test);
-                    
-                    return Test.ExportedDateTime;
-                }, canExport)
+                    {
+                        var success = await exporter.Export(Test);
+
+                        return Test.ExportedDateTime;
+                    }, canExport)
                     .DisposeWith(Cleanup);
-                
+
                 ExportVerification
-                    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, deferSubscription: true)
+                    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, true)
                     .DisposeWith(Cleanup);
 
 
@@ -103,11 +103,10 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
                     return Test.ArchivedDateTime;
                 }).DisposeWith(Cleanup);
-                
-                ArchiveVerification
-                    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, deferSubscription: true)
-                    .DisposeWith(Cleanup);
 
+                ArchiveVerification
+                    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, true)
+                    .DisposeWith(Cleanup);
             }
         }
 
@@ -133,6 +132,5 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public DeviceInfoViewModel DeviceInfo { get; }
 
         public string CompositionType => Test.Device.CompositionShort();
-
     }
 }

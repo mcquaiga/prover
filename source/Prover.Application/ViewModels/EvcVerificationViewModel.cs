@@ -22,7 +22,7 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public IVolumeInputType DriveType { get; set; }
 
-        [Reactive] public DateTime TestDateTime { get; set; } = DateTime.Now;
+        [Reactive] public DateTime? TestDateTime { get; set; }
 
         [Reactive] public DateTime? ExportedDateTime { get; set; }
 
@@ -38,22 +38,21 @@ namespace Prover.Application.ViewModels
 
         public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
         
-        public void Initialize()
+        public void Initialize(ICollection<VerificationViewModel> verificationTests)
         {
             DeviceInfo = new SiteInformationViewModel(Device, this);
-            RegisterVerificationsForVerified(VerificationTests);
 
+            VerificationTests.Clear();
+            VerificationTests.AddRange(verificationTests.ToArray());
             
+            RegisterVerificationsForVerified(VerificationTests);
         }
 
         protected override void Disposing()
         {
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
-            //VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();
         }
-
-        //public string UrlPathSegment { get; } = "EvcVerificationTest";
-        //public IScreen HostScreen { get; }
+        
     }
 }

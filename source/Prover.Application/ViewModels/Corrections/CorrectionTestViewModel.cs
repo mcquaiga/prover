@@ -25,36 +25,39 @@ namespace Prover.Application.ViewModels.Corrections
 
         protected VerificationViewModel()
         {
-            _setVerified = ReactiveCommand.Create<bool, bool>(v => v);
-            _setVerified
+            //_setVerified = ReactiveCommand.Create<bool, bool>(v => v);
+            //_setVerified
+            //    .LogDebug(x => $"{GetType()} - Verified = {x}")
+            //_setVerified.DisposeWith(Cleanup);
+
+            this.WhenAnyObservable(x => x.VerifiedObservable)
                 .LogDebug(x => $"{GetType()} - Verified = {x}")
-                .ToPropertyEx(this, x => x.Verified, false);
-
-            _setVerified.DisposeWith(Cleanup);
-
-            //this.WhenAnyValue(x => x.Verified)
-            //    //.LogDebug(x => $"{GetType().Name} - Verified = {x}")
-            //    .Subscribe();
+                .ToPropertyEx(this, x => x.Verified, deferSubscription: true);
         }
 
         public extern bool Verified { [ObservableAsProperty] get; }
 
+        public IObservable<bool> VerifiedObservable { get; protected set; }
+
         protected void SetVerified(bool verified)
         {
-            //verified = SetOverrideVerify(verified);
+            
             _setVerified.Execute(verified);
         }
 
         protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
         {
-            if (verifications == null || !verifications.Any()) return;
+            //if (verifications == null || !verifications.Any()) return;
 
-            verifications.AsObservableChangeSet()
+            VerifiedObservable = 
+                verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(200), propertyChangeThrottle: TimeSpan.FromMilliseconds(100))
                 .ToCollection()
-                .Select(x => x.All(y => y.Verified))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToPropertyEx(this, x => x.Verified, false);
+                .Select(x => x.Any() && x.All(y => y.Verified))
+                .ObserveOn(RxApp.MainThreadScheduler);
+                
+
+                //.ToPropertyEx(this, x => x.Verified, false);
         }
 
         //protected virtual bool SetOverrideVerify(bool verified) => verified;
@@ -79,10 +82,9 @@ namespace Prover.Application.ViewModels.Corrections
         {
             PassTolerance = passTolerance;
 
-            this.WhenAnyValue(x => x.PercentError)
-                .Select(p => p.IsBetween(PassTolerance))
-                .ToPropertyEx(this, x => x.Verified)
-                .DisposeWith(Cleanup);
+            VerifiedObservable = this.WhenAnyValue(x => x.PercentError)
+                .Select(p => p.IsBetween(PassTolerance));
+                
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)
                 .ToPropertyEx(this, x => x.PercentError, 100m, true)

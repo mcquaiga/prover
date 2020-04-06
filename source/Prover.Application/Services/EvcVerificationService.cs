@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -15,39 +16,41 @@ using Prover.Shared.Interfaces;
 
 namespace Prover.Application.Services
 {
-    public class EvcVerificationTestService
-    {
-        private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+    //public class EvcVerificationTestService : IDisposable
+    //{
+    //    private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+        
+    //    private CompositeDisposable _cleanup;
+    //    private readonly IConnectableObservable<IChangeSet<EvcVerificationTest, Guid>> _tests;
 
-        private IObservableCache<EvcVerificationTest, Guid> _tests =
-            new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
+    //    public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
+    //    {
+    //        _verificationRepository = verificationRepository;
 
-        private CompositeDisposable _cleanup;
+    //        _tests = GetTests().Publish();
 
-        public EvcVerificationTestService(IAsyncRepository<EvcVerificationTest> verificationRepository)
-        {
-            _verificationRepository = verificationRepository;
-            VerificationTests = _tests;
-        }
+    //        VerificationTests = _tests.AsObservableCache();
+    //    }
+        
+    //    public IObservableCache<EvcVerificationTest, Guid> FetchTests()
+    //    {
+    //        if (_cleanup == null)
+    //            _cleanup = new CompositeDisposable(VerificationTests, _tests.Connect());
 
-        public IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; private set; }
+    //        return VerificationTests;
+    //    }
+    //    private IObservableCache<EvcVerificationTest, Guid> VerificationTests { get; set; }
+    //    private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
+    //    {
+    //        return _verificationRepository.Query().ToObservableChangeSet(t => t.Id);
+    //    }
 
-        public IObservableCache<EvcVerificationTest, Guid> FetchTests()
-        {
-            var tests = GetTests().Publish();
-
-            VerificationTests = tests.AsObservableCache();
-
-            _cleanup = new CompositeDisposable(VerificationTests, tests.Connect());
-
-            return VerificationTests;
-        }
-
-        private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
-        {
-            return _verificationRepository.List().ToObservableChangeSet(t => t.Id);
-        }
-    }
+    //    public void Dispose()
+    //    {
+    //        _cleanup?.Dispose();
+    //        VerificationTests?.Dispose();
+    //    }
+    //}
 
 /*
     public class EvcVerificationTestCreator

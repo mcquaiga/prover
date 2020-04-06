@@ -13,32 +13,32 @@ using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
+using Prover.Modules.UnionGas.Models;
+using Prover.Modules.UnionGas.VerificationActions;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
     public class ExporterViewModel : ViewModelBase, IRoutableViewModel
     {
-        private readonly IExportVerificationTest _exporter;
+        private readonly ReadOnlyObservableCollection<EvcVerificationProxy> _data;
+        private Func<EvcVerificationTest, ExportToolbarViewModel> _exporterToolbarFactory;
 
         public ExporterViewModel(IScreenManager screenManager,
-            EvcVerificationTestService service,
             IVerificationTestService verificationTestService,
             IDeviceRepository deviceRepository,
-            VerificationTestReportGenerator reportService,
             IExportVerificationTest exporter,
             ILoginService<EmployeeDTO> loginService,
-            Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel> verificationViewModelFactory,
-            TestsByJobNumberViewModel testsByJobNumberViewModel)
+            TestsByJobNumberViewModel testsByJobNumberViewModel,
+            MeterInventoryNumberValidator inventoryNumberValidator,
+            Func<ReadOnlyObservableCollection<EvcVerificationTest>, ExportToolbarViewModel> exporterToolbarFactory =
+                null)
         {
-            _exporter = exporter;
             ScreenManager = screenManager;
             TestsByJobNumberViewModel = testsByJobNumberViewModel;
             HostScreen = screenManager;
@@ -48,7 +48,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
             {
-                var viewModel = await verificationTestService.GetVerificationTest(test);
+                var viewModel = await verificationTestService.GetViewModel(test);
                 var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
                 reportViewModel.ContentViewModel = viewModel;
             }).DisposeWith(Cleanup);
@@ -56,45 +56,55 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             FilterByTypeCommand =
                 ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter);
 
-            var includeExportedFilter =
-                this.WhenAnyValue(x => x.IncludeExportedTests).Select(BuildIncludeExportedFilter);
-            
-            var includeArchivedFilter = 
-                this.WhenAnyValue(x => x.IncludeArchived).Select(BuildIncludeArchivedFilter);
+            FilterIncludeArchived =
+                ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter);
 
-            var reSorter = FilterByTypeCommand.Merge(includeExportedFilter).Merge(includeArchivedFilter)
-                .Select(_ => Unit.Default);
-            var sortExpression = SortExpressionComparer<VerificationGridViewModel>
-                    .Ascending(t => !string.IsNullOrEmpty(t.JobId) ? t.JobId : "ZZZZZZZ")
-                    .ThenByAscending(t => t.Test.TestDateTime);
+            FilterIncludeExported =
+                ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter);
 
-            var filteredTests = service.FetchTests().Connect()
+            var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
+
+            var visibleItems = verificationTestService.FetchTests().Connect()
                 .Filter(FilterByTypeCommand)
-                .Filter(includeExportedFilter)
-                .Filter(includeArchivedFilter);
-            
-            filteredTests
-                .Transform(x => verificationViewModelFactory.Invoke(x, this))
-                .Sort(sortExpression, reSorter)
+                .Filter(FilterIncludeExported)
+                .Filter(FilterIncludeArchived)
+                .Transform(x => new EvcVerificationProxy(x, changeObservable, loginService));
+
+            visibleItems
+                .Sort(SortExpressionComparer<EvcVerificationProxy>.Ascending(t => t.Test.TestDateTime))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var visibleTests)
-                .DisposeMany()
+                .Bind(out _data)
                 .Subscribe()
                 .DisposeWith(Cleanup);
-            
-            VisibleTests = visibleTests;
 
-            filteredTests
+            _data.ToObservableChangeSet()
+                .AutoRefresh(vm => vm.IsSelected)
+                .Filter(x => x.IsSelected)
+                .Transform(x => x.Test)
+                .Bind(out var selectedItems)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe()
+                .DisposeWith(Cleanup);
+            SelectedItems = selectedItems;
+
+            if (exporterToolbarFactory == null)
+                exporterToolbarFactory = selected => new ExportToolbarViewModel(screenManager, verificationTestService,
+                    loginService, exporter, inventoryNumberValidator, selected);
+
+            ToolbarViewModel = exporterToolbarFactory.Invoke(selectedItems);
+
+            verificationTestService.FetchTests().Connect()
                 .Filter(x => !string.IsNullOrEmpty(x.JobId))
-                //.DistinctValues(x => !string.IsNullOrEmpty(x.JobId) ? x.JobId : "")
                 .DistinctValues(x => x.JobId)
                 .Bind(out var jobIds)
                 .Subscribe()
                 .DisposeWith(Cleanup);
-            
+
             JobIdsList = jobIds;
         }
 
+        public ReadOnlyObservableCollection<EvcVerificationTest> SelectedItems { get; private set; }
+        public ExportToolbarViewModel ToolbarViewModel { get; set; }
         public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
 
         public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; protected set; }
@@ -102,12 +112,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public ReactiveCommand<VerificationGridViewModel, DateTime?> ArchiveVerification { get; protected set; }
         public ReactiveCommand<VerificationGridViewModel, DateTime?> ExportVerification { get; protected set; }
 
-        [Reactive] public bool IncludeExportedTests { get; set; } = false;
-        [Reactive] public bool IncludeArchived { get; set; } = false;
+        //[Reactive] public bool IncludeExportedTests { get; set; } = false;
+        //[Reactive] public bool IncludeArchived { get; set; } = false;
 
         public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
+        public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeExported { get; protected set; }
+        public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeArchived { get; protected set; }
 
-        public ReadOnlyObservableCollection<VerificationGridViewModel> VisibleTests { get; }
+
+        public ReadOnlyObservableCollection<EvcVerificationProxy> Data => _data;
 
         public ICollection<DeviceType> DeviceTypes { get; } = new List<DeviceType>();
 

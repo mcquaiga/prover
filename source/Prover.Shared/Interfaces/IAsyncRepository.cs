@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Prover.Shared.Domain;
 
@@ -9,14 +10,12 @@ namespace Prover.Shared.Interfaces
     public interface IAsyncRepository<in TId, TEntity>
         where TEntity : GenericEntity<TId>
     {
-        Task<TEntity> AddAsync(TEntity entity);
-        Task DeleteAsync(TId id);
+        Task<TEntity> UpsertAsync(TEntity entity);
 
+        Task DeleteAsync(TId id);
         Task DeleteAsync(TEntity entity);
 
         Task<TEntity> GetAsync(TId id);
-
-        Task UpdateAsync(TEntity entity);
     }
 
     public interface IAsyncRepository<T> : IAsyncRepository<Guid, T>
@@ -24,9 +23,14 @@ namespace Prover.Shared.Interfaces
     {
         Task<int> CountAsync(ISpecification<T> spec);
 
-        IObservable<T> List(Expression<Func<T, bool>> predicate = null);
+        IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null);
 
-        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
         Task<IReadOnlyList<T>> ListAsync();
+    }
+
+    public interface IObservableRepository<T>
+        where T : AggregateRoot
+    {
+        IQbservable<T> QueryObservable(Expression<Func<T, bool>> predicate = null);
     }
 }

@@ -7,13 +7,16 @@ using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
+using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
 
 namespace Prover.Modules.UnionGas.VerificationActions
 {
-    internal class MeterInventoryNumberValidator
+    public class MeterInventoryNumberValidator
     {
+        private const string NotFoundMessage = "Couldn't find inventory #{0} on an open job. {1}";
+
         private const int CompanyNumberItemId = 201;
         private readonly IDeviceSessionManager _deviceManager;
         private readonly IMeterService<MeterDTO> _meterService;
@@ -24,42 +27,26 @@ namespace Prover.Modules.UnionGas.VerificationActions
             _meterService = meterService;
         }
 
-        public async Task<MeterDTO> Validate(EvcVerificationViewModel verification)
-        {
-            return await CheckInventoryNumberByMeter(verification.Device);
-        }
+        public async Task<MeterDTO>
+            Validate(EvcVerificationViewModel verification, bool updateDeviceItemValue = false) =>
+            await Validate(verification.Device, updateDeviceItemValue);
 
-        private async Task<MeterDTO> CheckInventoryNumberByMeter(DeviceInstance device)
-        {
-            var meterDto = await FindAndValidateMeterDto(device, device.CompanyNumber());
+        public async Task<MeterDTO> Validate(EvcVerificationTest verification, bool updateDeviceItemValue = false) =>
+            await Validate(verification.Device, updateDeviceItemValue);
 
-            while (meterDto == null)
-            {
-                var newCompanyNumber =
-                    await MessageInteractions.GetInputString.Handle(
-                        $"Could not find inventory #{device.CompanyNumber()} on an open job. {Environment.NewLine}" +
-                        "Enter new inventory number or cancel to continue with");
-
-                if (string.IsNullOrEmpty(newCompanyNumber))
-                    return null;
-
-                meterDto = await FindAndValidateMeterDto(device, newCompanyNumber);
-
-                if (meterDto != null)
-                    await UpdateDeviceInventoryNumber(_deviceManager, device, newCompanyNumber);
-            }
-
-            return meterDto;
-        }
-
-        private async Task<MeterDTO> FindAndValidateMeterDto(DeviceInstance device, string inventoryCode)
+        private async Task<MeterDTO> FindAndValidateMeterDto(string serialNumber, string inventoryCode)
         {
             var meterDto = await _meterService.FindMeterByInventoryNumber(inventoryCode);
             var isValid = ValidateDeviceWithMeterDto(meterDto, inventoryCode,
-                device.Items.SiteInfo.SerialNumber);
+                serialNumber);
 
             return isValid ? meterDto : null;
         }
+
+        private async Task<string> GetInventoryNumberFromUser(string inventoryNumber) =>
+            await MessageInteractions.GetInputString.Handle(
+                $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}" +
+                "Enter new inventory number or cancel to continue with");
 
         private async Task UpdateDeviceInventoryNumber(IDeviceSessionManager deviceManager, DeviceInstance device,
             string companyNumber)
@@ -72,6 +59,44 @@ namespace Prover.Modules.UnionGas.VerificationActions
 
             //if (updatedItem.)
             device.SetItemValues(new[] {updatedItem});
+        }
+
+        private async Task<MeterDTO> UpdateInventoryNumber(DeviceInstance device, string inventoryNumber,
+            string serialNumber)
+        {
+            MeterDTO meterDto = null;
+            while (meterDto == null)
+            {
+                inventoryNumber = await GetInventoryNumberFromUser(inventoryNumber);
+
+                if (string.IsNullOrEmpty(inventoryNumber))
+                    return null;
+
+                meterDto = await FindAndValidateMeterDto(serialNumber, inventoryNumber);
+
+                if (meterDto != null)
+                    await UpdateDeviceInventoryNumber(_deviceManager, device, inventoryNumber);
+            }
+
+            return meterDto;
+        }
+
+        private async Task<MeterDTO> Validate(DeviceInstance device, bool updateDeviceItemValue = false)
+        {
+            var inventoryNumber = device.CompanyNumber();
+            var serialNumber = device.Items.SiteInfo.SerialNumber;
+
+            var meterDto = await FindAndValidateMeterDto(serialNumber, inventoryNumber);
+            if (meterDto == null )
+            {
+                if (updateDeviceItemValue)
+                    meterDto = await UpdateInventoryNumber(device, inventoryNumber, serialNumber);
+                else
+                    await MessageInteractions.ShowMessage.Handle(
+                        $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}");
+            }
+            
+            return meterDto;
         }
 
         private bool ValidateDeviceWithMeterDto(MeterDTO meterDto, string companyNumber, string serialNumber)

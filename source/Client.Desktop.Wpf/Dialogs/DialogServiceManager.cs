@@ -139,7 +139,6 @@ namespace Client.Desktop.Wpf.Dialogs
             var inputDialog = new InputDialogViewModel(message, title);
             
             await ShowViewModel(inputDialog);
-            await inputDialog.CloseCommand.FirstAsync();
 
             return (TResult) (object) inputDialog.InputValue;
         }
@@ -148,7 +147,6 @@ namespace Client.Desktop.Wpf.Dialogs
         {
             var model = new TextDialogViewModel(message, title);
             await ShowViewModel(model);
-            await model.CloseCommand.FirstAsync();
         }
 
         public async Task<bool> ShowQuestion(string question)
@@ -161,8 +159,7 @@ namespace Client.Desktop.Wpf.Dialogs
             };
 
             await ShowDialogView.Execute(view);
-            await viewModel.CloseCommand.FirstAsync();
-
+            await viewModel.CloseCommand.Merge(viewModel.CancelCommand).FirstAsync();
             return view.Answer ?? false;
         }
 
@@ -171,6 +168,7 @@ namespace Client.Desktop.Wpf.Dialogs
             var view = GenerateView(viewModel);
 
             await ShowDialogView.Execute(view);
+            await viewModel.CloseCommand.Merge(viewModel.CancelCommand).FirstAsync();
         }
 
         private IViewFor GenerateView(IDialogViewModel viewModel)

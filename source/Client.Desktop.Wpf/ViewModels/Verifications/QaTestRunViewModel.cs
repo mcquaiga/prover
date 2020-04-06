@@ -20,6 +20,8 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
+
+
     public class QaTestRunViewModel : RoutableViewModelBase, IDisposable
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
@@ -28,8 +30,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ILogger<QaTestRunViewModel> logger, 
             IScreenManager screenManager,
             IVerificationTestService verificationService,
-            IDeviceRepository deviceRepository
-            ) : base(screenManager)
+            IDeviceRepository deviceRepository) : base(screenManager)
         {
             deviceRepository.All.Connect()
                 .Filter(d => !d.IsHidden)
@@ -67,7 +68,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             SaveCommand = ReactiveCommand.CreateFromTask(async () => {
                 logger.LogDebug("Saving test...");
 
-                if (await verificationService.AddOrUpdate(TestManager.TestViewModel))
+                var updated = await verificationService.AddOrUpdate(TestManager.TestViewModel);
+                if (updated != null)
                 {
                     logger.LogDebug("Saved test successfully");
                     await NotificationInteractions.SnackBarMessage.Handle("SAVED");
@@ -75,15 +77,30 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 }
                 return false;
             }).DisposeWith(_cleanup);
+            SaveCommand.ThrownExceptions.Subscribe();
 
             var canSubmit = this.WhenAnyValue(x => x.TestManager.TestViewModel.Verified);
             SubmitTest = ReactiveCommand.CreateFromTask(async () => {
-                await SaveCommand.Execute();
-                (TestManager as IDisposable)?.Dispose();
-                await ScreenManager.GoHome();
+
+                if (true)
+                {
+                    TestManager.TestViewModel.TestDateTime = DateTime.Now;
+
+                    await SaveCommand.Execute();
+                    (TestManager as IDisposable)?.Dispose();
+                    await ScreenManager.GoHome();
+                }
             }, canSubmit).DisposeWith(_cleanup);
 
             PrintTestReport = ReactiveCommand.CreateFromObservable(() => MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(_cleanup);
+
+            this.WhenAnyObservable(x => x.TestManager.TestViewModel.VerifiedObservable)
+                .Where(v => v)
+                .Do(x => NotificationInteractions.SnackBarMessage.Handle("Verification Complete"));
+                //.Select(_ => Unit.Default)
+                //.InvokeCommand(SubmitTest);
+
+            Changing.LogDebug("Screen changing");
         }
 
         [Reactive] public ITestManager TestManager { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Prover.Shared.Interfaces
@@ -17,6 +18,7 @@ namespace Prover.Shared.Interfaces
     {
         T User { get; }
         Task<string> GetLoginDetails();
+        IEnumerable<T> GetUsers();
     }
 
 

@@ -41,6 +41,7 @@ namespace Devices.Core.Interfaces
             return ItemInfoAttributeHelpers.GetItemIdentifiers(itemType);
         }
 
+
         public override string ToString() => Name;
 
         private static IEnumerable<ItemValue> ToItemValuesEnumerable(DeviceType deviceType,

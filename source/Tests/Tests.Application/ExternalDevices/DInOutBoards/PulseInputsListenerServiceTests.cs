@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +23,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
         private Mock<IInputChannel> _channelBMock;
         private Mock<IInputChannelFactory> _channelMockFactory;
         private PulseOutputItems _pulseOutputItems;
-        private TestSchedulers _schedulers;
+        private static TestSchedulers _schedulers;
 
         [TestMethod]
         public void ConstantIntervalSimulatorInputChannelTest()
@@ -97,6 +98,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
 
             _schedulers = new TestSchedulers();
         }
+
 
         [TestMethod]
         public void ListenForPulsesOnOneChannel()

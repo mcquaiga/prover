@@ -13,11 +13,21 @@ using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 using Tests.Shared;
 
+namespace Prover.Application.Services.Tests
+{
+    [TestClass()]
+    public class VerificationViewModelServiceTests
+    {
+        
+    }
+}
+
 namespace Tests.Application.Services
 {
     [TestClass]
     public class VerificationViewModelServiceTests
     {
+        private static TestSchedulers _schedulers = new TestSchedulers();
         private static DeviceInstance _device;
         private static DeviceType _deviceType;
         private static Mock<DeviceInstance> _instance;
@@ -32,12 +42,12 @@ namespace Tests.Application.Services
         [TestMethod]
         public async Task CreateVerificationTestFromViewModelTest()
         {
-            var newTest = _service.NewTest(_device);
+            var newTest = _service.NewVerification(_device);
 
             var model = _service.CreateModel(newTest);
             Assert.AreEqual(newTest.Id, model.Id);
 
-            var viewModel = await _service.GetVerificationTest(model);
+            var viewModel = await _service.GetViewModel(model);
             //newTest.WithDeepEqual(viewModel)
             //    .IgnoreSourceProperty(t => t.Device.DeviceType)
             //    .Assert();
@@ -45,7 +55,7 @@ namespace Tests.Application.Services
             var model2 = _service.CreateModel(viewModel);
             model2.ShouldDeepEqual(model);
 
-            //Assert.IsTrue(model2.IsDeepEqual(model));
+            Assert.IsTrue(model2.IsDeepEqual(model));
             //Assert.IsTrue(newTest.IsDeepEqual(viewModel));
         }
 
@@ -55,36 +65,34 @@ namespace Tests.Application.Services
         }
 
         [TestInitialize]
-        public async Task Init()
+        public async Task TestInit()
         {
-            await Task.CompletedTask;
             var items = ItemFiles.MiniMaxItemFile;
             _device = _deviceType.CreateInstance(items);
+
+            await Task.CompletedTask;
         }
 
         [TestMethod]
         public void NewTestTest()
         {
-            var newTest = _service.NewTest(_device);
+            var newTest = _service.NewVerification(_device);
 
             Assert.IsNotNull(newTest);
         }
 
-        [TestMethod]
-        public void VerificationViewModelServiceTest()
-        {
-        }
+      
 
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            _repo = StorageInitialize.Repo;
+            _repo = StorageTestsInitialize.Repo;
             _deviceType = _repo.GetByName("Mini-Max");
 
-            _service = StorageInitialize.ViewModelService;
-            //_service = new VerificationTestService(_repoMock.Object, _verificationViewModelFactory, null, null);
+            _service = StorageTestsInitialize.ViewModelService;
             _instance = new Mock<DeviceInstance>();
-            _deviceType = _repo.GetByName("Mini-Max");
+
+
         }
     }
 }

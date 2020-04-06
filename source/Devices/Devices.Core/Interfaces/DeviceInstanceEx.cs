@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Prover.Shared;
 
@@ -6,14 +8,53 @@ namespace Devices.Core.Interfaces
 {
     public static class DeviceInstanceEx
     {
+        public static ItemValue SetItemValue(this DeviceInstance device, ItemMetadata itemMetadata, string value)
+        {
+            var itemValue = ItemValue.Create(itemMetadata, value);
+            device.SetItemValues(new []{itemValue});
+            return itemValue;
+        }
+
+        public static ItemValue SetItemValue(this DeviceInstance device, int itemId, string value)
+        {
+            var item = device.DeviceType.GetItemMetadata(itemId);
+            return device.SetItemValue(item, value);
+        }
+
+        public static ItemMetadata GetItemMetadata(this DeviceType deviceType, int itemId)
+        {
+            return deviceType.Items.FirstOrDefault(i => i.Number == itemId);
+        }
+
         public static string CompanyNumber(this DeviceInstance device) => device.Items.SiteInfo.SiteId2;
+
+      
+        public static bool HasLivePressure(this DeviceInstance device) =>
+            device.Composition() == CompositionType.P || device.Composition() == CompositionType.PTZ;
+
+        public static bool HasLiveSuper(this DeviceInstance device) => device.Composition() == CompositionType.PTZ;
+
+        public static bool HasLiveTemperature(this DeviceInstance device) =>
+            device.Composition() == CompositionType.T || device.Composition() == CompositionType.PTZ;
+
+        public static PressureItems Pressure(this DeviceInstance device) => device.ItemGroup<PressureItems>();
+        public static PulseOutputItems PulseOutput(this DeviceInstance device) => device.ItemGroup<PulseOutputItems>();
+        public static SiteInformationItems SiteInfo(this DeviceInstance device) => device.ItemGroup<SiteInformationItems>();
+        public static SuperFactorItems SuperFactor(this DeviceInstance device) => device.ItemGroup<SuperFactorItems>();
+        public static TemperatureItems Temperature(this DeviceInstance device) => device.ItemGroup<TemperatureItems>();
+        public static VolumeItems Volume(this DeviceInstance device) => device.ItemGroup<VolumeItems>();
+    }
+
+    public static class SiteInformationEx
+    {
+        public static string InventoryNumber(this SiteInformationItems siteInfo) => siteInfo.SiteId2;
 
         public static CompositionType Composition(this DeviceInstance device) =>
             device.ItemGroup<SiteInformationItems>().CompositionType;
 
-        public static string CompositionDescription(this DeviceInstance device)
+        public static string CompositionDescription(this SiteInformationItems siteInfo)
         {
-            switch (Composition(device))
+            switch (siteInfo.Composition())
             {
                 case CompositionType.T:
                     return "Temperature";
@@ -27,38 +68,10 @@ namespace Devices.Core.Interfaces
                     throw new ArgumentOutOfRangeException();
             }
         }
+        public static string CompositionShort(this DeviceInstance device) => device.Composition().ToString();
 
-        public static string CompositionShort(this DeviceInstance device) => Composition(device).ToString();
+        public static CompositionType Composition(this SiteInformationItems siteInfo) => siteInfo.CompositionType;
 
-        public static bool HasLivePressure(this DeviceInstance device) =>
-            device.Composition() == CompositionType.P || device.Composition() == CompositionType.PTZ;
-
-        public static bool HasLiveSuper(this DeviceInstance device) => device.Composition() == CompositionType.PTZ;
-
-        public static bool HasLiveTemperature(this DeviceInstance device) =>
-            device.Composition() == CompositionType.T || device.Composition() == CompositionType.PTZ;
-
-        public static DeviceItems Items(this DeviceInstance device) => new DeviceItems(device);
-        public static PressureItems Pressure(this DeviceInstance device) => device.ItemGroup<PressureItems>();
-        public static PulseOutputItems PulseOutput(this DeviceInstance device) => device.ItemGroup<PulseOutputItems>();
-
-        public static SiteInformationItems SiteInfo(this DeviceInstance device) =>
-            device.ItemGroup<SiteInformationItems>();
-
-        public static SuperFactorItems SuperFactor(this DeviceInstance device) => device.ItemGroup<SuperFactorItems>();
-        public static TemperatureItems Temperature(this DeviceInstance device) => device.ItemGroup<TemperatureItems>();
-        public static VolumeItems Volume(this DeviceInstance device) => device.ItemGroup<VolumeItems>();
-    }
-
-    public class DeviceItems
-    {
-        private readonly DeviceInstance _device;
-        public DeviceItems(DeviceInstance device) => _device = device;
-        public SiteInformationItems SiteInfo => _device.ItemGroup<SiteInformationItems>();
-        public PressureItems Pressure => _device.ItemGroup<PressureItems>();
-        public TemperatureItems Temperature => _device.ItemGroup<TemperatureItems>();
-        public SuperFactorItems SuperFactor => _device.ItemGroup<SuperFactorItems>();
-        public PulseOutputItems PulseOutput => _device.ItemGroup<PulseOutputItems>();
-        public VolumeItems Volume => _device.ItemGroup<VolumeItems>();
+        public static string CompositionShort(this SiteInformationItems siteInfo) => siteInfo.Composition().ToString();
     }
 }

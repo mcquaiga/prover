@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -37,6 +38,8 @@ namespace Prover.Application.Services
         {
             return await MessageInteractions.GetInputString.Handle("Username:");
         }
+
+        public abstract IEnumerable<TUser> GetUsers();
 
         public abstract Task<bool> Login(string username, string password = null);
         public async Task<bool> Login()
