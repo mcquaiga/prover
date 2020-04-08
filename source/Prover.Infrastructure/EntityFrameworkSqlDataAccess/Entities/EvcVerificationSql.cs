@@ -70,7 +70,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
         #endregion
     }
 
-    public class EvcVerificationSql : EvcVerificationTest
+    public sealed class EvcVerificationSql : EvcVerificationTest
     {
         private IVolumeInputType _driveType;
 
@@ -99,7 +99,7 @@ namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
         //    }
         //}
 
-        public virtual VolumeInputType InputDriveType { get; set; }
+        public VolumeInputType InputDriveType { get; set; }
 
         #endregion
 

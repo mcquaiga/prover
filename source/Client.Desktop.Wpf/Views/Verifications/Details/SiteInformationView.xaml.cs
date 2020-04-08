@@ -32,6 +32,12 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                 this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
                 
                 this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Text, value => $"Employee #{value}").DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Visibility, 
+                    value => 
+                        !string.IsNullOrEmpty(value) 
+                            ? Visibility.Visible 
+                            : Visibility.Collapsed)
+                    .DisposeWith(d);
 
                 //this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed);
 
@@ -71,31 +77,20 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
 
             //Pressure
+            PressureInfoSection.Visibility = viewModel.Pressure != null ? Visibility.Visible : Visibility.Collapsed;
             if (viewModel.Pressure != null)
             {
-                PressureInfoSection.Visibility = Visibility.Visible;
+                PressureUnitsTextBlock.Content = viewModel.Pressure.UnitType.ToString();
                 PressureRangeTextBlock.Content = viewModel.Pressure.Range.ToString();
                 PressureTransducerTextBlock.Content = viewModel.Pressure.TransducerType.ToString();
                 BasePressureTextBlock.Content = viewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
                 AtmPressureTextBlock.Content = viewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
             }
-            else
-            {
-                PressureInfoSection.Visibility = Visibility.Collapsed;
-            }
-
 
             //Temperature
-            if (viewModel.Temperature != null)
-            {
-                TemperatureInfoSection.Visibility = Visibility.Visible;
-                BaseTempTextBlock.Content = viewModel.Temperature.Base.ToString(CultureInfo.InvariantCulture);
-                TempUnitsTextBlock.Content = viewModel.Temperature.Units.ToString();
-            }
-            else
-            {
-                TemperatureInfoSection.Visibility = Visibility.Collapsed;
-            }
+            TemperatureInfoSection.Visibility = viewModel.Temperature != null ? Visibility.Visible : Visibility.Collapsed;
+            BaseTempTextBlock.Content = viewModel.Temperature?.Base.ToString(CultureInfo.InvariantCulture);
+            TempUnitsTextBlock.Content = viewModel.Temperature?.Units.ToString();
         }
 
         private void SetPulseOutputChannel(PulseOutputChannel channel, ContentControl channelControl, ContentControl unitsControl)

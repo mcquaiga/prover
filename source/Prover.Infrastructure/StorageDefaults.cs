@@ -142,9 +142,13 @@ namespace Prover.Infrastructure
 
                 var testVm = testService.NewVerification(device);
 
-                testVm.SetItems<TemperatureItems>(deviceType, 0, ItemFiles.TempLowItems);
-                testVm.SetItems<TemperatureItems>(deviceType, 1, ItemFiles.TempMidItems);
-                testVm.SetItems<TemperatureItems>(deviceType, 2, ItemFiles.TempHighItems);
+                testVm.SetItems<TemperatureItems>(device, 0, ItemFiles.TempLowItems);
+                testVm.SetItems<TemperatureItems>(device, 1, ItemFiles.TempMidItems);
+                testVm.SetItems<TemperatureItems>(device, 2, ItemFiles.TempHighItems);
+                
+                testVm.SetItems<PressureItems>(device, 0, ItemFiles.PressureTest(0));
+                testVm.SetItems<PressureItems>(device, 1, ItemFiles.PressureTest(1));
+                testVm.SetItems<PressureItems>(device, 2, ItemFiles.PressureTest(2));
 
                 await testService.AddOrUpdate(testVm);
 

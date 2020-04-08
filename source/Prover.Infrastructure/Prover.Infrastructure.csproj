@@ -6,9 +6,13 @@
 
   <ItemGroup>
     <None Remove="SampleData\MiniMax.json" />
+    <None Remove="SampleData\TemperatureTests.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="SampleData\TemperatureTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SampleData\MiniMax.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

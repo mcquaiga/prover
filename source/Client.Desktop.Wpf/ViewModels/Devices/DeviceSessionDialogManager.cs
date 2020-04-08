@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
+using Prover.Application.Verifications.Volume;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -45,6 +46,7 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
 
         public IDialogServiceManager DialogManager { get; }
         public ReactiveCommand<Unit, Unit> RequestCancellation { get; protected set; }
+
         [Reactive] public IViewFor SessionDialogContent { get; protected set; }
 
         public void RegisterDeviceInteractions()
@@ -88,7 +90,7 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
 
             DeviceInteractions.StartVolumeTest.RegisterHandler(async context =>
             {
-                SessionDialogContent = new VolumeTestDialogView {ViewModel = context.Input};
+                SessionDialogContent = new VolumeTestDialogView {ViewModel = (AutomatedVolumeTestRunnerBase) context.Input};
 
                 await DialogManager.Show(_dialogView);
                 context.SetOutput(_cancellationTokenSource.Token);

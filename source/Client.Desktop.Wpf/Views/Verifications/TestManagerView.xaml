@@ -23,7 +23,7 @@
                 Margin="8,4"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Command="{Binding ViewModel.DownloadCommand, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
+                Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
                 CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}"
                 Content="Run Test"
                 Style="{StaticResource MaterialDesignRaisedDarkButton}" />

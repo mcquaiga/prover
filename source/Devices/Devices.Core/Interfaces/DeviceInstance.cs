@@ -28,24 +28,22 @@ namespace Devices.Core.Interfaces
         public ICollection<ItemValue> Values => ItemValues.ToList();
 
         public virtual TGroup CreateItemGroup<TGroup>() where TGroup : ItemGroup =>
-            DeviceType.GetGroupValues<TGroup>(Values);
+            DeviceType.GetGroup<TGroup>(Values);
 
         public virtual TGroup ItemGroup<TGroup>() where TGroup : ItemGroup
         {
             if (GroupCache.TryGetValue(typeof(TGroup), out var cacheItem)) return (TGroup) cacheItem;
 
-            var result = DeviceType.GetGroupValues<TGroup>(Values);
+            var result = DeviceType.GetGroup<TGroup>(Values);
             GroupCache.TryAdd(typeof(TGroup), result);
             return result;
         }
 
-        public virtual TGroup ItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
+        public virtual TGroup CreateItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
         {
-            var v = values.ToList();
+            var joined = values.Union(Values, new ItemValueComparer()).ToList();
 
-            var joined = Values.Except(v, new ItemValueComparer()).ToList();
-
-            return DeviceType.GetGroupValues<TGroup>(joined.Union(v));
+            return DeviceType.GetGroup<TGroup>(joined);
         }
 
         public void ClearCache()

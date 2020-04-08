@@ -1,5 +1,7 @@
-﻿using Devices.Core.Items.ItemGroups;
+﻿using System.Reactive.Linq;
+using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels.Corrections;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Volume
@@ -11,6 +13,9 @@ namespace Prover.Application.ViewModels.Volume
         {
             StartValues = startValues;
             EndValues = endValues;
+
+            VerifiedObservable = VerifiedObservable.CombineLatest(this.WhenAnyValue(x => x.PulseOutputTest.Verified), 
+                (test, pulses) => test && pulses);
         }
 
         [Reactive] public VolumeItems StartValues { get; set; }

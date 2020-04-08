@@ -8,6 +8,7 @@ namespace Prover.Shared.Interfaces
     {
         Task<bool> Login(string username, string password = null);
         Task<bool> Login();
+        IObservable<bool> SignOn();
         Task Logout();
         IObservable<bool> LoggedIn { get; }
         bool IsSignedOn { get; }

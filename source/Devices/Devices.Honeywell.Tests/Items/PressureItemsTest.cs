@@ -47,7 +47,7 @@ namespace Devices.Honeywell.Tests.Items
             var instance = device.CreateInstance(MiniMaxItemFile);
 
             var myItems = device.ToItemValues(MiniMaxPressureItemFile);
-            var pItems = device.GetGroupValues<PressureItems>(myItems);
+            var pItems = device.GetGroup<PressureItems>(myItems);
             var pItems2 = instance.ItemGroup<PressureItems>();
 
             var t = instance.ItemGroup<TemperatureItems>();

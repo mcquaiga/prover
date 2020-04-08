@@ -3,6 +3,7 @@ using System.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
+using Prover.Application.Mappers;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Domain.EvcVerifications;
@@ -59,8 +60,7 @@ namespace Prover.Application.ViewModels.Volume.Factories
 
             if (device.HasLivePressure())
                 tpViewModel.VerificationTests.Add(
-                    MakePressureVieWModel(device.CreateItemGroup<PressureItems>(), definition.PressureGaugePercent,
-                        -100));
+                    MakePressureVieWModel(device.CreateItemGroup<PressureItems>(), definition.PressureGaugePercent));
 
             if (device.HasLiveTemperature())
                 tpViewModel.VerificationTests.Add(
@@ -79,10 +79,11 @@ namespace Prover.Application.ViewModels.Volume.Factories
             return tpViewModel;
         }
 
-        private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge, decimal atmPressure)
+        private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge, decimal? atmPressure = null)
         {
+
             if (items != null)
-                return new PressureFactorViewModel(items, gauge, atmPressure);
+                return new PressureFactorViewModel(items, gauge, atmPressure ?? items.AtmosphericPressure);
 
             return null;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Forms;
 using Devices.Communications.IO;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
@@ -15,8 +16,10 @@ using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
+using Prover.Infrastructure.SampleData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
@@ -28,7 +31,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             ILogger<QaTestRunViewModel> logger, 
             IScreenManager screenManager,
             IVerificationTestService verificationService,
-            IDeviceRepository deviceRepository) : base(screenManager)
+            ITestManagerFactory verificationManagerFactory,
+            IDeviceRepository deviceRepository) : base(screenManager, "VerificationTests")
         {
             deviceRepository.All.Connect()
                 .Filter(d => !d.IsHidden)
@@ -58,10 +62,17 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
             var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort, x => x.SelectedBaudRate,
                 (device, comm, baud) => device != null && !string.IsNullOrEmpty(comm) && baud != 0);
-            StartTestCommand = ReactiveCommand.CreateFromTask(async () => {
-                SetLastUsedSettings();
-                TestManager = await verificationService.NewTestManager(SelectedDeviceType);
+
+            StartTestCommand = ReactiveCommand.CreateFromObservable(() => {
+                return Observable.StartAsync(async () => await verificationService.NewTestManager(SelectedDeviceType));
             }, canStartTest).DisposeWith(_cleanup);
+
+            StartTestCommand
+                .ToPropertyEx(this, t => t.TestManager, scheduler: RxApp.MainThreadScheduler);
+            
+            StartTestCommand
+                .Do(_ => SetLastUsedSettings())
+                .Subscribe();
 
             SaveCommand = ReactiveCommand.CreateFromTask(async () => {
                 logger.LogDebug("Saving test...");
@@ -77,6 +88,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             }).DisposeWith(_cleanup);
             SaveCommand.ThrownExceptions.Subscribe();
 
+
+
             var canSubmit = this.WhenAnyValue(x => x.TestManager.TestViewModel.Verified);
             SubmitTest = ReactiveCommand.CreateFromTask(async () => {
 
@@ -90,25 +103,37 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 }
             }, canSubmit).DisposeWith(_cleanup);
 
+
             PrintTestReport = ReactiveCommand.CreateFromObservable(() => MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(_cleanup);
+
 
             this.WhenAnyObservable(x => x.TestManager.TestViewModel.VerifiedObservable)
                 .Where(v => v)
-                .Do(x => NotificationInteractions.SnackBarMessage.Handle("Verification Complete"))
+                .Do(async x => await NotificationInteractions.SnackBarMessage.Handle("Verification Complete"))
                 .Subscribe()
                 .DisposeWith(Cleanup);
-                //.Select(_ => Unit.Default)
-                //.InvokeCommand(SubmitTest);
 
-            Changing.LogDebug("Screen changing");
+
+            LoadFromFile = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var fileOpen = new OpenFileDialog();
+                if (fileOpen.ShowDialog() == DialogResult.OK)
+                {
+                    var testDef = ItemFiles.LoadFromFile(fileOpen.FileName);
+
+                }
+            });
+
         }
 
-        [Reactive] public ITestManager TestManager { get; private set; }
+        public extern ITestManager TestManager { [ObservableAsProperty] get; }
 
         public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
         public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
         public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
-        public ReactiveCommand<Unit, Unit> StartTestCommand { get; set; }
+
+        public ReactiveCommand<Unit, Unit> LoadFromFile { get; protected set; }
+        public ReactiveCommand<Unit, ITestManager> StartTestCommand { get; set; }
 
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
         public ReadOnlyObservableCollection<int> BaudRates { get; set; }
@@ -119,8 +144,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         [Reactive] public DeviceType SelectedDeviceType { get; set; }
         [Reactive] public int SelectedBaudRate { get; set; }
 
-        public override string UrlPathSegment => "/VerificationTests";
-        public override IScreen HostScreen => ScreenManager;
+     
 
         //public ReactiveCommand<Unit, bool> CloseCommand { get; set; }
 

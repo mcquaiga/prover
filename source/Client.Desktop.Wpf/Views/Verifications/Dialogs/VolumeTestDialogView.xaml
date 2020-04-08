@@ -9,7 +9,7 @@
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
     xmlns:verificationManager="clr-namespace:Prover.Application.Verifications.Volume;assembly=Prover.Application"
-    x:TypeArguments="verificationManager:RotaryVolumeManager"
+    x:TypeArguments="verificationManager:AutomatedVolumeTestRunnerBase"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="materialDesign:Card">

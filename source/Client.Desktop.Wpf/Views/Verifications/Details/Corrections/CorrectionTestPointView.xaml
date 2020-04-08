@@ -6,11 +6,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:verifications="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
-    xmlns:viewModels1="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
+    xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
     x:Name="CorrectionTestPointViewControl"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="viewModels1:VerificationTestPointViewModel"
+    x:TypeArguments="viewModels:VerificationTestPointViewModel"
     mc:Ignorable="d">
 
     <Grid>

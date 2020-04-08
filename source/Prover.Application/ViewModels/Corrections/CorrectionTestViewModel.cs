@@ -14,53 +14,47 @@ using DynamicData;
 
 namespace Prover.Application.ViewModels.Corrections
 {
-    public interface ISetVerified : IAssertVerification
+    public abstract class VerifyViewModel : ViewModelWithIdBase
     {
-        void SetVerified(bool verified);
+      
     }
 
-    public abstract class VerificationViewModel : ViewModelWithIdBase, IAssertVerification
+
+    public abstract class VerificationViewModel : VerifyViewModel, IAssertVerification
     {
-        private readonly ReactiveCommand<bool, bool> _setVerified;
 
         protected VerificationViewModel()
         {
-            //_setVerified = ReactiveCommand.Create<bool, bool>(v => v);
-            //_setVerified
-            //    .LogDebug(x => $"{GetType()} - Verified = {x}")
-            //_setVerified.DisposeWith(Cleanup);
+            VerifiedObservable = Observable.Empty(false);
 
             this.WhenAnyObservable(x => x.VerifiedObservable)
-                .LogDebug(x => $"{GetType()} - Verified = {x}")
-                .ToPropertyEx(this, x => x.Verified, deferSubscription: true);
+                .Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
+                .ToPropertyEx(this, x => x.Verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
         }
 
-        public extern bool Verified { [ObservableAsProperty] get; }
+        protected VerificationViewModel(bool verified)
+        {
+            VerifiedObservable = Observable.Empty(verified);
+
+            this.WhenAnyObservable(x => x.VerifiedObservable)
+                .Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
+                .ToPropertyEx(this, x => x.Verified, verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
+        }
+
+        public virtual extern bool Verified { [ObservableAsProperty] get; }
 
         public IObservable<bool> VerifiedObservable { get; protected set; }
 
-        protected void SetVerified(bool verified)
-        {
-            
-            _setVerified.Execute(verified);
-        }
-
         protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
         {
-            //if (verifications == null || !verifications.Any()) return;
+            if (verifications == null || !verifications.Any() || Verified) return;
 
-            VerifiedObservable = 
-                verifications.AsObservableChangeSet()
-                .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(200), propertyChangeThrottle: TimeSpan.FromMilliseconds(100))
+            VerifiedObservable = verifications.AsObservableChangeSet()
+                .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
                 .ToCollection()
                 .Select(x => x.Any() && x.All(y => y.Verified))
-                .ObserveOn(RxApp.MainThreadScheduler);
-                
-
-                //.ToPropertyEx(this, x => x.Verified, false);
+                .ObserveOn(RxApp.TaskpoolScheduler);
         }
-
-        //protected virtual bool SetOverrideVerify(bool verified) => verified;
     }
 
     public interface IAssertExpectedActual

@@ -16,26 +16,26 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <materialDesign:ColorZone
-            Grid.Row="0"
-            Padding="8"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
-            Mode="PrimaryLight">
+        <materialDesign:ColorZone Grid.Row="0" Style="{StaticResource SubheaderToolbarColorZoneStyle}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="QA Test Run Report" />
-                <Button
+                <TextBlock Text="QA Test Run Report" />
+                <!--<Button
                     x:Name="SaveReport"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     Style="{StaticResource MaterialDesignIconButton}">
                     <materialDesign:PackIcon Kind="ContentSave" />
+                </Button>-->
+                <Button
+                    x:Name="CloseReport"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource MaterialDesignIconButton}">
+                    <materialDesign:PackIcon Kind="Close" />
                 </Button>
             </Grid>
 

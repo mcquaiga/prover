@@ -1,23 +1,18 @@
 using System;
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Threading.Tasks;
-using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
-using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
-using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
 namespace Prover.Application.Verifications
 {
     public sealed class TestManager : ReactiveObject, ITestManager, IDisposable
     {
+        private readonly IActionsExecutioner _actionsExecutioner;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
-        private readonly IVerificationActionsExecutioner _actionsExecutioner;
         private readonly ILogger _logger;
 
         public TestManager(
@@ -25,49 +20,42 @@ namespace Prover.Application.Verifications
             IDeviceSessionManager deviceSessionManager,
             EvcVerificationViewModel verificationViewModel,
             IVolumeTestManager volumeTestManager,
-            IVerificationActionsExecutioner customActionsExecutioner)
+            IActionsExecutioner actionsExecutioner,
+            ICorrectionVerificationRunner correctionVerificationRunner)
         {
             _logger = logger;
             _deviceManager = deviceSessionManager;
-            _actionsExecutioner = customActionsExecutioner;
+            _actionsExecutioner = actionsExecutioner;
 
             TestViewModel = verificationViewModel;
             VolumeTestManager = volumeTestManager;
+            CorrectionVerifications = correctionVerificationRunner;
 
-            DownloadCommand = ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(RunCorrectionTests);
-            DownloadCommand.ThrownExceptions.LogErrors("Error downloading items from instrument.").Subscribe();
-            DownloadCommand.DisposeWith(_cleanup);
+            ExecuteStartActions = ReactiveCommand.CreateFromTask(async () =>
+                await _actionsExecutioner.RunActionsOn<IInitializeAction>(TestViewModel));
+
+            RunCorrectionVerifications =
+                ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests);
+            RunCorrectionVerifications.ThrownExceptions.LogErrors("Error downloading items from instrument.")
+                .Subscribe();
+            RunCorrectionVerifications.DisposeWith(_cleanup);
         }
 
-        public EvcVerificationViewModel TestViewModel { get; protected set; }
+        public EvcVerificationViewModel TestViewModel { get; }
 
-        public IVolumeTestManager VolumeTestManager { get; protected set; }
+        public IVolumeTestManager VolumeTestManager { get; }
 
-        public ReactiveCommand<VerificationTestPointViewModel, Unit> DownloadCommand { get; protected set; }
-        
+        public ICorrectionVerificationRunner CorrectionVerifications { get; }
+
+        public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; }
+
+        public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
+
         public void Dispose()
         {
             _logger.LogDebug("Disposing instance.");
             _deviceManager.EndSession();
             _cleanup?.Dispose();
-        }
-
-        public async Task RunCorrectionTests(VerificationTestPointViewModel test)
-        {
-            await LiveReadCoordinator.StartLiveReading(_deviceManager, test,
-                async () =>
-                {
-                    var values = await _deviceManager.DownloadCorrectionItems();
-
-                    //test.UpdateItemValues(values);
-
-                    foreach (var correction in test.GetCorrectionTests())
-                    {
-                        var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
-                        itemType?.SetValue(correction,
-                            _deviceManager.Device.DeviceType.GetGroupValues(values, itemType.PropertyType));
-                    }
-                }, RxApp.MainThreadScheduler);
         }
     }
 }

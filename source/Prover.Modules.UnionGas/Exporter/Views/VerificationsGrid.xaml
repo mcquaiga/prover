@@ -18,7 +18,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Client.Desktop.Wpf;component/Resources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.datagrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
@@ -72,38 +74,43 @@
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.RowStyle>
                 <Style BasedOn="{StaticResource MaterialDesignDataGridRow}" TargetType="{x:Type DataGridRow}">
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="VerticalContentAlignment" Value="Top" />
                     <Setter Property="Height" Value="Auto" />
                     <!--<Setter Property="Foreground" Value="Black" />-->
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True" />
+                    </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" SortMemberPath="IsSelected">
 
                     <DataGridCheckBoxColumn.ElementStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
-                            <Setter Property="Width" Value="18" />
+                        <Style BasedOn="{StaticResource MaterialDesignActionCheckBox}" TargetType="{x:Type CheckBox}">
+                            <Setter Property="Width" Value="32" />
                             <Setter Property="Height" Value="32" />
                             <Setter Property="Margin" Value="4" />
-                            <!--<Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                    <Setter Property="Kind" Value="Check" />
-                                    <Setter Property="Foreground" Value="{StaticResource PassColour}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLocked}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Test.Verified}" Value="False">
-                                    <Setter Property="Kind" Value="AlertCircleOutline" />
-                                    <Setter Property="Foreground" Value="{StaticResource FailColour}" />
+                                <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden" />
                                 </DataTrigger>
-                            </Style.Triggers>-->
+
+                            </Style.Triggers>
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
 
                 </DataGridCheckBoxColumn>
-                <DataGridTemplateColumn Width="80" Header="Verified">
+                <DataGridTemplateColumn
+                    Width="80"
+                    Header="Verified"
+                    SortMemberPath="Test.Verified">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Margin" Value="0" />
@@ -111,8 +118,6 @@
                             <Setter Property="Height" Value="50" />
                             <Setter Property="FontSize" Value="14" />
                             <Setter Property="HorizontalAlignment" Value="Center" />
-
-
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
@@ -137,15 +142,17 @@
                                     FontSize="24"
                                     Text="{Binding Test.Device.DeviceType.Name, Mode=OneTime}" />
 
-                                <TextBlock
-                                    x:Name="CompositionTypeTextBlock"
-                                    HorizontalAlignment="Left"
-                                    Text="{Binding Composition, Mode=OneTime}" />
+
 
                                 <TextBlock
                                     x:Name="DriveTypeTextBlock"
                                     HorizontalAlignment="Left"
                                     Text="{Binding Test.DriveType.InputType, Mode=OneTime}" />
+
+                                <TextBlock
+                                    x:Name="CompositionTypeTextBlock"
+                                    HorizontalAlignment="Left"
+                                    Text="{Binding Composition, Mode=OneTime}" />
                             </StackPanel>
 
 
@@ -180,14 +187,39 @@
                     Binding="{Binding Employee.EmployeeName, Mode=OneWay}"
                     Header="Employee" />
 
+                <materialDesign:DataGridTextColumn
+                    x:Name="ExportedColumn"
+                    Binding="{Binding Test.ExportedDateTime, Mode=OneWay}"
+                    Header="Exported" />
 
-                <!--<DataGridTemplateColumn Width="*" CellTemplate="{Binding PrintDataTemplate, ElementName=VerificationsGridControl}">
-                -->
-                <!--<DataGridTemplateColumn.CellTemplate >
-                        <DataTemplate ="{Binding PrintDataTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                    </DataGridTemplateColumn.CellTemplate>-->
-                <!--
-                </DataGridTemplateColumn>-->
+                <materialDesign:DataGridTextColumn
+                    x:Name="ArchivedColumn"
+                    Binding="{Binding Test.ArchivedDateTime, Mode=OneWay}"
+                    Header="Archived" />
+
+
+                <DataGridTemplateColumn Width="*">
+
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                x:Name="PrintTestReportButton"
+                                Margin="15,4,50,4"
+                                HorizontalAlignment="Right"
+                                Command="{Binding ViewReport}"
+                                CommandParameter="{Binding Test}"
+                                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                ToolTip="View QA Test Report">
+                                <materialDesign:PackIcon
+                                    Width="36"
+                                    Height="36"
+                                    Foreground="Gray"
+                                    Kind="PrintPreview" />
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
 
         </DataGrid>

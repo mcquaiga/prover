@@ -10,7 +10,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
 {
     public interface IMeterService<TMeter>
     {
-        Task<TMeter> FindMeterByInventoryNumber(string inventoryNumber);
+        Task<TMeter> FindMeterByInventoryNumber(string inventoryNumber, string serialNumber = null);
         Task<IList<TMeter>> GetOutstandingMeterTestsByJobNumber(int jobId);
     }
 
@@ -33,7 +33,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
             _webService = webService;
         }
 
-        public async Task<MeterDTO> FindMeterByInventoryNumber(string inventoryNumber)
+        public async Task<MeterDTO> FindMeterByInventoryNumber(string inventoryNumber, string serialNumber = null)
         {
             try
             {

@@ -27,16 +27,30 @@ namespace Prover.Modules.UnionGas.VerificationActions
             _meterService = meterService;
         }
 
-        public async Task<MeterDTO>
-            Validate(EvcVerificationViewModel verification, bool updateDeviceItemValue = false) =>
-            await Validate(verification.Device, updateDeviceItemValue);
+        public async Task<MeterDTO> Update(DeviceInstance device) =>
+            await UpdateInventoryNumber(device, device.CompanyNumber(), device.Items.SiteInfo.SerialNumber);
 
-        public async Task<MeterDTO> Validate(EvcVerificationTest verification, bool updateDeviceItemValue = false) =>
-            await Validate(verification.Device, updateDeviceItemValue);
+        public async Task<MeterDTO> Validate(DeviceInstance device, bool updateDeviceItemValue = false)
+        {
+            var inventoryNumber = device.CompanyNumber();
+            var serialNumber = device.Items.SiteInfo.SerialNumber;
+
+            var meterDto = await FindAndValidateMeterDto(serialNumber, inventoryNumber);
+            if (meterDto == null)
+            {
+                if (updateDeviceItemValue)
+                    meterDto = await Update(device);
+                else
+                    await MessageInteractions.ShowMessage.Handle(
+                        $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}");
+            }
+
+            return meterDto;
+        }
 
         private async Task<MeterDTO> FindAndValidateMeterDto(string serialNumber, string inventoryCode)
         {
-            var meterDto = await _meterService.FindMeterByInventoryNumber(inventoryCode);
+            var meterDto = await _meterService.FindMeterByInventoryNumber(inventoryCode, serialNumber);
             var isValid = ValidateDeviceWithMeterDto(meterDto, inventoryCode,
                 serialNumber);
 
@@ -81,24 +95,6 @@ namespace Prover.Modules.UnionGas.VerificationActions
             return meterDto;
         }
 
-        private async Task<MeterDTO> Validate(DeviceInstance device, bool updateDeviceItemValue = false)
-        {
-            var inventoryNumber = device.CompanyNumber();
-            var serialNumber = device.Items.SiteInfo.SerialNumber;
-
-            var meterDto = await FindAndValidateMeterDto(serialNumber, inventoryNumber);
-            if (meterDto == null )
-            {
-                if (updateDeviceItemValue)
-                    meterDto = await UpdateInventoryNumber(device, inventoryNumber, serialNumber);
-                else
-                    await MessageInteractions.ShowMessage.Handle(
-                        $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}");
-            }
-            
-            return meterDto;
-        }
-
         private bool ValidateDeviceWithMeterDto(MeterDTO meterDto, string companyNumber, string serialNumber)
         {
             if (string.IsNullOrEmpty(meterDto?.InventoryCode)
@@ -109,5 +105,16 @@ namespace Prover.Modules.UnionGas.VerificationActions
 
             return true;
         }
+    }
+
+    public static class ValidatorEx
+    {
+        public static async Task<MeterDTO> ValidateInventoryNumber(this MeterInventoryNumberValidator validator,
+            EvcVerificationViewModel verification, bool updateDeviceItemValue = false) =>
+            await validator.Validate(verification.Device, updateDeviceItemValue);
+
+        public static async Task<MeterDTO> ValidateInventoryNumber(this MeterInventoryNumberValidator validator,
+            EvcVerificationTest verification, bool updateDeviceItemValue = false) =>
+            await validator.Validate(verification.Device, updateDeviceItemValue);
     }
 }

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
-using Prover.Application.Config;
 using Prover.Application.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Application.ViewModels.Volume;
 using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Domain.EvcVerifications.Verifications;
 using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 
-namespace Prover.Application.Services
+namespace Prover.Application.Mappers
 {
     public static class VerificationMapper
     {

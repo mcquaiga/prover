@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
@@ -17,58 +18,99 @@ namespace Prover.Application.Services.LiveReadCorrections
 {
     public partial class LiveReadCoordinator
     {
-        public static async Task<IObservable<ItemValue>> StartLiveReading(IDeviceSessionManager session,
+        public static async Task<IObservable<ItemLiveReadStatus>> StartLiveReading(IDeviceSessionManager session,
             VerificationTestPointViewModel test, Action onSuccessfulCompletion = null, IScheduler scheduler = null)
         {
-            var liveReader = new LiveReadCoordinator();
+            var liveReader = new LiveReadCoordinator(session);
 
             if (test.Pressure != null)
             {
-                var pressureItem = session.Device.DeviceType.GetLivePressureItem();
+                var pressureItem = session.Device.GetLivePressureItem();
                 liveReader.AddReadingStabilizer(pressureItem, test.Pressure.GetTotalGauge());
             }
 
             if (test.Temperature != null)
             {
-                var tempItem = session.Device.DeviceType.GetLiveTemperatureItem();
+                var tempItem = session.Device.GetLiveTemperatureItem();
                 liveReader.AddReadingStabilizer(tempItem, test.Temperature.Gauge);
             }
 
             liveReader.RegisterCallback(onSuccessfulCompletion, scheduler);
 
-            return await liveReader.Start(session);
+            return await liveReader.Start();
+        }
+    }
+
+    public class ItemLiveReadStatus
+    {
+        private readonly Subject<ItemLiveReadStatus> _statusSubject = new Subject<ItemLiveReadStatus>();
+
+        public ItemLiveReadStatus(ItemMetadata item, AveragedReadingStabilizer stabilizer)
+        {
+            Item = item;
+            Stabilizer = stabilizer;
+            Value = ItemValue.Create(Item, 0m);
+        }
+
+        public IObservable<ItemLiveReadStatus> StatusUpdates => _statusSubject;
+        public ItemMetadata Item { get; }
+
+        public AveragedReadingStabilizer Stabilizer { get; }
+
+        public decimal TargetValue => Stabilizer.TargetValue;
+
+        public ItemValue Value { get; private set; }
+
+        public void AddUpdate(ItemValue value)
+        {
+            Value = value;
+            if (value.DecimalValue().HasValue)
+            {
+                Stabilizer.Add(value.DecimalValue() ?? 0m);
+                _statusSubject.OnNext(this);
+            }
         }
     }
 
     public partial class LiveReadCoordinator : ReactiveObject, ILiveReadHandler, IDisposable
     {
         private readonly Dictionary<Action, IScheduler> _callbacks = new Dictionary<Action, IScheduler>();
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
+        private readonly IDeviceSessionManager _deviceSession;
+        private readonly IConnectableObservable<ItemLiveReadStatus> _liveStatuses;
 
-        private readonly Dictionary<ItemMetadata, AveragedReadingStabilizer> _liveReadItems;
+        private LiveReadCoordinator(IDeviceSessionManager deviceSession)
+        {
+            _deviceSession = deviceSession;
+            _liveStatuses = CreateLiveItemReadObservable(deviceSession, _cancellationTokenSource.Token).Publish();
+        }
 
-        private LiveReadCoordinator() => _liveReadItems = new Dictionary<ItemMetadata, AveragedReadingStabilizer>();
 
-        public Dictionary<ItemMetadata, decimal> ItemTargets { get; } = new Dictionary<ItemMetadata, decimal>();
 
-        public IObservable<ItemValue> LiveReadUpdates { get; set; }
-        public DeviceType DeviceType { get; private set; }
+        public ICollection<ItemLiveReadStatus> LiveReadItems { get; set; } = new List<ItemLiveReadStatus>();
+
+        public IObservable<ItemLiveReadStatus> LiveReadUpdates { get; private set; }
+
+        public DeviceType DeviceType => _deviceSession.Device?.DeviceType;
 
         public void Dispose()
         {
             _cleanup?.Dispose();
         }
 
-        public async Task<IObservable<ItemValue>> Start(IDeviceSessionManager deviceSession)
+        public async Task<IObservable<ItemLiveReadStatus>> Start()
         {
-            await deviceSession.Connect();
-            DeviceType = deviceSession.Device.DeviceType;
+            await _deviceSession.Connect();
+
             var cancellationToken =
                 await DeviceInteractions.LiveReading.Handle(this);
 
-            var live = Observable.Publish<ItemValue>(CreateLiveItemReadObservable(deviceSession, cancellationToken));
+            cancellationToken.Register(_cancellationTokenSource.Cancel);
 
-            live.ObserveOn(RxApp.MainThreadScheduler)
+            //var live = CreateLiveItemReadObservable(_deviceSession, cancellationToken).Publish();
+
+            _liveStatuses.ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(
                     value => { },
                     async () => //OnComplete
@@ -76,43 +118,47 @@ namespace Prover.Application.Services.LiveReadCorrections
                         Dispose();
 
                         await Task.Delay(500);
-                        await deviceSession.Disconnect();
+                        await _deviceSession.Disconnect();
 
                         if (!cancellationToken.IsCancellationRequested) InvokeCallbacks();
                     })
                 .DisposeWith(_cleanup);
 
-            LiveReadUpdates = live.AsObservable();
+            LiveReadUpdates = _liveStatuses.AsObservable();
 
-            live.Connect()
+            _liveStatuses
+                .Connect()
                 .DisposeWith(_cleanup);
 
             return LiveReadUpdates;
         }
 
-        private void AddReadingStabilizer(ItemMetadata item, decimal targetValue)
+        public async Task Stop()
         {
-            _liveReadItems.Add(item, new AveragedReadingStabilizer(targetValue));
-            ItemTargets.Add(item, targetValue);
+            Dispose();
+            await Task.Delay(500);
         }
 
-        private IObservable<ItemValue> CreateLiveItemReadObservable(IDeviceSessionManager deviceSession,
+        private void AddReadingStabilizer(ItemMetadata item, decimal targetValue)
+        {
+            LiveReadItems.Add(new ItemLiveReadStatus(item, new AveragedReadingStabilizer(targetValue)));
+        }
+
+        private IObservable<ItemLiveReadStatus> CreateLiveItemReadObservable(IDeviceSessionManager deviceSession,
             CancellationToken cancellationToken)
         {
-            return Observable.Create<ItemValue>(obs =>
+            return Observable.Create<ItemLiveReadStatus>(obs =>
             {
                 var liveRead = TaskPoolScheduler.Default.SchedulePeriodic(TimeSpan.FromMilliseconds(250), () =>
                 {
-                    _liveReadItems.Keys.ForEach(async i =>
+                    LiveReadItems.ForEach(async i =>
                     {
-                        var value = await deviceSession.LiveReadItemValue(i);
-
-                        _liveReadItems[value.Metadata].Add(value.DecimalValue() ?? 0m);
-
-                        obs.OnNext(value);
+                        var value = await deviceSession.LiveReadItemValue(i.Item);
+                        i.AddUpdate(value);
+                        obs.OnNext(i);
                     });
 
-                    if (_liveReadItems.All(i => i.Value.CheckIfStable()) || cancellationToken.IsCancellationRequested)
+                    if (LiveReadItems.All(i => i.Stabilizer.IsStable) || cancellationToken.IsCancellationRequested)
                         obs.OnCompleted();
                 });
 
@@ -128,12 +174,6 @@ namespace Prover.Application.Services.LiveReadCorrections
         private void RegisterCallback(Action callbackAction, IScheduler scheduler = null)
         {
             _callbacks.Add(callbackAction, scheduler ?? CurrentThreadScheduler.Instance);
-        }
-
-        private async Task StopLiveReading()
-        {
-            Dispose();
-            await Task.Delay(500);
         }
     }
 }

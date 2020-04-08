@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 
 namespace Prover.Application.Services.LiveReadCorrections
 {
@@ -12,7 +14,7 @@ namespace Prover.Application.Services.LiveReadCorrections
         /// <summary>
         ///     Defines the AverageThreshold
         /// </summary>
-        private readonly decimal _averageThreshold = 1.0m;
+        private readonly decimal _differenceThreshold = 1.0m;
 
         /// <summary>
         ///     Defines the FixedQueueSize
@@ -22,9 +24,10 @@ namespace Prover.Application.Services.LiveReadCorrections
         /// <summary>
         ///     Defines the _valueQueue
         /// </summary>
-        private readonly Queue<decimal> _valueQueue;
+        private readonly ConcurrentQueue<decimal> _valueQueue = new ConcurrentQueue<decimal>();
 
         private decimal _latest;
+        private Subject<bool> _stableSubject = new Subject<bool>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AveragedReadingStabilizer" /> class.
@@ -33,11 +36,11 @@ namespace Prover.Application.Services.LiveReadCorrections
         public AveragedReadingStabilizer(decimal target, int? queueSize = null, decimal? threshold = null)
         {
             _fixedQueueSize = queueSize ?? _fixedQueueSize;
-            _averageThreshold = threshold ?? _averageThreshold;
+            _differenceThreshold = threshold ?? _differenceThreshold;
             TargetValue = target;
-            _valueQueue = new Queue<decimal>(_fixedQueueSize);
         }
 
+        public decimal TargetThreshold => _differenceThreshold;
         /// <summary>
         ///     Gets the GaugeValue
         /// </summary>
@@ -49,11 +52,18 @@ namespace Prover.Application.Services.LiveReadCorrections
         /// <param name="value">The value<see cref="decimal" /></param>
         public void Add(decimal value)
         {
-            if (_valueQueue.Count == _fixedQueueSize) _valueQueue.Dequeue();
+            if (_valueQueue.Count == _fixedQueueSize)
+            {
+                _valueQueue.TryDequeue(out var removed);
 
+            }
             _valueQueue.Enqueue(value);
             _latest = value;
+            
+            IsStable = CheckIfStable();
         }
+
+        public decimal Difference => (Average - TargetValue).Round(2);
 
         /// <summary>
         ///     Gets a value indicating whether IsStable
@@ -62,24 +72,24 @@ namespace Prover.Application.Services.LiveReadCorrections
         {
             if (_valueQueue.Count >= _fixedQueueSize)
             {
-                var average = _valueQueue.Sum() / _valueQueue.Count;
-                var difference = Math.Abs(TargetValue - average);
-
-                if (difference <= _averageThreshold)
-                    return true;
+                return Math.Abs(Difference) <= _differenceThreshold;
             }
 
             return false;
         }
 
-        /// <summary>
-        ///     The Clear
-        /// </summary>
-        public void Clear()
+        public bool IsStable { get; private set; }
+
+        public decimal Average => (_valueQueue.Sum() / _valueQueue.Count).Round(2);
+        
+        public decimal Progress()
         {
-            _valueQueue.Clear();
+            var x = _valueQueue.Count / _fixedQueueSize;
+            return TargetThreshold - (Math.Abs(Difference) / (TargetThreshold * 10));
         }
 
+        public IObservable<bool> StableObservable => _stableSubject;
+        
         public decimal Latest() => _latest;
     }
 }

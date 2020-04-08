@@ -40,24 +40,26 @@ namespace Prover.Application.Extensions
             return (VolumeTestRunViewModelBase) volumeTest.AllTests().FirstOrDefault();
         }
 
-        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceType deviceType,  int testNumber, Dictionary<string, string> valuesDictionary)
+        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceInstance device,  int testNumber, Dictionary<string, string> valuesDictionary)
             where T : ItemGroup, IHaveFactor
         {
-            var itemValues = deviceType.ToItemValues(valuesDictionary);
-            verification.SetItems<T>(deviceType, testNumber, itemValues);
+            var itemValues = device.DeviceType.ToItemValues(valuesDictionary);
+            verification.SetItems<T>(device, testNumber, itemValues);
         }
 
-        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceType deviceType, int testNumber,
+        public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceInstance device, int testNumber,
             IEnumerable<ItemValue> itemValues)
             where T : ItemGroup, IHaveFactor
         {
             var testPoint = verification.VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(v => v.TestNumber == testNumber);
-            if (testPoint == null) 
-                return;
 
-            var testOfT = testPoint.VerificationTests.OfType<CorrectionTestViewModel<T>>().FirstOrDefault();
+            var testOfT = testPoint?.VerificationTests.OfType<CorrectionTestViewModel<T>>().FirstOrDefault();
             if (testOfT != null)
-                testOfT.Items = deviceType.GetGroupValues<T>(itemValues);
+            {
+                //itemValues = device.CreateGroupItemValues<T>(itemValues);
+                testOfT.Items = device.CreateItemGroup<T>(itemValues);
+            }
+               
         }
 
         public static string TestDateTimePretty(this EvcVerificationViewModel test)

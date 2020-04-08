@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Client.Desktop.Wpf.Reports;
 using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Interactions;
@@ -34,8 +33,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             _loginService = loginService;
             SelectedObservable = selectedObservable;
-            SetCanExecutesTrue(selectedObservable.ToObservableChangeSet());
-            
+            SetCanExecutes(selectedObservable.ToObservableChangeSet());
+
             AddSignedOnUser = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                     {
@@ -58,18 +57,17 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 {
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
-                        var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
+                        //var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
                         foreach (var evcVerificationTest in tests)
-                            if (!string.IsNullOrEmpty(jobId))
+                        {
+                            var meterDto = await inventoryNumberValidator.ValidateInventoryNumber(evcVerificationTest);
+                            if (meterDto != null)
                             {
-                                var meterDto = await inventoryNumberValidator.Validate(evcVerificationTest);
-                                if (meterDto != null)
-                                {
-                                    evcVerificationTest.JobId = jobId;
-                                    var test = await verificationTestService.AddOrUpdate(evcVerificationTest);
-                                    obs.OnNext(test);
-                                }
+                                evcVerificationTest.JobId = meterDto.JobNumber.ToString();
+                                var test = await verificationTestService.AddOrUpdate(evcVerificationTest);
+                                obs.OnNext(test);
                             }
+                        }
                     });
                 }, CanAddJobId).DisposeWith(Cleanup);
 
@@ -105,13 +103,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             Updates = this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification,
                 x => x.ExportVerification);
 
-            PrintReport = ReactiveCommand.CreateFromTask<ICollection<EvcVerificationTest>>(async tests =>
-            {
-                var test = tests.First();
-                var viewModel = await verificationTestService.GetViewModel(test);
-                var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
-                reportViewModel.ContentViewModel = viewModel;
-            }).DisposeWith(Cleanup);
+            //PrintReport = ReactiveCommand.CreateFromTask<ICollection<EvcVerificationTest>>(async tests =>
+            //{
+            //    var test = tests.FirstOrDefault();
+            //    if (test == null) return;
+
+            //    var viewModel = await verificationTestService.GetViewModel(test);
+            //    var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
+            //    reportViewModel.ContentViewModel = viewModel;
+            //}).DisposeWith(Cleanup);
         }
 
         //public EvcVerificationProxy VerificationProxy { get; protected set; }
@@ -139,9 +139,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         private void SetCanExecutes(EvcVerificationTest evcVerification = null)
         {
-            if (evcVerification == null) {
-                return;
-            }
+            if (evcVerification == null) return;
 
 
             this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification,
@@ -159,16 +157,34 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 !x.ExportedDateTime.HasValue && !string.IsNullOrEmpty(x.JobId) && !x.ArchivedDateTime.HasValue);
         }
 
-        private void SetCanExecutesTrue(IObservable<IChangeSet<EvcVerificationTest>> selectedTests)
+        private void SetCanExecutes(IObservable<IChangeSet<EvcVerificationTest>> selectedTests)
         {
-            CanAddUser = selectedTests.ToCollection().Select(x => x.All(y => string.IsNullOrEmpty(y.EmployeeId)))
-                .CombineLatest(_loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler), (b1, b2) => b1 && b2); ;
+            CanAddUser =
+                selectedTests.AutoRefreshOnObservable(e => _loginService.LoggedIn)
+                    .ToCollection()
+                    .Select(tests => tests.Any() && tests.All(test => string.IsNullOrEmpty(test.EmployeeId)))
+                    .CombineLatest(_loginService.LoggedIn,
+                        (noEmployeeId, isLoggedIn) => noEmployeeId && isLoggedIn)
+                    .ObserveOn(RxApp.MainThreadScheduler);
 
-            CanAddJobId = selectedTests.ToCollection().Select(x => x.All(y => string.IsNullOrEmpty(y.JobId)));
+            CanAddJobId = selectedTests
+                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+                .ToCollection()
+                .Select(tests => tests.Any() && tests.All(y => string.IsNullOrEmpty(y.JobId)));
 
-            CanArchive = selectedTests.ToCollection().Select(x => x.All(y => !y.ArchivedDateTime.HasValue));
+            CanArchive = selectedTests
+                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+                .ToCollection()
+                .Select(tests =>
+                    tests.Any() && tests.All(y => !y.ArchivedDateTime.HasValue && !y.ExportedDateTime.HasValue));
 
-            CanExport = selectedTests.ToCollection().Select(x => x.All(y => !y.ExportedDateTime.HasValue));
+            CanExport = selectedTests
+                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+                .ToCollection()
+                .Select(tests => tests.Any() && tests.All(
+                    test => !test.ExportedDateTime.HasValue && !test.ArchivedDateTime.HasValue &&
+                            !string.IsNullOrEmpty(test.JobId) &&
+                            !string.IsNullOrEmpty(test.EmployeeId)));
         }
     }
 }

@@ -24,10 +24,10 @@ namespace Prover.Application.ViewModels.Volume
             : this(pulseChannelItems)
         {
             _volumeTest = volumeTest;
-            var units = (Items as IVolumeUnits)?.Units;
+            var multiplier = (Items as IVolumeUnits)?.Units.Multiplier ?? volumeTest.Multiplier;
 
             this.WhenAnyValue(x => x._volumeTest.ExpectedValue)
-                .Select(expectedVolume => VolumeCalculator.PulseCount(expectedVolume, units?.Multiplier))
+                .Select(expectedVolume => VolumeCalculator.PulseCount(expectedVolume, multiplier))
                 .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
         }

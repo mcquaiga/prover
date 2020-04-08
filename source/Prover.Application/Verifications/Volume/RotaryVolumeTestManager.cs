@@ -14,9 +14,9 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications.Volume
 {
-    public class RotaryVolumeManager : AutomatedVolumeTestManagerBase
+    public class RotaryVolumeTestRunner : AutomatedVolumeTestRunnerBase
     {
-        internal RotaryVolumeManager(ILogger<RotaryVolumeManager> logger,
+        internal RotaryVolumeTestRunner(ILogger<RotaryVolumeTestRunner> logger,
             IDeviceSessionManager deviceManager,
             IAppliedInputVolume tachometerService,
             PulseOutputsListenerService pulseListenerService,
@@ -31,7 +31,7 @@ namespace Prover.Application.Verifications.Volume
 
         public RotaryVolumeViewModel RotaryVolume { get; }
 
-        public int TargetUncorrectedPulses => RotaryVolume.DriveType.MaxUncorrectedPulses();
+        public override int TargetUncorrectedPulses => RotaryVolume.DriveType.MaxUncorrectedPulses();
 
         public override async Task PublishCompleteInteraction() =>
             await DeviceInteractions.CompleteVolumeTest.Handle(this);
@@ -51,6 +51,8 @@ namespace Prover.Application.Verifications.Volume
                 .DisposeWith(Cleanup);
 
             MotorControl.SignalStart();
+
+            await Task.CompletedTask;
         }
     }
 }

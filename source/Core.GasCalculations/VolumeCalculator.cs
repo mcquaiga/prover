@@ -27,7 +27,7 @@ namespace Core.GasCalculations
 
         public static int PulseCount(decimal totalVolume, decimal? multiplier)
         {
-            return (int)(decimal.ToInt32(totalVolume) / multiplier ?? 1);
+            return (int)(decimal.ToInt32(totalVolume) / (multiplier ?? 1));
         }
     }
 

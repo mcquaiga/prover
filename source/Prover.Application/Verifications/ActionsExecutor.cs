@@ -11,22 +11,22 @@ using Prover.Application.ViewModels;
 
 namespace Prover.Application.Verifications
 {
-    public class VerificationCustomActionsExecutioner : IVerificationActionsExecutioner
+    public class VerificationActionsExecutor : IActionsExecutioner
     {
         private readonly IDeviceSessionManager _deviceSessionManager;
 
 
         //private readonly IEnumerable<IInitializeAction> _onInitializeActions;
         //private readonly IEnumerable<ISubmitAction> _onSubmitActions;
-        private readonly ILogger<VerificationCustomActionsExecutioner> _logger;
+        private readonly ILogger<VerificationActionsExecutor> _logger;
         private readonly IEnumerable<IVerificationAction> _verificationActions;
 
-        public VerificationCustomActionsExecutioner(
+        public VerificationActionsExecutor(
             IDeviceSessionManager deviceSessionManager, 
             IEnumerable<IVerificationAction> verificationActions,
-            ILogger<VerificationCustomActionsExecutioner> logger = null)
+            ILogger<VerificationActionsExecutor> logger = null)
         {
-            _logger = logger ?? NullLogger<VerificationCustomActionsExecutioner>.Instance;
+            _logger = logger ?? NullLogger<VerificationActionsExecutor>.Instance;
 
             _deviceSessionManager = deviceSessionManager;
             _verificationActions = verificationActions;

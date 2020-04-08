@@ -13,10 +13,8 @@ namespace Prover.Application.ViewModels
     {
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
 
-        private VerificationTestPointViewModel(int testNumber)
-        {
+        private VerificationTestPointViewModel(int testNumber, bool verified) : base(verified) =>
             TestNumber = testNumber;
-        }
 
         public VerificationTestPointViewModel()
         {
@@ -24,7 +22,6 @@ namespace Prover.Application.ViewModels
 
         public int TestNumber { get; set; }
 
-        //public extern bool Verified { [ObservableAsProperty] get; }
 
         public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
@@ -8,6 +9,21 @@ namespace Devices.Core.Interfaces
 {
     public static class DeviceInstanceEx
     {
+        public static TGroup CreateItemGroup<TGroup>(this DeviceInstance device, IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup
+        {
+           return device.CreateItemGroup<TGroup>(itemValues);
+        }
+
+        public static IEnumerable<ItemValue> CreateGroupItemValues<TGroup>(this DeviceInstance device, IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup
+        {
+            var values = itemValues.ToList();
+            
+            //var joined = device.Values.Except(values, new ItemValueComparer()).ToList();
+            var joined = values.Union(device.Values);
+
+            return joined;
+        }
+
         public static ItemValue SetItemValue(this DeviceInstance device, ItemMetadata itemMetadata, string value)
         {
             var itemValue = ItemValue.Create(itemMetadata, value);

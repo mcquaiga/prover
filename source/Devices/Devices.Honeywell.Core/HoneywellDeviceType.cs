@@ -42,7 +42,7 @@ namespace Devices.Honeywell.Core
             return groupClass;
         }
 
-        public override TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) =>
+        public override TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues) =>
             ItemFactory.Create<TGroup>(this, itemValues);
 
         public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)

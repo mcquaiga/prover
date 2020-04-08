@@ -157,9 +157,19 @@ namespace Devices.Core.Items
             return deviceType.Items.FirstOrDefault(i => i.IsLiveReadPressure == true);
         }
 
+        public static ItemMetadata GetLivePressureItem(this DeviceInstance device)
+        {
+            return device.DeviceType.GetLivePressureItem();
+        }
+
         public static ItemMetadata GetLiveTemperatureItem(this DeviceType deviceType)
         {
             return deviceType.Items.FirstOrDefault(i => i.IsLiveReadTemperature == true);
+        }
+
+        public static ItemMetadata GetLiveTemperatureItem(this DeviceInstance device)
+        {
+            return device.DeviceType.GetLiveTemperatureItem();
         }
     }
 }

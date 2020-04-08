@@ -114,7 +114,7 @@ namespace Devices.Communications
         {
             var items = DeviceType.GetItemMetadata<T>();
             var values = await GetItemValuesAsync(items);
-            return DeviceType.GetGroupValues<T>(values);
+            return DeviceType.GetGroup<T>(values);
         }
 
         public virtual void Dispose()

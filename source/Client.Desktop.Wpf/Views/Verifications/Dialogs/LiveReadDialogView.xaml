@@ -17,7 +17,7 @@
     <UserControl.Resources>
         <Style TargetType="materialDesign:Card">
             <Setter Property="Margin" Value="4" />
-            <Setter Property="Padding" Value="25" />
+            <Setter Property="Padding" Value="15" />
         </Style>
         <Style TargetType="{x:Type StackPanel}">
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -32,13 +32,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!--<TextBlock
-            Grid.Row="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Margin="5"
-            Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-            Text="Live Read" />-->
 
         <UniformGrid
             Grid.Row="1"
@@ -97,9 +90,34 @@
                         VerticalAlignment="Center"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="PSIA" />
+
+                    <StackPanel
+                        Margin="25,0"
+                        HorizontalAlignment="Right"
+                        Orientation="Vertical">
+                        <ProgressBar
+                            x:Name="PressureStableProgressBar"
+                            Width="150"
+                            HorizontalAlignment="Center"
+                            Maximum="100"
+                            Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            Value="80" />
+                        <TextBlock
+                            x:Name="PressureDifferenceTextBlock"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                            Text="Difference" />
+
+                    </StackPanel>
                 </StackPanel>
 
             </materialDesign:Card>
+
             <materialDesign:Card x:Name="TemperatureStackPanelControl" materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock
@@ -107,21 +125,35 @@
                         VerticalAlignment="Center"
                         Style="{StaticResource MaterialDesignHeadline4TextBlock}"
                         Text="Temperature" />
-                    <StackPanel Orientation="Horizontal">
+                    <ProgressBar
+                        x:Name="TemperatureStableProgressBar"
+                        Width="36"
+                        Height="36"
+                        Margin="0,30,0,15"
+                        HorizontalAlignment="Center"
+                        IsIndeterminate="True"
+                        Maximum="100"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="80" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <materialDesign:PackIcon
                             Width="48"
                             Height="48"
-                            Margin="20"
+                            Margin="12,0,4,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Kind="ThermometerLow" />
                         <TextBlock
                             x:Name="TemperatureValueTextBlock"
+                            MinWidth="200"
+                            Margin="12,0,4,0"
+                            Padding="12,0"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Bottom"
                             Style="{StaticResource MaterialDesignHeadline1TextBlock}"
                             Text="50.5" />
 
-                        <StackPanel Margin="25,0" Orientation="Vertical">
+                        <StackPanel Margin="0" Orientation="Vertical">
                             <TextBlock
                                 x:Name="TemperatureTargetValueTextBlock"
                                 HorizontalAlignment="Center"
@@ -135,12 +167,69 @@
                                 Text="Target" />
 
                         </StackPanel>
+
+
                     </StackPanel>
+
+
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                         Text="F" />
+                    <Expander
+                        Margin="0,4,-12,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Background="{StaticResource MaterialDesignPaper}">
+                        <Expander.Header>
+                            <materialDesign:PackIcon
+                                Width="24"
+                                Height="24"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Right"
+                                Kind="InfoCircle" />
+                        </Expander.Header>
+                        <UniformGrid HorizontalAlignment="Stretch" Rows="1">
+                            <StackPanel
+                                MinWidth="75"
+                                Margin="15,8"
+                                HorizontalAlignment="Center"
+                                Orientation="Vertical">
+
+                                <TextBlock
+                                    x:Name="TemperatureDifferenceTextBlock"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                                    Text="Difference" />
+
+                            </StackPanel>
+                            <StackPanel
+                                MinWidth="75"
+                                Margin="15,8"
+                                HorizontalAlignment="Center"
+                                Orientation="Vertical">
+
+                                <TextBlock
+                                    x:Name="TemperatureAverageTextBlock"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                                    Text="Average" />
+
+                            </StackPanel>
+                        </UniformGrid>
+
+                    </Expander>
                 </StackPanel>
             </materialDesign:Card>
         </UniformGrid>

@@ -73,7 +73,8 @@
         <Button
             x:Name="PrintTestReportButton"
             Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="View QA Test Report">
+            ToolTip="View QA Test Report"
+            Visibility="Collapsed">
             <materialDesign:PackIcon Kind="FileFind" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
         </Button>
     </StackPanel>

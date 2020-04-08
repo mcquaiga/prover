@@ -42,10 +42,24 @@ namespace Prover.Application.Services
         public abstract IEnumerable<TUser> GetUsers();
 
         public abstract Task<bool> Login(string username, string password = null);
-        public async Task<bool> Login()
+
+        public Task<bool> Login()
         {
-            var username = await GetLoginDetails();
-            return await Login(username);
+            Observable.StartAsync(async () =>
+            {
+                var username = await GetLoginDetails();
+                return await Login(username);
+            });
+            return Task.FromResult(true);
+        }
+
+        public IObservable<bool> SignOn()
+        {
+            return Observable.StartAsync(async () =>
+            {
+                var username = await GetLoginDetails();
+                return await Login(username);
+            });
         }
 
         public virtual async Task Logout()

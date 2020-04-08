@@ -40,7 +40,7 @@ namespace Prover.Application.Verifications.Volume
 
         public IVolumeTestManager CreateVolumeManager(EvcVerificationViewModel verificationTest)
         {
-            var logger = _loggerFactory.CreateLogger<RotaryVolumeManager>();
+            var logger = _loggerFactory.CreateLogger<RotaryVolumeTestRunner>();
 
             var tachometerService = _tachometerServiceFactory.Invoke();
             var pulseOutputListener = GetPulseOutputListener(_deviceManager.Device.ItemGroup<PulseOutputItems>());
@@ -49,7 +49,7 @@ namespace Prover.Application.Verifications.Volume
             switch (verificationTest.VolumeTest)
             {
                 case RotaryVolumeViewModel rotary:
-                    return new RotaryVolumeManager(logger, _deviceManager, tachometerService, pulseOutputListener, motorControl, rotary);
+                    return new RotaryVolumeTestRunner(logger, _deviceManager, tachometerService, pulseOutputListener, motorControl, rotary);
             }
 
             throw new NotImplementedException("Missing VolumeManager implementation");

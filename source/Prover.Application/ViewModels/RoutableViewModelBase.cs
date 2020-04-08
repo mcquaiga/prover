@@ -1,19 +1,23 @@
-﻿using Prover.Application.Interfaces;
+﻿using System.Reactive;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.ViewModels
 {
     public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
     {
-        public IScreenManager ScreenManager { get; }
+        public IScreenManager ScreenManager { get; protected set; }
 
-        protected RoutableViewModelBase(IScreenManager screenManager)
+        protected RoutableViewModelBase(IScreenManager screenManager, string urlPathSegment = null)
         {
             ScreenManager = screenManager;
+            HostScreen = screenManager;
+            UrlPathSegment = urlPathSegment;
 
+            CloseView = ReactiveCommand.CreateFromTask(ScreenManager.GoBack);
         }
-
-        public abstract string UrlPathSegment { get; } 
-        public abstract IScreen HostScreen { get; }
+        public ReactiveCommand<Unit, Unit> CloseView { get; protected set; }
+        public string UrlPathSegment { get; protected set; }
+        public IScreen HostScreen { get; protected set; }
     }
 }

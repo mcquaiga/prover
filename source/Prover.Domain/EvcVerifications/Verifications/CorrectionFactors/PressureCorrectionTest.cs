@@ -14,8 +14,8 @@ namespace Prover.Domain.EvcVerifications.Verifications.CorrectionFactors
             AtmosphericGauge = atmGauge;
         }
 
-        public decimal Gauge { get; private set; }
-        public decimal AtmosphericGauge { get; private set; }
+        public decimal Gauge { get; set; }
+        public decimal AtmosphericGauge { get; set; }
 
         #endregion
     }

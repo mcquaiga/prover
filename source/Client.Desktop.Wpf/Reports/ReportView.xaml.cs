@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +26,8 @@ namespace Client.Desktop.Wpf.Reports
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.ContentViewModel, v => v.ReportHostContentControl.ViewModel);
+                this.OneWayBind(ViewModel, vm => vm.ContentViewModel, v => v.ReportHostContentControl.ViewModel).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.CloseView, view => view.CloseReport).DisposeWith(d);
             });
         }
     }

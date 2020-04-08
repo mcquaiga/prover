@@ -25,7 +25,7 @@ namespace Devices.Core.Items.ItemGroups
         {
             var items = itemValues.ToList();
 
-            var site = deviceType.GetGroupValues<SiteInformationItems>(items);
+            var site = deviceType.GetGroup<SiteInformationItems>(items);
             
             if (site.LivePressureFactor == CorrectionFactorType.Fixed) 
                 return null;

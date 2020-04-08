@@ -29,7 +29,7 @@ namespace Devices.Core.Interfaces
 
         public abstract Type GetBaseItemGroupClass(Type itemGroupType);
 
-        public abstract TGroup GetGroupValues<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup;
+        public abstract TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues) where TGroup : ItemGroup;
 
         public abstract ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType);
 

@@ -10,7 +10,7 @@ using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Prover.Domain.EvcVerifications.Verifications.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 
-namespace Prover.Application.Config
+namespace Prover.Application.Mappers
 {
     public static class Mappers
     {

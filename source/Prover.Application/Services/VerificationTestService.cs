@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
 using Prover.Application.Interfaces;
+using Prover.Application.Mappers;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Domain.EvcVerifications;
@@ -76,8 +77,9 @@ namespace Prover.Application.Services
         public async Task<EvcVerificationTest> AddOrUpdate(EvcVerificationTest evcVerificationTest)
         {
             await _verificationRepository.UpsertAsync(evcVerificationTest);
-            //_updates.OnNext(evcVerificationTest);
+          
             _testsCache.AddOrUpdate(evcVerificationTest);
+
             return evcVerificationTest;
         }
 
@@ -94,15 +96,6 @@ namespace Prover.Application.Services
 
         public IObservableCache<EvcVerificationTest, Guid> FetchTests()
         {
-            //if (_verificationTests == null)
-            //{
-            //    var allTests = GetTests().Publish();
-            //    _verificationTests = allTests.AsObservableCache();
-
-            //    allTests.Connect().DisposeWith(_cleanup);
-            //    _cleanup.Add(_verificationTests);
-            //}
-
             return Load();
         }
 
@@ -110,6 +103,7 @@ namespace Prover.Application.Services
         {
             if (_verificationTests == null)
             {
+
                 _testsCache.AddOrUpdate(_verificationRepository.Query());
 
                 var changes = _testsCache.AsObservableCache().Connect().Publish();

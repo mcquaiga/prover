@@ -50,6 +50,8 @@ namespace Client.Desktop.Wpf.Views.Verifications
                 this.BindCommand(ViewModel, vm => vm.SaveCommand, v => v.SaveButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.PrintTestReport, v => v.PrintButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.SubmitTest, v => v.SubmitTestButton).DisposeWith(d);
+                
+                this.BindCommand(ViewModel, vm => vm.LoadFromFile, v => v.LoadFromFileButton).DisposeWith(d);
 
                 this.CleanUpDefaults().DisposeWith(d);
             });

@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items
 {
-    public class ItemValue
+    public class ItemValue : IEquatable<ItemValue>, IEqualityComparer<ItemValue>
     {
         private ItemValue() { }
 
@@ -73,6 +75,8 @@ namespace Devices.Core.Items
 
         #region Public Methods
 
+        public bool Equals(ItemValue other) => Id == other?.Id;
+
         public override string ToString()
         {
             return $" {Metadata?.Description} - #{Metadata?.Number} {Environment.NewLine}" +
@@ -80,6 +84,17 @@ namespace Devices.Core.Items
         }
 
         #endregion
+
+
+        public bool Equals(ItemValue x, ItemValue y)
+        {
+            return x?.Id == y?.Id;
+        }
+
+        public int GetHashCode(ItemValue obj)
+        {
+            return obj.Id.GetHashCode();
+        }
     }
 
 

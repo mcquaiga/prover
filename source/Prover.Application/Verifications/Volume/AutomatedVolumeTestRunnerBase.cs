@@ -17,7 +17,7 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications.Volume
 {
-    public abstract class AutomatedVolumeTestManagerBase : IVolumeTestManager, IDisposable
+    public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable
     {
         private const int WaitTimeForResidualPulsesSeconds = 5;
         protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
@@ -26,14 +26,14 @@ namespace Prover.Application.Verifications.Volume
         protected IOutputChannel MotorControl;
         protected IAppliedInputVolume TachometerService;
 
-        internal AutomatedVolumeTestManagerBase(ILogger<RotaryVolumeManager> logger,
+        internal AutomatedVolumeTestRunnerBase(ILogger<RotaryVolumeTestRunner> logger,
             IDeviceSessionManager deviceManager,
             IAppliedInputVolume tachometerService,
             PulseOutputsListenerService pulseListenerService,
             IOutputChannel motorControl,
             VolumeViewModelBase volumeTest)
         {
-            Logger = logger ?? NullLogger<RotaryVolumeManager>.Instance;
+            Logger = logger ?? NullLogger<RotaryVolumeTestRunner>.Instance;
             MotorControl = motorControl ?? throw new ArgumentNullException(nameof(motorControl));
 
             DeviceManager = deviceManager;
@@ -42,8 +42,7 @@ namespace Prover.Application.Verifications.Volume
             PulseListenerService = pulseListenerService;
             VolumeTest = volumeTest;
 
-            StartTest = ReactiveCommand.CreateFromTask(async () => { await RunStartActions(); },
-                outputScheduler: RxApp.MainThreadScheduler);
+            StartTest = ReactiveCommand.CreateFromTask(RunStartActions, outputScheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
 
             InitiateTestCompletion = ReactiveCommand.Create(() =>
             {
@@ -69,6 +68,8 @@ namespace Prover.Application.Verifications.Volume
             StartTest.DisposeWith(Cleanup);
             FinishTest.DisposeWith(Cleanup);
             InitiateTestCompletion.DisposeWith(Cleanup);
+
+            TargetUncorrectedPulses = VolumeTest.DriveType.MaxUncorrectedPulses();
         }
 
         public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
@@ -79,9 +80,11 @@ namespace Prover.Application.Verifications.Volume
         public VolumeViewModelBase VolumeTest { get; }
         public ReactiveCommand<Unit, Unit> InitiateTestCompletion { get; protected set; }
 
+        public virtual int TargetUncorrectedPulses { get; }
+        
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Cleanup?.Dispose();
         }
 
         public abstract Task PublishCompleteInteraction();
@@ -98,7 +101,7 @@ namespace Prover.Application.Verifications.Volume
             await PublishCompleteInteraction();
 
             var endValues = await DeviceManager.GetItemValues();
-            VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(endValues);
+            VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroup<VolumeItems>(endValues);
         }
 
         public virtual async Task RunStartActions()
@@ -107,7 +110,7 @@ namespace Prover.Application.Verifications.Volume
                 $"Starting {VolumeTest.DriveType.InputType} volume test for {DeviceManager.Device.DeviceType}.");
 
             var startValues = await DeviceManager.GetItemValues();
-            VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroupValues<VolumeItems>(startValues);
+            VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroup<VolumeItems>(startValues);
 
             var cancelToken = await PublishStartInteraction();
             cancelToken.Register(() =>

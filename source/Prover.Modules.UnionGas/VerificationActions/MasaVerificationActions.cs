@@ -40,11 +40,13 @@ namespace Prover.Modules.UnionGas.VerificationActions
         public async Task OnInitialize(EvcVerificationViewModel verification)
         {
             if (!_loginService.IsSignedOn)
-                await _loginService.Login();
+                _loginService.SignOn();
 
-            _disposer.Disposable = _loginService.LoggedIn.Subscribe(x => verification.EmployeeId = _loginService.User?.Id);
+            _disposer.Disposable = 
+                _loginService.LoggedIn
+                    .Subscribe(x => verification.EmployeeId = _loginService.User?.Id);
 
-            var meterDto = await _companyNumberValidator.Validate(verification, updateDeviceItemValue: true);
+            var meterDto = await _companyNumberValidator.ValidateInventoryNumber(verification, updateDeviceItemValue: true);
 
             verification.JobId = meterDto?.JobNumber.ToString();
             verification.EmployeeId = _loginService.User?.Id;

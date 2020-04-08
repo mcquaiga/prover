@@ -12,14 +12,15 @@ namespace Prover.Application.Verifications
         private readonly ILogger<VerificationTestManagerFactory> _logger;
         private readonly IDeviceSessionManager _deviceSessionManager;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager> _volumeTestManagerFactory;
-        private readonly IVerificationActionsExecutioner _actionExecutioner;
+        private readonly IActionsExecutioner _actionExecutioner;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> _testManagerFactory;
 
         public VerificationTestManagerFactory(ILogger<VerificationTestManagerFactory> logger,
             IDeviceSessionManager deviceSessionManager,
             Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> testManagerFactory,
             Func<EvcVerificationViewModel, IVolumeTestManager> volumeTestManagerFactory,
-            IVerificationActionsExecutioner actionExecutioner)
+
+            IActionsExecutioner actionExecutioner)
         {
             _logger = logger;
             _deviceSessionManager = deviceSessionManager;

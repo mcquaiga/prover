@@ -34,18 +34,24 @@ namespace Prover.Modules.UnionGas.MasaWebService
             return _users.FirstOrDefault(u => u.EmployeeNbr == employeeNumber);
         }
 
-        public async Task<MeterDTO> FindMeterByInventoryNumber(string inventoryNumber)
+        public async Task<MeterDTO> FindMeterByInventoryNumber(string inventoryNumber, string serialNumber = null)
         {
             await Task.CompletedTask;
-            var meterNumber = RandomNumberGenerator.GetInt32(0, 2);
 
-            if (meterNumber.ToString() == inventoryNumber)
+            serialNumber = _deviceSession.SessionInProgress
+                ? _deviceSession.Device?.Items.SiteInfo.SerialNumber
+                : serialNumber;
+
+            var inventoryInt = inventoryNumber.ToInt32();
+            var meterNumber = new Random(DateTime.Now.Millisecond).Next(inventoryInt, inventoryInt + 2);
+
+            if (meterNumber == inventoryInt)
             {
                 return new MeterDTO()
                 {
                     InventoryCode = inventoryNumber,
                     JobNumber = RandomNumberGenerator.GetInt32(1, 10000),
-                    SerialNumber = _deviceSession?.Device.Items.SiteInfo.SerialNumber ?? "1234"
+                    SerialNumber = serialNumber
                 };
             }
 

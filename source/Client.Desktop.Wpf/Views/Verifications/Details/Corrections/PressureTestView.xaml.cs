@@ -33,15 +33,15 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
                 this.Bind(ViewModel, vm => vm.AtmosphericGauge, v => v.AtmosphericControl.Value).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.Gauge, v => v.AbsoluteControl.Value).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
-                        v => v.AtmosphericControl.Visibility,
-                        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
-                    .DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
+                //        v => v.AtmosphericControl.Visibility,
+                //        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
+                //    .DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
-                        v => v.AbsoluteControl.Visibility,
-                        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
-                    .DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
+                //        v => v.AbsoluteControl.Visibility,
+                //        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
+                //    .DisposeWith(d);
 
 
                 this.Bind(ViewModel, vm => vm.Items.GasPressure, v => v.EvcReadingControl.Value).DisposeWith(d);

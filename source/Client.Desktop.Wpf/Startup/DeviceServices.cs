@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using Prover.Application.Verifications;
+using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Volume;
 
 namespace Client.Desktop.Wpf.Startup
@@ -25,26 +26,13 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
 
             services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager>>(c =>
-                (test, volumeManager) => new TestManager(
-                    c.GetService<ILogger<TestManager>>(),
-                    c.GetService<IDeviceSessionManager>(),
-                    test,
-                    volumeManager,
-                    c.GetService<IVerificationActionsExecutioner>()));
-
-            //services.AddSingleton<Func<DeviceType, ITestManager>>(c => (deviceType) =>
-            //{
-            //    var session = c.GetService<IDeviceSessionManager>();
-            //    var device = await session.StartSession(deviceType);
-            //    var test = c.GetService<VerificationTestService>().NewTest(device);
-
-            //    return new TestManager(new TestManager(
-            //        c.GetService<ILogger<TestManager>>(),
-            //        c.GetService<IDeviceSessionManager>(),
-            //        test,
-            //        c.GetService<Func<EvcVerificationViewModel, IVolumeTestManager>>(),
-            //        c.GetService<IDeviceVerificationValidator>());
-            //});
+                (test, volumeManager) => ActivatorUtilities.CreateInstance<TestManager>(c, test, volumeManager));
+                    //new TestManager(
+                    //c.GetService<ILogger<TestManager>>(),
+                    //c.GetService<IDeviceSessionManager>(),
+                    //test,
+                    //volumeManager,
+                    //c.GetService<IActionsExecutioner>()));
 
             services.AddTransient<ITestManagerFactory, VerificationTestManagerFactory>();
 
@@ -60,8 +48,10 @@ namespace Client.Desktop.Wpf.Startup
             services.AddTachometer();
 
             services.AddSingleton<IDeviceRepository, DeviceRepository>();
-            services.AddSingleton<IVerificationActionsExecutioner, VerificationCustomActionsExecutioner>();
             services.AddSingleton<DeviceSessionDialogManager>();
+
+            services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
+            services.AddSingleton<ICorrectionVerificationRunner, BasicCorrectionTestRunner>();
 
             services.AddStartTask<DeviceServices>();
         }

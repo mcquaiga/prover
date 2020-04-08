@@ -26,10 +26,10 @@ namespace Prover.Application.Interactions
         public static Interaction<IDeviceSessionManager, Unit> Unlinked { get; } =
             new Interaction<IDeviceSessionManager, Unit>();
 
-        public static Interaction<RotaryVolumeManager, CancellationToken> StartVolumeTest { get; } =
-            new Interaction<RotaryVolumeManager, CancellationToken>();
+        public static Interaction<IVolumeTestManager, CancellationToken> StartVolumeTest { get; } =
+            new Interaction<IVolumeTestManager, CancellationToken>();
 
-        public static Interaction<RotaryVolumeManager, CancellationToken> CompleteVolumeTest { get; } =
-            new Interaction<RotaryVolumeManager, CancellationToken>();
+        public static Interaction<IVolumeTestManager, CancellationToken> CompleteVolumeTest { get; } =
+            new Interaction<IVolumeTestManager, CancellationToken>();
     }
 }

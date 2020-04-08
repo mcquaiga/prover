@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 
 namespace Prover.Application.Interfaces
@@ -7,6 +8,6 @@ namespace Prover.Application.Interfaces
     {
         EvcVerificationViewModel TestViewModel { get; }
         IVolumeTestManager VolumeTestManager { get; }
-        Task RunCorrectionTests(VerificationTestPointViewModel test);
+        ICorrectionVerificationRunner CorrectionVerifications { get; }
     }
 }

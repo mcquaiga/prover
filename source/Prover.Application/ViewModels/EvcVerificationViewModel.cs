@@ -16,6 +16,13 @@ namespace Prover.Application.ViewModels
 {
     public class EvcVerificationViewModel : VerificationViewModel
     {
+        public EvcVerificationViewModel()
+        {
+
+        }
+
+        private EvcVerificationViewModel(bool verified) : base(verified) { }
+
         [Reactive] public DeviceInstance Device { get; set; }
 
         [Reactive] public CompositionType CompositionType { get; set; }
