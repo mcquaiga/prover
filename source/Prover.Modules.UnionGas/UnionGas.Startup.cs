@@ -87,7 +87,7 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<MeterInventoryNumberValidator>();
             services.AddSingleton<MasaVerificationActions>();
             services.AddSingleton<IOnInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            services.AddSingleton<IOnCompleteAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            services.AddSingleton<IOnSubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
             services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
         }
 

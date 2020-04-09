@@ -21,6 +21,7 @@ namespace Prover.Application.Verifications
             IVerificationTestService verificationService,
             Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> testManagerFactory,
             Func<EvcVerificationViewModel, IVolumeTestManager> volumeTestManagerFactory,
+            Func<EvcVerificationViewModel, ICorrectionVerificationRunner> correctionsRunnerFactory,
             IActionsExecutioner actionExecutioner)
         {
             _logger = logger;
@@ -33,13 +34,10 @@ namespace Prover.Application.Verifications
 
         public async Task<ITestManager> StartNew(IDeviceSessionManager deviceManager, DeviceType deviceType)
         {
-            //if (deviceManager is IActiveDeviceSessionManager manager)
-            //    manager.Active = true;
-
             var device = await deviceManager.StartSession(deviceType);
             var testViewModel = _verificationService.NewVerification(device);
 
-            
+            await _actionExecutioner.RunActionsOn<IOnInitializeAction>(testViewModel);
 
             await deviceManager.Disconnect();
 

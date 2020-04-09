@@ -33,15 +33,20 @@ namespace Prover.Application.Interfaces
     {
     }
 
-    public interface IOnInitializeAction<in T> : IVerificationAction
-        where T : IReactiveObject
+    public interface IOnVerificationStepAction : IVerificationAction
     {
-        Task OnInitialize(T item);
+        VerificationTestStep VerificationStep { get; }
+        Task OnStep(EvcVerificationViewModel verification);
     }
 
-    public interface IOnCompleteAction<in T> : IVerificationAction
-        where T : IReactiveObject
+    public interface IOnInitializeAction : IVerificationAction
     {
-        Task OnComplete(T item);
+        Task OnInitialize(EvcVerificationViewModel verification);
+    }
+
+    public interface IOnSubmitAction : IVerificationAction
+    {
+        Task OnSubmit(EvcVerificationViewModel verification);
+        //new Task Execute(EvcVerificationViewModel verification);
     }
 }
