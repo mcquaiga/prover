@@ -13,6 +13,7 @@ namespace Prover.Application.Verifications
 
         private readonly IVerificationTestService _verificationService;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager> _volumeTestManagerFactory;
+        private readonly Func<EvcVerificationViewModel, ICorrectionVerificationRunner> _correctionsRunnerFactory;
         private readonly IActionsExecutioner _actionExecutioner;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> _testManagerFactory;
 
@@ -29,6 +30,7 @@ namespace Prover.Application.Verifications
             _verificationService = verificationService;
             _testManagerFactory = testManagerFactory;
             _volumeTestManagerFactory = volumeTestManagerFactory;
+            _correctionsRunnerFactory = correctionsRunnerFactory;
             _actionExecutioner = actionExecutioner;
         }
 
@@ -44,5 +46,10 @@ namespace Prover.Application.Verifications
             var volumeManager = _volumeTestManagerFactory.Invoke(testViewModel);
             return _testManagerFactory.Invoke(testViewModel, volumeManager);
         }
+    }
+
+    public class VerificationManagerBuilder
+    {
+
     }
 }
