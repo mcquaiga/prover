@@ -2,7 +2,7 @@
 using Devices.Core.Items.DriveTypes;
 using Prover.Application.ViewModels.Volume.Rotary;
 
-namespace Prover.Application.ViewModels.Volume.Factories
+namespace Prover.Application.ViewModels.Factories.Volume
 {
     public partial class VolumeViewModelFactory
     {

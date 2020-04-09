@@ -5,9 +5,11 @@ using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
 using Prover.Application.Mappers;
 using Prover.Application.ViewModels.Corrections;
+using Prover.Application.ViewModels.Factories.Volume;
 using Prover.Domain.EvcVerifications;
+using Prover.Shared.Interfaces;
 
-namespace Prover.Application.ViewModels.Volume.Factories
+namespace Prover.Application.ViewModels.Factories
 {
     public interface IVerificationViewModelFactory
     {
@@ -16,6 +18,8 @@ namespace Prover.Application.ViewModels.Volume.Factories
 
     public class VerificationViewModelFactory : IVerificationViewModelFactory
     {
+        private readonly ILoginService _loginService;
+
         private readonly ICollection<CorrectionTestDefinition> _testDefinitions = new List<CorrectionTestDefinition>
         {
             new CorrectionTestDefinition
@@ -41,15 +45,20 @@ namespace Prover.Application.ViewModels.Volume.Factories
             }
         };
 
-        public VerificationViewModelFactory(ICollection<CorrectionTestDefinition> testDefinitions = null) =>
+        public VerificationViewModelFactory(ILoginService loginService, ICollection<CorrectionTestDefinition> testDefinitions = null)
+        {
+            _loginService = loginService;
             _testDefinitions = testDefinitions ?? _testDefinitions;
+        }
 
         public EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest)
         {
             var viewModel = evcTest.ToViewModel();
 
             var testPoints = BuildTestPointViewModel(evcTest.Device, viewModel, _testDefinitions);
-            viewModel.Initialize(testPoints.ToList());
+
+            viewModel.Initialize(testPoints.ToList(), _loginService);
+            
             return viewModel;
         }
 

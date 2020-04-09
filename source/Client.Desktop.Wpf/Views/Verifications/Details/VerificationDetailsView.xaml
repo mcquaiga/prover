@@ -26,12 +26,11 @@
         </DataTemplate>-->
     </UserControl.Resources>
     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Stretch">
-        <!--<DockPanel.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
-        </DockPanel.ColumnDefinitions>-->
 
-        <Viewbox DockPanel.Dock="Left" Stretch="Uniform">
+        <Viewbox
+            Margin="20,0"
+            DockPanel.Dock="Left"
+            Stretch="Uniform">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
@@ -43,10 +42,6 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>-->
 
                 <ItemsControl
                     x:Name="TestPointItems"

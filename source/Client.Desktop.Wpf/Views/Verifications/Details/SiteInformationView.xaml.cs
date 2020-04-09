@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,7 +13,6 @@ using MaterialDesignThemes.Wpf;
 using Prover.Application.ViewModels;
 using Prover.Shared;
 using ReactiveUI;
-using Brushes = System.Windows.Media.Brushes;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Details
 {
@@ -28,18 +27,16 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Kind, value => value ? PackIconKind.Check : PackIconKind.AlertCircleOutline).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
-                
-                this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Text, value => $"Employee #{value}").DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Visibility, 
-                    value => 
-                        !string.IsNullOrEmpty(value) 
-                            ? Visibility.Visible 
-                            : Visibility.Collapsed)
-                    .DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Kind,
+                                value => value ? PackIconKind.Check : PackIconKind.AlertCircleOutline).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground,
+                                value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
 
-                //this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground, value => value ? Brushes.ForestGreen : Brushes.IndianRed);
+                this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Content).DisposeWith(d);
+
+                //this.WhenAnyValue(x => x.ViewModel.GetUser)
+                //    .SelectMany(x => x.Execute(ViewModel.Test.EmployeeId))
+                //    .Subscribe();
 
                 SetWithViewModel(ViewModel);
 
@@ -51,20 +48,36 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
             });
         }
 
+        private void SetPulseOutputChannel(PulseOutputChannel channel, ContentControl channelControl,
+            ContentControl unitsControl)
+        {
+            var channelItems = ViewModel.PulseOutput.GetChannel(channel);
+            channelControl.DataContext = channelItems;
+
+            if (channelItems is IVolumeUnits units)
+            {
+                unitsControl.Visibility = Visibility.Visible;
+                unitsControl.Content = units.Units.Description;
+                return;
+            }
+
+            unitsControl.Visibility = Visibility.Collapsed;
+        }
+
         private void SetWithViewModel(SiteInformationViewModel viewModel)
         {
             DeviceNameTextBlock.Text = viewModel.Device.DeviceType.Name;
             TestDateBlock.Text = $"{viewModel.TestDateTime:g}";
 
-            JobIdTextBlock.Visibility = !string.IsNullOrEmpty(viewModel.Test.JobId)
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            JobIdTextBlock.Text = $"Job #{viewModel.Test.JobId ?? ""}";
+            JobIdTextControl.Visibility = !string.IsNullOrEmpty(viewModel.Test.JobId)
+                                              ? Visibility.Visible
+                                              : Visibility.Collapsed;
+            JobIdTextControl.Content = viewModel.Test.JobId;
 
             CompositionTypeTextBlock.Text = viewModel.Device.CompositionShort();
 
             DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
-                viewModel.Test.VolumeTest.DriveType.InputType);
+                                                   viewModel.Test.VolumeTest.DriveType.InputType);
 
             CompanyNumberText.Content = viewModel.CompanyNumber;
             SerialNumberText.Content = viewModel.SiteInfo.SerialNumber;
@@ -84,28 +97,22 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
                 PressureRangeTextBlock.Content = viewModel.Pressure.Range.ToString();
                 PressureTransducerTextBlock.Content = viewModel.Pressure.TransducerType.ToString();
                 BasePressureTextBlock.Content = viewModel.Pressure.Base.ToString(CultureInfo.InvariantCulture);
-                AtmPressureTextBlock.Content = viewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
+                AtmPressureTextBlock.Content =
+                    viewModel.Pressure.AtmosphericPressure.ToString(CultureInfo.InvariantCulture);
             }
 
             //Temperature
-            TemperatureInfoSection.Visibility = viewModel.Temperature != null ? Visibility.Visible : Visibility.Collapsed;
+            TemperatureInfoSection.Visibility =
+                viewModel.Temperature != null ? Visibility.Visible : Visibility.Collapsed;
             BaseTempTextBlock.Content = viewModel.Temperature?.Base.ToString(CultureInfo.InvariantCulture);
             TempUnitsTextBlock.Content = viewModel.Temperature?.Units.ToString();
         }
-
-        private void SetPulseOutputChannel(PulseOutputChannel channel, ContentControl channelControl, ContentControl unitsControl)
-        {
-            var channelItems = ViewModel.PulseOutput.GetChannel(channel);
-            channelControl.DataContext = channelItems;
-            
-            if (channelItems is IVolumeUnits units)
-            {
-                unitsControl.Visibility = Visibility.Visible;
-                unitsControl.Content = units.Units.Description;
-                return;
-            }
-            unitsControl.Visibility = Visibility.Collapsed;
-        }
-
     }
 }
+
+//this.OneWayBind(ViewModel, vm => vm.Test.EmployeeId, v => v.EmployeeTextBlock.Visibility,
+//    value =>
+//        !string.IsNullOrEmpty(value)
+//            ? Visibility.Visible
+//            : Visibility.Collapsed)
+//    .DisposeWith(d);

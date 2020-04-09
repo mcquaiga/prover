@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Application.ViewModels.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 using Tests.Shared;
@@ -32,8 +32,9 @@ namespace Tests.Application.Services
         private static DeviceType _deviceType;
         private static Mock<DeviceInstance> _instance;
         private static IDeviceRepository _repo;
+        private static readonly Mock<ILoginService> _loginServiceMock = new Mock<ILoginService>();
 
-        private static IVerificationViewModelFactory _verificationViewModelFactory = new VerificationViewModelFactory();
+        private static IVerificationViewModelFactory _verificationViewModelFactory = new VerificationViewModelFactory(_loginServiceMock.Object);
         private static readonly Mock<IAsyncRepository<EvcVerificationTest>> _repoMock =
             new Mock<IAsyncRepository<EvcVerificationTest>>();
 

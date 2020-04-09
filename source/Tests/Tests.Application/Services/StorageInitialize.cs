@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Application.ViewModels.Factories;
 using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
 
@@ -73,7 +73,7 @@ namespace Tests.Application.Services
         }
 
         public static VerificationTestService CreateVerificationTestService() =>
-            new VerificationTestService(TestRepo, new VerificationViewModelFactory(), null);
+            new VerificationTestService(TestRepo, new VerificationViewModelFactory(null), null);
 
         public static void DropCollection()
         {

@@ -1,18 +1,41 @@
 ﻿using System;
+using System.Reactive.Linq;
+using System.Threading;
 using Devices.Core.Interfaces;
+using Prover.Shared.Interfaces;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels
 {
     public class SiteInformationViewModel : DeviceInfoViewModel
     {
-        private DateTime _startTestDate;
+        private readonly ILoginService _loginService;
+        private readonly DateTime _startTestDate;
+        public ReactiveCommand<string, string> GetUser;
+
+        public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel,
+            ILoginService loginService = null) : base(device)
+        {
+            _loginService = loginService;
+            _startTestDate = DateTime.Now;
+
+            Test = verificationViewModel;
+
+            //if (loginService != null)
+            //{
+            //    //loginService.
+            //    GetUser = ReactiveCommand.CreateFromTask<string, string>(loginService.GetDisplayName);
+                
+            //    this.WhenAnyValue(x => x.Test.EmployeeId).InvokeCommand(GetUser);
+
+            //    GetUser.ToPropertyEx(this, x => x.EmployeeName);
+            //}
+        }
+
         public EvcVerificationViewModel Test { get; }
 
-        public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel) : base(device)
-        {
-            Test = verificationViewModel;
-            _startTestDate = DateTime.Now;
-        }
+        public extern string EmployeeName { [ObservableAsProperty] get; }
 
         public DateTime TestDateTime => Test.TestDateTime ?? _startTestDate;
     }

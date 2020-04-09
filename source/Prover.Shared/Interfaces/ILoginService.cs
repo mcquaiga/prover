@@ -12,14 +12,17 @@ namespace Prover.Shared.Interfaces
         Task Logout();
         IObservable<bool> LoggedIn { get; }
         bool IsSignedOn { get; }
+
+        Task<string> GetDisplayName<T>(T id);
     }
 
-    public interface ILoginService<out T> : ILoginService
+    public interface ILoginService<T> : ILoginService
         where T : class
     {
         T User { get; }
         Task<string> GetLoginDetails();
         IEnumerable<T> GetUsers();
+        Task<T> GetUserDetails<TId>(TId id);
     }
 
 

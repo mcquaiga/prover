@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Shared.Interfaces;
 using System;
 using System.Threading;
@@ -15,6 +14,7 @@ using Client.Desktop.Wpf.ViewModels.Devices;
 using Prover.Application.VerificationManagers;
 using Prover.Application.VerificationManagers.Corrections;
 using Prover.Application.VerificationManagers.Factories;
+using Prover.Application.ViewModels.Factories;
 
 namespace Client.Desktop.Wpf.Startup
 {

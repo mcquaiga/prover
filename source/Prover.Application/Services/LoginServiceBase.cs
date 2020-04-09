@@ -37,12 +37,19 @@ namespace Prover.Application.Services
         public IObservable<bool> LoggedIn { get; }
         public bool IsSignedOn { get; private set; }
 
+        /// <inheritdoc />
+        public abstract Task<string> GetDisplayName<TId>(TId id);
+
         public virtual async Task<string> GetLoginDetails()
         {
             return await MessageInteractions.GetInputString.Handle("Username:");
         }
 
         public abstract IEnumerable<TUser> GetUsers();
+
+        /// <inheritdoc />
+        public abstract Task<TUser> GetUserDetails<TId>(TId id);
+     
 
         public abstract Task<bool> Login(string username, string password = null);
 

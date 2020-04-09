@@ -9,6 +9,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Shared.Interfaces;
 

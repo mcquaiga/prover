@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Prover.Shared.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<in TId, T>
         where T : class
     {
         T Add(T entity);
@@ -15,6 +15,12 @@ namespace Prover.Shared.Interfaces
 
         IEnumerable<T> GetAll();
 
-        T Get(Guid id);
+        T Get(TId id);
+    }
+
+    public interface IRepository<T> : IRepository<Guid, T>
+        where T : class
+    {
+
     }
 }

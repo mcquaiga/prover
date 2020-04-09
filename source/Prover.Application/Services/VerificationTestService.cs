@@ -13,7 +13,7 @@ using DynamicData;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Application.ViewModels.Factories;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 

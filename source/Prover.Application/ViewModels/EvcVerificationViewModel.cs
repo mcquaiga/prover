@@ -9,6 +9,7 @@ using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
+using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -39,15 +40,17 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public string EmployeeId { get; set; }
 
+        [Reactive] public string EmployeeName { get; set; }
+
         public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
         public SiteInformationViewModel DeviceInfo { get; set; }
 
         public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
         
-        public void Initialize(ICollection<VerificationViewModel> verificationTests)
+        public void Initialize(ICollection<VerificationViewModel> verificationTests, ILoginService loginService = null)
         {
-            DeviceInfo = new SiteInformationViewModel(Device, this);
+            DeviceInfo = new SiteInformationViewModel(Device, this, loginService);
 
             VerificationTests.Clear();
             VerificationTests.AddRange(verificationTests.ToArray());

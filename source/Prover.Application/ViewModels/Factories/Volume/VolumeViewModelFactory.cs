@@ -2,10 +2,11 @@
 using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
+using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
 
-namespace Prover.Application.ViewModels.Volume.Factories
+namespace Prover.Application.ViewModels.Factories.Volume
 {
     public partial class VolumeViewModelFactory
     {

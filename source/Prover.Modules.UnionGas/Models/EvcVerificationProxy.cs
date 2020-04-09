@@ -41,12 +41,12 @@ namespace Prover.Modules.UnionGas.Models
                 .Where(x => x.Id == Test.Id)
                 .ToPropertyEx(this, x => x.Test, verification);
 
-            var initEmployee = loginService?.GetUsers().FirstOrDefault(u => u.Id == Test.EmployeeId);
+            //var initEmployee = loginService?.GetUsers().FirstOrDefault(u => u.Id == Test.EmployeeId);
             
-            this.WhenAnyValue(x => x.Test)
-                .Where(t => !string.IsNullOrEmpty(t.EmployeeId))
-                .Select(t => loginService?.GetUsers().FirstOrDefault(u => u.Id == t.EmployeeId))
-                .ToPropertyEx(this, x => x.Employee, initEmployee);
+            //this.WhenAnyValue(x => x.Test)
+            //    .Where(t => !string.IsNullOrEmpty(t.EmployeeId))
+            //    .Select(t => loginService?.GetUsers().FirstOrDefault(u => u.Id == t.EmployeeId))
+            //    .ToPropertyEx(this, x => x.Employee, initEmployee);
 
             this.WhenAnyValue(x => x.Test)
                 .Select(t => t.ArchivedDateTime.HasValue || t.ExportedDateTime.HasValue)

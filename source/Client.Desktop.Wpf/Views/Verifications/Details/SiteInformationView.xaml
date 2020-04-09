@@ -23,7 +23,7 @@
                 <Setter Property="Foreground" Value="Gray" />
                 <Setter Property="Width" Value="48" />
                 <Setter Property="Height" Value="48" />
-                <Setter Property="Margin" Value="0,0,2,0" />
+                <Setter Property="Margin" Value="2,0,8,8" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
@@ -125,7 +125,7 @@
     </UserControl.Resources>
     <Border BorderThickness="0,0,1,0" Style="{StaticResource TestSectionOuterBorder}">
         <StackPanel Orientation="Vertical">
-            <StackPanel Margin="0,6">
+            <StackPanel Margin="0">
 
                 <materialDesign:PackIcon
                     x:Name="VerifiedStatusIcon"
@@ -134,11 +134,9 @@
                     Margin="5"
                     HorizontalAlignment="Center" />
 
-                <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
-
                 <TextBlock
                     x:Name="DeviceNameTextBlock"
-                    Margin="0,10,0,5"
+                    Margin="0,5"
                     HorizontalAlignment="Center"
                     FontSize="32" />
 
@@ -148,26 +146,29 @@
                     <TextBlock x:Name="DriveTypeTextBlock" FontWeight="Light" />
                 </StackPanel>
 
+                <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
+
                 <!--<TextBlock
                     x:Name="ClientTextBlock"
                     Margin="0,5,0,0"
                     HorizontalAlignment="Center" />-->
 
-                <TextBlock
-                    x:Name="JobIdTextBlock"
-                    Margin="0,5,0,0"
-                    HorizontalAlignment="Center"
-                    FontWeight="Light"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                <UniformGrid HorizontalAlignment="Stretch" Rows="1">
 
-                <TextBlock
-                    x:Name="EmployeeTextBlock"
-                    Margin="0,5,0,0"
-                    HorizontalAlignment="Center"
-                    FontWeight="Light"
-                    Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                    <ContentControl
+                        x:Name="JobIdTextControl"
+                        Tag="Job #"
+                        Template="{StaticResource ValueLabelControlTemplate}" />
+                    <ContentControl
+                        x:Name="EmployeeIdTextControl"
+                        Tag="Employee #"
+                        Template="{StaticResource ValueLabelControlTemplate}" />
+
+                </UniformGrid>
+
             </StackPanel>
 
+            <!--  Site Information  -->
             <Border Style="{StaticResource SubSectionDividerBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>

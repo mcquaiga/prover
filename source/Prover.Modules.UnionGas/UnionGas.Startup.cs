@@ -68,11 +68,12 @@ namespace Prover.Modules.UnionGas
            
             services.AddSingleton<MasaLoginService>();
             services.AddSingleton<ILoginService<EmployeeDTO>>(c => c.GetRequiredService<MasaLoginService>());
+            services.AddSingleton<ILoginService>(c => c.GetRequiredService<MasaLoginService>());
             //services.AddHostedService<MasaLoginService>();
 
             services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
             services.AddTransient<TestsByJobNumberViewModel>();
-            services.AddSingleton<IRepository<EmployeeDTO>, LiteDbRepository<EmployeeDTO>>();
+            services.AddSingleton<IRepository<string, EmployeeDTO>, LiteDbRepository<string, EmployeeDTO>>();
             
             AddVerificationActions(services);
 
