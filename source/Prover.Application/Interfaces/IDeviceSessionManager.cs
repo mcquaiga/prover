@@ -6,6 +6,11 @@ using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {
+    public interface IActiveDeviceSessionManager : IDeviceSessionManager
+    {
+        bool Active { get; set; }
+    }
+
     public interface IDeviceSessionManager
     {
         DeviceInstance Device { get; }
@@ -23,9 +28,6 @@ namespace Prover.Application.Interfaces
         Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemsToDownload = null);
 
         Task<ItemValue> LiveReadItemValue(ItemMetadata item);
-
-        //Task<IDeviceSessionManager> StartSession(DeviceType deviceType, string commPortName, int baudRate,
-        //    ReactiveObject owner);
 
         Task<DeviceInstance> StartSession(DeviceType deviceType);
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Client.Desktop.Wpf.Communications;
+using Devices.Communications;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,16 +19,42 @@ namespace Client.Desktop.Wpf.Extensions
         public static void AddDeviceCommunication(this IServiceCollection services)
         {
             services.AddSingleton<IDeviceSessionManager, DeviceSessionManager>();
+            //services.AddSingleton<IActiveDeviceSessionManager>(c => c.GetRequiredService<DeviceSessionManager>());
+            
+            //services.AddSingleton<FileDeviceSessionManager>();
+            //services.AddSingleton<IActiveDeviceSessionManager>(c => c.GetRequiredService<FileDeviceSessionManager>());
+
+            //services.AddSingleton<IDeviceSessionManager>(c =>
+            //{
+            //    var managers = c.GetServices<IActiveDeviceSessionManager>();
+            //    return managers.FirstOrDefault(m => m.Active);
+            //});
+
+            //services.AddSingleton<Func<Type, IDeviceSessionManager>>(c => (managerType) =>
+            //{
+            //    var manager = (IDeviceSessionManager) c.GetService(managerType);
+                
+            //    return manager;
+            //});
+
             // Port Setup
             var portFactory = new CommPortFactory();
             var clientFactory = new CommunicationsClientFactory(portFactory);
 
+            services.AddSingleton<FileCommunicationsClient>();
+
             // Device Clients
-            //services.AddSingleton<ICommPortFactory>(c => portFactory);
-            //services.AddSingleton<ICommClientFactory>(c => clientFactory);
             services.AddSingleton<Func<DeviceType, ICommunicationsClient>>(c => (device) =>
             {
-                var port = portFactory.Create(ApplicationSettings.Local.InstrumentCommPort,
+                if (!string.IsNullOrEmpty(ApplicationSettings.Local.VerificationFilePath))
+                {
+                    var fileComm = c.GetRequiredService<FileCommunicationsClient>();
+                    fileComm.SetFilePath(ApplicationSettings.Local.VerificationFilePath);
+                    return fileComm;
+                }
+
+                var port = portFactory.Create(
+                    ApplicationSettings.Local.InstrumentCommPort,
                     ApplicationSettings.Local.InstrumentBaudRate);
 
                 return clientFactory.Create(device, port);

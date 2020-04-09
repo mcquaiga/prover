@@ -41,13 +41,23 @@ namespace Prover.Application.Verifications
 
             foreach (var verificationAction in _verificationActions.OfType<TOn>())
             {
-                if (typeof(TOn) == typeof(IInitializeAction) && verificationAction is IInitializeAction init) 
+                if (typeof(TOn) == typeof(IOnInitializeAction) && verificationAction is IOnInitializeAction init) 
                     await init.OnInitialize(verificationTest);
 
-                if (typeof(TOn) == typeof(ISubmitAction) && verificationAction is ISubmitAction submit) 
+                if (typeof(TOn) == typeof(IOnSubmitAction) && verificationAction is IOnSubmitAction submit) 
                     await submit.OnSubmit(verificationTest);
                 
             }
+        }
+
+        public void RegisterAction<TOn>(TOn onAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterAction(Action<EvcVerificationViewModel> onAction)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -30,50 +30,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public QaTestRunViewModel(
             ILogger<QaTestRunViewModel> logger, 
             IScreenManager screenManager,
-            IVerificationTestService verificationService,
-            ITestManagerFactory verificationManagerFactory,
-            IDeviceRepository deviceRepository) : base(screenManager, "VerificationTests")
+            IVerificationTestService verificationService) : base(screenManager, "VerificationTests")
         {
-            deviceRepository.All.Connect()
-                .Filter(d => !d.IsHidden)
-                .Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var deviceTypes)
-                .Filter(d => d.Id == ApplicationSettings.Local.LastDeviceTypeUsed)
-                .Do(d => SelectedDeviceType = d.FirstOrDefault().Current)
-                .Subscribe().DisposeWith(_cleanup);
-            DeviceTypes = deviceTypes;
-
-            SerialPort.GetPortNames().AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var ports)
-                .Subscribe().DisposeWith(_cleanup);
-            CommPorts = ports;
-
-            SerialPort.BaudRates.AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out var baudRates)
-                .Subscribe().DisposeWith(_cleanup);
-            BaudRates = baudRates;
-
-            SelectedBaudRate = ApplicationSettings.Local.InstrumentBaudRate;
-            SelectedCommPort = ApplicationSettings.Local.InstrumentCommPort;
-            SelectedTachCommPort = ApplicationSettings.Local.TachCommPort;
-
-            var canStartTest = this.WhenAnyValue(x => x.SelectedDeviceType, x => x.SelectedCommPort, x => x.SelectedBaudRate,
-                (device, comm, baud) => device != null && !string.IsNullOrEmpty(comm) && baud != 0);
-
-            StartTestCommand = ReactiveCommand.CreateFromObservable(() => {
-                return Observable.StartAsync(async () => await verificationService.NewTestManager(SelectedDeviceType));
-            }, canStartTest).DisposeWith(_cleanup);
-
-            StartTestCommand
-                .ToPropertyEx(this, t => t.TestManager, scheduler: RxApp.MainThreadScheduler);
-            
-            StartTestCommand
-                .Do(_ => SetLastUsedSettings())
-                .Subscribe();
-
             SaveCommand = ReactiveCommand.CreateFromTask(async () => {
                 logger.LogDebug("Saving test...");
 
@@ -88,8 +46,6 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             }).DisposeWith(_cleanup);
             SaveCommand.ThrownExceptions.Subscribe();
 
-
-
             var canSubmit = this.WhenAnyValue(x => x.TestManager.TestViewModel.Verified);
             SubmitTest = ReactiveCommand.CreateFromTask(async () => {
 
@@ -103,26 +59,13 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 }
             }, canSubmit).DisposeWith(_cleanup);
 
-
             PrintTestReport = ReactiveCommand.CreateFromObservable(() => MessageInteractions.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(_cleanup);
-
-
+            
             this.WhenAnyObservable(x => x.TestManager.TestViewModel.VerifiedObservable)
                 .Where(v => v)
                 .Do(async x => await NotificationInteractions.SnackBarMessage.Handle("Verification Complete"))
                 .Subscribe()
                 .DisposeWith(Cleanup);
-
-
-            LoadFromFile = ReactiveCommand.CreateFromTask(async () =>
-            {
-                var fileOpen = new OpenFileDialog();
-                if (fileOpen.ShowDialog() == DialogResult.OK)
-                {
-                    var testDef = ItemFiles.LoadFromFile(fileOpen.FileName);
-
-                }
-            });
 
         }
 

@@ -9,7 +9,7 @@ namespace Client.Desktop.Wpf.Views
     ///     Interaction logic for MainMenuView.xaml
     /// </summary>
     [SingleInstanceView]
-    public partial class HomeView : ReactiveUserControl<HomeViewModel>
+    public partial class HomeView
     {
         public HomeView()
         {

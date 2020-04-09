@@ -14,7 +14,7 @@ using Prover.Shared;
 
 namespace Client.Desktop.Wpf.Communications
 {
-    public class DeviceSessionManager : IDeviceSessionManager
+    public class DeviceSessionManager : IDeviceSessionManager, IActiveDeviceSessionManager
     {
         private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
         private readonly ILogger<DeviceSessionManager> _logger;
@@ -144,5 +144,7 @@ namespace Client.Desktop.Wpf.Communications
 
             return success ? ItemValue.Create(item, value) : default;
         }
+
+        public bool Active { get; set; }
     }
 }

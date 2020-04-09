@@ -32,14 +32,14 @@ namespace Prover.Application.ViewModels.Corrections
                 .ToPropertyEx(this, x => x.Verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
         }
 
-        protected VerificationViewModel(bool verified)
-        {
-            VerifiedObservable = Observable.Empty(verified);
+        //protected VerificationViewModel(bool verified)
+        //{
+        //    VerifiedObservable = Observable.Empty(verified);
 
-            this.WhenAnyObservable(x => x.VerifiedObservable)
-                .Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
-                .ToPropertyEx(this, x => x.Verified, verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
-        }
+        //    this.WhenAnyObservable(x => x.VerifiedObservable)
+        //        .Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
+        //        .ToPropertyEx(this, x => x.Verified, verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
+        //}
 
         public virtual extern bool Verified { [ObservableAsProperty] get; }
 
@@ -47,7 +47,7 @@ namespace Prover.Application.ViewModels.Corrections
 
         protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
         {
-            if (verifications == null || !verifications.Any() || Verified) return;
+            if (verifications == null || !verifications.Any()) return;
 
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))

@@ -8,6 +8,7 @@ namespace Prover.Application.Interfaces
     {
         Task Close();
 
+        Task ShowViewModel<TViewModel>(TViewModel dialogViewModel, Action onClosed = null) where TViewModel : class, IDialogViewModel;
         Task Show<TView>(TView dialogView, Action onClosed = null) where TView : IViewFor;
         Task Show<T>(Action onClosed = null) where T : class, IDialogViewModel;
 

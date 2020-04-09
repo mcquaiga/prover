@@ -23,7 +23,7 @@ namespace Tests.Application.Services
 
         public static VerificationsLiteDbRepository TestRepo { get; private set; }
 
-        public static DeviceRepository Repo { get; private set; }
+        public static IDeviceRepository DeviceRepo { get; private set; }
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
@@ -34,11 +34,11 @@ namespace Tests.Application.Services
         [AssemblyInitialize]
         public static async Task AssemblyInitialize(TestContext context)
         {
-            Repo = new DeviceRepository();
-            await Repo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
-            await Repo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
+            DeviceRepo = new DeviceRepository();
+            await DeviceRepo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+            await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
 
-            TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, Repo);
+            TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, DeviceRepo);
 
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");
@@ -73,7 +73,7 @@ namespace Tests.Application.Services
         }
 
         public static VerificationTestService CreateVerificationTestService() =>
-            new VerificationTestService(TestRepo, new VerificationViewModelFactory(), null, null);
+            new VerificationTestService(TestRepo, new VerificationViewModelFactory(), null);
 
         public static void DropCollection()
         {

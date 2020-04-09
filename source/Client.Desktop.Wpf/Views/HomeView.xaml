@@ -18,8 +18,7 @@
                         x:Name="MenuButton"
                         Width="240"
                         Height="256"
-                        Command="{Binding OpenCommand}"
-                        CommandParameter="{Binding ViewModel.ScreenManager, ElementName=HomeScreen}">
+                        Command="{Binding OpenCommand}">
                         <StackPanel>
                             <materialDesign:PackIcon
                                 Width="100"

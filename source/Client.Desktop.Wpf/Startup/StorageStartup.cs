@@ -48,7 +48,7 @@ namespace Client.Desktop.Wpf.Startup
             var repo = _provider.GetService<IDeviceRepository>();
             await repo.Load(new[] { MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance });
 
-            await _seeder.SeedDatabase(5);
+            //await _seeder.SeedDatabase(5);
         }
 
         #endregion

@@ -13,6 +13,8 @@ namespace Client.Desktop.Wpf.ViewModels.Devices
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
+        public SessionStatusDialogViewModel() { }
+
         public SessionStatusDialogViewModel(IObservable<StatusMessage> statusStream, CancellationTokenSource cts)
         {
             RegisterStatusStream(statusStream);

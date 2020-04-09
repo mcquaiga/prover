@@ -13,7 +13,7 @@ namespace Prover.Application.ViewModels
     {
         private readonly SourceCache<ItemValue, int> _items = new SourceCache<ItemValue, int>(v => v.Id);
 
-        private VerificationTestPointViewModel(int testNumber, bool verified) : base(verified) =>
+        private VerificationTestPointViewModel(int testNumber, bool verified) : base() =>
             TestNumber = testNumber;
 
         public VerificationTestPointViewModel()

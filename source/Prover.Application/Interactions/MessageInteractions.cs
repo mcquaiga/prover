@@ -26,7 +26,9 @@ namespace Prover.Application.Interactions
 
         public static Interaction<string, int> GetInputInteger { get; } = new Interaction<string, int>();
 
-        public static Interaction<string, decimal> GetInputDecimal { get; } = new Interaction<string, decimal>();
+        //public static Interaction<string, decimal> GetInputDecimal { get; } = new Interaction<string, decimal>();
+
+        public static Interaction<string, string> OpenFileDialog { get; } = new Interaction<string, string>();
 
         //public static Interaction<string, T> GetInput<T>() => new Interaction<string, T>();
 

@@ -6,6 +6,8 @@ namespace Client.Desktop.Wpf.Dialogs
 {
     public class QuestionDialogViewModel : DialogViewModel
     {
+        public QuestionDialogViewModel() { }
+
         public QuestionDialogViewModel(string message, string title = "")
         {
             Message = message;

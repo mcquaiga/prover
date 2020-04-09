@@ -40,13 +40,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     {
                         return Observable.Create<EvcVerificationTest>(async obs =>
                         {
-                            foreach (var evcVerificationTest in tests)
-                                if (loginService.User != null)
-                                {
-                                    evcVerificationTest.EmployeeId = loginService.User?.Id;
-                                    var test = await verificationTestService.AddOrUpdate(evcVerificationTest);
-                                    obs.OnNext(test);
-                                }
+                            tests.ForEach(t => t.EmployeeId = _loginService.User?.Id);
+                            tests.ForEach(t => verificationTestService.AddOrUpdate(t));
+                            tests.ForEach(obs.OnNext);
                         });
                     },
                     CanAddUser,
@@ -57,6 +53,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 {
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
+                        var updatedTests = new List<EvcVerificationTest>();
                         //var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
                         foreach (var evcVerificationTest in tests)
                         {
@@ -64,10 +61,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                             if (meterDto != null)
                             {
                                 evcVerificationTest.JobId = meterDto.JobNumber.ToString();
-                                var test = await verificationTestService.AddOrUpdate(evcVerificationTest);
-                                obs.OnNext(test);
+                                updatedTests.Add(evcVerificationTest);
                             }
                         }
+                        
+                        updatedTests.ForEach(async t => 
+                            obs.OnNext(await verificationTestService.AddOrUpdate(t)));
                     });
                 }, CanAddJobId).DisposeWith(Cleanup);
 

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Shared.Interfaces;
+using ReactiveUI;
 
 namespace Prover.Application.Services
 {
@@ -19,7 +22,7 @@ namespace Prover.Application.Services
 
         protected LoginServiceBase()
         {
-            var loggedIn = LoggedInSubject.Publish();
+            var loggedIn = LoggedInSubject.ObserveOn(RxApp.MainThreadScheduler).Publish();
 
             LoggedIn = loggedIn;
 
@@ -43,14 +46,13 @@ namespace Prover.Application.Services
 
         public abstract Task<bool> Login(string username, string password = null);
 
-        public Task<bool> Login()
+        public async Task<bool> Login()
         {
-            Observable.StartAsync(async () =>
-            {
-                var username = await GetLoginDetails();
-                return await Login(username);
-            });
-            return Task.FromResult(true);
+          
+            await GetLoginDetails()
+                .ContinueWith(task => { Login(task.Result); });
+
+            return await Task.FromResult(true);
         }
 
         public IObservable<bool> SignOn()

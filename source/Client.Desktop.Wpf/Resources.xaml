@@ -24,6 +24,7 @@
 
 
         <ResourceDictionary Source="Views/Verifications/Styles.xaml" />
+        <ResourceDictionary Source="Views/Verifications/TestManagerStyle.xaml" />
         <!--<ResourceDictionary>
             <startup:AppBootstrapper x:Key="AppBoot" />
         </ResourceDictionary>-->

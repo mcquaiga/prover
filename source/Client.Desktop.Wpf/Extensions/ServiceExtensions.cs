@@ -22,15 +22,18 @@ namespace Client.Desktop.Wpf.Extensions
         public static void AddMainMenuItems(this IServiceCollection services)
         {
             var assembly = Assembly.GetCallingAssembly();
-            var items = assembly.DefinedTypes.FirstOrDefault(t => t == typeof(MainMenuItems));
+            var items = 
+                assembly
+                    .DefinedTypes
+                    .Where(t => t.ImplementedInterfaces.Contains(typeof(IMainMenuItem)) && !t.IsAbstract);
 
-            if (items != null)
-                items.DeclaredProperties
-                    .ToList()
-                    .ForEach(prop =>
-                    {
-                        services.AddSingleton(typeof(IMainMenuItem), c => prop.GetValue(items));
-                    });
+            foreach (var item in items)
+            {
+                services.AddSingleton(typeof(IMainMenuItem), item);
+            }
+            
+            //var staticItems = assembly.DefinedTypes.FirstOrDefault(t => t == typeof(MainMenuItems))
+
 
             //assembly.DefinedTypes
             //    .Where(ti => ti.ImplementedInterfaces.Contains(typeof(IMainMenuItem)) && !ti.IsAbstract)

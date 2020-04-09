@@ -10,33 +10,38 @@ namespace Prover.Application.Verifications
     public class VerificationTestManagerFactory : ITestManagerFactory
     {
         private readonly ILogger<VerificationTestManagerFactory> _logger;
-        private readonly IDeviceSessionManager _deviceSessionManager;
+
+        private readonly IVerificationTestService _verificationService;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager> _volumeTestManagerFactory;
         private readonly IActionsExecutioner _actionExecutioner;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> _testManagerFactory;
 
-        public VerificationTestManagerFactory(ILogger<VerificationTestManagerFactory> logger,
-            IDeviceSessionManager deviceSessionManager,
+        public VerificationTestManagerFactory(
+            ILogger<VerificationTestManagerFactory> logger,
+            IVerificationTestService verificationService,
             Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> testManagerFactory,
             Func<EvcVerificationViewModel, IVolumeTestManager> volumeTestManagerFactory,
-
             IActionsExecutioner actionExecutioner)
         {
             _logger = logger;
-            _deviceSessionManager = deviceSessionManager;
+          
+            _verificationService = verificationService;
             _testManagerFactory = testManagerFactory;
             _volumeTestManagerFactory = volumeTestManagerFactory;
             _actionExecutioner = actionExecutioner;
         }
 
-        public async Task<ITestManager> StartNew(IVerificationTestService verificationService, DeviceType deviceType)
+        public async Task<ITestManager> StartNew(IDeviceSessionManager deviceManager, DeviceType deviceType)
         {
-            var device = await _deviceSessionManager.StartSession(deviceType);
-            var testViewModel = verificationService.NewVerification(device);
+            //if (deviceManager is IActiveDeviceSessionManager manager)
+            //    manager.Active = true;
 
-            await _actionExecutioner.RunActionsOn<IInitializeAction>(testViewModel);
+            var device = await deviceManager.StartSession(deviceType);
+            var testViewModel = _verificationService.NewVerification(device);
 
-            await _deviceSessionManager.Disconnect();
+            await _actionExecutioner.RunActionsOn<IOnInitializeAction>(testViewModel);
+
+            await deviceManager.Disconnect();
 
             var volumeManager = _volumeTestManagerFactory.Invoke(testViewModel);
             return _testManagerFactory.Invoke(testViewModel, volumeManager);

@@ -24,6 +24,6 @@ namespace Prover.Application.Interfaces
             IEnumerable<EvcVerificationTest> verificationTests);
 
         EvcVerificationViewModel NewVerification(DeviceInstance device);
-        Task<ITestManager> NewTestManager(DeviceType deviceType);
+        
     }
 }

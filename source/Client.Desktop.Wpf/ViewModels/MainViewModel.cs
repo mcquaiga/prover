@@ -21,7 +21,7 @@ namespace Client.Desktop.Wpf.ViewModels
 
             GoNext = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);
-            NavigateHome = ReactiveCommand.CreateFromTask(ScreenManager.GoHome);
+            NavigateHome = ReactiveCommand.CreateFromTask(async () => await ScreenManager.GoHome());
          
         }
 
@@ -41,9 +41,9 @@ namespace Client.Desktop.Wpf.ViewModels
             ScreenManager.Router.NavigationStack.Reverse().ForEach(vm => (vm as IDisposable)?.Dispose());
         }
 
-        public void ShowHome()
+        public void ShowHome(IRoutableViewModel homeViewModel)
         {
-            ScreenManager.GoHome();
+            ScreenManager.GoHome(homeViewModel);
         }
     }
 }
