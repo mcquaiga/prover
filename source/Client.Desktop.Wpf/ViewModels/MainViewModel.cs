@@ -9,6 +9,11 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
+    public class PopupMenuToolbar : ReactiveObject, IToolbarItem
+    {
+
+    }
+
     public class MainViewModel : ReactiveObject, IDisposable
     {
         private readonly IConfiguration _config;

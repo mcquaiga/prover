@@ -72,7 +72,7 @@ namespace Prover.Application.Services.LiveReadCorrections
         }
     }
 
-    public partial class LiveReadCoordinator : ReactiveObject, ILiveReadHandler, IDisposable
+    public partial class LiveReadCoordinator : ILiveReadHandler, IDisposable
     {
         private readonly Dictionary<Action, IScheduler> _callbacks = new Dictionary<Action, IScheduler>();
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -80,12 +80,11 @@ namespace Prover.Application.Services.LiveReadCorrections
         private readonly IDeviceSessionManager _deviceSession;
         private readonly IConnectableObservable<ItemLiveReadStatus> _liveStatuses;
 
-        private LiveReadCoordinator(IDeviceSessionManager deviceSession)
+        public LiveReadCoordinator(IDeviceSessionManager deviceSession)
         {
             _deviceSession = deviceSession;
             _liveStatuses = CreateLiveItemReadObservable(deviceSession, _cancellationTokenSource.Token).Publish();
         }
-
 
 
         public ICollection<ItemLiveReadStatus> LiveReadItems { get; set; } = new List<ItemLiveReadStatus>();

@@ -151,15 +151,13 @@
 
         </Grid>
 
-
-
-
         <StackPanel
             Height="Auto"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             DockPanel.Dock="Bottom"
             Orientation="Vertical">
+            <TextBlock x:Name="FilePath" Style="{StaticResource MaterialDesignBody1TextBlock}" />
             <Expander HorizontalAlignment="Right" DockPanel.Dock="Right">
                 <StackPanel>
                     <Button

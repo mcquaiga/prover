@@ -11,12 +11,11 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
-using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.Verifications.Volume
+namespace Prover.Application.VerificationManagers.Volume
 {
     public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable
     {

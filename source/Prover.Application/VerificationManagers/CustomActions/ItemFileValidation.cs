@@ -6,7 +6,7 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.Verifications.CustomActions
+namespace Prover.Application.VerificationManagers.CustomActions
 {
 
     public abstract class ItemFileValidation<TValue> : IVerificationAction

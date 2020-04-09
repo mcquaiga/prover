@@ -17,6 +17,7 @@ namespace Devices.Communications.Interfaces
         Task Disconnect();
         void Dispose();
         Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers);
+       
         Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber);
 
         Task<bool> SetItemValue(int itemNumber, string value);
@@ -34,6 +35,13 @@ namespace Devices.Communications.Interfaces
         public static async Task<bool> SetItemValue(this ICommunicationsClient commClient, int itemNumber, long value)
         {
             return await Task.FromResult(true);
+        }
+
+        public static async Task<IEnumerable<ItemValue>> GetItemsAsync(this ICommunicationsClient client)
+        {
+            return await client.GetItemsAsync(null);
+
+
         }
     }
 }

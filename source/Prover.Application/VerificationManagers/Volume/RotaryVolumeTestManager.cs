@@ -12,7 +12,7 @@ using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.Verifications.Volume
+namespace Prover.Application.VerificationManagers.Volume
 {
     public class RotaryVolumeTestRunner : AutomatedVolumeTestRunnerBase
     {

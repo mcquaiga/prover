@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading;
-using Prover.Application.Interfaces;
-using Prover.Application.ViewModels;
-using ReactiveUI;
 
-namespace Prover.Application.Verifications.CustomActions
+namespace Prover.Application.VerificationManagers.CustomActions
 {
     public static class ActivatorMixins
     {

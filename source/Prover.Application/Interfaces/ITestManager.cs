@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Prover.Application.Verifications;
+using Prover.Application.VerificationManagers;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
@@ -9,6 +9,6 @@ namespace Prover.Application.Interfaces
     {
         EvcVerificationViewModel TestViewModel { get; }
         IVolumeTestManager VolumeTestManager { get; }
-        ICorrectionVerificationRunner CorrectionVerifications { get; }
+        ICorrectionTestsManager CorrectionVerifications { get; }
     }
 }

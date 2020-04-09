@@ -16,7 +16,7 @@ namespace Prover.Application.Interfaces
         CancellationToken Cancelled { get; }
         ReactiveCommand<Unit, Unit> CancelCommand { get; set; }
         ReactiveCommand<Unit, Unit> CloseCommand { get; set; }
-        DialogResult Response { get; }
+        DialogResult Result { get; }
         //bool IsDialogOpen { get; }
     }
 }

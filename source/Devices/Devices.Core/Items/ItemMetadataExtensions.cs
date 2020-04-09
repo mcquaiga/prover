@@ -24,6 +24,11 @@ namespace Devices.Core.Items
         }
 
         public static DeviceInstance CreateInstance(this DeviceType deviceType,
+            IEnumerable<ItemValue> itemValues)
+        {
+            return deviceType.Factory.CreateInstance(itemValues);
+        }
+        public static DeviceInstance CreateInstance(this DeviceType deviceType,
             IDictionary<int, string> itemValuesDictionary)
         {
             var items = deviceType.ToItemValues(itemValuesDictionary);

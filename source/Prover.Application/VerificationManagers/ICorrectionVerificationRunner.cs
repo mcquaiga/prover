@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.Verifications
+namespace Prover.Application.VerificationManagers
 {
-    public interface ICorrectionVerificationRunner
+    public interface ICorrectionTestsManager
     {
         Task RunCorrectionTests(VerificationTestPointViewModel test);
     }

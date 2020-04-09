@@ -7,13 +7,13 @@ using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
-namespace Prover.Application.Verifications.Corrections
+namespace Prover.Application.VerificationManagers.Corrections
 {
-    public class BasicCorrectionTestRunner : ICorrectionVerificationRunner
+    public class StabilizerCorrectionTestManager : ICorrectionTestsManager
     {
         private readonly IDeviceSessionManager _deviceManager;
 
-        public BasicCorrectionTestRunner(IDeviceSessionManager deviceManager)
+        public StabilizerCorrectionTestManager(IDeviceSessionManager deviceManager)
         {
             _deviceManager = deviceManager;
         }

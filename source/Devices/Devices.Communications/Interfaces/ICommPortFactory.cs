@@ -14,6 +14,11 @@ namespace Devices.Communications.Interfaces
         private static ICommPort _irDaPort;
         private static ICommPort _currentPort;
 
+        public static ICommPort CreateCommPort(string portName, int? baudRate)
+        {
+            return new CommPortFactory().Create(portName, baudRate);
+        }
+
         public ICommPort Create(string portName = null, int? baudRate = null)
         {
             CleanupPorts();   
