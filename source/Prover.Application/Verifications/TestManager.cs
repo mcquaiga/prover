@@ -51,7 +51,7 @@ namespace Prover.Application.Verifications
 
         //public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
 
-        public void Dispose()
+        protected override void Disposing()
         {
             _logger.LogDebug("Disposing instance.");
             _deviceManager.EndSession();

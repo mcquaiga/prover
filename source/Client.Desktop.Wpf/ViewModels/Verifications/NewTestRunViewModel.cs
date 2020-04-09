@@ -69,8 +69,12 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
             //var changeScreens = ReactiveCommand.CreateFromTask<ITestManager>(async vm => await screenManager.ChangeView(vm));
             StartTestCommand
-                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
+                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(async vm =>
+                {
+                    await screenManager.ChangeView(vm);
+                }));
 
+            ApplicationSettings.Local.VerificationFilePath = "";
             LoadFromFile = ReactiveCommand.CreateFromTask(async () =>
             {
                 var fileDialog = new OpenFileDialog();
