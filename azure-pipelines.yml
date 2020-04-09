@@ -1,4 +1,4 @@
-name: $(Date:yy.MM)$(Rev:.r)
+name: 4.$(Date:MM)$(Rev:.r)
 
 trigger:
 - master
