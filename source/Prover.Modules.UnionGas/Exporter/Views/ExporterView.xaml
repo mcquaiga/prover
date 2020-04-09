@@ -23,15 +23,15 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+        <materialDesign:DrawerHost>
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="300" VerticalAlignment="Stretch">
-                    <ToggleButton
+                <StackPanel MinWidth="300" VerticalAlignment="Stretch">
+                    <!--<Button
                         Margin="8"
                         HorizontalAlignment="Right"
-                        DockPanel.Dock="Top"
-                        IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"
-                        Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                        Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        CommandParameter="{x:Static Dock.Left}"
+                        Style="{DynamicResource MaterialDesignFlatButton}" />-->
 
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
@@ -40,7 +40,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" Margin="8">
+                        <!--<StackPanel Grid.Row="0" Margin="8">
                             <TextBlock Text="Export Tests by Job #" />
                             <ComboBox
                                 x:Name="JobIdsComboBox"
@@ -54,9 +54,9 @@
                                 CommandParameter="{Binding Path=SelectedItem, ElementName=JobIdsComboBox}"
                                 Content="Export"
                                 Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>
+                        </StackPanel>-->
 
-                        <StackPanel
+                        <!--<StackPanel
                             Grid.Row="1"
                             Margin="8"
                             Orientation="Vertical">
@@ -72,17 +72,17 @@
                                 Command="{Binding ExportFailedTestCommand}"
                                 Content="Export"
                                 Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>
+                        </StackPanel>-->
 
-                        <reactiveUi:ViewModelViewHost
+                        <!--<reactiveUi:ViewModelViewHost
                             x:Name="TestsByJobNumberContentControl"
                             Grid.Row="2"
-                            Margin="8" />
+                            Margin="8" />-->
 
 
                     </Grid>
 
-                </DockPanel>
+                </StackPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <Grid VerticalAlignment="Stretch">
@@ -104,7 +104,8 @@
                         <ToggleButton
                             x:Name="MenuToggleButton"
                             Grid.Column="0"
-                            IsChecked="False"
+                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                            CommandParameter="{x:Static Dock.Left}"
                             Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
                         <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->

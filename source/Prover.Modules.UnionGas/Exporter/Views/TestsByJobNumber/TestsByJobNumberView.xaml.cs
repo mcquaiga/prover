@@ -17,7 +17,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.JobNumbers, v => v.JobNumbersComboBox.ItemsSource).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.JobNumbers, v => v.JobNumbersComboBox.ItemsSource).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.GetOpenJobNumbersCommand, v => v.SearchButton).DisposeWith(d);
                 this.WhenAnyValue(x => x.ViewModel.GetOpenJobNumbersCommand)
                     .SelectMany(x => x.Execute())
