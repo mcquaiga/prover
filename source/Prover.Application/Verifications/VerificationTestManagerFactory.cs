@@ -39,7 +39,7 @@ namespace Prover.Application.Verifications
             var device = await deviceManager.StartSession(deviceType);
             var testViewModel = _verificationService.NewVerification(device);
 
-            
+            await _actionExecutioner.RunActionsOn<IOnInitializeAction>(testViewModel);
 
             await deviceManager.Disconnect();
 

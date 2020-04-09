@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
-using Prover.Application.Verifications.CustomActions;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Shared.Interfaces;
@@ -14,11 +13,10 @@ using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.VerificationActions
 {
-    internal class MasaVerificationActions : IDisposable
+    internal class MasaVerificationActions : IOnInitializeAction, IOnSubmitAction, IDisposable
     {
         private readonly MeterInventoryNumberValidator _companyNumberValidator;
         private readonly IDeviceSessionManager _deviceManager;
-        private readonly VerificationActivator<EvcVerificationViewModel> _testActivator;
         private readonly ILogger<MasaVerificationActions> _logger;
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
@@ -28,17 +26,12 @@ namespace Prover.Modules.UnionGas.VerificationActions
             MeterInventoryNumberValidator companyNumberValidator,
             ILoginService<EmployeeDTO> loginService,
             IDeviceSessionManager deviceManager,
-            VerificationActivator<EvcVerificationViewModel> testActivator,
             ILogger<MasaVerificationActions> logger = null)
         {
             _companyNumberValidator = companyNumberValidator;
             _loginService = loginService;
             _deviceManager = deviceManager;
-            _testActivator = testActivator;
             _logger = logger ?? NullLogger<MasaVerificationActions>.Instance;
-
-            testActivator.AddActivationBlock(async evc => await OnInitialize(evc));
-            //testActivator.AddActivationBlock(async evc => await On(evc));
         }
 
         public void Dispose()
@@ -68,7 +61,7 @@ namespace Prover.Modules.UnionGas.VerificationActions
             verification.EmployeeId = _loginService.User?.Id;
         }
 
-        public async Task OnComplete(EvcVerificationViewModel verification)
+        public async Task OnSubmit(EvcVerificationViewModel verification)
         {
             await Task.CompletedTask;
             _disposer.Disposable = Disposable.Empty;
