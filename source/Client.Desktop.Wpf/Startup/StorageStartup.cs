@@ -71,11 +71,12 @@ namespace Client.Desktop.Wpf.Startup
             var db = StorageDefaults.CreateLiteDb(host.Configuration.LiteDbPath());
             services.AddSingleton(c => db);
 
+            services.AddSingleton<IDeviceRepository, DeviceRepository>();
             services.AddSingleton<IRepository<DeviceType>>(c =>
                 new LiteDbRepository<DeviceType>(db));
 
             services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-                new VerificationsLiteDbRepository(db, c.GetService<DeviceRepository>()));
+                new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

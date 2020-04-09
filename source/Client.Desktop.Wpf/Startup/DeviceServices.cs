@@ -48,7 +48,7 @@ namespace Client.Desktop.Wpf.Startup
             services.AddPulseOutputListeners();
             services.AddTachometer();
 
-            services.AddSingleton<IDeviceRepository, DeviceRepository>();
+        
             services.AddSingleton<DeviceSessionDialogManager>();
 
             services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
