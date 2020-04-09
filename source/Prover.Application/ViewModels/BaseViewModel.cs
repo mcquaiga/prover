@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.ViewModels

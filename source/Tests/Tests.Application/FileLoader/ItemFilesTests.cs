@@ -11,9 +11,9 @@ namespace Tests.Application.FileLoader
         [TestMethod()]
         public async Task LoadFromFileTest()
         {
-            await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, ".\\MiniMax.json");
+            var items = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, ".\\MiniMax.json");
             
-            Assert.IsTrue(false);
+            Assert.IsTrue(items != null);
         }
     }
 }

@@ -24,11 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MiniMax.json" />
+    <None Remove="Test-MiniMax.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="MiniMax.json">
+    <Content Include="Test-MiniMax.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

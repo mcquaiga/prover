@@ -6,6 +6,7 @@ using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Prover.Application.FileLoader;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;

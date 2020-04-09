@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Prover.Application.ViewModels;
+using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {
@@ -10,49 +11,37 @@ namespace Prover.Application.Interfaces
     {
         OnInitialize,
         OnSubmit,
-        OnCorrectionTestStart,
-        OnCorrectionTestEnd,
-        OnVolumeStart,
-        OnVolumeEnd
+        OnCorrections,
+        OnVolume,
     }
 
     public static class VerificationActionStages
     {
-        public static Type OnInitialize = ;
-        public static Type OnSubmit = typeof(IOnSubmitAction);
-        public static Type OnCorrectionTestStart = typeof(IOnInitializeAction);
-        public static Type OnVolumeTestStart = typeof(IOnInitializeAction);
-        public static Type OnVolumeTestEnd = typeof(IOnInitializeAction);
+        //public static Dictionary<VerificationTestStep, Type> TestActionMappings =
+        //    new Dictionary<VerificationTestStep, Type>()
+        //    {
+        //        {VerificationTestStep.OnInitialize, typeof(IOnInitializeAction)},
+        //        {VerificationTestStep.OnSubmit, typeof(IOnCompleteAction)}
+        //        //,
+        //        //{VerificationTestStep.OnCorrectionTestStart,  typeof(IOnInitializeAction) },
+        //        //{VerificationTestStep.OnCorrectionTestEnd,  typeof(IOnInitializeAction) },
 
-        public static Dictionary<VerificationTestStep, Type> TestActionMappings = new Dictionary<VerificationTestStep, Type>()
-        {
-            {VerificationTestStep.OnInitialize,  typeof(IOnInitializeAction) },
-            {VerificationTestStep.OnSubmit,  typeof(IOnSubmitAction) }
-            //,
-            //{VerificationTestStep.OnCorrectionTestStart,  typeof(IOnInitializeAction) },
-            //{VerificationTestStep.OnCorrectionTestEnd,  typeof(IOnInitializeAction) },
-
-        }
+        //    };
     }
 
     public interface IVerificationAction
     {
     }
 
-    public interface IOnVerificationStepAction : IVerificationAction
+    public interface IOnInitializeAction<in T> : IVerificationAction
+        where T : IReactiveObject
     {
-        VerificationTestStep VerificationStep { get; }
-        Task OnStep(EvcVerificationViewModel verification);
+        Task OnInitialize(T item);
     }
 
-    public interface IOnInitializeAction : IVerificationAction
+    public interface IOnCompleteAction<in T> : IVerificationAction
+        where T : IReactiveObject
     {
-        Task OnInitialize(EvcVerificationViewModel verification);
-    }
-
-    public interface IOnSubmitAction : IVerificationAction
-    {
-        Task OnSubmit(EvcVerificationViewModel verification);
-        //new Task Execute(EvcVerificationViewModel verification);
+        Task OnComplete(T item);
     }
 }

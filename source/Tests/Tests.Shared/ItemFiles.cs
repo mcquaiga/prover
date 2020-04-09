@@ -12,7 +12,7 @@ namespace Tests.Shared
             => _lazy.Value;
 
         private static readonly Lazy<Dictionary<int, string>> _lazy = new Lazy<Dictionary<int, string>>(
-            () => DeserializeItemFile(File.ReadAllText("MiniMax.json"))
+            () => DeserializeItemFile(File.ReadAllText("Test-MiniMax.json"))
         );
 
         public static Dictionary<int, string> PressureHighItems 

@@ -5,6 +5,8 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Devices.Core.Interfaces;
 using DynamicData;
+using Prover.Application.Interfaces;
+using Prover.Application.Verifications.CustomActions;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
@@ -60,6 +62,8 @@ namespace Prover.Application.ViewModels
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();
         }
-        
+
+        /// <inheritdoc />
+        public VerificationActivator<EvcVerificationViewModel> Activator { get; }
     }
 }
