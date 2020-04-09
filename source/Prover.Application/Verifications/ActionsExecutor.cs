@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
@@ -13,13 +15,14 @@ namespace Prover.Application.Verifications
     {
         private readonly IDeviceSessionManager _deviceSessionManager;
 
+
         //private readonly IEnumerable<IInitializeAction> _onInitializeActions;
         //private readonly IEnumerable<ISubmitAction> _onSubmitActions;
         private readonly ILogger<VerificationActionsExecutor> _logger;
         private readonly IEnumerable<IVerificationAction> _verificationActions;
 
         public VerificationActionsExecutor(
-            IDeviceSessionManager deviceSessionManager,
+            IDeviceSessionManager deviceSessionManager, 
             IEnumerable<IVerificationAction> verificationActions,
             ILogger<VerificationActionsExecutor> logger = null)
         {
@@ -27,22 +30,6 @@ namespace Prover.Application.Verifications
 
             _deviceSessionManager = deviceSessionManager;
             _verificationActions = verificationActions;
-        }
-
-        /// <inheritdoc />
-        public void RegisterAction<TOn>(TOn onAction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RegisterAction(VerificationTestStep onStep, Action<EvcVerificationViewModel> onAction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RegisterAction(VerificationTestStep onStep, Action<VerificationTestPointViewModel> onAction)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task RunActionsOn<TOn>(EvcVerificationViewModel verificationTest)
@@ -54,12 +41,23 @@ namespace Prover.Application.Verifications
 
             foreach (var verificationAction in _verificationActions.OfType<TOn>())
             {
-                if (typeof(TOn) == typeof(IOnInitializeAction) && verificationAction is IOnInitializeAction init)
+                if (typeof(TOn) == typeof(IOnInitializeAction) && verificationAction is IOnInitializeAction init) 
                     await init.OnInitialize(verificationTest);
 
-                if (typeof(TOn) == typeof(IOnCompleteAction) && verificationAction is IOnCompleteAction submit)
-                    await submit.OnComplete(verificationTest);
+                if (typeof(TOn) == typeof(IOnSubmitAction) && verificationAction is IOnSubmitAction submit) 
+                    await submit.OnSubmit(verificationTest);
+                
             }
+        }
+
+        public void RegisterAction<TOn>(TOn onAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterAction(Action<EvcVerificationViewModel> onAction)
+        {
+            throw new NotImplementedException();
         }
     }
 }
