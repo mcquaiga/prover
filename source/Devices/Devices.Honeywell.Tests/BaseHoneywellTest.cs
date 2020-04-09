@@ -13,7 +13,7 @@ namespace Devices.Honeywell.Tests
         protected Mock<HoneywellDeviceType> Device;
         protected Mock<HoneywellDeviceType> Device2;
         protected List<HoneywellDeviceType> DevicesList = new List<HoneywellDeviceType>();
-        public Dictionary<int, string> MiniMaxItemFile => JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("MiniMax.json"));
+        public Dictionary<int, string> MiniMaxItemFile => JsonConvert.DeserializeObject<Dictionary<int, string>>(File.ReadAllText("Test-MiniMax.json"));
 
         public Dictionary<int, string> MiniMaxPressureItemFile => JsonConvert.DeserializeObject<Dictionary<int, string>>(
             "{'8':'  80.134','44':'  6.4402','47':'  1.0076'}");

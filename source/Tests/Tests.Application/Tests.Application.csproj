@@ -49,6 +49,7 @@
 
   <ItemGroup>
     <Folder Include="EntityFrameworkSqlDataAccess\Repositories\" />
+    <Folder Include="Verifications\CustomActions\" />
   </ItemGroup>
 
 </Project>

@@ -4,14 +4,14 @@ using System.Reactive.Disposables;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
+using Prover.Application.Verifications.CustomActions;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Prover.Application.Verifications
 {
-    public sealed class TestManager : TestManagerBase, ITestManager, IDisposable
+    public sealed class TestManager : TestManagerBase, ITestManager, IDisposable, IActivatable<ITestManager>
     {
-        private readonly IActionsExecutioner _actionsExecutioner;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
         private readonly ILogger _logger;
@@ -24,11 +24,13 @@ namespace Prover.Application.Verifications
             IVerificationTestService verificationService,
             IVolumeTestManager volumeTestManager,
             IActionsExecutioner actionsExecutioner,
-            ICorrectionVerificationRunner correctionVerificationRunner) : base(logger, screenManager, verificationService, verificationViewModel)
+            VerificationActivator<EvcVerificationViewModel> activator,
+            ICorrectionVerificationRunner correctionVerificationRunner)
+            : base(logger, screenManager, verificationService, verificationViewModel)
         {
             _logger = logger;
             _deviceManager = deviceSessionManager;
-            _actionsExecutioner = actionsExecutioner;
+            Activator = activator;
 
             VolumeTestManager = volumeTestManager;
             CorrectionVerifications = correctionVerificationRunner;
@@ -38,9 +40,15 @@ namespace Prover.Application.Verifications
 
             RunCorrectionVerifications =
                 ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests);
-            RunCorrectionVerifications.ThrownExceptions.LogErrors("Error downloading items from instrument.")
-                .Subscribe();
+
+            RunCorrectionVerifications.ThrownExceptions
+                                      
+                                      .LogErrors("Error downloading items from instrument.")
+                                      .Subscribe();
+
             RunCorrectionVerifications.DisposeWith(_cleanup);
+
+            Activator.Activate(this);
         }
 
         public IVolumeTestManager VolumeTestManager { get; }
@@ -49,9 +57,9 @@ namespace Prover.Application.Verifications
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; }
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunVolumeVerifications { get; }
 
-        //public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
+        public VerificationActivator<ITestManager> Activator { get; }
 
-        public void Dispose()
+        public override 
         {
             _logger.LogDebug("Disposing instance.");
             _deviceManager.EndSession();
