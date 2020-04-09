@@ -4,6 +4,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Extensions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;

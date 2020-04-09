@@ -4,6 +4,7 @@ using Client.Desktop.Wpf.Dialogs;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Reports;
 using Client.Desktop.Wpf.ViewModels;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,11 +31,12 @@ namespace Client.Desktop.Wpf.Startup
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreenManager, ScreenManager>();
             services.AddSingleton<IScreen>(c => c.GetService<ScreenManager>());
-            services.AddSingleton<Func<IScreenManager, IRoutableViewModel>>(c =>
-                (screen) => new HomeViewModel(screen, c.GetServices<IMainMenuItem>()));
+       
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();
+
+            services.AddSingleton<NewTestRunViewModel>();
 
             AddDialogs(services);
             AddReporting(services);

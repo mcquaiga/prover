@@ -43,7 +43,7 @@ namespace Client.Desktop.Wpf.Dialogs
                 .DisposeWith(Cleanup);
         }
 
-        protected DialogViewModel() : this(new CancellationTokenSource())
+        public DialogViewModel() : this(new CancellationTokenSource())
         {
         }
 

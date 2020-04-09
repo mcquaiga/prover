@@ -21,8 +21,6 @@ namespace Prover.Application.Services
 {
     public class VerificationTestService : IVerificationTestService, IDisposable
     {
-        private readonly IDeviceSessionManager _deviceManager;
-
         private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
 
         private readonly ISubject<EvcVerificationTest> _updates = new Subject<EvcVerificationTest>();
@@ -31,7 +29,7 @@ namespace Prover.Application.Services
             = new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
 
         private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
-        private readonly ITestManagerFactory _verificationManagerFactory;
+        //private readonly ITestManagerFactory _verificationManagerFactory;
         private readonly IVerificationViewModelFactory _verificationViewModelFactory;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
@@ -43,15 +41,12 @@ namespace Prover.Application.Services
         public VerificationTestService(
             IAsyncRepository<EvcVerificationTest> verificationRepository,
             IVerificationViewModelFactory verificationViewModelFactory,
-            IDeviceSessionManager deviceManager,
-            ITestManagerFactory verificationManagerFactory,
             Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
             IScheduler scheduler = null)
         {
             _verificationRepository = verificationRepository;
             _verificationViewModelFactory = verificationViewModelFactory;
-            _deviceManager = deviceManager;
-            _verificationManagerFactory = verificationManagerFactory;
+            //_verificationManagerFactory = verificationManagerFactory;
             _evcVerificationTestFactory = evcVerificationTestFactory;
 
             //var updateConnect = _updates.Publish();
@@ -140,7 +135,7 @@ namespace Prover.Application.Services
             return _verificationViewModelFactory.CreateViewModel(testModel);
         }
 
-        public async Task<ITestManager> NewTestManager(DeviceType deviceType) => await _verificationManagerFactory.StartNew(this, deviceType);
+        //public async Task<ITestManager> NewTestManager(DeviceType deviceType) => await _verificationManagerFactory.StartNew(this, deviceType);
 
         private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
         {

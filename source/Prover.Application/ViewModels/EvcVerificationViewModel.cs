@@ -21,7 +21,7 @@ namespace Prover.Application.ViewModels
 
         }
 
-        private EvcVerificationViewModel(bool verified) : base(verified) { }
+        private EvcVerificationViewModel(bool verified) : base() { }
 
         [Reactive] public DeviceInstance Device { get; set; }
 

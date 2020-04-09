@@ -2,7 +2,9 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -58,10 +60,26 @@ namespace Client.Desktop.Wpf.Dialogs
 
             MessageInteractions.GetInputNumber.RegisterHandler(async i =>
             {
-                var answer = await dialogManager.ShowInputDialog<decimal>(i.Input);
-                i.SetOutput(answer);
+              await Observable.StartAsync(async () =>
+               {
+                   var answer = await dialogManager.ShowInputDialog<decimal>(i.Input);
+                   i.SetOutput(answer);
+               }, RxApp.MainThreadScheduler);
+            });
+
+            MessageInteractions.OpenFileDialog.RegisterHandler(async i =>
+            {
+                var fileOpen = new OpenFileDialog();
+                if (fileOpen.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    i.SetOutput(fileOpen.FileName);
+                }
+
+                return;
             });
         }
+
+        
     }
 
     public partial class DialogServiceManager : ReactiveObject, IDialogServiceManager
@@ -72,8 +90,11 @@ namespace Client.Desktop.Wpf.Dialogs
         private readonly IViewLocator _viewLocator;
         private Action _onClosed;
 
-        public DialogServiceManager(IServiceProvider services, ILogger<DialogServiceManager> logger,
-            IViewLocator viewLocator = null, Action<IDialogServiceManager> interactionsRegistery = null)
+        public DialogServiceManager(
+                IServiceProvider services, 
+                ILogger<DialogServiceManager> logger,
+                IViewLocator viewLocator = null, 
+                Action<IDialogServiceManager> interactionsRegistery = null)
         //: this()
         {
             _services = services;
@@ -100,6 +121,20 @@ namespace Client.Desktop.Wpf.Dialogs
                 return DialogSession;
             }, outputScheduler: RxApp.MainThreadScheduler);
 
+            ShowDialogViewModel = ReactiveCommand.CreateFromObservable<IDialogViewModel, IViewFor>(
+                viewModel =>
+                {
+                    return Observable.Start(() =>
+                    {
+                        var view = _viewLocator.ResolveView(viewModel);
+                        view.ViewModel = viewModel;
+                        return view;
+                    }, RxApp.MainThreadScheduler);
+                }, outputScheduler: RxApp.MainThreadScheduler);
+                   
+
+            ShowDialogViewModel.InvokeCommand(ShowDialogView);
+
             CloseDialog = ReactiveCommand.CreateFromObservable(() => {
                 DialogSession?.Close();
                 //_disposer.Disposable = Disposable.Empty;
@@ -109,7 +144,9 @@ namespace Client.Desktop.Wpf.Dialogs
             RegisterInteractions(this);
             interactionsRegistery?.Invoke(this);
         }
-        
+
+        public ReactiveCommand<IDialogViewModel, IViewFor> ShowDialogViewModel { get; set; }
+
         private ReactiveCommand<IViewFor, DialogSession> ShowDialogView { get; }
         private ReactiveCommand<Unit, IViewFor> CloseDialog { get; }
         [Reactive] public DialogSession DialogSession { get; set; }
@@ -124,6 +161,12 @@ namespace Client.Desktop.Wpf.Dialogs
         {
             _onClosed = onClosed;
             await ShowDialogView.Execute(dialogView);
+        }
+
+        public async Task ShowViewModel<TViewModel>(TViewModel dialogViewModel, Action onClosed = null) where TViewModel : class, IDialogViewModel
+        {
+            await ShowDialogViewModel.Execute(dialogViewModel);
+            await dialogViewModel.CloseCommand.Merge(dialogViewModel.CancelCommand).FirstAsync();
         }
 
         public async Task Show<T>(Action onClosed = null)
@@ -163,31 +206,27 @@ namespace Client.Desktop.Wpf.Dialogs
             return view.Answer ?? false;
         }
 
-        private async Task ShowViewModel(IDialogViewModel viewModel)
-        {
-            var view = GenerateView(viewModel);
+        //private IViewFor GenerateView(IDialogViewModel viewModel)
+        //{
+        //    //RxApp.MainThreadScheduler.Schedule(viewModel, (scheduler, model) =>
+        //    //{
+        //        var view = _viewLocator.ResolveView(viewModel);
+        //        if (view == null)
+        //            throw new Exception($"Couldn't find view for '{viewModel.GetType()}'.");
 
-            await ShowDialogView.Execute(view);
-            await viewModel.CloseCommand.Merge(viewModel.CancelCommand).FirstAsync();
-        }
+        //        view.ViewModel = viewModel;
 
-        private IViewFor GenerateView(IDialogViewModel viewModel)
-        {
-            var view = _viewLocator.ResolveView(viewModel);
-            if (view == null)
-                throw new Exception($"Couldn't find view for '{viewModel.GetType()}'.");
+        //        _disposer.Disposable = Disposable.Empty;
+        //        _disposer.Disposable = Disposable.Create(() =>
+        //        {
+        //            (view as IDisposable)?.Dispose();
+        //            _onClosed?.Invoke();
+        //        });
 
-            view.ViewModel = viewModel;
+        //        return view;
+        //    //});
 
-            _disposer.Disposable = Disposable.Empty;
-            _disposer.Disposable = Disposable.Create(() =>
-            {
-                (view as IDisposable)?.Dispose();
-                _onClosed?.Invoke();
-            });
-
-            return view;
-        }
+        //}
     }
 
  

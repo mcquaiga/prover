@@ -124,21 +124,18 @@ namespace Devices.Communications
             _cleanup.Dispose();
             CommPort?.Dispose();
         }
-
-        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
-
+        
         public abstract Task<IEnumerable<ItemValue>> GetItemValuesAsync(IEnumerable<ItemMetadata> itemNumbers);
 
         public abstract Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber);
-
         public abstract Task LiveReadItemValue(ItemMetadata itemNumber, IObserver<ItemValue> updates,
             CancellationToken ct);
+        public abstract Task<bool> SetItemValue(int itemNumber, string value);
+        //public abstract Task<bool> SetItemValue(ItemMetadata item, string value);
 
+        public abstract Task<ItemValue> GetItemValue(ItemMetadata itemNumber);
         public abstract Task<bool> SetItemValue(int itemNumber, decimal value);
         public abstract Task<bool> SetItemValue(int itemNumber, long value);
-
-        public abstract Task<bool> SetItemValue(int itemNumber, string value);
-
         #endregion
 
         #region Protected
@@ -149,14 +146,14 @@ namespace Devices.Communications
             new CancellationTokenSource();
 
         //protected abstract Task EstablishConnectionAsync<T>(T deviceType, CancellationToken ct) where T : IDeviceType;
-        protected abstract Task EstablishConnectionAsync(CancellationToken ct);
+        protected abstract Task EstablishConnectionAsync(CancellationToken ct, TimeSpan timeout);
 
         protected virtual void ExecuteCommand(string command)
         {
             CommPort.Send(command);
         }
 
-        protected virtual async Task<T> ExecuteCommandAsync<T>(CommandDefinition<T> command) where T : ResponseMessage
+        protected virtual async Task<T> ExecuteCommandAsync<T>(CommandDefinition<T> command, TimeSpan? timeout = null) where T : ResponseMessage
         {
             if (command.ResponseProcessor == null)
             {
@@ -165,7 +162,7 @@ namespace Devices.Communications
             }
 
             var response = command.ResponseProcessor.ResponseObservable(CommPort.DataReceived)
-                .Timeout(_timeout)
+                .Timeout(timeout ?? _timeout)
                 .FirstAsync()
                 .PublishLast();
 
@@ -196,12 +193,7 @@ namespace Devices.Communications
 
             //SetupStreams();
 
-            if (CancellationTokenSource == null || CancellationTokenSource.IsCancellationRequested)
-                CancellationTokenSource = new CancellationTokenSource();
-
-            CancellationToken.ThrowIfCancellationRequested();
-
-            timeout = timeout ?? _timeout;
+            CancellationTokenSource = new CancellationTokenSource();
 
             Exception exception = null;
 
@@ -215,16 +207,18 @@ namespace Devices.Communications
 
                 try
                 {
-                    await EstablishConnectionAsync(CancellationToken);
+                    await EstablishConnectionAsync(CancellationToken, timeout ?? _timeout);
+                    CancellationToken.ThrowIfCancellationRequested();
                 }
                 catch (EvcResponseException responseException)
                 {
                     PublishMessage(Messages.Error($"Failed connecting to {DeviceType.Name}: Response Message {responseException.Message}."));
                     exception = responseException;
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException ex)
                 {
                     PublishMessage(Messages.Error($"Failed connecting to {DeviceType.Name}: Operation canceled."));
+                    exception = ex;
                 }
                 catch (Exception ex)
                 {

@@ -58,6 +58,9 @@ namespace Prover.Application.Settings
         /// </summary>
         public string WindowState { get; set; } = "Normal";
 
+
+        public string VerificationFilePath { get; set; } 
+
         /// <summary>
         /// Gets or sets the WindowWidth
         /// </summary>

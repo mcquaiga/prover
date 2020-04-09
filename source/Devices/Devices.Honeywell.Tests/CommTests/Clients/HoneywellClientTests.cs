@@ -60,10 +60,10 @@ namespace Devices.Honeywell.Tests.CommTests.Clients
             }
             catch (Exception ex)
             {
-                Assert.IsInstanceOfType(ex.InnerException, typeof(TimeoutException));
+                Assert.IsInstanceOfType(ex.InnerException, typeof(TaskCanceledException));
             }
 
-            await Assert.ThrowsExceptionAsync<TimeoutException>(async ()
+            await Assert.ThrowsExceptionAsync<TaskCanceledException>(async ()
                 => await client.ConnectAsync(0, TimeSpan.FromMilliseconds(25)));
         }
 
@@ -113,7 +113,7 @@ namespace Devices.Honeywell.Tests.CommTests.Clients
             SetupComm(commMock, incoming, outgoing);
             var client = ClientFactory.Create(Device, _commMock.Object);
 
-            await Assert.ThrowsExceptionAsync<TimeoutException>(async ()
+            await Assert.ThrowsExceptionAsync<TaskCanceledException>(async ()
                 => await client.ConnectAsync(0, TimeSpan.FromMilliseconds(50)));
         }
     }

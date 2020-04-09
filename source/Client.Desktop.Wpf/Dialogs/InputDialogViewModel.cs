@@ -9,6 +9,11 @@ namespace Client.Desktop.Wpf.Dialogs
 {
     public class InputDialogViewModel : DialogViewModel, IValidatableViewModel
     {
+        public InputDialogViewModel()
+        {
+
+        }
+
         public InputDialogViewModel(string message, string title = null)
         {
             Message = message;

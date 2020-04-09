@@ -10,7 +10,8 @@ namespace Prover.Application.Interfaces
 
         IDialogServiceManager DialogManager { get; }
 
-        Task GoHome();
+        Task GoHome(IRoutableViewModel viewModel = null);
         Task GoBack();
+        
     }
 }

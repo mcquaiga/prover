@@ -14,15 +14,14 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         public IDialogServiceManager DialogManager { get; }
         [Reactive] public RoutingState Router { get; set; }
-        public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager,
-            Func<IScreenManager, IRoutableViewModel> homeViewModelFactory)
+        public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager)
         {
             _services = services;
 
             Router = new RoutingState();
 
             DialogManager = dialogManager;
-            _homeViewModel = homeViewModelFactory.Invoke(this);
+            //_homeViewModel = homeViewModelFactory.Invoke(this);
 
             Router.CurrentViewModel.Subscribe(vm => _currentViewModel = vm);
         }
@@ -54,14 +53,22 @@ namespace Client.Desktop.Wpf.ViewModels
             (current as IDisposable)?.Dispose();
         }
 
-        public async Task GoHome()
+        public void SetHome(IRoutableViewModel viewModel)
         {
+            _homeViewModel = viewModel;
+        }
+
+        public async Task GoHome(IRoutableViewModel home = null)
+        {
+            if (_homeViewModel == null)
+                _homeViewModel = home;
+
             Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
             await Router.NavigateAndReset.Execute(_homeViewModel);
         }
 
         private readonly IServiceProvider _services;
         private IRoutableViewModel _currentViewModel;
-        private readonly IRoutableViewModel _homeViewModel;
+        private IRoutableViewModel _homeViewModel;
     }
 }

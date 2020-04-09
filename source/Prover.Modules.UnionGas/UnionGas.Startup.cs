@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
@@ -22,21 +23,33 @@ using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Modules.UnionGas.VerificationActions;
 using Prover.Shared.Interfaces;
+using ReactiveUI;
 
 namespace Prover.Modules.UnionGas
 {
-    public static class MainMenuItems
+    public class ExporterMainMenu : IMainMenuItem
     {
-        public static IMainMenuItem ExporterMainMenu
-            => new MainMenu("Export Test Run", PackIconKind.CloudUpload,
-                async screen => await screen.ChangeView<ExporterViewModel>(), 4);
+        public ExporterMainMenu(IScreenManager screenManager)
+        {
+            OpenCommand =
+                ReactiveCommand.CreateFromTask(async () =>
+                {
+                    await screenManager.ChangeView<ExporterViewModel>();
+                    return;
+                });
+        }
+
+        public PackIconKind MenuIconKind { get; } = PackIconKind.CloudUpload;
+        public string MenuTitle { get; } = "Export Test Run";
+        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+        public int? Order { get; } = 2;
     }
 
     public class UnionGasModule : IConfigureModule
     {
         public void Configure(HostBuilderContext builder, IServiceCollection services)
         {
-            services.AddSingleton(c => MainMenuItems.ExporterMainMenu);
+            services.AddSingleton<IMainMenuItem, ExporterMainMenu>();
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
@@ -73,8 +86,8 @@ namespace Prover.Modules.UnionGas
         {
             services.AddSingleton<MeterInventoryNumberValidator>();
             services.AddSingleton<MasaVerificationActions>();
-            services.AddSingleton<IInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            services.AddSingleton<ISubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            services.AddSingleton<IOnInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            services.AddSingleton<IOnSubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
             services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
         }
 

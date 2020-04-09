@@ -106,13 +106,13 @@ namespace Devices.Honeywell.Comm.CommClients
         //public override async Task<bool> SetItemValue(string itemCode, long value)
         //    => await SetItemValue(ItemDetails.GetItem(itemCode), value);
 
-        protected override async Task EstablishConnectionAsync(CancellationToken ct)
+        protected override async Task EstablishConnectionAsync(CancellationToken ct, TimeSpan timeout)
         {
             if (await WakeUpInstrument(ct))
             {
                 var response =
                     await ExecuteCommandAsync(
-                        Commands.SignOn((TDevice) DeviceType)
+                        Commands.SignOn((TDevice) DeviceType), timeout
                     );
 
                 if (HandleResponseMessage<HoneywellDeviceType>(response))

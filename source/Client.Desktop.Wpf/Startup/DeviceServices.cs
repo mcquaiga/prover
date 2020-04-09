@@ -10,6 +10,7 @@ using Prover.Shared.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.ViewModels.Devices;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
@@ -35,7 +36,7 @@ namespace Client.Desktop.Wpf.Startup
                     //c.GetService<IActionsExecutioner>()));
 
             services.AddTransient<ITestManagerFactory, VerificationTestManagerFactory>();
-
+            services.AddTransient<TestManagerFactoryCoordinator>();
             services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
             services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => (evcTest) =>
                 {

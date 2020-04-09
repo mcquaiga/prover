@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 
-namespace Prover.Application.ViewModels
+namespace Prover.Application.Extensions
 {
     public static class ObservableLoggingExtensions
     {

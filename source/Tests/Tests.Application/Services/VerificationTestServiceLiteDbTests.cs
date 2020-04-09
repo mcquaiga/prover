@@ -198,7 +198,7 @@ namespace Tests.Application.Services
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
         {
-            _repo = StorageTestsInitialize.Repo;
+            _repo = StorageTestsInitialize.DeviceRepo;
             _deviceType = _repo.GetByName("Mini-Max");
 
             _testRepo = StorageTestsInitialize.TestRepo; 

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:details="clr-namespace:Client.Desktop.Wpf.Views.Verifications.Details"
+    xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
     xmlns:local="clr-namespace:Client.Desktop.Wpf.Views.Verifications"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -39,8 +40,65 @@
                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
             </StackPanel>
         </DataTemplate>
+
+        <DataTemplate x:Key="ToolbarControl">
+            <materialDesign:ColorZone
+                Grid.Row="0"
+                Mode="PrimaryLight"
+                Style="{StaticResource SubheaderToolbarColorZoneStyle}">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="QA TEST RUN" />
+
+                    <StackPanel
+                        x:Name="EditTestToolBarControl"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+
+                        <Button
+                            x:Name="SubmitTestButton"
+                            Width="Auto"
+                            Margin="25,0,5,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding ViewModel.SubmitTest, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Content="SUBMIT TEST"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+
+                        <Button
+                            x:Name="SaveButton"
+                            HorizontalAlignment="Left"
+                            Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Content="{materialDesign:PackIcon ContentSave}"
+                            Style="{StaticResource MaterialDesignIconButton}" />
+
+                        <Button
+                            x:Name="PrintButton"
+                            HorizontalAlignment="Left"
+                            Command="{Binding ViewModel.PrintTestReport, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            Content="{materialDesign:PackIcon Printer}"
+                            Style="{StaticResource MaterialDesignIconButton}" />
+
+                    </StackPanel>
+
+                </Grid>
+            </materialDesign:ColorZone>
+
+        </DataTemplate>
     </UserControl.Resources>
 
-    <reactiveUi:ViewModelViewHost x:Name="TestViewContent" DockPanel.Dock="Bottom" />
+    <DockPanel>
+        <ContentControl
+            x:Name="TestToolBarContent"
+            ContentTemplate="{StaticResource ToolbarControl}"
+            DataContext="{Binding}"
+            DockPanel.Dock="Top" />
+        <reactiveUi:ViewModelViewHost x:Name="TestViewContent" DockPanel.Dock="Bottom" />
+    </DockPanel>
+
 
 </reactiveUi:ReactiveUserControl>

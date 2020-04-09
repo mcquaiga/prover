@@ -20,10 +20,13 @@ namespace Client.Desktop.Wpf.Views
 
             window.ViewModel = model;
             
-            if (showMenu) 
-                model.ShowHome();
+            if (showMenu)
+            {
+                var home = _resolver.GetService<HomeViewModel>();
+                model.ShowHome(home);
+            }
 
-            
+
             window.Closing += (sender, e) =>
             {
                 (((MainWindow)sender).ViewModel as IDisposable)?.Dispose();

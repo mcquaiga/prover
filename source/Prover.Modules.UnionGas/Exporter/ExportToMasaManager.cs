@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
@@ -34,15 +36,18 @@ namespace Prover.Modules.UnionGas.Exporter
         /// </summary>
         private readonly ILoginService<EmployeeDTO> _loginService;
 
+        private readonly ILogger<ExportToMasaManager> _logger;
+
         /// <summary>
         ///     Defines the _testRunService
         /// </summary>
         private readonly IVerificationTestService _testRunService;
 
-        public ExportToMasaManager(IVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
+        public ExportToMasaManager(ILogger<ExportToMasaManager> logger, IVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
             IExportService<QARunEvcTestResult> exportService,
             IMeterService<MeterDTO> meterService)
         {
+            _logger = logger;
             _testRunService = testRunService;
             _exportService = exportService;
             _meterService = meterService;
@@ -57,8 +62,15 @@ namespace Prover.Modules.UnionGas.Exporter
             var isSuccess = await _exportService.SubmitQaTestRunResults(qaTestRuns);
 
             if (!isSuccess)
+            {
+                await NotificationInteractions.SnackBarMessage.Handle("EXPORT FAILED");
+                return false;
                 throw new Exception(
                     "An error occured sending test results to web service. Please see log for details.");
+
+            }
+
+            await NotificationInteractions.SnackBarMessage.Handle("EXPORT SUCCESSFUL");
 
             foreach (var instr in forExport)
             {

@@ -82,8 +82,9 @@ namespace Client.Desktop.Wpf
             var model = _host.Services.GetService<MainViewModel>();
             _mainWindow = _host.Services.GetService<MainWindow>();
             _mainWindow.ViewModel = model;
-            
-            model.ShowHome();
+
+            var home = _host.Services.GetService<HomeViewModel>();
+            model.ShowHome(home);
 
             _mainWindow.Closed += (sender, args) => { ShutdownApp(); };
 
