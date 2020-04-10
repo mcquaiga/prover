@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive;
 using Microsoft.Extensions.Configuration;
 using Prover.Application.Interfaces;
-using Prover.Shared.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels

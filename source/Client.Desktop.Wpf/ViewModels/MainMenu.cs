@@ -4,7 +4,6 @@ using Client.Desktop.Wpf.ViewModels.Verifications;
 using MaterialDesignThemes.Wpf;
 using Prover.Application.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {

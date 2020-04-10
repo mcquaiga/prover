@@ -21,13 +21,19 @@
         <DataTemplate x:Key="CorrectionsTestDataTemplate">
             <Button
                 x:Name="DownloadButton"
-                Margin="8,4"
+                Width="Auto"
+                Height="35"
+                Margin="8,-2,8,12"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center"
+                VerticalAlignment="Top"
                 Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type local:TestManagerView}}}"
-                CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}}"
-                Content="Run Test"
-                Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+                CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                <materialDesign:PackIcon
+                    Width="48"
+                    Height="25"
+                    Kind="Play" />
+            </Button>
         </DataTemplate>
 
         <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
@@ -48,34 +54,42 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style BasedOn="{StaticResource MaterialDesignIconForegroundButton}" TargetType="{x:Type Button}">
+                        <Setter Property="Width" Value="64" />
+                        <Setter Property="Height" Value="64" />
+                    </Style>
+                    <Style TargetType="materialDesign:PackIcon">
+                        <Setter Property="Width" Value="64" />
+                        <Setter Property="Height" Value="64" />
+                    </Style>
 
 
+                </Grid.Resources>
                 <WrapPanel
                     x:Name="EditTestToolBarControl"
                     Grid.Column="2"
                     HorizontalAlignment="Right"
-                    Orientation="Horizontal">
+                    Orientation="Vertical">
                     <Button
                         x:Name="SaveButton"
                         HorizontalAlignment="Left"
-                        Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                        Content="{materialDesign:PackIcon ContentSave}"
-                        Style="{StaticResource MaterialDesignIconButton}" />
+                        Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                        <materialDesign:PackIcon Kind="ContentSave" />
+                    </Button>
 
                     <Button
                         x:Name="PrintButton"
                         HorizontalAlignment="Left"
                         Command="{Binding ViewModel.PrintTestReport, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                        Content="{materialDesign:PackIcon Printer}"
-                        Style="{StaticResource MaterialDesignIconButton}" />
+                        Content="{materialDesign:PackIcon Printer}" />
                     <Button
                         x:Name="SubmitTestButton"
                         Width="Auto"
                         Margin="25,0,5,0"
                         HorizontalAlignment="Right"
                         Command="{Binding ViewModel.SubmitTest, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                        Content="SUBMIT TEST"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+                        Content="SUBMIT TEST" />
 
 
 

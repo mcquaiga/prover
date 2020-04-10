@@ -20,12 +20,9 @@
             <Setter Property="ValueFontSize" Value="16" />
         </Style>
     </UserControl.Resources>
-    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Stretch">
-        <Viewbox
-            Margin="20,0"
-            DockPanel.Dock="Left"
-            Stretch="Uniform">
-            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" />
+    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Viewbox DockPanel.Dock="Left" Stretch="Uniform">
+            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="5" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
 
@@ -48,18 +45,19 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Viewbox Stretch="Uniform">
-                                <Border
-                                    Padding="4"
-                                    BorderThickness="0,0,1,0"
-                                    Style="{StaticResource SubSectionDividerBorder}">
-                                    <StackPanel>
-                                        <ContentControl ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                                        <reactiveUi:ViewModelViewHost x:Name="CorrectionsTestManagerViewHost" ViewModel="{Binding}" />
-                                    </StackPanel>
-                                </Border>
-                            </Viewbox>
-
+                            <Border
+                                x:Name="TestPointDataTemplate"
+                                Padding="4"
+                                BorderThickness="0,0,1,0"
+                                Style="{StaticResource SubSectionDividerBorder}">
+                                <Grid>
+                                    <ContentControl
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                    <reactiveUi:ViewModelViewHost x:Name="CorrectionsTestManagerViewHost" ViewModel="{Binding}" />
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

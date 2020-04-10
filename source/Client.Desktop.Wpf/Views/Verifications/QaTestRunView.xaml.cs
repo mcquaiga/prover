@@ -1,6 +1,4 @@
 ﻿using System.Reactive.Disposables;
-using System.Windows;
-using Client.Desktop.Wpf.Extensions;
 using Prover.Application.Verifications;
 using ReactiveUI;
 

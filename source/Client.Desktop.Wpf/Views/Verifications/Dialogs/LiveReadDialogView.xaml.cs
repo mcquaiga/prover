@@ -3,10 +3,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Forms;
-using Client.Desktop.Wpf.Extensions;
 using Devices.Core.Items;
-using Prover.Application.Services.LiveReadCorrections;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Views.Verifications.Dialogs

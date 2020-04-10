@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Reactive.Disposables;
-using System.Windows;
 using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;

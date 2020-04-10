@@ -1,16 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
-using Prover.Application.FileLoader;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-
 namespace Client.Desktop.Wpf.Communications
 {
     //public class FileDeviceSessionManager : IDeviceSessionManager

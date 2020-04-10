@@ -46,22 +46,21 @@
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-
-        <ContentControl x:Name="SessionDialogContentControl" />
+        <ContentControl x:Name="SessionDialogContentControl" Margin="30,30,30,0" />
 
 
         <Button
             x:Name="CancelButton"
             Grid.Row="1"
             Width="100"
-            Margin="8,25"
+            Margin="8,20"
             VerticalAlignment="Bottom"
             Content="Cancel"
-            Style="{StaticResource MaterialDesignFlatAccentButton}" />
+            Style="{StaticResource MaterialDesignFlatAccentBgButton}" />
 
 
     </Grid>

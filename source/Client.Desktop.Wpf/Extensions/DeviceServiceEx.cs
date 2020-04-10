@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Client.Desktop.Wpf.Communications;
-using Devices.Communications;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

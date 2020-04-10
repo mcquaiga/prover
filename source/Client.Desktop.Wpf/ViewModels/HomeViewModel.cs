@@ -2,7 +2,6 @@
 using System.Linq;
 using Prover.Application.Interfaces;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {

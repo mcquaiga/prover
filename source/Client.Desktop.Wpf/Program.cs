@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Client.Desktop.Wpf.Common;
-using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf
 {

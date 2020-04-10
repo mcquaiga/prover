@@ -9,18 +9,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
-using Prover.Application.ViewModels.Volume.Factories;
 using Prover.Shared.Interfaces;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.ViewModels;
-using Client.Desktop.Wpf.ViewModels.Devices;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Factories;
 using Prover.Application.ViewModels.Factories;
-using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {
