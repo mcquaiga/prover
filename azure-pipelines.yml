@@ -6,6 +6,7 @@ trigger:
 
 pr:
 - master
+- dev
 
 resources:
 - repo: self
