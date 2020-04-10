@@ -12,7 +12,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.VerificationActions;
+using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

@@ -1,52 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Disposables;
+using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas.Login
 {
+    //internal interface ILoginService<TUser> : ILoginService<string, TUser>
+    //    where TUser : class
+    //{
+
+    //}
+
     /// <summary>
     ///     Defines the <see cref="MasaLoginService" />
     /// </summary>
     public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IDisposable
     {
+        private readonly IRepository<string, EmployeeDTO> _employeeCache;
+
+        private readonly List<EmployeeDTO> _employees = new List<EmployeeDTO>();
+
         /// <summary>
         ///     Defines the _log
         /// </summary>
-        private readonly ILogger _log;
+        private readonly ILogger<MasaLoginService> _log;
 
         /// <summary>
         ///     Defines the _webService
         /// </summary>
         private readonly IUserService<EmployeeDTO> _webService;
 
-        private readonly IRepository<EmployeeDTO> _employeeCache;
-
-        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService, IRepository<EmployeeDTO> employeeCache)
+        public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService,
+            IRepository<string, EmployeeDTO> employeeCache)
         {
             _log = log ?? NullLogger<MasaLoginService>.Instance;
             _webService = employeeService;
             _employeeCache = employeeCache;
         }
 
-        public override async Task<string> GetLoginDetails()
+        protected override string UserId => User?.Id;
+
+        /// <inheritdoc />
+        public override async Task<string> GetDisplayName<T>(T id)
         {
-            return await MessageInteractions.GetInputString.Handle("Employee number:");
+            if (string.IsNullOrEmpty(id?.ToString())) return string.Empty;
+
+            var employee = await GetUserDetails(id.ToString());
+            return employee.EmployeeName;
         }
 
-        public override IEnumerable<EmployeeDTO> GetUsers() => _employeeCache?.GetAll();
+        public override async Task<string> GetLoginDetails() =>
+            await MessageInteractions.GetInputString.Handle("Employee number:");
+
+        /// <inheritdoc />
+        public override async Task<EmployeeDTO> GetUserDetails<TId>(TId id)
+        {
+            _log.LogDebug($"Getting user details for employee #{id.ToString()}");
+            var idString = id.ToString();
+            if (User?.Id == idString)
+                return User;
+
+            return GetUsers().FirstOrDefault(u => u.EmployeeNbr == idString) 
+                ?? await _webService.GetUser(idString);
+        }
+
+        public override IEnumerable<EmployeeDTO> GetUsers()
+        {
+            _log.LogDebug($"Getting employees.");
+            if (_employees.Any() == false)
+                _employees.AddRange(_employeeCache?.GetAll());
+
+            return _employees;
+        }
 
         public override async Task<bool> Login(string username, string password = null)
         {
@@ -55,12 +88,9 @@ namespace Prover.Modules.UnionGas.Login
             LoggedInSubject.OnNext(User != null);
 
             _employeeCache.Add(User);
+            _employees.Add(User);
 
             return !User?.Id.IsNullOrEmpty() ?? false;
         }
-
-        protected override string UserId => User?.Id;
-
-  
     }
 }

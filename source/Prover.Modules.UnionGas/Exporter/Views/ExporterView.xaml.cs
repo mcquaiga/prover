@@ -16,8 +16,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.TestsByJobNumberViewModel,
-                    view => view.TestsByJobNumberContentControl.ViewModel).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.TestsByJobNumberViewModel,
+                //    view => view.TestsByJobNumberContentControl.ViewModel).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.ToolbarViewHost.ViewModel).DisposeWith(d);
 
@@ -28,7 +28,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 this.OneWayBind(ViewModel, vm => vm.Data, v => v.VerificationsGrid.DataContext).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.JobIdsList, v => v.JobIdsComboBox.ItemsSource).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.JobIdsList, v => v.JobIdsComboBox.ItemsSource).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeExported, v => v.IncludeExportedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeArchived, v => v.IncludeArchivedCheckBox).DisposeWith(d);

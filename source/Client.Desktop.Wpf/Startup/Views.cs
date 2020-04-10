@@ -30,7 +30,7 @@ namespace Client.Desktop.Wpf.Startup
 
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreenManager, ScreenManager>();
-            services.AddSingleton<IScreen>(c => c.GetService<ScreenManager>());
+            services.AddSingleton<IScreen>(c => c.GetRequiredService<IScreenManager>());
        
 
             services.AddMainMenuItems();

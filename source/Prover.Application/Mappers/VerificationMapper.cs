@@ -4,7 +4,8 @@ using AutoMapper;
 using Prover.Application.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Application.ViewModels.Volume.Factories;
+using Prover.Application.ViewModels.Factories;
+using Prover.Application.ViewModels.Factories.Volume;
 using Prover.Domain.EvcVerifications;
 using Prover.Domain.EvcVerifications.Verifications;
 using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
@@ -116,9 +117,7 @@ namespace Prover.Application.Mappers
 
                     return (VerificationViewModel) pointViewModel;
                 }).ToList();
-
-            //evcViewModel.VerificationTests.Clear();
-            //testPoints.ForEach(evcViewModel.VerificationTests.Add);
+            
             evcViewModel.Initialize(testPoints.ToList());
             return evcViewModel;
         }

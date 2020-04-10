@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 
-namespace Prover.Application.ViewModels.Volume.Factories
+namespace Prover.Application.ViewModels.Factories.Volume
 {
     public partial class VolumeViewModelFactory
     {

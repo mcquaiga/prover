@@ -17,12 +17,18 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Views/Verifications/Styles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />
+                <!--<ResourceDictionary Source="/Views/Verifications/Styles.xaml" />-->
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Amber.xaml" />-->
                 <ResourceDictionary>
                     <Style BasedOn="{StaticResource MaterialDesignFloatingHintComboBox}" TargetType="{x:Type ComboBox}">
                         <Setter Property="FontSize" Value="18" />
+                    </Style>
+
+                    <Style BasedOn="{StaticResource MaterialDesignCardGroupBox}" TargetType="{x:Type GroupBox}">
+                        <Setter Property="Padding" Value="12" />
+                        <Setter Property="Margin" Value="4" />
+                        <Setter Property="FontSize" Value="16" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -75,7 +81,7 @@
                     <GroupBox
                         Grid.Row="0"
                         BorderThickness="1"
-                        Header="Instrument Type">
+                        Header="Device Type">
                         <ListView
                             x:Name="DeviceTypes"
                             DisplayMemberPath="Name"
@@ -89,8 +95,8 @@
                                                 <Condition Property="IsSelected" Value="true" />
                                                 <!--<Condition Property="Selector.IsSelectionActive" Value="true" />-->
                                             </MultiTrigger.Conditions>
-                                            <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
-                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}" />
+                                            <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                                            <Setter Property="Foreground" Value="White" />
                                         </MultiTrigger>
                                     </Style.Triggers>
                                     <Setter Property="Margin" Value="0" />
@@ -151,15 +157,13 @@
 
         </Grid>
 
-
-
-
         <StackPanel
             Height="Auto"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             DockPanel.Dock="Bottom"
             Orientation="Vertical">
+            <TextBlock x:Name="FilePath" Style="{StaticResource MaterialDesignBody1TextBlock}" />
             <Expander HorizontalAlignment="Right" DockPanel.Dock="Right">
                 <StackPanel>
                     <Button
@@ -178,23 +182,30 @@
                 </StackPanel>
             </Expander>
 
-            <Button
-                x:Name="StartTestButton"
-                Width="150"
-                Height="60"
-                Margin="15"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Content="START"
-                FontSize="24"
-                Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-            <Button
-                x:Name="CancelButton"
-                Margin="15"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Content="Cancel"
-                Style="{StaticResource MaterialDesignFlatButton}" />
+            <Grid HorizontalAlignment="Stretch">
+                <Button
+                    x:Name="CancelButton"
+                    Width="Auto"
+                    Height="Auto"
+                    Margin="25"
+                    Padding="25"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="Cancel"
+                    Style="{StaticResource MaterialDesignFlatAccentBgButton}" />
+                <Button
+                    x:Name="StartTestButton"
+                    Width="Auto"
+                    Height="Auto"
+                    Margin="50,25"
+                    Padding="25"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Content="START"
+                    FontSize="38"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+
+            </Grid>
         </StackPanel>
     </DockPanel>
 </reactiveUi:ReactiveUserControl>

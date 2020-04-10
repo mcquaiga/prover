@@ -7,13 +7,19 @@ using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {
-    public enum VerificationTestStep
+    public interface IEventsSubscriber
     {
-        OnInitialize,
-        OnSubmit,
-        OnCorrections,
-        OnVolume,
+        void SubscribeToEvents();
     }
+
+
+    //public enum VerificationTestStep
+    //{
+    //    OnInitialize,
+    //    OnSubmit,
+    //    OnCorrections,
+    //    OnVolume,
+    //}
 
     public static class VerificationActionStages
     {
@@ -33,11 +39,11 @@ namespace Prover.Application.Interfaces
     {
     }
 
-    public interface IOnVerificationStepAction : IVerificationAction
-    {
-        VerificationTestStep VerificationStep { get; }
-        Task OnStep(EvcVerificationViewModel verification);
-    }
+    //public interface IOnVerificationStepAction : IVerificationAction
+    //{
+    //    VerificationTestStep VerificationStep { get; }
+    //    Task OnStep(EvcVerificationViewModel verification);
+    //}
 
     public interface IOnInitializeAction : IVerificationAction
     {

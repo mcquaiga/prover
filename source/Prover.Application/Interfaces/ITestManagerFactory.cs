@@ -6,6 +6,6 @@ namespace Prover.Application.Interfaces
 {
     public interface ITestManagerFactory
     {
-        Task<ITestManager> StartNew(IDeviceSessionManager deviceManager, DeviceType deviceType);
+        Task<ITestManager> StartNew(DeviceType deviceType);
     }
 }

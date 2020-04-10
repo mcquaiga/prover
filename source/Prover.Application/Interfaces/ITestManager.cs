@@ -9,6 +9,6 @@ namespace Prover.Application.Interfaces
     {
         EvcVerificationViewModel TestViewModel { get; }
         IVolumeTestManager VolumeTestManager { get; }
-        ICorrectionVerificationRunner CorrectionVerifications { get; }
+        ICorrectionTestsManager CorrectionVerifications { get; }
     }
 }

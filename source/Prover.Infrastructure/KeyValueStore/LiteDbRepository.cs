@@ -12,7 +12,7 @@ using Prover.Shared.Interfaces;
 
 namespace Prover.Infrastructure.KeyValueStore
 {
-    public class LiteDbRepository<T> : IRepository<T>
+    public class LiteDbRepository<TId, T> : IRepository<TId, T>
         where T : class
     {
         protected readonly ILiteDatabase Context;
@@ -28,11 +28,30 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public bool Delete(T entity) => throw new NotImplementedException();
 
-        public T Get(Guid id) => Context.GetCollection<T>().FindById(id);
+        public virtual T Get(TId id)
+        {
+            var value = new BsonValue(id.ToString());
+            return Context.GetCollection<T>().FindById(value);
+        }
 
         public IEnumerable<T> GetAll() => Context.GetCollection<T>().FindAll();
 
         public bool Update(T entity) => Context.GetCollection<T>().Upsert(entity);
+    }
+
+    public class LiteDbRepository<T> : LiteDbRepository<Guid, T>, IRepository<T>
+        where T : class
+    {
+        /// <inheritdoc />
+        public LiteDbRepository(ILiteDatabase context) : base(context)
+        {
+        }
+
+        /// <inheritdoc />
+        public override T Get(Guid id)
+        {
+            return Context.GetCollection<T>().FindById(id);
+        }
     }
 
     public class LiteDbAsyncRepository<T> : IAsyncRepository<T>

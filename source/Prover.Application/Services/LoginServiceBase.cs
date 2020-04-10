@@ -15,7 +15,7 @@ using ReactiveUI;
 namespace Prover.Application.Services
 {
     public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IVerificationAction, IDisposable
-        where TUser : class, new()
+            where TUser : IUser, new()
     {
         private readonly CompositeDisposable _cleanup;
         protected readonly ISubject<bool> LoggedInSubject = new Subject<bool>();
@@ -37,22 +37,54 @@ namespace Prover.Application.Services
         public IObservable<bool> LoggedIn { get; }
         public bool IsSignedOn { get; private set; }
 
-        public virtual async Task<string> GetLoginDetails()
+        protected abstract string UserId { get; }
+
+
+        public void Dispose()
         {
-            return await MessageInteractions.GetInputString.Handle("Username:");
+            User = default;
+            _cleanup?.Dispose();
         }
 
+        public virtual async Task<bool> Execute(EvcVerificationViewModel verification)
+        {
+            await Task.CompletedTask;
+
+            LoggedIn.Subscribe(x => { verification.EmployeeId = UserId; }).DisposeWith(_cleanup);
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        public abstract Task<string> GetDisplayName<TId>(TId id);
+
+        public virtual async Task<string> GetLoginDetails() => await MessageInteractions.GetInputString.Handle("Username:");
+
+        /// <inheritdoc />
+        /// <inheritdoc />
+        public IUser GetSignOnUser() => User;
+
+        /// <inheritdoc />
+        public abstract Task<TUser> GetUserDetails<TId>(TId id);
+
         public abstract IEnumerable<TUser> GetUsers();
+
 
         public abstract Task<bool> Login(string username, string password = null);
 
         public async Task<bool> Login()
         {
-          
             await GetLoginDetails()
-                .ContinueWith(task => { Login(task.Result); });
+                    .ContinueWith(task => { Login(task.Result); });
 
             return await Task.FromResult(true);
+        }
+
+        public virtual async Task Logout()
+        {
+            User = default;
+            LoggedInSubject.OnNext(User != null);
+            await Task.CompletedTask;
         }
 
         public IObservable<bool> SignOn()
@@ -63,32 +95,5 @@ namespace Prover.Application.Services
                 return await Login(username);
             });
         }
-
-        public virtual async Task Logout()
-        {
-            User = null;
-            LoggedInSubject.OnNext(User != null);
-            await Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            User = null;
-            _cleanup?.Dispose();
-        }
-
-        protected abstract string UserId { get; }
-
-        public VerificationTestStep RunOnStep { get; } = VerificationTestStep.OnInitialize;
-
-        public virtual async Task<bool> Execute(EvcVerificationViewModel verification)
-        {
-            await Task.CompletedTask;
-
-            LoggedIn.Subscribe(x => { verification.EmployeeId = UserId; }).DisposeWith(_cleanup);
-            
-            return true;
-        }
-      
     }
 }

@@ -45,7 +45,7 @@
                 Grid.Row="0"
                 materialDesign:TextFieldAssist.DecorationVisibility="{Binding Path=IsReadOnly, Converter={StaticResource BoolToHiddenConverter}}"
                 BorderThickness="0"
-                FontSize="{Binding ValueFontSize, FallbackValue=20}"
+                FontSize="{Binding ValueFontSize}"
                 Foreground="{StaticResource PrimaryText}"
                 IsReadOnly="{Binding Path=IsReadOnly}"
                 Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -53,7 +53,7 @@
             <TextBlock
                 Grid.Row="1"
                 HorizontalAlignment="Left"
-                FontSize="{Binding LabelFontSize, FallbackValue=16}"
+                FontSize="{Binding LabelFontSize}"
                 Foreground="{StaticResource SecondaryText}"
                 Text="{Binding Path=Label, FallbackValue='Gauge'}" />
         </Grid>

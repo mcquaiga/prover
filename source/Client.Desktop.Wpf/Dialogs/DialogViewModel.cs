@@ -27,13 +27,13 @@ namespace Client.Desktop.Wpf.Dialogs
             //ShowCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(true)).DisposeWith(Cleanup);
             CloseCommand = ReactiveCommand.CreateFromObservable(() =>
             {
-                Response = DialogResult.Accepted;
+                Result = DialogResult.Accepted;
                 return Observable.Return(Unit.Default);
             }, this.IsValid()).DisposeWith(Cleanup);
 
             CancelCommand = ReactiveCommand.CreateFromObservable(() =>
             {
-                Response = DialogResult.Cancelled;
+                Result = DialogResult.Cancelled;
                 CancellationTokenSource.Cancel();
                 return Observable.Return(Unit.Default);
             }).DisposeWith(Cleanup);
@@ -55,7 +55,7 @@ namespace Client.Desktop.Wpf.Dialogs
         [Reactive] public string Message { get; set; }
 
         public ReactiveCommand<Unit, Unit> CloseCommand { get; set; }
-        public DialogResult Response { get; protected set; }
+        public DialogResult Result { get; protected set; }
         public ReactiveCommand<Unit, Unit> CancelCommand { get; set; }
 
         public ValidationContext ValidationContext { get; } = new ValidationContext();

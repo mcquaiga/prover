@@ -11,7 +11,7 @@ using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
 
-namespace Prover.Modules.UnionGas.VerificationActions
+namespace Prover.Modules.UnionGas.VerificationEvents
 {
     public class MeterInventoryNumberValidator
     {

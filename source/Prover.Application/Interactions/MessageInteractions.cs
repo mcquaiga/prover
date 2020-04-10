@@ -6,7 +6,6 @@ namespace Prover.Application.Interactions
 {
     public static class MessageInteractions
     {
-
         public static Interaction<IDialogViewModel, Unit> ShowDialog { get; } 
             = new Interaction<IDialogViewModel, Unit>();
 

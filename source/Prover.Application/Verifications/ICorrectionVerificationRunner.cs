@@ -3,7 +3,7 @@ using Prover.Application.ViewModels;
 
 namespace Prover.Application.Verifications
 {
-    public interface ICorrectionVerificationRunner
+    public interface ICorrectionTestsManager
     {
         Task RunCorrectionTests(VerificationTestPointViewModel test);
     }

@@ -15,11 +15,10 @@ using DynamicData.Binding;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Models;
-using Prover.Modules.UnionGas.VerificationActions;
+using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
@@ -66,58 +65,51 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
 
             var visibleItems = verificationTestService.FetchTests().Connect()
+                                                      .Filter(FilterByTypeCommand)
+                                                      .Filter(FilterIncludeExported,
+                                                              changeObservable.Select(x => Unit.Default))
+                                                      .Filter(FilterIncludeArchived,
+                                                              changeObservable.Select(x => Unit.Default))
+                                                      .Transform(x => new EvcVerificationProxy(
+                                                                     x, changeObservable, loginService, PrintReport));
 
-                .Filter(FilterByTypeCommand)
-                .Filter(FilterIncludeExported, changeObservable.Select(x => Unit.Default))
-                .Filter(FilterIncludeArchived, changeObservable.Select(x => Unit.Default))
-                //.TransformAsync(async x =>
-                //{
-                //    var points = x.Tests.OfType<VerificationTestPoint>();
-                //    foreach (var pressureTest in points.SelectMany(t => t.Tests.OfType<PressureCorrectionTest>()))
-                //    {
-                //        pressureTest.AtmosphericGauge = x.Device.Pressure().AtmosphericPressure;
-                //    }
-
-                //    return await verificationTestService.AddOrUpdate(x);
-                //})
-                .Transform(x => new EvcVerificationProxy(x, changeObservable, loginService, PrintReport));
-                
 
             visibleItems
-                .Sort(SortExpressionComparer<EvcVerificationProxy>.Ascending(t => t.Test.TestDateTime))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out _data)
-                .DisposeMany()
-                .Subscribe()
-                .DisposeWith(Cleanup);
+               .Sort(SortExpressionComparer<EvcVerificationProxy>.Ascending(t => t.Test.TestDateTime))
+               .ObserveOn(RxApp.MainThreadScheduler)
+               .Bind(out _data)
+               .DisposeMany()
+               .Subscribe()
+               .DisposeWith(Cleanup);
 
             _data.ToObservableChangeSet()
-                .AutoRefresh(vm => vm.IsSelected)
-                .Filter(x => x.IsSelected)
-                .Transform(x => x.Test)
-                .Bind(out var selectedItems)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe()
-                .DisposeWith(Cleanup);
+                 .AutoRefresh(vm => vm.IsSelected)
+                 .Filter(x => x.IsSelected)
+                 .Transform(x => x.Test)
+                 .Bind(out var selectedItems)
+                 .ObserveOn(RxApp.MainThreadScheduler)
+                 .Subscribe()
+                 .DisposeWith(Cleanup);
             SelectedItems = selectedItems;
 
             if (exporterToolbarFactory == null)
                 exporterToolbarFactory = selected => new ExportToolbarViewModel(screenManager, verificationTestService,
-                    loginService, exporter, inventoryNumberValidator, selected);
+                                                                                loginService, exporter,
+                                                                                inventoryNumberValidator, selected);
 
             ToolbarViewModel = exporterToolbarFactory.Invoke(selectedItems);
 
             verificationTestService.FetchTests().Connect()
-                .Filter(x => !string.IsNullOrEmpty(x.JobId))
-                .DistinctValues(x => x.JobId)
-                .Bind(out var jobIds)
-                .Subscribe()
-                .DisposeWith(Cleanup);
+                                   .Filter(x => !string.IsNullOrEmpty(x.JobId))
+                                   .DistinctValues(x => x.JobId)
+                                   .Bind(out var jobIds)
+                                   .Subscribe()
+                                   .DisposeWith(Cleanup);
 
             JobIdsList = jobIds;
         }
 
-        public ReadOnlyObservableCollection<EvcVerificationTest> SelectedItems { get; private set; }
+        public ReadOnlyObservableCollection<EvcVerificationTest> SelectedItems { get; }
         public ExportToolbarViewModel ToolbarViewModel { get; set; }
         public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
 

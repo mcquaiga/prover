@@ -9,26 +9,23 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications
 {
-    public sealed class TestManager : TestManagerBase, ITestManager, IDisposable
+    public sealed class RotaryTestManager : TestManagerBase, ITestManager
     {
-        private readonly IActionsExecutioner _actionsExecutioner;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
         private readonly ILogger _logger;
 
-        public TestManager(
-            ILogger<TestManager> logger,
+        public RotaryTestManager(
+            ILogger<RotaryTestManager> logger,
             IScreenManager screenManager,
             IDeviceSessionManager deviceSessionManager,
             EvcVerificationViewModel verificationViewModel,
             IVerificationTestService verificationService,
             IVolumeTestManager volumeTestManager,
-            IActionsExecutioner actionsExecutioner,
-            ICorrectionVerificationRunner correctionVerificationRunner) : base(logger, screenManager, verificationService, verificationViewModel)
+            ICorrectionTestsManager correctionVerificationRunner) : base(logger, screenManager, verificationService, verificationViewModel)
         {
             _logger = logger;
             _deviceManager = deviceSessionManager;
-            _actionsExecutioner = actionsExecutioner;
 
             VolumeTestManager = volumeTestManager;
             CorrectionVerifications = correctionVerificationRunner;
@@ -44,7 +41,7 @@ namespace Prover.Application.Verifications
         }
 
         public IVolumeTestManager VolumeTestManager { get; }
-        public ICorrectionVerificationRunner CorrectionVerifications { get; }
+        public ICorrectionTestsManager CorrectionVerifications { get; }
 
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; }
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunVolumeVerifications { get; }

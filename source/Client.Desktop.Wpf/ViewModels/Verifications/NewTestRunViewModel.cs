@@ -55,44 +55,36 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out var baudRates)
                 .Subscribe().DisposeWith(_cleanup);
-            BaudRates = baudRates;
-
-            //SelectedBaudRate = Selected.InstrumentBaudRate;
-            //SelectedCommPort = Selected.InstrumentCommPort;
-            //SelectedTachCommPort = Selected.TachCommPort;
-
-            StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
-            {
-                SetLastUsedSettings();
-                return Observable.StartAsync(async () => await verificationManagerFactory.StartNew(commDeviceManager, SelectedDeviceType));
-            }).DisposeWith(_cleanup);
-
-            //var changeScreens = ReactiveCommand.CreateFromTask<ITestManager>(async vm => await screenManager.ChangeView(vm));
-            StartTestCommand
-                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(async vm =>
-                {
-                    await screenManager.ChangeView(vm);
-                }));
-
+            BaudRates = baudRates;                      
+            
             ApplicationSettings.Local.VerificationFilePath = "";
-            LoadFromFile = ReactiveCommand.CreateFromTask(async () =>
+            LoadFromFile = ReactiveCommand.CreateFromObservable<string>(() =>
             {
                 var fileDialog = new OpenFileDialog();
                 if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (fileDialog.CheckFileExists)
                     {
-                        ApplicationSettings.Local.VerificationFilePath = fileDialog.FileName;
-                        await ApplicationSettings.Instance.SaveSettings();
-                    }
-                    
+                        ApplicationSettings.Local.VerificationFilePath = fileDialog.FileName;                      
+                        return Observable.Return(fileDialog.FileName);
+                    }                    
                 }
-                
+                return Observable.Return(string.Empty);
             });
+
+            StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
+            {
+                SetLastUsedSettings();
+                return Observable.StartAsync(async () => await verificationManagerFactory.StartNew(SelectedDeviceType));
+            }).DisposeWith(_cleanup);
+
+            //var changeScreens = ReactiveCommand.CreateFromTask<ITestManager>(async vm => await screenManager.ChangeView(vm));
+            StartTestCommand
+                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));          
         }
 
         public LocalSettings Selected => ApplicationSettings.Local;
-        public ReactiveCommand<Unit, Unit> LoadFromFile { get; protected set; }
+        public ReactiveCommand<Unit, string> LoadFromFile { get; protected set; }
         public ReactiveCommand<Unit, ITestManager> StartTestCommand { get; set; }
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
         public ReadOnlyObservableCollection<int> BaudRates { get; set; }
@@ -104,11 +96,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         [Reactive] public int SelectedBaudRate { get; set; }
 
         private void SetLastUsedSettings()
-        {
-            ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
-            //ApplicationSettings.Local.InstrumentCommPort = SelectedCommPort;
-            //ApplicationSettings.Local.InstrumentBaudRate = SelectedBaudRate;
-            //ApplicationSettings.Local.TachCommPort = SelectedTachCommPort;
+        {            
+            ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;        
             ApplicationSettings.Instance.SaveSettings();
         }
     }
