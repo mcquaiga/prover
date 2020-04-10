@@ -21,7 +21,7 @@ using Prover.Modules.UnionGas.Exporter.Views;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
-using Prover.Modules.UnionGas.VerificationActions;
+using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
@@ -86,10 +86,12 @@ namespace Prover.Modules.UnionGas
         private void AddVerificationActions(IServiceCollection services)
         {
             services.AddSingleton<MeterInventoryNumberValidator>();
-            services.AddSingleton<MasaVerificationActions>();
-            services.AddSingleton<IOnInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            services.AddSingleton<IOnSubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            //services.AddSingleton<MasaVerificationActions>();
+
+            services.AddAllTypes<IEventsSubscriber>(lifetime: ServiceLifetime.Singleton);
+            //services.AddSingleton<IOnInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            //services.AddSingleton<IOnSubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
+            //services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
         }
 
         private void AddMasaWebService(IServiceCollection services, string remoteAddress = null)

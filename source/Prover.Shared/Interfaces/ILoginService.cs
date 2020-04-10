@@ -4,20 +4,33 @@ using System.Threading.Tasks;
 
 namespace Prover.Shared.Interfaces
 {
+    public interface IUser
+    {
+        string Id { get; set; }
+        string EmployeeName { get; set; }
+    }
+
     public interface ILoginService
     {
         Task<bool> Login(string username, string password = null);
         Task<bool> Login();
+        
         IObservable<bool> SignOn();
+        
         Task Logout();
+        
         IObservable<bool> LoggedIn { get; }
+        
         bool IsSignedOn { get; }
+        
+        IUser GetSignOnUser();
 
         Task<string> GetDisplayName<T>(T id);
+
     }
 
     public interface ILoginService<T> : ILoginService
-        where T : class
+        where T : IUser
     {
         T User { get; }
         Task<string> GetLoginDetails();

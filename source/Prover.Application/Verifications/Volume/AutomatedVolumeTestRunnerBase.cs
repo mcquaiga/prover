@@ -15,7 +15,7 @@ using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
-namespace Prover.Application.VerificationManagers.Volume
+namespace Prover.Application.Verifications.Volume
 {
     public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable
     {

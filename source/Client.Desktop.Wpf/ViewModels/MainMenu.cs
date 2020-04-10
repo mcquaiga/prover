@@ -8,26 +8,6 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    //internal static class MainMenuItems
-    //{
-    //    //public static IMainMenuItem VerificationsMainMenu
-    //    //    => new MainMenuItem("New QA Test Run", , order: 1,
-    //    //        openFunc: async s =>
-    //    //        {
-    //    //            await s.DialogManager.Show<NewTestRunViewModel>();
-    //    //        });
-
-    //    /*         
-    //        public static IMainMenuItem CertificatesMainMenu
-    //       => new MainMenu("Certificates", PackIconKind.ClipboardText, order: 4,
-    //       openFunc: s => s.ChangeView<ClientManagerViewModel>());
-           
-    //       public static IMainMenuItem ClientsMainMenu
-    //       => new MainMenu("Clients", PackIconKind.User, order: 2,
-    //       openFunc: s => s.ChangeView<ClientManagerViewModel>());
-    //     */
-    //}
-
     public class TestManagerFactoryCoordinator
     {
         public NewTestRunViewModel TestRunViewModel { get; }
@@ -59,7 +39,8 @@ namespace Client.Desktop.Wpf.ViewModels
         {
             OpenCommand = ReactiveCommand.CreateFromObservable(() =>
             {
-                return Observable.StartAsync(async () => await screenManager.DialogManager.Show<NewTestRunViewModel>());
+                screenManager.DialogManager.Show<NewTestRunViewModel>();
+                return Observable.Return(Unit.Default);
             });
         }
 

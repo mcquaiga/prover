@@ -2,6 +2,7 @@
     x:Class="Client.Desktop.Wpf.Views.Verifications.Details.Corrections.CorrectionTestPointView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Client.Desktop.Wpf.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
@@ -29,6 +30,7 @@
             x:Name="TestItems"
             Grid.Row="1"
             DataContext="{Binding}">
+            <ItemsControl.Resources />
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" />
@@ -40,9 +42,17 @@
                         Padding="4"
                         BorderThickness="0,0,0,0"
                         Style="{StaticResource SubSectionDividerBorder}">
-                        <reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}" />
+                        <reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}">
+                            <reactiveUi:ViewModelViewHost.Resources>
+                                <Style TargetType="controls:ValueDescriptionControl">
+                                    <Setter Property="LabelFontSize" Value="12" />
+                                    <Setter Property="ValueFontSize" Value="16" />
+                                </Style>
+                            </reactiveUi:ViewModelViewHost.Resources>
+                        </reactiveUi:ViewModelViewHost>
                     </Border>
                 </DataTemplate>
+
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 

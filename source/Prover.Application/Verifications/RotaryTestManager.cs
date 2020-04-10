@@ -7,11 +7,10 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
-namespace Prover.Application.VerificationManagers
+namespace Prover.Application.Verifications
 {
     public sealed class RotaryTestManager : TestManagerBase, ITestManager
     {
-        private readonly IActionsExecutioner _actionsExecutioner;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IDeviceSessionManager _deviceManager;
         private readonly ILogger _logger;
@@ -23,12 +22,10 @@ namespace Prover.Application.VerificationManagers
             EvcVerificationViewModel verificationViewModel,
             IVerificationTestService verificationService,
             IVolumeTestManager volumeTestManager,
-            IActionsExecutioner actionsExecutioner,
             ICorrectionTestsManager correctionVerificationRunner) : base(logger, screenManager, verificationService, verificationViewModel)
         {
             _logger = logger;
             _deviceManager = deviceSessionManager;
-            _actionsExecutioner = actionsExecutioner;
 
             VolumeTestManager = volumeTestManager;
             CorrectionVerifications = correctionVerificationRunner;

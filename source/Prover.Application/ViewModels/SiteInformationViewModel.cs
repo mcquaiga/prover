@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
-using System.Threading;
 using Devices.Core.Interfaces;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
@@ -15,22 +13,26 @@ namespace Prover.Application.ViewModels
         public ReactiveCommand<string, string> GetUser;
 
         public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel,
-            ILoginService loginService = null) : base(device)
+                ILoginService loginService = null) : base(device)
         {
             _loginService = loginService;
             _startTestDate = DateTime.Now;
 
             Test = verificationViewModel;
 
-            //if (loginService != null)
-            //{
-            //    //loginService.
-            //    GetUser = ReactiveCommand.CreateFromTask<string, string>(loginService.GetDisplayName);
-                
-            //    this.WhenAnyValue(x => x.Test.EmployeeId).InvokeCommand(GetUser);
+            GetUser = ReactiveCommand.CreateFromTask<string, string>(async id =>
+            {
+                if (loginService == null)
+                    return id;
 
-            //    GetUser.ToPropertyEx(this, x => x.EmployeeName);
-            //}
+                return await loginService.GetDisplayName(id);
+            });
+
+            this.WhenAnyValue(x => x.Test.EmployeeId)
+                .InvokeCommand(GetUser);
+
+            GetUser.ToPropertyEx(this, x => x.EmployeeName, Test.EmployeeId);
+            //loginService?.GetDisplayName(Test.EmployeeId) ?? Test.EmployeeId);
         }
 
         public EvcVerificationViewModel Test { get; }

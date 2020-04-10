@@ -6,7 +6,7 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.VerificationManagers.CustomActions
+namespace Prover.Application.Verifications.Events
 {
 
     public abstract class ItemFileValidation<TValue> : IVerificationAction
@@ -17,8 +17,6 @@ namespace Prover.Application.VerificationManagers.CustomActions
         {
             _deviceManager = deviceManager;
         }
-
-        public abstract VerificationTestStep RunOnStep { get; }
 
         public async Task<bool> Execute(EvcVerificationViewModel verification)
         {

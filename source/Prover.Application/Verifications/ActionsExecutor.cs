@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.VerificationManagers
+namespace Prover.Application.Verifications
 {
     public class VerificationActionsExecutor : IActionsExecutioner
     {

@@ -34,10 +34,6 @@ namespace Client.Desktop.Wpf.Views.Verifications.Details
 
                 this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Content).DisposeWith(d);
 
-                //this.WhenAnyValue(x => x.ViewModel.GetUser)
-                //    .SelectMany(x => x.Execute(ViewModel.Test.EmployeeId))
-                //    .Subscribe();
-
                 SetWithViewModel(ViewModel);
 
                 //Pulse Outputs

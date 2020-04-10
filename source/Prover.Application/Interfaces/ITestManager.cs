@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Prover.Application.VerificationManagers;
+using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
