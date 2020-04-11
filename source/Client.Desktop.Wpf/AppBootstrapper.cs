@@ -57,27 +57,28 @@ namespace Client.Desktop.Wpf
         }
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
-            Host.CreateDefaultBuilder()
-                .ConfigureLogging((host, log) =>
-                {
-                    //log.AddEventLog();
-                    log.AddDebug();
-                    log.Services.AddSplatLogging();
-#if DEBUG
+                Host.CreateDefaultBuilder()
+                    .ConfigureLogging((host, log) =>
+                    {
+                        log.Services.AddSplatLogging();
 
-#endif
-                })
-                .ConfigureServices((host, services) =>
-                {
-                    booter.AddServices(services, host);
-                    host.ConfigureModules(services);
-                })
-                .Build();
+                        if (host.HostingEnvironment.IsProduction()) log.AddEventLog();
+
+                        if (host.HostingEnvironment.IsProduction() == false) log.AddDebug();
+                    })
+                    .ConfigureServices((host, services) =>
+                    {
+                        booter.AddServices(services, host);
+                        host.ConfigureModules(services);
+                    })
+                    .Build();
 
         private async Task ExecuteStartUpTasks()
         {
-            var startTasks = AppHost.Services.GetServices<IStartupTask>().ToObservable()
-                .ForEachAsync(async t => await t.ExecuteAsync(CancellationTokenSource.Token));
+            var startTasks = AppHost.Services.GetServices<IStartupTask>()
+                                    .ToObservable()
+                                    .ForEachAsync(async t =>
+                                            await t.ExecuteAsync(CancellationTokenSource.Token));
 
             await startTasks;
 

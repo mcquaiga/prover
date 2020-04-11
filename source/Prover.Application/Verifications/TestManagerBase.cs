@@ -8,7 +8,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
-namespace Prover.Application.VerificationManagers
+namespace Prover.Application.Verifications
 {
     public abstract class TestManagerBase : RoutableViewModelBase
     {

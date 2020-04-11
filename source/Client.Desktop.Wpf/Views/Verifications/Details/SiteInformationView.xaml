@@ -161,7 +161,7 @@
                         Template="{StaticResource ValueLabelControlTemplate}" />
                     <ContentControl
                         x:Name="EmployeeIdTextControl"
-                        Tag="Employee #"
+                        Tag="Employee"
                         Template="{StaticResource ValueLabelControlTemplate}" />
 
                 </UniformGrid>

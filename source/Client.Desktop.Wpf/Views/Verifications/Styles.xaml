@@ -35,7 +35,7 @@
 
     <Style x:Key="PrimaryTestHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
-        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="4" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -44,7 +44,7 @@
 
     <Style x:Key="SecondaryTestHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{StaticResource SecondaryTextColor}" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="16" />
         <Setter Property="FontWeight" Value="Regular" />
         <Setter Property="Margin" Value="2,4,0,0" />
         <Setter Property="VerticalAlignment" Value="Center" />

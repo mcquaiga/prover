@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.VerificationManagers.Volume;
+using Prover.Application.Verifications.Volume;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

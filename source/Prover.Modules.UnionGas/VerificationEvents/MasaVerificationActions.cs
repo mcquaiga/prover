@@ -9,29 +9,28 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Shared.Interfaces;
-using ReactiveUI;
 
-namespace Prover.Modules.UnionGas.VerificationActions
+namespace Prover.Modules.UnionGas.VerificationEvents
 {
-    internal class MasaVerificationActions : IOnInitializeAction, IOnSubmitAction, IDisposable
+    internal class MasaVerificationActions : IEventsSubscriber, IDisposable
     {
         private readonly MeterInventoryNumberValidator _companyNumberValidator;
         private readonly IDeviceSessionManager _deviceManager;
         private readonly ILogger<MasaVerificationActions> _logger;
         private readonly ILoginService<EmployeeDTO> _loginService;
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
-        private SerialDisposable _disposer = new SerialDisposable();
+        private readonly SerialDisposable _disposer = new SerialDisposable();
 
         public MasaVerificationActions(
-            MeterInventoryNumberValidator companyNumberValidator,
-            ILoginService<EmployeeDTO> loginService,
-            IDeviceSessionManager deviceManager,
-            ILogger<MasaVerificationActions> logger = null)
+                ILogger<MasaVerificationActions> logger,
+                MeterInventoryNumberValidator companyNumberValidator,
+                ILoginService<EmployeeDTO> loginService,
+                IDeviceSessionManager deviceManager)
         {
+            _logger = logger ?? NullLogger<MasaVerificationActions>.Instance;
             _companyNumberValidator = companyNumberValidator;
             _loginService = loginService;
             _deviceManager = deviceManager;
-            _logger = logger ?? NullLogger<MasaVerificationActions>.Instance;
         }
 
         public void Dispose()
@@ -63,8 +62,25 @@ namespace Prover.Modules.UnionGas.VerificationActions
 
         public async Task OnSubmit(EvcVerificationViewModel verification)
         {
-            await Task.CompletedTask;
             _disposer.Disposable = Disposable.Empty;
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public void SubscribeToEvents()
+        {
+            Application.Verifications.VerificationEvents.OnInitialize.Subscribe(async e =>
+            {
+                await OnInitialize(e.Input);
+            }).DisposeWith(_cleanup);
+
+            Application.Verifications.VerificationEvents.OnSubmit.Subscribe(async e =>
+            {
+                await OnSubmit(e.Input);
+            }).DisposeWith(_cleanup);
+
+            Application.Verifications.VerificationEvents.CorrectionTest.OnStart.Subscribe(e => e.SetOutput(e.Input));
+            Application.Verifications.VerificationEvents.CorrectionTest.OnFinish.Subscribe(e => e.SetOutput(e.Input));
         }
     }
 }

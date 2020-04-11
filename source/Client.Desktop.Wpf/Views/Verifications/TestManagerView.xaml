@@ -9,13 +9,13 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:verificationManagers="clr-namespace:Prover.Application.VerificationManagers;assembly=Prover.Application"
+    xmlns:verifications="clr-namespace:Prover.Application.Verifications;assembly=Prover.Application"
     x:Name="TestManager"
-    d:DataContext="{d:DesignInstance verificationManagers:RotaryTestManager,
+    d:DataContext="{d:DesignInstance verifications:RotaryTestManager,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="verificationManagers:RotaryTestManager"
+    x:TypeArguments="verifications:RotaryTestManager"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="CorrectionsTestDataTemplate">
@@ -42,63 +42,72 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ToolbarControl">
-            <materialDesign:ColorZone
-                Grid.Row="0"
-                Mode="PrimaryLight"
-                Style="{StaticResource SubheaderToolbarColorZoneStyle}">
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="QA TEST RUN" />
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        x:Name="EditTestToolBarControl"
-                        Grid.Column="1"
+
+                <WrapPanel
+                    x:Name="EditTestToolBarControl"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="SaveButton"
                         HorizontalAlignment="Left"
-                        Orientation="Horizontal">
+                        Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Content="{materialDesign:PackIcon ContentSave}"
+                        Style="{StaticResource MaterialDesignIconButton}" />
 
-                        <Button
-                            x:Name="SubmitTestButton"
-                            Width="Auto"
-                            Margin="25,0,5,0"
-                            HorizontalAlignment="Right"
-                            Command="{Binding ViewModel.SubmitTest, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Content="SUBMIT TEST"
-                            Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+                    <Button
+                        x:Name="PrintButton"
+                        HorizontalAlignment="Left"
+                        Command="{Binding ViewModel.PrintTestReport, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Content="{materialDesign:PackIcon Printer}"
+                        Style="{StaticResource MaterialDesignIconButton}" />
+                    <Button
+                        x:Name="SubmitTestButton"
+                        Width="Auto"
+                        Margin="25,0,5,0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding ViewModel.SubmitTest, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        Content="SUBMIT TEST"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}" />
 
-                        <Button
-                            x:Name="SaveButton"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Content="{materialDesign:PackIcon ContentSave}"
-                            Style="{StaticResource MaterialDesignIconButton}" />
 
-                        <Button
-                            x:Name="PrintButton"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ViewModel.PrintTestReport, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                            Content="{materialDesign:PackIcon Printer}"
-                            Style="{StaticResource MaterialDesignIconButton}" />
 
-                    </StackPanel>
+                </WrapPanel>
 
-                </Grid>
-            </materialDesign:ColorZone>
+            </Grid>
+
 
         </DataTemplate>
     </UserControl.Resources>
 
-    <DockPanel>
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <ContentControl
             x:Name="TestToolBarContent"
+            Grid.Row="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
             ContentTemplate="{StaticResource ToolbarControl}"
-            DataContext="{Binding}"
-            DockPanel.Dock="Top" />
-        <reactiveUi:ViewModelViewHost x:Name="TestViewContent" DockPanel.Dock="Bottom" />
-    </DockPanel>
+            DataContext="{Binding}" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="TestViewContent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" />
+    </Grid>
 
 
 </reactiveUi:ReactiveUserControl>

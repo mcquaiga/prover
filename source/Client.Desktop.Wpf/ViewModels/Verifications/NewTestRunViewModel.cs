@@ -80,10 +80,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
             //var changeScreens = ReactiveCommand.CreateFromTask<ITestManager>(async vm => await screenManager.ChangeView(vm));
             StartTestCommand
-                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(async vm =>
-                {
-                    await screenManager.ChangeView(vm);
-                }));          
+                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));          
         }
 
         public LocalSettings Selected => ApplicationSettings.Local;

@@ -26,7 +26,7 @@
     <PackageReference Include="ReactiveUI.Validation" Version="1.4.13" />
     <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Reactive" Version="4.3.2" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 

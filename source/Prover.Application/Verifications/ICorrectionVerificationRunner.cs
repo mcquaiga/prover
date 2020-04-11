@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.VerificationManagers
+namespace Prover.Application.Verifications
 {
     public interface ICorrectionTestsManager
     {

@@ -18,7 +18,7 @@ using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Models;
-using Prover.Modules.UnionGas.VerificationActions;
+using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 

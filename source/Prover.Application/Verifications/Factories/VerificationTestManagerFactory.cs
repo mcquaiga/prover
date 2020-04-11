@@ -1,28 +1,30 @@
 using System;
+using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
-using Prover.Application.VerificationManagers.Corrections;
+using Prover.Application.Verifications.Corrections;
+using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 
-namespace Prover.Application.VerificationManagers.Factories
+namespace Prover.Application.Verifications.Factories
 {
     public class VerificationTestManagerFactory : ITestManagerFactory
     {
         private readonly ILogger<VerificationTestManagerFactory> _logger;
 
         private readonly IVerificationTestService _verificationService;
+        private readonly IEnumerable<IEventsSubscriber> _verificationEventsSubscribers;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager> _volumeTestManagerFactory;
         private readonly Func<EvcVerificationViewModel, ICorrectionTestsManager> _correctionsRunnerFactory;
-        private readonly IActionsExecutioner _actionExecutioner;
         private readonly IDeviceSessionManager _deviceManager;
         private readonly Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> _testManagerFactory;
 
         public VerificationTestManagerFactory(
             ILogger<VerificationTestManagerFactory> logger,
             IVerificationTestService verificationService,
-            IActionsExecutioner actionExecutioner,
             IDeviceSessionManager deviceManager,
             Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager> testManagerFactory,
             Func<EvcVerificationViewModel, IVolumeTestManager> volumeTestManagerFactory,
@@ -34,7 +36,7 @@ namespace Prover.Application.VerificationManagers.Factories
             _testManagerFactory = testManagerFactory;
             _volumeTestManagerFactory = volumeTestManagerFactory;
             _correctionsRunnerFactory = correctionsRunnerFactory ?? (test => new StabilizerCorrectionTestManager(deviceManager));
-            _actionExecutioner = actionExecutioner;
+           
             _deviceManager = deviceManager;
         }
 
@@ -43,7 +45,7 @@ namespace Prover.Application.VerificationManagers.Factories
             var device = await _deviceManager.StartSession(deviceType);
             var testViewModel = _verificationService.NewVerification(device);
 
-            await _actionExecutioner.RunActionsOn<IOnInitializeAction>(testViewModel);
+            await VerificationEvents.OnInitialize.Publish(testViewModel);
 
             await _deviceManager.Disconnect();
 

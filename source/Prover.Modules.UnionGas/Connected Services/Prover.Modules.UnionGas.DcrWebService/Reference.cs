@@ -7,6 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using System.ServiceModel;
+using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas.DcrWebService
 {
@@ -16,7 +17,7 @@ namespace Prover.Modules.UnionGas.DcrWebService
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EmployeeDTO", Namespace="http://tempuri.org/")]
-    public partial class EmployeeDTO : object
+    public partial class EmployeeDTO : object, IUser
     {
         
         private string IdField;
