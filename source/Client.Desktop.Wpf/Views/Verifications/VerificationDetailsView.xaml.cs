@@ -6,7 +6,7 @@ using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     ///     Interaction logic for EditTestView.xaml

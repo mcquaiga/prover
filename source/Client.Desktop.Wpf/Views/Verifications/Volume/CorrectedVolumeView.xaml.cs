@@ -4,7 +4,7 @@ using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Volume;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
+namespace Client.Desktop.Wpf.Views.Verifications.Volume
 {
     /// <summary>
     /// Interaction logic for UncorrectedVolumeView.xaml

@@ -13,7 +13,7 @@ using Prover.Application.ViewModels;
 using Prover.Shared;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     ///     Interaction logic for SiteInformationView.xaml

@@ -25,7 +25,7 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
                 if (tempItem != null && temperatureLive != null)
                 {
                     TemperatureTargetValueTextBlock.Text = temperatureLive.TargetValue.ToString(CultureInfo.InvariantCulture);
-                    TemperatureStableProgressBar.Maximum = temperatureLive.Stabilizer.TargetThreshold.ToDouble();
+                    //TemperatureStableProgressBar.Maximum = temperatureLive.Stabilizer.TargetThreshold.ToDouble();
 
                     temperatureLive.StatusUpdates
                         .Select(i => i.Value.DecimalValue()?.ToString() ?? "")
@@ -46,11 +46,11 @@ namespace Client.Desktop.Wpf.Views.Verifications.Dialogs
                         .BindTo(this, view => view.TemperatureAverageTextBlock.Text)
                         .DisposeWith(d);
 
-                    temperatureLive.StatusUpdates
-                        .Select(i => i.Stabilizer.Progress().ToString(CultureInfo.InvariantCulture))
-                        .ObserveOn(RxApp.MainThreadScheduler)
-                        .BindTo(this, view => view.TemperatureStableProgressBar.Value)
-                        .DisposeWith(d);
+                    //temperatureLive.StatusUpdates
+                    //    .Select(i => i.Stabilizer.Progress().ToString(CultureInfo.InvariantCulture))
+                    //    .ObserveOn(RxApp.MainThreadScheduler)
+                    //    .BindTo(this, view => view.TemperatureStableProgressBar.Value)
+                    //    .DisposeWith(d);
                 }
                 else
                 {

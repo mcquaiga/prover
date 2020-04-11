@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details.DriveTypes
+namespace Client.Desktop.Wpf.Views.Verifications.Volume.Rotary
 {
     /// <summary>
     /// Interaction logic for RotaryMeterView.xaml

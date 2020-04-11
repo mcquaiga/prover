@@ -1,5 +1,5 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Desktop.Wpf.Views.Verifications.Details.VerificationDetailsView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.VerificationDetailsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Client.Desktop.Wpf.Controls"
@@ -16,31 +16,36 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="controls:ValueDescriptionControl">
-            <Setter Property="LabelFontSize" Value="12" />
-            <Setter Property="ValueFontSize" Value="16" />
+            <Setter Property="LabelFontSize" Value="16" />
+            <Setter Property="ValueFontSize" Value="20" />
         </Style>
     </UserControl.Resources>
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Viewbox DockPanel.Dock="Left" Stretch="Uniform">
+        <Viewbox
+            Width="Auto"
+            DockPanel.Dock="Left"
+            Stretch="Uniform">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="5" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
 
 
-        <Viewbox HorizontalAlignment="Stretch" DockPanel.Dock="Right">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Viewbox
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Stretch="Uniform">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ItemsControl
-                    x:Name="TestPointItems"
-                    Grid.Row="0"
-                    DataContext="{Binding}">
+
+                <ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
+                            <UniformGrid HorizontalAlignment="Stretch" Rows="1" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -48,9 +53,9 @@
                             <Border
                                 x:Name="TestPointDataTemplate"
                                 Padding="4"
-                                BorderThickness="0,0,1,0"
+                                BorderThickness="0"
                                 Style="{StaticResource SubSectionDividerBorder}">
-                                <Grid>
+                                <Grid HorizontalAlignment="Stretch">
                                     <ContentControl
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
@@ -62,18 +67,20 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <Border
-                    Grid.Row="1"
-                    Padding="4"
-                    Style="{StaticResource SubSectionDividerBorder}">
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
-                            <ContentControl x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                <Viewbox Grid.Row="1">
+                    <Border Padding="2" Style="{StaticResource SubSectionDividerBorder}">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
+                                <ContentControl x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                            </StackPanel>
+
+                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
                         </StackPanel>
-                        <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
-                    </StackPanel>
-                </Border>
+                    </Border>
+                </Viewbox>
+
             </Grid>
         </Viewbox>
 

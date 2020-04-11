@@ -3,7 +3,7 @@ using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details.Volume
+namespace Client.Desktop.Wpf.Views.Verifications.Volume.Rotary
 {
     /// <summary>
     /// Interaction logic for RotaryVolumeTestView.xaml

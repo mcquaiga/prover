@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Resources.xaml" />
+                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Styles/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -91,128 +91,126 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <materialDesign:ColorZone Grid.Row="0" Style="{StaticResource SubheaderToolbarColorZoneStyle}">
-                    <Grid HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
 
-                        <ToggleButton
+                    <!--<ToggleButton
                             x:Name="MenuToggleButton"
                             Grid.Column="0"
                             Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
                             CommandParameter="{x:Static Dock.Left}"
-                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
 
-                        <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
-                        <Viewbox
-                            Grid.Column="1"
-                            Margin="0,2"
-                            HorizontalAlignment="Left">
-                            <Viewbox.Resources>
-                                <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
-                                    <Setter Property="Margin" Value="2,0" />
-                                    <Setter Property="Width" Value="Auto" />
-                                    <Setter Property="Height" Value="Auto" />
+                    <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
+                    <Viewbox
+                        Grid.Column="1"
+                        Margin="0,2"
+                        HorizontalAlignment="Left">
+                        <Viewbox.Resources>
+                            <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                                <Setter Property="Margin" Value="2,0" />
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Height" Value="Auto" />
+                            </Style>
+                        </Viewbox.Resources>
+                        <ItemsControl
+                            x:Name="DeviceTypes"
+                            Grid.Row="1"
+                            d:DataContext="{d:DesignInstance interfaces:DeviceType,
+                                                             IsDesignTimeCreatable=False}"
+                            DataContext="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel
+                                        Margin="15,0"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Margin="4,0"
+                                        Command="{Binding ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
+                                        CommandParameter="{Binding}"
+                                        Content="{Binding Name}"
+                                        FontSize="16" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </Viewbox>
+
+                    <Viewbox Grid.Column="2">
+
+                        <reactiveUi:ViewModelViewHost
+                            x:Name="ToolbarViewHost"
+                            Grid.Column="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center" />
+                    </Viewbox>
+
+                    <StackPanel
+                        Grid.Column="3"
+                        Margin="0"
+                        Orientation="Horizontal">
+
+                        <TextBlock>
+                            <TextBlock.Resources>
+                                <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="{x:Type TextBlock}">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontWeight" Value="Thin" />
+
                                 </Style>
-                            </Viewbox.Resources>
-                            <ItemsControl
-                                x:Name="DeviceTypes"
-                                Grid.Row="1"
-                                d:DataContext="{d:DesignInstance interfaces:DeviceType,
-                                                                 IsDesignTimeCreatable=False}"
-                                DataContext="{Binding}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel
-                                            Margin="15,0"
-                                            VerticalAlignment="Center"
-                                            Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button
-                                            Margin="4,0"
-                                            Command="{Binding ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
-                                            CommandParameter="{Binding}"
-                                            Content="{Binding Name}"
-                                            FontSize="16" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                        </Viewbox>
-
-                        <Viewbox Grid.Column="2">
-
-                            <reactiveUi:ViewModelViewHost
-                                x:Name="ToolbarViewHost"
-                                Grid.Column="2"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center" />
-                        </Viewbox>
-
-                        <StackPanel
-                            Grid.Column="3"
-                            Margin="15,5"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Stretch"
-                            Orientation="Horizontal">
-
-                            <TextBlock>
-                                <TextBlock.Resources>
-                                    <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="{x:Type TextBlock}">
-                                        <Setter Property="HorizontalAlignment" Value="Left" />
-                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                        <Setter Property="FontWeight" Value="Thin" />
-
-                                    </Style>
-                                </TextBlock.Resources>
-                                <TextBlock Text="Selected " />
-                                <TextBlock x:Name="SelectedCountTextBlock" />
-                                <TextBlock Text=" of " />
-                                <TextBlock x:Name="TestCountTextBlock" />
-                            </TextBlock>
+                            </TextBlock.Resources>
+                            <TextBlock Text="Selected " />
+                            <TextBlock x:Name="SelectedCountTextBlock" />
+                            <TextBlock Text=" of " />
+                            <TextBlock x:Name="TestCountTextBlock" />
+                        </TextBlock>
 
 
-                            <materialDesign:PopupBox
-                                Margin="20,2,8,2"
-                                PlacementMode="BottomAndAlignLeftEdges"
-                                PopupMode="Click"
-                                StaysOpen="False">
-                                <materialDesign:PopupBox.Resources>
-                                    <Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
-                                        <Setter Property="FontSize" Value="18" />
-                                        <Setter Property="Margin" Value="8" />
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Setter Property="VerticalAlignment" Value="Center" />
-                                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <materialDesign:PopupBox
+                            Margin="20,2,8,2"
+                            PlacementMode="BottomAndAlignLeftEdges"
+                            PopupMode="Click"
+                            StaysOpen="False">
+                            <materialDesign:PopupBox.Resources>
+                                <Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
+                                    <Setter Property="FontSize" Value="18" />
+                                    <Setter Property="Margin" Value="8" />
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
 
-                                    </Style>
-                                </materialDesign:PopupBox.Resources>
-                                <StackPanel>
-                                    <CheckBox
-                                        x:Name="IncludeExportedCheckBox"
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                                        Content="Include Exported" />
-                                    <CheckBox
-                                        x:Name="IncludeArchivedCheckBox"
-                                        CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                                        Content="Include Archived" />
-                                </StackPanel>
-                            </materialDesign:PopupBox>
-                        </StackPanel>
+                                </Style>
+                            </materialDesign:PopupBox.Resources>
+                            <StackPanel>
+                                <CheckBox
+                                    x:Name="IncludeExportedCheckBox"
+                                    CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                    Content="Include Exported" />
+                                <CheckBox
+                                    x:Name="IncludeArchivedCheckBox"
+                                    CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                    Content="Include Archived" />
+                            </StackPanel>
+                        </materialDesign:PopupBox>
+                    </StackPanel>
 
 
-                    </Grid>
-                </materialDesign:ColorZone>
+                </Grid>
+
 
                 <local:VerificationsGrid
                     x:Name="VerificationsGrid"

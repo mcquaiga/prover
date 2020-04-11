@@ -7,8 +7,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources.xaml" />
-                <ResourceDictionary Source="Dialogs/DialogWindowStyle.xaml" />
+
+
+                <ResourceDictionary Source="Styles/Resources.xaml" />
+                <ResourceDictionary Source="Styles/VerificationStyles.xaml" />
+                <ResourceDictionary Source="Styles/DialogWindowStyle.xaml" />
+                <ResourceDictionary Source="Styles/DrawerHost.CustomTemplate.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

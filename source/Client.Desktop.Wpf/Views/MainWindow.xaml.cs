@@ -20,15 +20,16 @@ namespace Client.Desktop.Wpf.Views
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, x => x.AppTitle, x => x.MainWindowView.Title).DisposeWith(d);
-                
                 this.OneWayBind(ViewModel, x => x.ScreenManager.Router, x => x.RoutedViewHost.Router).DisposeWith(d);
-                //this.OneWayBind(ViewModel, x => x.ScreenManager.DialogManager.DialogContent, x => x.DialogHost.DialogContent).DisposeWith(d);
-                //this.OneWayBind(ViewModel, x => x.ScreenManager.DialogManager.DialogContent, v => v.DialogHost.IsOpen, dialog => dialog != null).DisposeWith(d);
-
                 this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource).DisposeWith(d);
+                
+                this.OneWayBind(ViewModel, vm => vm.MessageQueue, x => x.NotificationSnackBar.MessageQueue).DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
                 this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);
+                
+                
+                //this.BindCommand(ViewModel, x => x., x => x.GoHomeButton).DisposeWith(d);
                 //this.BindCommand(ViewModel, x => x.OpenDialog, x => x.ShowDialogButton).DisposeWith(d);
 
             });
@@ -38,19 +39,18 @@ namespace Client.Desktop.Wpf.Views
 
         private void RegisterNotificationInteractions()
         {
-            NotificationInteractions.SnackBarMessage.RegisterHandler(async message =>
+            NotificationInteractions.SnackBarMessage.RegisterHandler(message =>
             {
+                NotificationSnackBar.MessageQueue.Enqueue(message.Input);
+                //NotificationSnackBar.IsActive = true;
 
-                NotificationSnackBar.Message.Content = message.Input;
-                NotificationSnackBar.IsActive = true;
-
-                Observable.Timer(TimeSpan.FromSeconds(2))
-                    .ObserveOn(RxApp.MainThreadScheduler)
-                    .Subscribe(_ =>
-                    {
-                        NotificationSnackBar.IsActive = false;
-                        NotificationSnackBar.Message.Content = string.Empty;
-                    });
+                //Observable.Timer(TimeSpan.FromSeconds(2))
+                //    .ObserveOn(RxApp.MainThreadScheduler)
+                //    .Subscribe(_ =>
+                //    {
+                //        NotificationSnackBar.IsActive = false;
+                //        NotificationSnackBar.Message.Content = string.Empty;
+                //    });
 
                 message.SetOutput(Unit.Default);
             });
