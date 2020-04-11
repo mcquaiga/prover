@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Shared.Interfaces;
 using RJCP.IO.Ports;
 
-namespace Prover.Application.Services
+namespace Prover.Application.Hardware
 {
     public interface IAppliedInputVolume
     {

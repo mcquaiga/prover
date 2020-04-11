@@ -47,9 +47,9 @@ namespace Prover.Shared.Extensions
 
         public static bool IsBetween<T>(this T value, T absoluteLimit) where T : struct
         {
-            if (!typeof(T).Equals(typeof(int))
-                && !typeof(T).Equals(typeof(decimal))
-                && !typeof(T).Equals(typeof(double)))
+            if (typeof(T) != typeof(int)
+                    && typeof(T) != typeof(decimal)
+                    && typeof(T) != typeof(double))
             {
                 return false;
             }
@@ -70,5 +70,13 @@ namespace Prover.Shared.Extensions
         }
 
         #endregion
+    }
+
+    public static class DateTimeEx
+    {
+        public static bool BetweenThenAndNow(this DateTime dateTime, DateTime fromDate)
+        {
+            return dateTime.Between(fromDate, DateTime.Now);
+        }
     }
 }

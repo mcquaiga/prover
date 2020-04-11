@@ -9,6 +9,7 @@ using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
+using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume;

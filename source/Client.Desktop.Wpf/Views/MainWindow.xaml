@@ -17,15 +17,14 @@
     mc:Ignorable="d">
     <Window.Resources />
 
-    <Grid Margin="2">
+    <DockPanel Margin="2">
 
         <Grid
             Width="75"
-            MaxWidth="75"
-            Margin="0,0,60,0"
+            Margin="0,0,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Stretch"
-            ZIndex="8">
+            DockPanel.Dock="Left">
             <StackPanel
                 x:Name="NavigationBar"
                 HorizontalAlignment="Center"
@@ -58,24 +57,22 @@
 
         <rxui:RoutedViewHost
             x:Name="RoutedViewHost"
-            Margin="60,0,0,0"
-            HorizontalAlignment="Center"
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch" />
-        <!--
-            HorizontalAlignment="Center"
-            VerticalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
-        -->
+            DockPanel.Dock="Right" />
 
-        <Grid
+
+        <!--<Grid Visibility="Collapsed">
+            <materialDesign:Snackbar x:Name="NotificationSnackBar" Visibility="Collapsed" />
+        </Grid>-->
+        <!--
+            Height="Auto"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            d:LayoutOverrides="Width">
-            <materialDesign:Snackbar x:Name="NotificationSnackBar" />
-        </Grid>
-    </Grid>
+            DockPanel.Dock="Bottom"
+            d:LayoutOverrides="Width"
+        -->
+    </DockPanel>
 
 
 </rxui:ReactiveWindow>

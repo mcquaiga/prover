@@ -31,6 +31,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ExporterViewModel(IScreenManager screenManager,
             IVerificationTestService verificationTestService,
+            IEntityDataCache<EvcVerificationTest> cache,
             IDeviceRepository deviceRepository,
             IExportVerificationTest exporter,
             ILoginService<EmployeeDTO> loginService,
@@ -64,14 +65,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
 
-            var visibleItems = verificationTestService.FetchTests().Connect()
-                                                      .Filter(FilterByTypeCommand)
-                                                      .Filter(FilterIncludeExported,
-                                                              changeObservable.Select(x => Unit.Default))
-                                                      .Filter(FilterIncludeArchived,
-                                                              changeObservable.Select(x => Unit.Default))
-                                                      .Transform(x => new EvcVerificationProxy(
-                                                                     x, changeObservable, loginService, PrintReport));
+            var visibleItems = cache.Data().Connect()
+                                    .Filter(FilterByTypeCommand)
+                                    .Filter(FilterIncludeExported) //, changeObservable.Select(x => Unit.Default)
+                                    .Filter(FilterIncludeArchived) //, changeObservable.Select(x => Unit.Default))
+                                    .Transform(x => new EvcVerificationProxy(
+                                            x, changeObservable, loginService, PrintReport));
 
 
             visibleItems
@@ -99,7 +98,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             ToolbarViewModel = exporterToolbarFactory.Invoke(selectedItems);
 
-            verificationTestService.FetchTests().Connect()
+            cache.Data().Connect()
                                    .Filter(x => !string.IsNullOrEmpty(x.JobId))
                                    .DistinctValues(x => x.JobId)
                                    .Bind(out var jobIds)
