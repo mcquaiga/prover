@@ -20,6 +20,7 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.datagrid.xaml" />
+
         <ResourceDictionary Source="DrawerHost.CustomTemplate.xaml" />
         <ResourceDictionary>
 
@@ -57,6 +58,9 @@
                 x:Key="SecondaryTextColor"
                 Opacity=".85"
                 Color="DarkSlateGray" />
+
+            <SolidColorBrush x:Key="PassColour" Color="Green" />
+            <SolidColorBrush x:Key="FailColour" Color="DarkRed" />
 
             <Style TargetType="{x:Type Window}">
                 <Setter Property="FontSize" Value="16" />

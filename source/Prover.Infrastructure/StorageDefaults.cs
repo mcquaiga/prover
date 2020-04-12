@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
@@ -69,7 +70,7 @@ namespace Prover.Infrastructure
             if (db.CollectionExists("EvcVerificationTest"))
             {
                 //db.GetCollection<EvcVerificationTest>()..Exists(t => t.ExportedDateTime)
-                //db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ExportedDateTime);
+                db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.TestDateTime);
                 //db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ArchivedDateTime);
             }
 
@@ -78,9 +79,17 @@ namespace Prover.Infrastructure
 
         private static ILiteDatabase CreateDatabaseForLazy()
         {
-            var db = new LiteDatabase(ConnectionString);
-            ConfigureMappings(db);
-            return db;
+            try
+            {
+                var db = new LiteDatabase(ConnectionString);
+                ConfigureMappings(db);
+                return db;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
         

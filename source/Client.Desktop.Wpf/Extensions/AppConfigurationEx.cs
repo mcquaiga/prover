@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace Client.Desktop.Wpf.Extensions
@@ -13,19 +14,25 @@ namespace Client.Desktop.Wpf.Extensions
 
         public static string AppDataPath(this IConfiguration config)
         {
-            var path = Environment.ExpandEnvironmentVariables(config.GetValue<string>(AppDataKey));
+            var path = config.GetValueExpanded(AppDataKey);
 
             return !string.IsNullOrEmpty(path) ? path : DefaultAppData;
         }
 
         public static string LiteDbPath(this IConfiguration config)
         {
-            return Path.Combine(config.AppDataPath(), (config.GetValue<string>(LiteDbKey)));
+            return config.GetValueExpanded(LiteDbKey);
+            //return Path.Combine(config.AppDataPath(), (config.GetValue<string>(LiteDbKey)));
         }
 
         public static bool IsLiteDb(this IConfiguration config)
         {
             return !string.IsNullOrEmpty(config.GetValue<string>(LiteDbKey));
+        }
+
+        public static string GetValueExpanded(this IConfiguration config, string key)
+        {
+            return Environment.ExpandEnvironmentVariables(config.GetValue<string>(key));
         }
     }
 }

@@ -107,10 +107,13 @@ namespace Devices.Core.Repository
             if (Devices.Count == 0 && sources.Any())
             {
                 _logger.LogDebug("No device types found in cache. Searching local data sources...");
+
                 _deviceSourceCache.Clear();
+
                 await UpdateCachedTypes(sources);
 
-                if (_cacheSource != null) Save();
+                if (_cacheSource != null)
+                    Save();
             }
 
             return this;
@@ -134,8 +137,7 @@ namespace Devices.Core.Repository
 
             _logger.LogDebug($"Scanning data from {dataSource.GetType().Name}.");
 
-            await dataSource.GetDeviceTypes()
-                .ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
+            await dataSource.GetDeviceTypes().ForEachAsync(t => _deviceSourceCache.AddOrUpdate(t));
 
             return this;
         }

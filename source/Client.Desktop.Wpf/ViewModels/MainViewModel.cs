@@ -4,21 +4,19 @@ using System.Linq;
 using System.Reactive;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
+using Prover.Application.Dashboard;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    public class PopupMenuToolbar : ReactiveObject, IToolbarItem
-    {
-
-    }
-
     public class MainViewModel : ReactiveObject, IDisposable
     {
         private readonly IConfiguration _config;
 
-        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, IConfiguration config)
+        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, 
+                IConfiguration config
+                )
         {
             _config = config;
             ScreenManager = screenManager;
@@ -40,7 +38,6 @@ namespace Client.Desktop.Wpf.ViewModels
         public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> NavigateForward { get; }
         public ReactiveCommand<Unit, Unit> NavigateBack { get; }
         public ReactiveCommand<Unit, Unit> NavigateHome { get; }
-     
 
         public void Dispose()
         {
