@@ -21,7 +21,7 @@
     <DockPanel Margin="2">
 
         <Grid
-            Width="65"
+            Width="Auto"
             Margin="0,0,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Stretch"
@@ -78,17 +78,25 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <ItemsControl x:Name="ToolbarItemsControl" Margin="0,0,4,0">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            Orientation="Vertical"
-                            ZIndex="8" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <materialDesign:PopupBox
+                Margin="2,15"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                StaysOpen="True">
+                <ItemsControl x:Name="ToolbarItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+
+                            <StackPanel
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                Orientation="Vertical" />
+
+
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </materialDesign:PopupBox>
         </Grid>
 
         <rxui:RoutedViewHost

@@ -15,8 +15,7 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         private readonly IConfiguration _config;
 
-        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, 
-                IConfiguration config
+        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, IConfiguration config
                 )
         {
             _config = config;

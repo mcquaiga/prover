@@ -29,21 +29,20 @@
             </Style>
 
 
-            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
-            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
 
             <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="{x:Type TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontSize" Value="18" />
             </Style>
 
             <Style
                 x:Key="ValueTextBlockStyle"
-                BasedOn="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}"
                 TargetType="{x:Type TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontSize" Value="20" />
                 <Setter Property="Margin" Value="4" />
+                <Setter Property="FontWeight" Value="UltraLight" />
             </Style>
 
             <Style
@@ -53,8 +52,11 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="Margin" Value="0,2" />
+                <Setter Property="FontWeight" Value="Light" />
 
             </Style>
+
+
 
             <ControlTemplate x:Key="ValueLabelControlTemplate" TargetType="ContentControl">
 
@@ -63,21 +65,24 @@
                     HorizontalAlignment="Center"
                     Orientation="Vertical">
 
-                    <TextBlock x:Name="ValueTextBlock" Text="{TemplateBinding Content}">
-                        <TextBlock.Resources>
+                    <TextBlock
+                        x:Name="ValueTextBlock"
+                        Style="{StaticResource ValueTextBlockStyle}"
+                        Text="{TemplateBinding Content}">
+                        <!--<TextBlock.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignSubtitle1TextBlock}" TargetType="{x:Type TextBlock}">
                                 <Setter Property="HorizontalAlignment" Value="Center" />
                                 <Setter Property="FontSize" Value="24" />
                                 <Setter Property="Margin" Value="0" />
                             </Style>
-                        </TextBlock.Resources>
+                        </TextBlock.Resources>-->
 
                     </TextBlock>
                     <TextBlock
                         x:Name="LabelTextBlock"
                         Style="{StaticResource LabelFontStyle}"
                         Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}">
-                        <TextBlock.Resources>
+                        <!--<TextBlock.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignSubtitle2TextBlock}" TargetType="{x:Type TextBlock}">
                                 <Setter Property="HorizontalAlignment" Value="Center" />
                                 <Setter Property="FontSize" Value="18" />
@@ -85,7 +90,7 @@
                                 <Setter Property="Margin" Value="0" />
 
                             </Style>
-                        </TextBlock.Resources>
+                        </TextBlock.Resources>-->
 
                     </TextBlock>
                 </StackPanel>
@@ -109,7 +114,6 @@
                         Style="{StaticResource ValueTextBlockStyle}"
                         Text="{Binding ChannelType}" />
 
-
                     <TextBlock
                         x:Name="ChannelScalingTextBlock"
                         HorizontalAlignment="Center"
@@ -120,6 +124,18 @@
                 </StackPanel>
 
             </ControlTemplate>
+
+            <Style
+                x:Key="SectionHeaderTextBlockStyle"
+                BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}"
+                TargetType="{x:Type TextBlock}">
+
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="UltraLight" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+            </Style>
+
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -175,13 +191,23 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-
-                    <materialDesign:PackIcon
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <!--<materialDesign:PackIcon
                         Grid.Column="0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Kind="InformationOutline" />
+                        Kind="InformationOutline" />-->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionHeaderTextBlockStyle}"
+                        Text="Site Information" />
                     <UniformGrid
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         Columns="2">
@@ -207,8 +233,19 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Kind="TestTube" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <!--<materialDesign:PackIcon Kind="TestTube" />-->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionHeaderTextBlockStyle}"
+                        Text="Volume" />
                     <UniformGrid
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center">
@@ -235,8 +272,18 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Column="0" Kind="Gauge" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <!--<materialDesign:PackIcon Grid.Column="0" Kind="Gauge" />-->
+                    <TextBlock
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionHeaderTextBlockStyle}"
+                        Text="Pressure" />
                     <UniformGrid
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
@@ -272,14 +319,25 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <!--<materialDesign:PackIcon
                         Grid.Column="0"
                         Width="48"
                         Height="48"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Kind="Thermometer" />
+                        Kind="Thermometer" />-->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionHeaderTextBlockStyle}"
+                        Text="Temperature" />
                     <UniformGrid
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
@@ -305,8 +363,18 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Column="0" Kind="Pulse" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <!--<materialDesign:PackIcon Grid.Column="0" Kind="Pulse" />-->
+                    <TextBlock
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SectionHeaderTextBlockStyle}"
+                        Text="Pulse Outputs" />
                     <UniformGrid
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
