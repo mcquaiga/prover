@@ -18,9 +18,9 @@ namespace Client.Desktop.Wpf.Views.Dashboards
     /// <summary>
     /// Interaction logic for TestsByDayView.xaml
     /// </summary>
-    public partial class TestsByDayView
+    public partial class ValueItemView
     {
-        public TestsByDayView()
+        public ValueItemView()
         {
             InitializeComponent();
 

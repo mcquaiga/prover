@@ -6,6 +6,8 @@ using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.ViewModels;
@@ -19,15 +21,18 @@ namespace Prover.Application.Services
     {
         private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
         private readonly object _lock = new AsyncLock();
+        private readonly ILogger<VerificationTestService> _logger;
         private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
         private readonly IVerificationViewModelFactory _verificationViewModelFactory;
 
         public VerificationTestService(
+                ILogger<VerificationTestService> logger,
                 IAsyncRepository<EvcVerificationTest> verificationRepository,
                 IVerificationViewModelFactory verificationViewModelFactory,
                 Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
                 IScheduler scheduler = null)
         {
+            _logger = logger ?? NullLogger<VerificationTestService>.Instance;
             _verificationRepository = verificationRepository;
             _verificationViewModelFactory = verificationViewModelFactory;
             _evcVerificationTestFactory = evcVerificationTestFactory;
@@ -57,10 +62,7 @@ namespace Prover.Application.Services
 
         public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel) => VerificationMapper.MapViewModelToModel(viewModel);
 
-        public void Dispose()
-        {
-            _cleanup?.Dispose();
-        }
+        
 
         public async Task<EvcVerificationViewModel> GetViewModel(EvcVerificationTest verificationTest)
         {

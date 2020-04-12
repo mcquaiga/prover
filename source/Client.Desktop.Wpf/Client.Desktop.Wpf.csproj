@@ -158,6 +158,9 @@
     <Compile Update="Dialogs\TextDialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Dashboards\VerifiedDashboardView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -198,6 +201,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Dialogs\TextDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dashboards\VerifiedDashboardView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Verifications\Volume\PulseOutputsView.xaml">

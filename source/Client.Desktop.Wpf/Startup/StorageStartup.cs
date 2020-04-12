@@ -48,7 +48,8 @@ namespace Client.Desktop.Wpf.Startup
         private async Task StartCaches(CancellationToken cancellationToken)
         {
             await Observable.StartAsync(() => _provider.GetService<IDeviceRepository>()
-                                                       .Load(new[] {MiJsonDeviceTypeDataSource.Instance, RometJsonDeviceTypeDataSource.Instance}))
+                                                       .Load(new[] {RometJsonDeviceTypeDataSource.Instance, MiJsonDeviceTypeDataSource.Instance}))
+                            .LastAsync()
                             .Select(_ => Unit.Default)
                             .Concat(
                                     _provider.GetServices<ICacheManager>()
@@ -82,19 +83,19 @@ namespace Client.Desktop.Wpf.Startup
         {
             var oneWeekAgo = DateTime.Now.Subtract(TimeSpan.FromDays(7));
 
+            services.AddSingleton<DashboardFactory>();
             services.AddSingleton<DashboardViewModel>();
+            //services.AddValueDashboardItem("Verified Today", 
+            //        v => v.TestDateTime.IsToday() && v.Verified);
 
-            services.AddValueDashboardItem("Verified Today", 
-                    v => v.TestDateTime.IsToday() && v.Verified);
+            //services.AddValueDashboardItem("Failed Today",  
+            //        v => v.TestDateTime.IsToday() && !v.Verified);
 
-            services.AddValueDashboardItem("Failed Today",  
-                    v => v.TestDateTime.IsToday() && !v.Verified);
+            //services.AddValueDashboardItem("Verified This Week", 
+            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && v.Verified);
 
-            services.AddValueDashboardItem("Verified This Week", 
-                    v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && v.Verified);
-
-            services.AddValueDashboardItem("Failed This Week",  
-                    v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && !v.Verified);
+            //services.AddValueDashboardItem("Failed This Week",  
+            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && !v.Verified);
        
         }
 
@@ -125,8 +126,8 @@ namespace Client.Desktop.Wpf.Startup
 
         public static void AddValueDashboardItem(this IServiceCollection services, string title, Func<EvcVerificationTest, bool> predicate)
         {
-            services.AddSingleton<IDashboardValueViewModel>(c => 
-                    new ValueDashboardViewModel(c.GetRequiredService<IEntityDataCache<EvcVerificationTest>>(), title, predicate));
+            //services.AddSingleton<IDashboardValueViewModel>(c => 
+            //        new ValueDashboardViewModel(c.GetRequiredService<IEntityDataCache<EvcVerificationTest>>(), title, predicate));
         }
     }
 }

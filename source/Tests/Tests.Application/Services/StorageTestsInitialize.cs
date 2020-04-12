@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Honeywell.Core.Repository.JsonRepository;
 using Devices.Romet.Core.Repository;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -25,6 +28,10 @@ namespace Tests.Application.Services
 
         public static IDeviceRepository DeviceRepo { get; private set; }
 
+        public static ILogger Logger { get; } = new DebugLoggerProvider().CreateLogger("StorageTests");
+        public static ILoggerProvider LoggerProvider { get; } = new DebugLoggerProvider();
+        public static ILoggerFactory LoggerFactory { get; } = new LoggerFactory(new []{new DebugLoggerProvider()});
+
         [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
@@ -39,7 +46,6 @@ namespace Tests.Application.Services
             await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
 
             TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, DeviceRepo);
-
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");
         }
@@ -73,7 +79,7 @@ namespace Tests.Application.Services
         }
 
         public static VerificationTestService CreateVerificationTestService() =>
-            new VerificationTestService(TestRepo, new VerificationViewModelFactory(null), null);
+            new VerificationTestService(LoggerFactory.CreateLogger<VerificationTestService>(), TestRepo, new VerificationViewModelFactory(null), null);
 
         public static void DropCollection()
         {

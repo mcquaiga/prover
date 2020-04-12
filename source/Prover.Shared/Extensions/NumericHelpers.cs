@@ -71,12 +71,4 @@ namespace Prover.Shared.Extensions
 
         #endregion
     }
-
-    public static class DateTimeEx
-    {
-        public static bool BetweenThenAndNow(this DateTime dateTime, DateTime fromDate)
-        {
-            return dateTime.Between(fromDate, DateTime.Now);
-        }
-    }
 }
