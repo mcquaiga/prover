@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Windows.Forms;
 using Client.Desktop.Wpf.Startup;
 using Client.Desktop.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +34,8 @@ namespace Client.Desktop.Wpf.Extensions
                            .DefinedTypes
                            .Where(t => t.ImplementedInterfaces.Contains(typeof(IMainMenuItem)) && !t.IsAbstract);
 
-            foreach (var item in items) services.AddSingleton(typeof(IMainMenuItem), item);
+            foreach (var item in items) 
+                services.AddSingleton(typeof(IMainMenuItem), item);
         }
 
         public static void AddStartTask<T>(this IServiceCollection services) where T : class, IStartupTask

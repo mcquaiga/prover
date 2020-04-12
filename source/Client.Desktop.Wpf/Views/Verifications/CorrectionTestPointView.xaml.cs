@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using System.Reactive.Disposables;
-using System.Windows;
 using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     /// Interaction logic for CorrectionTestPointView.xaml

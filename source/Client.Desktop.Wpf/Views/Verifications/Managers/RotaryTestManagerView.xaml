@@ -1,0 +1,124 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Client.Desktop.Wpf.Views.Verifications.Managers.RotaryTestManagerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
+    xmlns:local="clr-namespace:Client.Desktop.Wpf.Views.Verifications"
+    xmlns:managers="clr-namespace:Client.Desktop.Wpf.Views.Verifications.Managers"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    xmlns:verifications="clr-namespace:Prover.Application.Verifications;assembly=Prover.Application"
+    x:Name="RotaryTestManager"
+    d:DataContext="{d:DesignInstance verifications:RotaryTestManager,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="verifications:RotaryTestManager"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="CorrectionsTestDataTemplate">
+            <Button
+                x:Name="DownloadButton"
+                Width="75"
+                Height="32"
+                Margin="8,-2,8,12"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:RotaryTestManagerView}}}"
+                CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                <materialDesign:PackIcon
+                    Width="48"
+                    Height="25"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Kind="Play" />
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
+            <StackPanel>
+                <Button
+                    Width="150"
+                    Margin="15,5"
+                    Command="{Binding ViewModel.VolumeTestManager.StartTest, RelativeSource={RelativeSource AncestorType={x:Type managers:RotaryTestManagerView}}}"
+                    Content="Run Volume Test"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ToolbarControl">
+            <UniformGrid
+                MinHeight="250"
+                Margin="0,8"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Columns="1">
+                <UniformGrid.Resources>
+                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                        <Setter Property="Width" Value="Auto" />
+                        <Setter Property="Height" Value="Auto" />
+                        <Setter Property="Margin" Value="0,12" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                    </Style>
+                    <Style TargetType="materialDesign:PackIcon">
+                        <Setter Property="Width" Value="36" />
+                        <Setter Property="Height" Value="36" />
+                        <Setter Property="FontSize" Value="64" />
+                    </Style>
+                </UniformGrid.Resources>
+                <Button
+                    x:Name="SaveButton"
+                    Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                    Content="{materialDesign:PackIcon ContentSave}" />
+
+                <Button
+                    x:Name="PrintButton"
+                    Command="{Binding ViewModel.PrintTestReport, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                    Content="{materialDesign:PackIcon Printer}" />
+
+                <Button
+                    x:Name="SubmitTestButton"
+                    Command="{Binding ViewModel.SubmitTest, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                    Content="{materialDesign:PackIcon Send}" />
+
+
+            </UniformGrid>
+
+
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ContentControl
+            x:Name="TestToolBarContent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"
+            ContentTemplate="{StaticResource ToolbarControl}"
+            DataContext="{Binding}" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="TestViewContent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center" />
+    </Grid>
+
+
+</reactiveUi:ReactiveUserControl>

@@ -8,12 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
+using Prover.Shared.Interfaces;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Factories;
-using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
-using Prover.Shared.Interfaces;
 
 namespace Client.Desktop.Wpf.Startup
 {

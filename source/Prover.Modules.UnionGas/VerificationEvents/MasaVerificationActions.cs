@@ -9,6 +9,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Shared.Interfaces;
+using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.VerificationEvents
 {

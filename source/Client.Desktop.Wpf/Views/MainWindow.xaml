@@ -17,94 +17,65 @@
     mc:Ignorable="d">
     <Window.Resources />
 
-    <DockPanel>
+    <Grid Margin="2">
 
-        <materialDesign:ColorZone
-            x:Name="HeaderColorZone"
-            Padding="4"
-            materialDesign:ShadowAssist.ShadowDepth="Depth0"
-            DockPanel.Dock="Top"
-            Mode="PrimaryDark">
-
-            <Grid x:Name="HeaderDockPanel" Height="65">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel
-                    x:Name="NavigationBar"
-                    Grid.Column="0"
-                    Margin="5"
-                    Orientation="Horizontal">
-
-                    <Button
-                        x:Name="GoHomeButton"
-                        Width="48"
-                        Height="48"
-                        Margin="8,0,4,0">
-                        <materialDesign:PackIcon Foreground="White" Kind="Home" />
-                    </Button>
-
-                    <Button
-                        x:Name="GoBackButton"
-                        Width="48"
-                        Height="48"
-                        Margin="4,0">
-                        <materialDesign:PackIcon Foreground="White" Kind="ArrowBack" />
-                    </Button>
-
-                    <!--<Button
-                        x:Name="ShowDialogButton"
-                        Margin="5,0,0,0"
-                        Content="Show Dialog" />-->
-
-                </StackPanel>
-                <TextBlock
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"><Run Text="EVC Prover" />
-                </TextBlock>
-
-                <ItemsControl
-                    x:Name="ToolbarItemsControl"
-                    Grid.Column="2"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Stretch"
-                                Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-
-            </Grid>
-        </materialDesign:ColorZone>
-
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <rxui:RoutedViewHost
-                x:Name="RoutedViewHost"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch"
-                DockPanel.Dock="Bottom" />
-            <Grid
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                d:LayoutOverrides="Width">
-                <!--<materialDesign:Snackbar x:Name="NotificationSnackBar" IsActive="{Binding ShowNotificationSnackBar}">
-                    <materialDesign:SnackbarMessage HorizontalAlignment="Center" Content="{Binding NotificationMessage}" />
-                </materialDesign:Snackbar>-->
-                <materialDesign:Snackbar x:Name="NotificationSnackBar">
-                    <materialDesign:SnackbarMessage HorizontalAlignment="Center" />
-                </materialDesign:Snackbar>
-            </Grid>
+        <Grid
+            Width="75"
+            MaxWidth="75"
+            Margin="0,0,60,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"
+            ZIndex="8">
+            <StackPanel
+                x:Name="NavigationBar"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Orientation="Vertical"
+                ZIndex="8">
+                <StackPanel.Resources>
+                    <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="{x:Type Button}">
+                        <Setter Property="Margin" Value="8,2,8,2" />
+                        <Setter Property="Width" Value="Auto" />
+                        <Setter Property="Height" Value="Auto" />
+                    </Style>
+                </StackPanel.Resources>
+                <Button x:Name="GoHomeButton" Content="{materialDesign:PackIcon Home, Size=48}" />
+                <Button x:Name="GoBackButton" Content="{materialDesign:PackIcon NavigateBefore, Size=48}" />
+            </StackPanel>
+            <ContentControl VerticalAlignment="Center" />
+            <ItemsControl x:Name="ToolbarItemsControl" Margin="0,0,4,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal"
+                            ZIndex="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Grid>
 
-    </DockPanel>
+        <rxui:RoutedViewHost
+            x:Name="RoutedViewHost"
+            Margin="60,0,0,0"
+            HorizontalAlignment="Center"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch" />
+        <!--
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+        -->
+
+        <Grid
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            d:LayoutOverrides="Width">
+            <materialDesign:Snackbar x:Name="NotificationSnackBar" />
+        </Grid>
+    </Grid>
+
 
 </rxui:ReactiveWindow>

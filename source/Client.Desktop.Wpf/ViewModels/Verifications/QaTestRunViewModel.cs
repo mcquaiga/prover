@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Forms;
-using Devices.Communications.IO;
 using Devices.Core.Interfaces;
-using Devices.Core.Repository;
-using DynamicData;
-using DynamicData.Binding;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
-using Prover.Infrastructure.SampleData;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {

@@ -10,7 +10,6 @@ using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Shared;
 
 namespace Client.Desktop.Wpf.Communications
 {

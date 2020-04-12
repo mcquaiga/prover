@@ -3,7 +3,7 @@ using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Details.Corrections
+namespace Client.Desktop.Wpf.Views.Verifications.CorrectionTests
 {
     /// <summary>
     /// Interaction logic for TemperatureTestView.xaml

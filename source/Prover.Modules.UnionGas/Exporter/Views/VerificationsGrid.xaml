@@ -18,10 +18,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Client.Desktop.Wpf;component/Resources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.datagrid.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
+                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Styles/Resources.xaml" />
+
 
             </ResourceDictionary.MergedDictionaries>
 
@@ -87,7 +85,10 @@
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" SortMemberPath="IsSelected">
+                <DataGridCheckBoxColumn
+                    Width="70"
+                    Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                    SortMemberPath="IsSelected">
 
                     <DataGridCheckBoxColumn.ElementStyle>
                         <Style BasedOn="{StaticResource MaterialDesignActionCheckBox}" TargetType="{x:Type CheckBox}">

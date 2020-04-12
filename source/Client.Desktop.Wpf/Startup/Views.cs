@@ -1,5 +1,4 @@
-﻿using System;
-using Client.Desktop.Wpf.Controls;
+﻿using Client.Desktop.Wpf.Controls;
 using Client.Desktop.Wpf.Dialogs;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.Reports;

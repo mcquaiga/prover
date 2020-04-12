@@ -160,13 +160,10 @@
     <Compile Update="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Verifications\Details\PressureTestView.xaml.cs">
+    <Compile Update="Views\Verifications\Volume\PulseOutputsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml.cs">
+    <Compile Update="Views\Verifications\Volume\CorrectedVolumeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml.cs">
@@ -202,19 +199,16 @@
     <Page Update="Dialogs\TextDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Details\PressureTestView.xaml">
+    <Page Update="Views\Verifications\Volume\PulseOutputsView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Details\Volume\PulseOutputsView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Verifications\Details\Volume\CorrectedVolumeView.xaml">
+    <Page Update="Views\Verifications\Volume\CorrectedVolumeView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Styles.xaml">
+    <Page Update="Styles\VerificationStyles.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\HomeView.xaml">
