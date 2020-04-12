@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reactive;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
+using Prover.Application.Dashboard;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 
@@ -23,6 +25,7 @@ namespace Client.Desktop.Wpf.ViewModels
             _config = config;
             ScreenManager = screenManager;
             ToolbarItems = toolbarItems;
+
 
             NavigateForward = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);

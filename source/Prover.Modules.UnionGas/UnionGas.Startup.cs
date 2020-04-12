@@ -11,6 +11,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;

@@ -21,13 +21,13 @@
         </Style>
     </UserControl.Resources>
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Viewbox
-            Width="Auto"
-            DockPanel.Dock="Left"
-            Stretch="Uniform">
+        <StackPanel
+            MinWidth="200"
+            MaxWidth="400"
+            DockPanel.Dock="Left">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="5" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
-        </Viewbox>
+        </StackPanel>
 
 
         <Viewbox

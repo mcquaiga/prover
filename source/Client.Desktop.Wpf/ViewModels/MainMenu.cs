@@ -7,34 +7,34 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
-    public class TestManagerFactoryCoordinator
-    {
-        public NewTestRunViewModel TestRunViewModel { get; }
-        public QaTestRunViewModel QaTestRunViewModel { get; }
+    //public class TestManagerFactoryCoordinator
+    //{
+    //    public NewTestRunViewModel TestRunViewModel { get; }
+    //    public QaTestRunViewModel QaTestRunViewModel { get; }
 
-        public TestManagerFactoryCoordinator(IScreenManager screenManager, NewTestRunViewModel testRunViewModel,
-            QaTestRunViewModel qaTestRunViewModel)
-        {
-            TestRunViewModel = testRunViewModel;
-            QaTestRunViewModel = qaTestRunViewModel;
+    //    public TestManagerFactoryCoordinator(IScreenManager screenManager, NewTestRunViewModel testRunViewModel,
+    //        QaTestRunViewModel qaTestRunViewModel)
+    //    {
+    //        TestRunViewModel = testRunViewModel;
+    //        QaTestRunViewModel = qaTestRunViewModel;
 
-            //this.TestRunViewModel
-            //    .StartTestCommand
-            //    .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
+    //        //this.TestRunViewModel
+    //        //    .StartTestCommand
+    //        //    .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
             
-            StartTest = ReactiveCommand.CreateFromObservable(() =>
-            {
-                screenManager.DialogManager.ShowViewModel(testRunViewModel);
-                return Observable.Return(Unit.Default);
-            });
-        }
+    //        StartTest = ReactiveCommand.CreateFromObservable(() =>
+    //        {
+    //            screenManager.DialogManager.ShowViewModel(testRunViewModel);
+    //            return Observable.Return(Unit.Default);
+    //        });
+    //    }
 
-        public ReactiveCommand<Unit, Unit> StartTest { get; }
-    }
+    //    public ReactiveCommand<Unit, Unit> StartTest { get; }
+    //}
 
     public class VerificationsMainMenu : IMainMenuItem
     {
-        public VerificationsMainMenu(IScreenManager screenManager, TestManagerFactoryCoordinator managerFactory)
+        public VerificationsMainMenu(IScreenManager screenManager)
         {
             OpenCommand = ReactiveCommand.CreateFromObservable(() =>
             {

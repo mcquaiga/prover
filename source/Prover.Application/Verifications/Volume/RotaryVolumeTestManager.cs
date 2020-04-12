@@ -16,6 +16,7 @@ namespace Prover.Application.Verifications.Volume
 {
     public class RotaryVolumeTestRunner : AutomatedVolumeTestRunnerBase
     {
+
         internal RotaryVolumeTestRunner(ILogger<RotaryVolumeTestRunner> logger,
             IDeviceSessionManager deviceManager,
             IAppliedInputVolume tachometerService,

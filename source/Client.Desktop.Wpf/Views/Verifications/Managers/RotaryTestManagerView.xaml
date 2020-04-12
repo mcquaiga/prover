@@ -10,12 +10,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:verifications="clr-namespace:Prover.Application.Verifications;assembly=Prover.Application"
+    xmlns:verifications1="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
+    xmlns:viewModels="clr-namespace:Client.Desktop.Wpf.ViewModels"
     x:Name="RotaryTestManager"
-    d:DataContext="{d:DesignInstance verifications:RotaryTestManager,
+    d:DataContext="{d:DesignInstance verifications1:RotaryTestManager,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="verifications:RotaryTestManager"
+    x:TypeArguments="verifications1:RotaryTestManager"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="CorrectionsTestDataTemplate">
@@ -100,7 +102,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ContentControl
+        <!--<ContentControl
             x:Name="TestToolBarContent"
             Grid.Row="0"
             Grid.RowSpan="2"
@@ -108,7 +110,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Stretch"
             ContentTemplate="{StaticResource ToolbarControl}"
-            DataContext="{Binding}" />
+            DataContext="{Binding}" />-->
         <reactiveUi:ViewModelViewHost
             x:Name="TestViewContent"
             Grid.Row="0"
