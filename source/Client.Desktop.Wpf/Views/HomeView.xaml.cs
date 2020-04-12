@@ -16,9 +16,9 @@ namespace Client.Desktop.Wpf.Views
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.AppMainMenus, v => v.MenuItems.ItemsSource)
-                    .DisposeWith(d);
-          
+                this.OneWayBind(ViewModel, vm => vm.AppMainMenus, v => v.MenuItems.ItemsSource).DisposeWith(d);
+
+                this.OneWayBind(ViewModel, vm => vm.Dashboard, view => view.DashboardHostControl.ViewModel).DisposeWith(d);
             });
         }
 

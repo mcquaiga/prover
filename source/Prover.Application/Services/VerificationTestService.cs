@@ -2,14 +2,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.ViewModels;
@@ -19,52 +17,36 @@ using Prover.Shared.Interfaces;
 
 namespace Prover.Application.Services
 {
-    public class VerificationTestService : IVerificationTestService, IDisposable
+    public partial class VerificationTestService : IVerificationTestService, IDisposable
     {
         private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
-
-        private readonly ISubject<EvcVerificationTest> _updates = new Subject<EvcVerificationTest>();
-
-        private ISourceCache<EvcVerificationTest, Guid> _testsCache
-            = new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
-
-        private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
-        //private readonly ITestManagerFactory _verificationManagerFactory;
-        private readonly IVerificationViewModelFactory _verificationViewModelFactory;
-        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
-
-        private IConnectableObservable<IChangeSet<EvcVerificationTest, Guid>> _tests;
-
-        private IObservableCache<EvcVerificationTest, Guid> _verificationTests;
         private readonly object _lock = new AsyncLock();
+        private readonly ILogger<VerificationTestService> _logger;
+        private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+        private readonly IVerificationViewModelFactory _verificationViewModelFactory;
 
         public VerificationTestService(
-            IAsyncRepository<EvcVerificationTest> verificationRepository,
-            IVerificationViewModelFactory verificationViewModelFactory,
-            Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
-            IScheduler scheduler = null)
+                ILogger<VerificationTestService> logger,
+                IAsyncRepository<EvcVerificationTest> verificationRepository,
+                IVerificationViewModelFactory verificationViewModelFactory,
+                Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
+                IScheduler scheduler = null)
         {
+            _logger = logger ?? NullLogger<VerificationTestService>.Instance;
             _verificationRepository = verificationRepository;
             _verificationViewModelFactory = verificationViewModelFactory;
-            //_verificationManagerFactory = verificationManagerFactory;
             _evcVerificationTestFactory = evcVerificationTestFactory;
 
-            //var updateConnect = _updates.Publish();
-            //Updates = updateConnect;
-            //updateConnect.Connect().DisposeWith(_cleanup);
-
-            //All = new SourceCache<EvcVerificationTest, Guid>(v => v.Id);
+            SetupCache();
         }
-        //public IObservableCache<EvcVerificationTest, Guid> All { get; }
-        //public IObservable<EvcVerificationTest> Updates { get; }
 
         public async Task<EvcVerificationViewModel> AddOrUpdate(EvcVerificationViewModel viewModel)
         {
             viewModel.TestDateTime = viewModel.TestDateTime ?? DateTime.Now;
 
-            var model = 
-                await AddOrUpdate(
-                    VerificationMapper.MapViewModelToModel(viewModel));
+            var model =
+                    await AddOrUpdate(
+                            VerificationMapper.MapViewModelToModel(viewModel));
 
             return model.ToViewModel();
         }
@@ -72,45 +54,15 @@ namespace Prover.Application.Services
         public async Task<EvcVerificationTest> AddOrUpdate(EvcVerificationTest evcVerificationTest)
         {
             await _verificationRepository.UpsertAsync(evcVerificationTest);
-          
-            _testsCache.AddOrUpdate(evcVerificationTest);
+
+            _cacheUpdates.AddOrUpdate(evcVerificationTest);
 
             return evcVerificationTest;
         }
 
-        public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel)
-        {
-            return VerificationMapper.MapViewModelToModel(viewModel);
-        }
+        public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel) => VerificationMapper.MapViewModelToModel(viewModel);
 
-        public void Dispose()
-        {
-            _cleanup?.Dispose();
-            _verificationTests?.Dispose();
-        }
-
-        public IObservableCache<EvcVerificationTest, Guid> FetchTests()
-        {
-            return Load();
-        }
-
-        public IObservableCache<EvcVerificationTest, Guid> Load()
-        {
-            if (_verificationTests == null)
-            {
-
-                _testsCache.AddOrUpdate(_verificationRepository.Query());
-
-                var changes = _testsCache.AsObservableCache().Connect().Publish();
-                _verificationTests = changes.AsObservableCache();
-
-                changes.Connect().DisposeWith(_cleanup);
-                _cleanup.Add(_verificationTests);
-            }
-
-            return _verificationTests;
-        }
-
+        
 
         public async Task<EvcVerificationViewModel> GetViewModel(EvcVerificationTest verificationTest)
         {
@@ -118,7 +70,7 @@ namespace Prover.Application.Services
         }
 
         public async Task<ICollection<EvcVerificationViewModel>> GetViewModel(
-            IEnumerable<EvcVerificationTest> verificationTests)
+                IEnumerable<EvcVerificationTest> verificationTests)
         {
             var evcTests = new ConcurrentBag<EvcVerificationViewModel>();
 
@@ -133,23 +85,6 @@ namespace Prover.Application.Services
             var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
 
             return _verificationViewModelFactory.CreateViewModel(testModel);
-        }
-
-        //public async Task<ITestManager> NewTestManager(DeviceType deviceType) => await _verificationManagerFactory.StartNew(this, deviceType);
-
-        private IObservable<IChangeSet<EvcVerificationTest, Guid>> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null)
-        {
-            return _verificationRepository.Query(predicate).ToObservable().ToObservableChangeSet(t => t.Id);
-            //return ObservableChangeSet.Create<EvcVerificationTest, Guid>(cache =>
-            //{
-            //    var cleanup = new CompositeDisposable();
-                
-            //    cache.AddOrUpdate(_verificationRepository.Query(predicate));
-
-            //    Updates.Subscribe(cache.AddOrUpdate);
-
-            //    return cleanup;
-            //}, test => test.Id);
         }
     }
 }

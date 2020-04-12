@@ -23,7 +23,7 @@ namespace Client.Desktop.Wpf.Views
                 this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, x => x.ScreenManager.ToolbarItems, x => x.ToolbarActionItemsControl.ItemsSource).DisposeWith(d);
                 
-                this.OneWayBind(ViewModel, vm => vm.MessageQueue, x => x.NotificationSnackBar.MessageQueue).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.MessageQueue, x => x.NotificationSnackBar.MessageQueue).DisposeWith(d);
 
                 this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
                 this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);
@@ -41,7 +41,7 @@ namespace Client.Desktop.Wpf.Views
         {
             NotificationInteractions.SnackBarMessage.RegisterHandler(message =>
             {
-                NotificationSnackBar.MessageQueue.Enqueue(message.Input);
+                //NotificationSnackBar.MessageQueue.Enqueue(message.Input);
                 //NotificationSnackBar.IsActive = true;
 
                 //Observable.Timer(TimeSpan.FromSeconds(2))

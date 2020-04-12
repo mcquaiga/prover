@@ -1,6 +1,7 @@
 ﻿using System;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
+using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.Verifications.Volume;

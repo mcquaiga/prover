@@ -10,38 +10,52 @@
     x:Name="HomeScreen"
     x:TypeArguments="viewModels:HomeViewModel"
     mc:Ignorable="d">
-    <ItemsControl x:Name="MenuItems">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Button
-                    x:Name="MenuButton"
-                    Width="240"
-                    Height="256"
-                    Margin="50"
-                    Command="{Binding OpenCommand}">
-                    <StackPanel>
-                        <materialDesign:PackIcon
-                            Width="100"
-                            Height="100"
-                            HorizontalAlignment="Center"
-                            Foreground="White"
-                            Kind="{Binding MenuIconKind}" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            Foreground="White"
-                            Text="{Binding MenuTitle}"
-                            TextAlignment="Center"
-                            TextWrapping="WrapWithOverflow" />
-                    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-                </Button>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <UniformGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-    </ItemsControl>
+        <rxui:ViewModelViewHost
+            x:Name="DashboardHostControl"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch" />
+
+        <ItemsControl x:Name="MenuItems" Grid.Row="1">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button
+                        x:Name="MenuButton"
+                        Width="140"
+                        Height="156"
+                        Margin="50"
+                        Command="{Binding OpenCommand}">
+                        <StackPanel>
+                            <materialDesign:PackIcon
+                                Width="100"
+                                Height="100"
+                                HorizontalAlignment="Center"
+                                Foreground="White"
+                                Kind="{Binding MenuIconKind}" />
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                Foreground="White"
+                                Text="{Binding MenuTitle}"
+                                TextAlignment="Center"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid VerticalAlignment="Bottom" Rows="1" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+
+    </Grid>
 
 </rxui:ReactiveUserControl>

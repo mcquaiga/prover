@@ -7,9 +7,9 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Dashboard
 {
-    public class DashboardViewModel : ReactiveObject
+    public class DashboardingViewModel : ReactiveObject
     {
-        public DashboardViewModel()
+        public DashboardingViewModel()
         {
 
         }

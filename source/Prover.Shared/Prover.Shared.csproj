@@ -16,6 +16,7 @@
     <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
+    <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>

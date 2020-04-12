@@ -92,8 +92,8 @@ namespace Tests.Application.Services
             var scheduler = new TestScheduler();
             scheduler.StartStopwatch();
             
-            var results = _viewModelService
-                .FetchTests().Connect(t => t.ExportedDateTime == null)
+            var results = _viewModelService.FetchTests()
+                                           .Connect(t => t.ExportedDateTime == null)
                 .Bind(out var data, 25)
                 .Subscribe();
             

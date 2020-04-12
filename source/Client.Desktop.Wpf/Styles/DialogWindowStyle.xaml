@@ -22,7 +22,7 @@
                                 <materialDesign:DialogHost x:Name="DialogHost" Identifier="ActiveItemDialog">
 
 
-                                    <ContentPresenter />
+                                    <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
                                 </materialDesign:DialogHost>
                             </AdornerDecorator>
