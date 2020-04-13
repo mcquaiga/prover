@@ -42,7 +42,7 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="20" />
                 <Setter Property="Margin" Value="4" />
-                <Setter Property="FontWeight" Value="UltraLight" />
+                <Setter Property="FontWeight" Value="Regular" />
             </Style>
 
             <Style
@@ -50,7 +50,7 @@
                 BasedOn="{StaticResource MaterialDesignBody1TextBlock}"
                 TargetType="{x:Type TextBlock}">
                 <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="Margin" Value="0,2" />
                 <Setter Property="FontWeight" Value="Light" />
 
@@ -104,8 +104,7 @@
                     DataContext="{TemplateBinding DataContext}">
                     <TextBlock
                         HorizontalAlignment="Center"
-                        FontWeight="Bold"
-                        Foreground="Gray"
+                        FontWeight="Regular"
                         Style="{StaticResource LabelFontStyle}"
                         Text="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
                     <TextBlock
@@ -131,7 +130,8 @@
                 TargetType="{x:Type TextBlock}">
 
                 <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontWeight" Value="UltraLight" />
+                <Setter Property="FontWeight" Value="Regular" />
+                <Setter Property="Margin" Value="0,2,0,0" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Top" />
             </Style>

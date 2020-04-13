@@ -18,105 +18,142 @@
     mc:Ignorable="d">
     <Window.Resources />
 
-    <DockPanel Margin="2">
-
-        <Grid
-            Width="Auto"
-            Margin="0,0,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"
-            DockPanel.Dock="Left">
-            <StackPanel
-                x:Name="NavigationBar"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                Orientation="Vertical">
-                <StackPanel.Resources>
-                    <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="{x:Type Button}">
-                        <Setter Property="Margin" Value="8,2,8,2" />
-                        <Setter Property="Width" Value="Auto" />
-                        <Setter Property="Height" Value="Auto" />
-                    </Style>
-                </StackPanel.Resources>
-                <Button x:Name="GoHomeButton" Content="{materialDesign:PackIcon Home, Size=48}" />
-                <Button x:Name="GoBackButton" Content="{materialDesign:PackIcon NavigateBefore, Size=48}" />
-            </StackPanel>
-
-            <ItemsControl x:Name="ToolbarActionItemsControl" Margin="0,0,4,0">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid
-                            MinHeight="250"
-                            Margin="0,8"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Columns="1">
-                            <UniformGrid.Resources>
-                                <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
-                                    <Setter Property="Width" Value="Auto" />
-                                    <Setter Property="Height" Value="Auto" />
-                                    <Setter Property="Margin" Value="0,12" />
-                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                </Style>
-                                <Style TargetType="materialDesign:PackIcon">
-                                    <Setter Property="Width" Value="36" />
-                                    <Setter Property="Height" Value="36" />
-                                    <Setter Property="FontSize" Value="64" />
-                                </Style>
-                            </UniformGrid.Resources>
-                        </UniformGrid>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
-                        <Button Command="{Binding ToolbarAction}">
-                            <Button.Content>
-                                <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
-                            </Button.Content>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <materialDesign:PopupBox
-                Margin="2,15"
+    <Grid>
+        <DockPanel
+            Margin="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid
+                Width="Auto"
+                Margin="0,0,0,0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                StaysOpen="True">
-                <ItemsControl x:Name="ToolbarItemsControl">
+                VerticalAlignment="Stretch"
+                DockPanel.Dock="Left">
+                <StackPanel
+                    x:Name="NavigationBar"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Orientation="Vertical">
+                    <StackPanel.Resources>
+                        <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="{x:Type Button}">
+                            <Setter Property="Margin" Value="8,2,8,2" />
+                            <Setter Property="Width" Value="Auto" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button x:Name="GoHomeButton" Content="{materialDesign:PackIcon Home, Size=48}" />
+                    <Button x:Name="GoBackButton" Content="{materialDesign:PackIcon NavigateBefore, Size=48}" />
+                </StackPanel>
+
+                <ItemsControl x:Name="ToolbarActionItemsControl" Margin="0,0,4,0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-
-                            <StackPanel
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Bottom"
-                                Orientation="Vertical" />
-
-
+                            <UniformGrid
+                                MinHeight="250"
+                                Margin="0,8"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Columns="1">
+                                <UniformGrid.Resources>
+                                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                                        <Setter Property="Width" Value="Auto" />
+                                        <Setter Property="Height" Value="Auto" />
+                                        <Setter Property="Margin" Value="0,12" />
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                    </Style>
+                                    <Style TargetType="materialDesign:PackIcon">
+                                        <Setter Property="Width" Value="36" />
+                                        <Setter Property="Height" Value="36" />
+                                        <Setter Property="FontSize" Value="64" />
+                                    </Style>
+                                </UniformGrid.Resources>
+                            </UniformGrid>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
+                            <Button Command="{Binding ToolbarAction}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </materialDesign:PopupBox>
-        </Grid>
 
-        <rxui:RoutedViewHost
-            x:Name="RoutedViewHost"
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            DockPanel.Dock="Right" />
+                <materialDesign:PopupBox
+                    Margin="2,15"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    StaysOpen="True">
+                    <ItemsControl x:Name="ToolbarItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+
+                                <StackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Orientation="Vertical" />
 
 
-        <!--<Grid Visibility="Collapsed">
-            <materialDesign:Snackbar x:Name="NotificationSnackBar" Visibility="Collapsed" />
-        </Grid>-->
-        <!--
-            Height="Auto"
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </materialDesign:PopupBox>
+            </Grid>
+
+            <rxui:RoutedViewHost
+                x:Name="RoutedViewHost"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                DockPanel.Dock="Right" />
+
+
+            <!--
+                Visibility="Collapsed"
+                
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Stretch"
+            -->
+            <!--  MessageQueue="{Binding MessageQueue}"  -->
+
+
+        </DockPanel>
+        <materialDesign:Snackbar
+            x:Name="NotificationSnackBar"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            DockPanel.Dock="Bottom"
-            d:LayoutOverrides="Width"
-        -->
-    </DockPanel>
+            d:LayoutOverrides="Width">
+            <materialDesign:Snackbar.Resources>
+                <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="materialDesign:SnackbarMessage">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="materialDesign:SnackbarMessage">
+                                <Grid>
+                                    <ContentPresenter
+                                        MaxHeight="60"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Content="{TemplateBinding Content}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                                    <!--  Needed by the template, wont use it though  -->
+                                    <Button
+                                        x:Name="PART_ActionButton"
+                                        VerticalAlignment="Bottom"
+                                        Content="Adam"
+                                        Visibility="Collapsed" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Background" Value="White" />
+                </Style>
+            </materialDesign:Snackbar.Resources>
+            <materialDesign:SnackbarMessage HorizontalAlignment="Stretch" />
+        </materialDesign:Snackbar>
+    </Grid>
 
 
 </rxui:ReactiveWindow>
