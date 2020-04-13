@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reactive;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -19,6 +20,11 @@ namespace Prover.Application.Verifications
         public static VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel> 
                 OnVerified { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
+        public static class TestEvents<TManager>
+        {
+            public static VerificationEvent<TManager, Unit> OnStart { get; } = new VerificationEvent<TManager, Unit>();
+            public static VerificationEvent<TManager, Unit> OnComplete { get; } = new VerificationEvent<TManager, Unit>();
+        }
 
         public static class CorrectionTests
         {
@@ -31,8 +37,11 @@ namespace Prover.Application.Verifications
             public static VerificationEvent<LiveReadCoordinator, LiveReadCoordinator> 
                     OnLiveReadStart { get; } = new VerificationEvent<LiveReadCoordinator, LiveReadCoordinator>(); 
             
-            public static VerificationEvent<LiveReadCoordinator, LiveReadCoordinator> 
-                    OnLiveReadComplete { get; } = new VerificationEvent<LiveReadCoordinator, LiveReadCoordinator>();
+            public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
+                    OnLiveReadComplete { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+
+            public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
+                    BeforeDownload { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
         }
 
         public static void DefaultSubscribers(ILogger<VerificationEvents> logger = null)

@@ -56,7 +56,7 @@
                                 Padding="4"
                                 BorderThickness="0"
                                 Style="{StaticResource SubSectionDividerBorder}">
-                                <Grid HorizontalAlignment="Stretch">
+                                <Grid HorizontalAlignment="Center">
                                     <ContentControl
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"

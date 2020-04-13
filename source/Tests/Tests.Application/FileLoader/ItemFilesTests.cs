@@ -35,8 +35,8 @@ namespace Tests.Application.FileLoader
         public async Task FileCommunicationClientInstanceTest()
         {
             var client = new FileDeviceClient(_itemFile);
-            var manager = new Device
-            VerificationEvents.CorrectionTests.OnLiveReadStart.Publish(new LiveReadCoordinator(_deviceManagerMock.Ob));
+           // var manager = new Device
+            //VerificationEvents.CorrectionTests.OnLiveReadStart.Publish(new LiveReadCoordinator(_deviceManagerMock.Ob));
             
             Assert.IsTrue(client != null);
         }

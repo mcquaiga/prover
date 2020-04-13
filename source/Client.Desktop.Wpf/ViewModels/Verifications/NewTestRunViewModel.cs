@@ -65,8 +65,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 
                 return Observable.StartAsync(async () =>
                 {
-                    var itemFile = await ItemLoader.LoadFromFile(deviceRepository,
-                            fileDialog.FileName);
+                    var itemFile = await ItemLoader.LoadFromFile(deviceRepository, fileDialog.FileName);
                     return await verificationManagerFactory.StartNew(itemFile.Device.DeviceType);
                 });
             });

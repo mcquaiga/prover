@@ -41,7 +41,7 @@
                 <Button
                     Width="150"
                     Margin="15,5"
-                    Command="{Binding ViewModel.VolumeTestManager.StartTest, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
+                    Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
                     Content="Run Volume Test"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
             </StackPanel>
@@ -115,7 +115,9 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center" />
+            VerticalContentAlignment="Center">
+            <reactiveUi:ViewModelViewHost.Resources />
+        </reactiveUi:ViewModelViewHost>
     </Grid>
 
 

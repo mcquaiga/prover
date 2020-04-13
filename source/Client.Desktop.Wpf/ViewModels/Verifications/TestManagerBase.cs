@@ -27,6 +27,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 string urlSegment = null) //: base(screenManager, urlSegment ?? "VerificationManager")
         {
             TestViewModel = testViewModel;
+
             SaveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 logger.LogDebug("Saving test...");

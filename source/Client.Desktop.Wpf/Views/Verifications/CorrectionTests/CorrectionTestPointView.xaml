@@ -14,7 +14,7 @@
     x:TypeArguments="viewModels:VerificationTestPointViewModel"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -23,9 +23,15 @@
 
         <TextBlock
             x:Name="TestLevelBlock"
+            Grid.RowSpan="3"
             Margin="0,0,0,5"
-            Style="{StaticResource PrimaryTestHeaderStyle}" />
+            RenderTransformOrigin=".5,.5"
+            Style="{StaticResource PrimaryTestHeaderStyle}">
+            <TextBlock.LayoutTransform>
+                <RotateTransform Angle="-90" />
+            </TextBlock.LayoutTransform>
 
+        </TextBlock>
         <ItemsControl
             x:Name="TestItems"
             Grid.Row="1"

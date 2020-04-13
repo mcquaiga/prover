@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Prover.Application.Services.LiveReadCorrections
 {
     [Serializable]
-    public class ItemLiveReadStatus
+    public class ItemLiveReadStatus : ICloneable
     {
         [NonSerialized]
         private readonly Subject<ItemLiveReadStatus> _statusSubject = new Subject<ItemLiveReadStatus>();
@@ -36,6 +36,12 @@ namespace Prover.Application.Services.LiveReadCorrections
                 Stabilizer.Add(value.DecimalValue() ?? 0m);
                 _statusSubject.OnNext(this);
             }
+        }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return new ItemLiveReadStatus(Item, Stabilizer);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Client.Desktop.Wpf.ViewModels
 {
     internal class ScreenManager : ReactiveObject, IScreenManager
     {
+        private readonly SerialDisposable _toolbarRemover = new SerialDisposable();
         private readonly SourceList<IToolbarActionItem> _toolbarItems = new SourceList<IToolbarActionItem>();
 
         public ReadOnlyObservableCollection<IToolbarActionItem> ToolbarItems { get; }
@@ -30,6 +31,7 @@ namespace Client.Desktop.Wpf.ViewModels
             DialogManager = dialogManager;
 
             Router = new RoutingState();
+
             Router.CurrentViewModel.Subscribe(vm => _currentViewModel = vm);
 
             _toolbarItems.Connect()
@@ -45,9 +47,14 @@ namespace Client.Desktop.Wpf.ViewModels
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
 
-            //if (viewModel is IHaveToolbarItems items) _toolbarItems.AddRange(items.ToolbarActionItems);
-            _toolbarItems.AddRange(
-                    (viewModel as IHaveToolbarItems)?.ToolbarActionItems);
+            if (viewModel is IHaveToolbarItems barItems)
+            {
+                _toolbarRemover.Disposable = Disposable.Empty;
+
+                var disposables = barItems.ToolbarActionItems.Select(AddToolbarItem).ToList();
+
+                _toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList());
+            }
 
             await Router.Navigate.Execute(viewModel);
             
@@ -77,9 +84,10 @@ namespace Client.Desktop.Wpf.ViewModels
         public async Task GoBack()
         {
             var current = _currentViewModel;
-
+           
             await Router.NavigateBack.Execute();
 
+            _toolbarRemover.Disposable = Disposable.Empty;
             (current as IDisposable)?.Dispose();
         }
 
@@ -93,6 +101,7 @@ namespace Client.Desktop.Wpf.ViewModels
             if (_homeViewModel == null)
                 _homeViewModel = home;
 
+            _toolbarRemover.Disposable = Disposable.Empty;
             Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
             await Router.NavigateAndReset.Execute(_homeViewModel);
         }

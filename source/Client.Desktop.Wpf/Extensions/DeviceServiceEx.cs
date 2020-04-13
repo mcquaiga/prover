@@ -3,6 +3,7 @@ using Client.Desktop.Wpf.Communications;
 using Client.Desktop.Wpf.ViewModels.Verifications;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
+using Devices.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Prover.Application.FileLoader;
@@ -52,7 +53,7 @@ namespace Client.Desktop.Wpf.Extensions
             {
                 if (!string.IsNullOrEmpty(ApplicationSettings.Local.VerificationFilePath))
                 {
-                    return ActivatorUtilities.CreateInstance<FileDeviceClient>(c, ApplicationSettings.Local.VerificationFilePath);
+                    return FileDeviceClient.Create(c.GetRequiredService<IDeviceRepository>(), ApplicationSettings.Local.VerificationFilePath);
                 }
 
                 var port = portFactory.Create(

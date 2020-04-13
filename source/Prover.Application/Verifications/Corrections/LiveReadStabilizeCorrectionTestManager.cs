@@ -11,6 +11,7 @@ using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
+using CorrectionEvents = Prover.Application.Verifications.VerificationEvents.CorrectionTests;
 
 namespace Prover.Application.Verifications.Corrections
 {
@@ -39,15 +40,20 @@ namespace Prover.Application.Verifications.Corrections
 
         public async Task RunCorrectionTests(VerificationTestPointViewModel test)
         {
-            await VerificationEvents.CorrectionTests.OnStart.Publish(test);
+           
 
             await LiveReadCoordinator.StartLiveReading(_deviceManager, test,
                 async () =>
                 {
+                    await CorrectionEvents.OnLiveReadComplete.Publish(test);
+
+                    await CorrectionEvents.BeforeDownload.Publish(test);
+                    
                     var values = await _deviceManager.DownloadCorrectionItems();
                     SetTestItems(test, values, _deviceManager.Device);
 
-                    await VerificationEvents.CorrectionTests.OnComplete.Publish(test);
+                    await CorrectionEvents.OnComplete.Publish(test);
+
                 }, RxApp.MainThreadScheduler);
         }
     }
