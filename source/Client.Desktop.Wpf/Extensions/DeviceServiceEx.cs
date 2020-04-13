@@ -1,5 +1,6 @@
 ﻿using System;
 using Client.Desktop.Wpf.Communications;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,10 @@ using Prover.Application.FileLoader;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
+using Prover.Application.Verifications;
+using Prover.Application.Verifications.Corrections;
+using Prover.Application.Verifications.Factories;
+using Prover.Application.ViewModels;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 
@@ -40,16 +45,14 @@ namespace Client.Desktop.Wpf.Extensions
             var portFactory = new CommPortFactory();
             var clientFactory = new CommunicationsClientFactory(portFactory);
 
-            services.AddSingleton<FileCommunicationsClient>();
+            //services.AddSingleton<FileDeviceClient>();
 
             // Device Clients
             services.AddSingleton<Func<DeviceType, ICommunicationsClient>>(c => (device) =>
             {
                 if (!string.IsNullOrEmpty(ApplicationSettings.Local.VerificationFilePath))
                 {
-                    var fileComm = c.GetRequiredService<FileCommunicationsClient>();
-                    fileComm.SetFilePath(ApplicationSettings.Local.VerificationFilePath);
-                    return fileComm;
+                    return ActivatorUtilities.CreateInstance<FileDeviceClient>(c, ApplicationSettings.Local.VerificationFilePath);
                 }
 
                 var port = portFactory.Create(
@@ -83,6 +86,33 @@ namespace Client.Desktop.Wpf.Extensions
             //services.AddSingleton(c => new SimulatorPulseChannelFactory(c.GetService<ILogger>()));
             //services.AddSingleton<IInputChannelFactory, SimulatorPulseChannelFactory>();
             //services.AddSingleton<IOutputChannelFactory, SimulatorPulseChannelFactory>();
+        }
+
+        public static void AddVerificationManagers(this IServiceCollection services)
+        {
+            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
+            {
+                var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
+                return volumeFactory.CreateVolumeManager(evcTest);
+            });
+
+            services.AddSingleton<Func<EvcVerificationViewModel, ITestManager>>(c =>
+            {
+                return test =>
+                {
+                    var volumeManager = c.GetService<IVolumeTestManagerFactory>()
+                                         .CreateVolumeManager(test);
+
+                    var testManager = ActivatorUtilities.CreateInstance<TestManager>(c);
+
+                    testManager.Setup(test, volumeManager, c.GetService<ICorrectionTestsManager>());
+                    
+                    return testManager;
+                };
+            });
+            services.AddSingleton<ICorrectionTestsManager, LiveReadStabilizeCorrectionTestManager>();
+            services.AddTransient<IVerificationManagerFactory, VerificationManagerFactory>();
+            services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
         }
 
         public static void AddTachometer(this IServiceCollection services)

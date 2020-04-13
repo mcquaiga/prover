@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 
@@ -19,13 +20,19 @@ namespace Prover.Application.Verifications
                 OnVerified { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
 
-        public static class CorrectionTest
+        public static class CorrectionTests
         {
             public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
                     OnStart { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
 
             public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
-                    OnFinish { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+                    OnComplete { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+
+            public static VerificationEvent<LiveReadCoordinator, LiveReadCoordinator> 
+                    OnLiveReadStart { get; } = new VerificationEvent<LiveReadCoordinator, LiveReadCoordinator>(); 
+            
+            public static VerificationEvent<LiveReadCoordinator, LiveReadCoordinator> 
+                    OnLiveReadComplete { get; } = new VerificationEvent<LiveReadCoordinator, LiveReadCoordinator>();
         }
 
         public static void DefaultSubscribers(ILogger<VerificationEvents> logger = null)
@@ -35,8 +42,8 @@ namespace Prover.Application.Verifications
             OnInitialize.Subscribe(e => SetResponse(e, e.Input, nameof(OnInitialize)));
             OnSubmit.Subscribe(e => SetResponse(e, e.Input, nameof(OnSubmit)));
             
-            CorrectionTest.OnStart.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTest.OnStart)));
-            CorrectionTest.OnFinish.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTest.OnFinish)));
+            CorrectionTests.OnStart.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTests.OnStart)));
+            CorrectionTests.OnComplete.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTests.OnComplete)));
 
             void SetResponse<TIn, TOut>(EventContext<TIn, TOut> context, TOut output, string name)
             {

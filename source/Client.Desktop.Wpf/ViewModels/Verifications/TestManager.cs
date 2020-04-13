@@ -11,22 +11,22 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public sealed class RotaryTestManager : TestManagerBase, ITestManager, IRoutableViewModel
+    public sealed class TestManager : TestManagerBase, ITestManager, IRoutableViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IScreenManager _screenManager;
         private readonly IDeviceSessionManager _deviceManager;
         private readonly IVerificationTestService _verificationService;
-        private readonly ILogger<RotaryTestManager> _logger;
+        private readonly ILogger<TestManager> _logger;
 
-        public RotaryTestManager(
-                ILogger<RotaryTestManager> logger,
+        public TestManager(
+                ILogger<TestManager> logger,
                 IScreenManager screenManager,
                 IDeviceSessionManager deviceSessionManager,
                 IVerificationTestService verificationService
         ) 
         {
-            _logger = logger ?? NullLogger<RotaryTestManager>.Instance;
+            _logger = logger ?? NullLogger<TestManager>.Instance;
             _screenManager = screenManager;
             _deviceManager = deviceSessionManager;
             _verificationService = verificationService;

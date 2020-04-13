@@ -157,9 +157,18 @@
                     FontSize="32" />
 
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock x:Name="CompositionTypeTextBlock" FontWeight="Light" />
-                    <TextBlock FontWeight="UltraLight" Text=" | " />
-                    <TextBlock x:Name="DriveTypeTextBlock" FontWeight="Light" />
+                    <TextBlock
+                        x:Name="CompositionTypeTextBlock"
+                        FontWeight="Light"
+                        Style="{StaticResource ValueTextBlockStyle}" />
+                    <TextBlock
+                        FontWeight="UltraLight"
+                        Style="{StaticResource ValueTextBlockStyle}"
+                        Text=" | " />
+                    <TextBlock
+                        x:Name="DriveTypeTextBlock"
+                        FontWeight="Light"
+                        Style="{StaticResource ValueTextBlockStyle}" />
                 </StackPanel>
 
                 <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />

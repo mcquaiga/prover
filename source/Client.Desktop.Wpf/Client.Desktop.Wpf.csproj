@@ -224,6 +224,7 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
+    <Folder Include="Views\Verifications\Managers\" />
   </ItemGroup>
 
   <ItemGroup>

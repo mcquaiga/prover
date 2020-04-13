@@ -33,38 +33,14 @@ namespace Client.Desktop.Wpf.Startup
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
             services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
-
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager>>(c =>
-            {
-                return (test, volumeManager) =>
-                {
-                    
-                    var rotaryManager = ActivatorUtilities.CreateInstance<RotaryTestManager>(c);
-                    rotaryManager.Setup(test, volumeManager, c.GetService<ICorrectionTestsManager>());
-
-                    return rotaryManager;
-                };
-            });
-
-            services.AddTransient<ITestManagerFactory, VerificationTestManagerFactory>();
-            //services.AddTransient<TestManagerFactoryCoordinator>();
-
-            services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
-            //services.AddSingleton<IVolumeTestManager, RotaryVolumeTestRunner>();
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
-            {
-                var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
-                return volumeFactory.CreateVolumeManager(evcTest);
-            });
-
+            
+            services.AddVerificationManagers();
             services.AddDeviceCommunication();
             services.AddPulseOutputListeners();
             services.AddTachometer();
 
             services.AddSingleton<DeviceSessionDialogManager>();
-
             services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
-            services.AddSingleton<ICorrectionTestsManager, StabilizerCorrectionTestManager>();
 
             services.AddAllTypes<IEventsSubscriber>(lifetime: ServiceLifetime.Singleton);
 
@@ -79,7 +55,6 @@ namespace Client.Desktop.Wpf.Startup
             _provider.GetService<DeviceSessionDialogManager>();
 
             InitializeEventSubscribers();
-
 
             await Task.CompletedTask;
         }

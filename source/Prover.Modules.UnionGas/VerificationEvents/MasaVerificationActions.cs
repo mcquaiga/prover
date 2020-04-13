@@ -80,8 +80,8 @@ namespace Prover.Modules.UnionGas.VerificationEvents
                 await OnSubmit(e.Input);
             }).DisposeWith(_cleanup);
 
-            Application.Verifications.VerificationEvents.CorrectionTest.OnStart.Subscribe(e => e.SetOutput(e.Input));
-            Application.Verifications.VerificationEvents.CorrectionTest.OnFinish.Subscribe(e => e.SetOutput(e.Input));
+            Application.Verifications.VerificationEvents.CorrectionTests.OnStart.Subscribe(e => e.SetOutput(e.Input));
+            Application.Verifications.VerificationEvents.CorrectionTests.OnComplete.Subscribe(e => e.SetOutput(e.Input));
         }
     }
 }

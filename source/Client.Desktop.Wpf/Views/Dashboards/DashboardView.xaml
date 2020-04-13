@@ -111,7 +111,6 @@
                             CommandParameter="{Binding}"
                             Content="{Binding}"
                             GroupName="DateFilterGroup"
-                            IsEnabled="False"
                             Style="{StaticResource MaterialDesignTabRadioButton}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -163,10 +162,11 @@
                                     <Setter.Value>
                                         <ControlTemplate>
                                             <Expander
+                                                HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
+                                                HorizontalContentAlignment="Left"
                                                 VerticalContentAlignment="Top"
                                                 Header="{Binding}"
-                                                IsEnabled="False"
                                                 IsExpanded="True"
                                                 Style="{StaticResource MaterialDesignExpander}">
 
