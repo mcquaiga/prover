@@ -40,29 +40,7 @@
                         TextWrapping="Wrap" />
                 </Border>
             </DataTemplate>
-            <!--<DataTemplate x:Key="DashboardGroupListViewTemplate">
-                <ListView
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    d:DataContext="{d:DesignInstance dashboard:IDashboardItem,
-                                                     IsDesignTimeCreatable=False}"
-                    DockPanel.Dock="Bottom"
-                    ItemsSource="{Binding}"
-                    Style="{StaticResource MaterialDesignListBox}">
 
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel
-                                Margin="12"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Stretch" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
-
-            </DataTemplate>-->
 
             <CollectionViewSource x:Key="DashboardListBoxItems" Source="{Binding DashboardItems}">
                 <CollectionViewSource.GroupDescriptions>
@@ -72,11 +50,11 @@
         </ResourceDictionary>
 
     </UserControl.Resources>
-    <DockPanel Margin="25">
+    <DockPanel Margin="15,5">
 
         <Grid
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            VerticalAlignment="Top"
             DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -84,15 +62,30 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock
-                x:Name="DashboardHeader"
-                Height="Auto"
-                Margin="0,0,25,0"
-                Padding="8"
-                FontWeight="UltraLight"
-                Style="{StaticResource MaterialDesignHeadline3TextBlock}">
-                Dashboard
-            </TextBlock>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock
+                    x:Name="AppTitleHeader"
+                    Height="Auto"
+                    Margin="0,0,15,0"
+                    Padding="8"
+                    FontSize="48"
+                    FontWeight="Light"
+                    Style="{StaticResource MaterialDesignHeadline4TextBlock}">
+                    EVC Prover
+                </TextBlock>
+                <TextBlock
+                    x:Name="DashboardHeader"
+                    Height="Auto"
+                    Margin="0,0,15,0"
+                    Padding="8"
+                    VerticalAlignment="Top"
+                    FontSize="36"
+                    FontWeight="Light"
+                    Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                    Dashboard
+                </TextBlock>
+            </StackPanel>
 
             <ListView
                 x:Name="DateFiltersControl"
@@ -100,41 +93,25 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Style="{StaticResource MaterialDesignListBox}">
+                <ListView.Resources />
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid
-                            Margin="50,5"
+                        <VirtualizingStackPanel
+                            Margin="5,1"
                             HorizontalAlignment="Right"
-                            Rows="1" />
+                            Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
-                <!--<ListView.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="ListViewItem">
-                -->
-                <!--<Style.Resources>
-                            <ResourceDictionary>
-                                <Style BasedOn="{StaticResource MaterialDesignTabRadioButton}" TargetType="{x:Type RadioButton}">
-                                    <Setter Property="Margin" Value="4,2" />
-                                </Style>
-                            </ResourceDictionary>
-                        </Style.Resources>-->
-                <!--
-                        <Setter Property="Margin" Value="0" />
-                -->
-                <!--<Setter Property="Background" Value="{StaticResource MaterialDesignPaper}" />-->
-                <!--
-                    </Style>
-
-                </ListView.ItemContainerStyle>-->
-
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <DataTemplate.Resources />
                         <RadioButton
+                            Margin="0"
+                            Padding="0"
                             Command="{Binding ViewModel.ApplyDateFilter, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
                             Content="{Binding}"
                             GroupName="DateFilterGroup"
+                            IsEnabled="False"
                             Style="{StaticResource MaterialDesignTabRadioButton}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -148,22 +125,6 @@
                 DockPanel.Dock="Right"
                 Style="{StaticResource MaterialDesignIconButton}" />
         </Grid>
-
-
-        <!--<ItemsControl x:Name="GroupDashboardItems">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.Gro />
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Key}" />
-                    <ItemsControl DataContext="{Binding Value}" ItemTemplate="{StaticResource DashboardGroupListViewTemplate}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
 
         <Viewbox DockPanel.Dock="Bottom" Stretch="Uniform">
             <ListView
@@ -205,6 +166,7 @@
                                                 VerticalAlignment="Top"
                                                 VerticalContentAlignment="Top"
                                                 Header="{Binding}"
+                                                IsEnabled="False"
                                                 IsExpanded="True"
                                                 Style="{StaticResource MaterialDesignExpander}">
 

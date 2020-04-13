@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.ViewModels.Devices;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using Prover.Shared.Interfaces;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Factories;
+using Prover.Application.Verifications.Volume;
 using Prover.Application.ViewModels.Factories;
 
 namespace Client.Desktop.Wpf.Startup
@@ -32,12 +34,23 @@ namespace Client.Desktop.Wpf.Startup
         {
             services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
 
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager>>(c => (test, volumeManager) =>
-                    ActivatorUtilities.CreateInstance<RotaryTestManager>(c, test, volumeManager));
+            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager>>(c =>
+            {
+                return (test, volumeManager) =>
+                {
+                    
+                    var rotaryManager = ActivatorUtilities.CreateInstance<RotaryTestManager>(c);
+                    rotaryManager.Setup(test, volumeManager, c.GetService<ICorrectionTestsManager>());
+
+                    return rotaryManager;
+                };
+            });
 
             services.AddTransient<ITestManagerFactory, VerificationTestManagerFactory>();
-            services.AddTransient<TestManagerFactoryCoordinator>();
+            //services.AddTransient<TestManagerFactoryCoordinator>();
+
             services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
+            //services.AddSingleton<IVolumeTestManager, RotaryVolumeTestRunner>();
             services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
             {
                 var volumeFactory = c.GetService<IVolumeTestManagerFactory>();

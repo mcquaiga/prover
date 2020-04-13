@@ -19,7 +19,7 @@
                         <Grid>
                             <AdornerDecorator>
                                 <StackPanel Orientation="Vertical">
-                                    <local:QaTestRunView />
+
 
                                     <ContentPresenter />
 

@@ -1,4 +1,5 @@
-﻿using Prover.Application.Interfaces;
+﻿using Client.Desktop.Wpf.ViewModels;
+using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

@@ -13,7 +13,10 @@ namespace Prover.Application.Verifications
                 OnInitialize { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
         public static VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel> 
-                OnSubmit { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
+                OnSubmit { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>(); 
+        
+        public static VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel> 
+                OnVerified { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
 
         public static class CorrectionTest

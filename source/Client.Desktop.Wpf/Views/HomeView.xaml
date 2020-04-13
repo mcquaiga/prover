@@ -19,7 +19,7 @@
         <rxui:ViewModelViewHost
             x:Name="DashboardHostControl"
             HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch" />
+            VerticalContentAlignment="Top" />
 
         <ItemsControl x:Name="MenuItems" Grid.Row="1">
             <ItemsControl.ItemTemplate>

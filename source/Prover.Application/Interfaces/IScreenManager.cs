@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Prover.Application.Interactions;
 using ReactiveUI;
 
 namespace Prover.Application.Interfaces
@@ -12,6 +15,8 @@ namespace Prover.Application.Interfaces
 
         Task GoHome(IRoutableViewModel viewModel = null);
         Task GoBack();
-        
+
+        ReadOnlyObservableCollection<IToolbarActionItem> ToolbarItems { get; }
+        IDisposable AddToolbarItem(IToolbarActionItem item);
     }
 }
