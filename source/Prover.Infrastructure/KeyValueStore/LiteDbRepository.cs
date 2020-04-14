@@ -83,7 +83,8 @@ namespace Prover.Infrastructure.KeyValueStore
 
         public async Task<IReadOnlyList<T>> ListAsync()
         {
-            return await Task.Run(() => Context.GetCollection<T>().FindAll().ToList());
+            await Task.CompletedTask;
+            return Context.GetCollection<T>().FindAll().ToList();
         }
 
         public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => predicate != null

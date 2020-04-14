@@ -36,7 +36,7 @@ namespace Prover.Application.Extensions
         public static VolumeViewModelBase GetVolumeTest(this EvcVerificationViewModel test) => test.VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
 
         public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceInstance device, int testNumber, Dictionary<string, string> valuesDictionary)
-                where T : ItemGroup, IHaveFactor
+                where T : ItemGroup, ICorrectionFactor
         {
             var itemValues = device.DeviceType.ToItemValues(valuesDictionary);
             verification.SetItems<T>(device, testNumber, itemValues);
@@ -44,7 +44,7 @@ namespace Prover.Application.Extensions
 
         public static void SetItems<T>(this EvcVerificationViewModel verification, DeviceInstance device, int testNumber,
                 IEnumerable<ItemValue> itemValues)
-                where T : ItemGroup, IHaveFactor
+                where T : ItemGroup, ICorrectionFactor
         {
             var testPoint = verification.VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(v => v.TestNumber == testNumber);
 

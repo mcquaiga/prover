@@ -5,11 +5,44 @@ using Prover.Shared.Domain;
 
 namespace Prover.Domain.EvcVerifications.Verifications
 {
+    public class VerificationTestMixins<TTest> where TTest : class
+    {
+        private AggregateRootWithChildTests<TTest> _aggregateRootWithChildTests;
+
+        public VerificationTestMixins(AggregateRootWithChildTests<TTest> aggregateRootWithChildTests)
+        {
+            _aggregateRootWithChildTests = aggregateRootWithChildTests;
+        }
+
+        public T GetTest<T>() where T : class
+        {
+            return _aggregateRootWithChildTests.Tests.FirstOrDefault(t => t.GetType() == typeof(T)) as T;
+        }
+
+        public T GetTest<T>(Func<T, bool> filter) where T : class
+        {
+            var ts = _aggregateRootWithChildTests.Tests
+                                                 .OfType<T>()
+                                                 .ToList();
+
+            return ts
+                   .Where(filter)
+                   .FirstOrDefault();
+        }
+
+        public IEnumerable<T> GetTests<T>() where T : IVerification
+        {
+            return _aggregateRootWithChildTests.Tests.OfType<T>();
+
+        }
+    }
+
     public class AggregateRootWithChildTests<TTest> : AggregateRoot
         where TTest : class
     {
         protected AggregateRootWithChildTests()
         {
+            _verificationTestMixins = new VerificationTestMixins<TTest>(this);
         }
 
         //protected AggregateRootWithChildTests(ICollection<TTest> Tests)
@@ -19,6 +52,7 @@ namespace Prover.Domain.EvcVerifications.Verifications
         //}
 
         private ICollection<TTest> _tests = new List<TTest>();
+        private readonly VerificationTestMixins<TTest> _verificationTestMixins;
 
         #region Public Properties
 
@@ -26,6 +60,11 @@ namespace Prover.Domain.EvcVerifications.Verifications
         {
             get => _tests;
             set => _tests = value;
+        }
+
+        public VerificationTestMixins<TTest> VerificationTestMixins
+        {
+            get { return _verificationTestMixins; }
         }
 
         #endregion
@@ -41,29 +80,6 @@ namespace Prover.Domain.EvcVerifications.Verifications
         public void AddTests(IEnumerable<TTest> test)
         {
             test.ToList().ForEach( _tests.Add);
-        }
-
-
-        public T GetTest<T>() where T : class
-        {
-            return _tests.FirstOrDefault(t => t.GetType() == typeof(T)) as T;
-        }
-
-        public T GetTest<T>(Func<T, bool> filter) where T : class
-        {
-            var ts = _tests
-                .OfType<T>()
-                .ToList();
-
-            return ts
-                .Where(filter)
-                .FirstOrDefault();
-        }
-
-        public IEnumerable<T> GetTests<T>() where T : IVerification
-        {
-            return _tests
-                .Where(t => t.GetType() == typeof(T)) as IEnumerable<T>;
         }
 
         #endregion

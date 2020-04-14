@@ -1,10 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.FileLoader;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications;
+using Prover.Application.ViewModels.Corrections;
+using Prover.Domain.EvcVerifications;
+using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Tests.Application.Services;
 
 namespace Tests.Application.FileLoader
@@ -37,7 +45,29 @@ namespace Tests.Application.FileLoader
             var client = new FileDeviceClient(_itemFile);
            // var manager = new Device
             //VerificationEvents.CorrectionTests.OnLiveReadStart.Publish(new LiveReadCoordinator(_deviceManagerMock.Ob));
-            
+            var tests = await StorageTestsInitialize.TestRepo.ListAsync();
+
+            //var test = tests.Last().VerificationTestMixins.GetTests<VerificationTestPoint>().Select(p => p.GetTests<TemperatureCorrectionTest>()).ToList();
+            var test = tests.First().Tests.Tests.GetCorrectionTests<PressureItems>();
+
+
+                            //.GetTests<VerificationTestPoint>().Select(p => p.GetTests<TemperatureCorrectionTest>()).ToList();
+
+            tests.Take(5).ForEach(t => new ItemAndTestFile()
+            {
+                Device = t.Device,
+                TemperatureTests = t.S.Tests.OfType<VerificationTestPoint>()
+                                    .SelectMany(i => new KeyValuePair<int,List<ItemValue>>(i.TestNumber, i.Tests.GetCorrectionTests<TemperatureItems>().ToDictionary(k => k.)
+
+                                                                          .SelectMany(p => p.Tests.OfType<TemperatureCorrectionTest>().ToList().SelectMany(x => x.)
+                                                                                            .S
+
+            //})
+            //var items = new ItemAndTestFile()
+            //{
+            //        VolumeTest = Tuple.Create(new)
+            //}
+
             Assert.IsTrue(client != null);
         }
 

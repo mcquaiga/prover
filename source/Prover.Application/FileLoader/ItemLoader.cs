@@ -69,6 +69,7 @@ namespace Prover.Application.FileLoader
 
             public ICollection<Dictionary<string, string>> PressureTests { get; set; }
             public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
+            public Dictionary<string, string> VolumeTest { get; set; }
         }
 
         #endregion
@@ -80,6 +81,7 @@ namespace Prover.Application.FileLoader
 
         public Dictionary<int, List<ItemValue>> PressureTests { get; set; }
         public Dictionary<int, List<ItemValue>> TemperatureTests { get; set; }
+        public Tuple<List<ItemValue>, List<ItemValue>> VolumeTest { get; set; }
     }
 
 }
