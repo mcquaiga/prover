@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Core.Repository.JsonConverters;
@@ -17,7 +19,7 @@ namespace Devices.Romet.Core.Repository
     }
 
 
-    public class RometJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<RometDeviceType>
+    public class RometJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<RometDeviceType>, IDeviceDataSourceInstance
     {
         private static readonly string _directory = $"{AppDomain.CurrentDomain.BaseDirectory}\\RometDeviceTypes";
 
@@ -28,7 +30,7 @@ namespace Devices.Romet.Core.Repository
         {
         }
 
-        private RometJsonDeviceTypeDataSource()
+        public RometJsonDeviceTypeDataSource()
             : base(new FileStreamReader(_directory))
         {
         }
@@ -57,5 +59,10 @@ namespace Devices.Romet.Core.Repository
         }
 
         #endregion
+
+        /// <inheritdoc />
+
+        /// <inheritdoc />
+        public IDeviceTypeDataSource<DeviceType> GetInstance() => Instance;
     }
 }

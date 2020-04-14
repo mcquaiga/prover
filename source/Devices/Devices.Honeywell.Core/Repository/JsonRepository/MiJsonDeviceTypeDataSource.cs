@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Devices.Core.Repository.JsonConverters;
@@ -7,12 +8,17 @@ using Devices.Honeywell.Core.Repository.JsonRepository.JsonConverters;
 
 namespace Devices.Honeywell.Core.Repository.JsonRepository
 {
-    public class MiJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<HoneywellDeviceType>
+    public class MiJsonDeviceTypeDataSource : JsonDeviceTypeDataSource<HoneywellDeviceType>, IDeviceDataSourceInstance
     {
         private static readonly string _directory = $"{AppDomain.CurrentDomain.BaseDirectory}\\MiDeviceTypes";
 
         public MiJsonDeviceTypeDataSource(IStreamReader streamReader) : base(streamReader)
         {
+        }
+
+        public MiJsonDeviceTypeDataSource() : this(new FileStreamReader(_directory))
+        {
+
         }
 
         public static IDeviceTypeDataSource<HoneywellDeviceType> Instance => _lazy.Value;
@@ -29,5 +35,8 @@ namespace Devices.Honeywell.Core.Repository.JsonRepository
         {
             return new MiJsonDeviceConverter(items, itemsConverter);
         }
+
+        /// <inheritdoc />
+        public IDeviceTypeDataSource<DeviceType> GetInstance() => Instance;
     }
 }

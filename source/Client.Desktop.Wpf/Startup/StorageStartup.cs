@@ -47,15 +47,23 @@ namespace Client.Desktop.Wpf.Startup
 
         private async Task StartCaches(CancellationToken cancellationToken)
         {
-            await Observable.StartAsync(() => _provider.GetService<IDeviceRepository>()
-                                                       .Load(new[] {RometJsonDeviceTypeDataSource.Instance, MiJsonDeviceTypeDataSource.Instance}))
-                            .LastAsync()
-                            .Select(_ => Unit.Default)
-                            .Concat(
-                                    _provider.GetServices<ICacheManager>()
-                                             .Select(c => Observable.StartAsync(c.LoadAsync))
-                                             .Merge())
-                            .RunAsync(cancellationToken);
+            //await Observable.StartAsync(
+            //                        () => _provider.GetService<IDeviceRepository>()
+            //                                           .Load(new[] {RometJsonDeviceTypeDataSource.Instance, MiJsonDeviceTypeDataSource.Instance}))
+            //                .LastAsync()
+            //                .Select(_ => Unit.Default)
+            //                .Concat(
+            //                        _provider.GetServices<ICacheManager>()
+            //                                 .Select(c => Observable.StartAsync(c.LoadAsync))
+            //                                 .Merge())
+            //                .RunAsync(cancellationToken);
+
+            var devices = DeviceRepository.Instance;
+            await _provider.GetServices<ICacheManager>()
+                     .Select(c => Observable.StartAsync(c.LoadAsync))
+                     .Concat()
+                     .RunAsync(cancellationToken);
+
         }
     }
 
@@ -104,7 +112,9 @@ namespace Client.Desktop.Wpf.Startup
             var db = StorageDefaults.CreateLiteDb(host.Configuration.LiteDbPath());
             services.AddSingleton(c => db);
 
-            services.AddSingleton<IDeviceRepository, DeviceRepository>();
+            var deviceRepo = DeviceRepository.Instance;
+            services.AddSingleton<IDeviceRepository>(deviceRepo);
+
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 

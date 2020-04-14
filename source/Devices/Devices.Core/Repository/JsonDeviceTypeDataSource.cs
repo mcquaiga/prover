@@ -8,6 +8,9 @@ using Newtonsoft.Json;
 
 namespace Devices.Core.Repository
 {
+
+
+
     public abstract class JsonDeviceTypeDataSource<T> : IDeviceTypeDataSource<T>
         where T : DeviceType
     {
@@ -66,5 +69,7 @@ namespace Devices.Core.Repository
         {
             return GetItems().ToEnumerable();
         }
+
+        
     }
 }

@@ -2,12 +2,87 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Devices.Core.Repository;
 using Prover.Shared;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Devices.Core.Interfaces
 {
+    public class DeviceInstanceJsonConverter : JsonConverter<DeviceInstance>
+    {
+        private JsonSerializerOptions _options = new JsonSerializerOptions()
+        {
+                PropertyNameCaseInsensitive = true
+        };
+
+        private readonly IDeviceRepository _deviceRepository;
+
+        public DeviceInstanceJsonConverter()
+        {
+            if (DeviceRepository.Instance == null) throw new NullReferenceException("Device repository has not been initialized");
+
+            _deviceRepository = DeviceRepository.Instance;
+        }
+
+        public DeviceInstanceJsonConverter(IDeviceRepository deviceRepository)
+        {
+            _deviceRepository = deviceRepository;
+        }
+
+        /// <inheritdoc />
+        public override DeviceInstance Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+
+            var json = reader.GetString();
+            var device = JsonSerializer.Deserialize<Device>(json, _options);
+            
+            var deviceType = _deviceRepository.GetById(device.DeviceTypeId);
+            return deviceType.CreateInstance(device.Values);
+        }
+
+        /// <inheritdoc />
+        public override void Write(Utf8JsonWriter writer, DeviceInstance value, JsonSerializerOptions options)
+        {
+            var device = Device.Create(value);
+            writer.WriteStringValue(JsonSerializer.Serialize(device, _options));
+        }
+
+
+        private class Device
+        {
+            internal static Device Create(DeviceInstance instance)
+            {
+                return new Device(instance);
+            }
+
+            public Device()
+            {
+            }
+
+
+            private Device(Guid deviceTypeId, Dictionary<string, string> values)
+            {
+                DeviceTypeId = deviceTypeId;
+                Values = values;
+            }
+
+            private Device(DeviceInstance value)
+            {
+                DeviceTypeId = value.DeviceType.Id;
+                Values = value.Values.ToItemValuesDictionary();
+            }
+
+            public Guid DeviceTypeId { get; set; }
+            public Dictionary<string, string> Values { get; set; }
+        }
+    }
+
+
+    [JsonConverter(typeof(DeviceInstanceJsonConverter))]
     public abstract class DeviceInstance
     {
         protected readonly ConcurrentDictionary<Type, ItemGroup> GroupCache =
