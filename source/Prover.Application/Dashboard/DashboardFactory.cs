@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using Devices.Core.Repository;
 using DynamicData;
 using Prover.Application.Interfaces;
@@ -24,18 +25,23 @@ namespace Prover.Application.Dashboard
         private readonly IDeviceRepository _deviceRepository;
         private readonly IEntityDataCache<EvcVerificationTest> _entityCache;
 
+        private readonly Subject<Func<EvcVerificationTest, bool>> _parentFilterObservable = new Subject<Func<EvcVerificationTest, bool>>();
+
         public DashboardFactory(IEntityDataCache<EvcVerificationTest> entityCache, IDeviceRepository deviceRepository)
         {
             _entityCache = entityCache;
             _deviceRepository = deviceRepository;
         }
 
-        public IEnumerable<IDashboardItem> CreateViews(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
+        public IEnumerable<IDashboardItem> CreateDashboard()
         {
-            return CreateDeviceViews(parentFilter)
-                    .Union(CreateVerifiedViews(parentFilter));
+            var items = new List<IDashboardItem>();
 
+            items.AddRange(CreateDeviceViews(_parentFilterObservable));
+            //items.AddRange(CreateVerifiedViews(_parentFilterObservable));
+            items.Add(CreateSummaryItem(_parentFilterObservable ));
 
+            return items;
         }
 
         private IEnumerable<IDashboardItem> CreateDeviceViews(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
@@ -46,18 +52,32 @@ namespace Prover.Application.Dashboard
                                     .Select(d => new VerifiedCountsDashboardViewModel(
                                             _entityCache,
                                             d.Name,
-                                            "By Device Type", parentFilter,
+                                            "By Device Type", 
+                                            parentFilter,
                                             v => v.Device.DeviceType.Id == d.Id));
         }
-        
+
+        public void DateTimeFilter(string dateTimeKey)
+        {
+            bool buildFilter(EvcVerificationTest test)
+                => DateFilters[dateTimeKey]
+                        .Invoke(test.TestDateTime);
+
+            _parentFilterObservable.OnNext(buildFilter);
+        }
 
         private IEnumerable<IDashboardItem> CreateVerifiedViews(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {
             return new[]
             {
-                    new ValueDashboardViewModel(_entityCache, "Tested", "Totals", v => v.ArchivedDateTime == null, parentFilter, 1),
-                    new ValueDashboardViewModel(_entityCache, "Exported", "Totals", v => v.ExportedDateTime != null, parentFilter, 2)
+                    new ValueDashboardViewModel(_entityCache, "Total tests", "Totals", v => v.ArchivedDateTime == null, parentFilter, 1),
+                    new ValueDashboardViewModel(_entityCache, "Exported tests", "Totals", v => v.ExportedDateTime != null, parentFilter, 2)
             };
+        }
+
+        private IDashboardItem CreateSummaryItem(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
+        {
+            return new TestsSummaryDashboardViewModel(_entityCache, parentFilter);
         }
 
         private IDashboardValueViewModel GetCounterItem(string title, string groupName, Func<EvcVerificationTest, bool> predicate, IObservable<Func<EvcVerificationTest, bool>> parentFilter)

@@ -12,11 +12,11 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public sealed class TestManager : TestManagerBase, ITestManager, IRoutableViewModel
+    public sealed class TestManager : TestManagerBase, IDeviceQaTestManager, IRoutableViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IScreenManager _screenManager;
-        private readonly IDeviceSessionManager _deviceManager;
+        public IDeviceSessionManager DeviceManager { get; }
         private readonly IVerificationTestService _verificationService;
         private readonly ILogger<TestManager> _logger;
 
@@ -28,10 +28,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         {
             _logger = logger ?? NullLogger<TestManager>.Instance;
             _screenManager = screenManager;
-            _deviceManager = deviceSessionManager;
+            DeviceManager = deviceSessionManager;
             _verificationService = verificationService;
-
-            
         }
 
         public IVolumeTestManager VolumeTestManager { get; set; }
@@ -63,7 +61,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         protected override void Disposing()
         {
             _logger.LogDebug("Disposing instance.");
-            _deviceManager.EndSession();
+            DeviceManager.EndSession();
             _cleanup?.Dispose();
         }
 

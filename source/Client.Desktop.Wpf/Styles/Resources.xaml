@@ -31,6 +31,8 @@
                 FalseValue="Collapsed"
                 TrueValue="Visible" />
 
+            <converters:InstanceToBooleanConverter x:Key="ValueToCheckedConverter" />
+
             <converters:BoolToVisibilityConverter
                 x:Key="FalseToHiddenConverter"
                 FalseValue="Hidden"

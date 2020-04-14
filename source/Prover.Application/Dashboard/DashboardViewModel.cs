@@ -7,6 +7,7 @@ using Prover.Application.Interfaces;
 using Prover.Domain.EvcVerifications;
 using Prover.Shared.Extensions;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.Dashboard
 {
@@ -22,9 +23,9 @@ namespace Prover.Application.Dashboard
                 return Observable.Return(Unit.Default);
             });
 
-            ApplyDateFilter = ReactiveCommand.Create<string, Func<EvcVerificationTest, bool>>(x => BuildTestDateTimeFilter(dashboardFactory.DateFilters[x]));
+            ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.DateTimeFilter, outputScheduler: RxApp.MainThreadScheduler);
             
-            DashboardItems = dashboardFactory.CreateViews(ApplyDateFilter)
+            DashboardItems = dashboardFactory.CreateDashboard()
                                              .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
                                              .ToList();
             GroupedItems = DashboardItems
@@ -33,7 +34,8 @@ namespace Prover.Application.Dashboard
 
             DateFilters = dashboardFactory.DateFilters.Keys;
         }
-        public string DefaultSelectedDate => "1d";
+        
+        [Reactive] public string DefaultSelectedDate { get; set; } = "7d";
 
         public ICollection<string> DateFilters { get; }
 
@@ -41,7 +43,7 @@ namespace Prover.Application.Dashboard
         public ICollection<DashboardGroup> GroupedItems { get; }
 
         public ReactiveCommand<Unit, Unit> LoadCaches { get; }
-        public ReactiveCommand<string, Func<EvcVerificationTest, bool>> ApplyDateFilter { get; }
+        public ReactiveCommand<string, Unit> ApplyDateFilter { get; }
 
         private Func<EvcVerificationTest, bool> BuildTestDateTimeFilter(Func<DateTime, bool> dateTime)
         {

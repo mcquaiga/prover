@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Controls;
@@ -33,14 +34,22 @@ namespace Client.Desktop.Wpf.Views.Dashboards
                 //this.OneWayBind(ViewModel, vm => vm.GroupedItems, v => v.GroupDashboardItems.ItemsSource).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DateFilters, v => v.DateFiltersControl.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.DefaultSelectedDate, v => v.DateFiltersControl.SelectedItem).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.LoadCaches, v => v.RefreshDataButton).DisposeWith(d);
 
                 this.WhenAnyValue(x => x.ViewModel.ApplyDateFilter)
                     .SelectMany(x => x.Execute(ViewModel.DefaultSelectedDate))
+                    .SubscribeOnDispatcher()
+                    .DelaySubscription(TimeSpan.FromSeconds(1))
                     .Subscribe();
 
+                //DateFiltersControl.Mou = 3;// ViewModel.DefaultSelectedDate;
+                //var rb = (RadioButton) DateFiltersControl.SelectedItem;
+                //rb.IsChecked = true;
                 
+                //DateFiltersControl.ItemsSource.Where<ICollection<string>>(x => x == ViewModel.DefaultSelectedDate);
+                //this.Bind(ViewModel, vm => vm.DefaultSelectedDate, v => v.DateFiltersControl.Items)
             });
         }
     }

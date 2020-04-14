@@ -97,7 +97,7 @@ namespace Client.Desktop.Wpf.Extensions
                 return volumeFactory.CreateVolumeManager(evcTest);
             });
 
-            services.AddSingleton<Func<EvcVerificationViewModel, ITestManager>>(c =>
+            services.AddSingleton<Func<EvcVerificationViewModel, IDeviceQaTestManager>>(c =>
             {
                 return test =>
                 {

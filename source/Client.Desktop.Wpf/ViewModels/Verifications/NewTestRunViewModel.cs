@@ -59,7 +59,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 var fileDialog = new OpenFileDialog();
 
                 if (fileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK || !fileDialog.CheckFileExists)
-                    return Observable.Empty<ITestManager>();
+                    return Observable.Empty<IDeviceQaTestManager>();
 
                 ApplicationSettings.Local.VerificationFilePath = fileDialog.FileName;
                 
@@ -82,8 +82,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         }
 
         public LocalSettings Selected => ApplicationSettings.Local;
-        public ReactiveCommand<Unit, ITestManager> LoadFromFile { get; protected set; }
-        public ReactiveCommand<Unit, ITestManager> StartTestCommand { get; set; }
+        public ReactiveCommand<Unit, IDeviceQaTestManager> LoadFromFile { get; protected set; }
+        public ReactiveCommand<Unit, IDeviceQaTestManager> StartTestCommand { get; set; }
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
         public ReadOnlyObservableCollection<int> BaudRates { get; set; }
         public ReadOnlyObservableCollection<string> CommPorts { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Devices.Romet.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Dashboard;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Domain.EvcVerifications;
@@ -19,6 +21,7 @@ using Prover.Infrastructure;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Shared.Extensions;
 using Prover.Shared.Interfaces;
+using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Startup
 {
@@ -40,12 +43,12 @@ namespace Client.Desktop.Wpf.Startup
         {
             await StartCaches(cancellationToken);
 
-            //await _seeder.SeedDatabase(5);
+            //TaskPoolScheduler.Default.ScheduleLongRunning(async ct => await _seeder.SeedDatabase(250));
         }
 
         #endregion
 
-        private async Task StartCaches(CancellationToken cancellationToken)
+        private Task StartCaches(CancellationToken cancellationToken)
         {
             //await Observable.StartAsync(
             //                        () => _provider.GetService<IDeviceRepository>()
@@ -59,11 +62,15 @@ namespace Client.Desktop.Wpf.Startup
             //                .RunAsync(cancellationToken);
 
             var devices = DeviceRepository.Instance;
-            await _provider.GetServices<ICacheManager>()
-                     .Select(c => Observable.StartAsync(c.LoadAsync))
-                     .Concat()
-                     .RunAsync(cancellationToken);
 
+            return _provider.GetServices<ICacheManager>()
+                            .ToObservable()
+                            .ForEachAsync(async c => await c.LoadAsync(), cancellationToken);
+                    
+                     
+                     //.Concat()
+                     //.RunAsync(cancellationToken)
+                     ;
         }
     }
 

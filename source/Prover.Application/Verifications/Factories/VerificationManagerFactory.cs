@@ -12,7 +12,7 @@ namespace Prover.Application.Verifications.Factories
 {
     public static class ManagerFactoryMixins
     {
-        public static async Task<ITestManager> CreateTestManager(this DeviceInstance deviceInstance)
+        public static async Task<IDeviceQaTestManager> CreateTestManager(this DeviceInstance deviceInstance)
         {
             return await VerificationManagerFactory.CreateManager(deviceInstance.DeviceType);
         }
@@ -22,13 +22,13 @@ namespace Prover.Application.Verifications.Factories
     {
         private static IDeviceSessionManager _deviceManager;
         private static ILogger<VerificationManagerFactory> _logger;
-        private static Func<EvcVerificationViewModel, ITestManager> _testManagerFactory;
+        private static Func<EvcVerificationViewModel, IDeviceQaTestManager> _testManagerFactory;
         private static IVerificationTestService _verificationService;
         
         public VerificationManagerFactory(ILogger<VerificationManagerFactory> logger,
                 IVerificationTestService verificationService,
                 IDeviceSessionManager deviceManager,
-                Func<EvcVerificationViewModel, ITestManager> testManagerFactory)
+                Func<EvcVerificationViewModel, IDeviceQaTestManager> testManagerFactory)
         {
             _logger = logger;
             _verificationService = verificationService;
@@ -36,12 +36,12 @@ namespace Prover.Application.Verifications.Factories
             _deviceManager = deviceManager;
         }
 
-        public async Task<ITestManager> StartNew(DeviceType deviceType)
+        public async Task<IDeviceQaTestManager> StartNew(DeviceType deviceType)
         {
             return await CreateManager(deviceType);
         }
 
-        public static async Task<ITestManager> CreateManager(DeviceType deviceType)
+        public static async Task<IDeviceQaTestManager> CreateManager(DeviceType deviceType)
         {
             if (_deviceManager == null) throw new NullReferenceException(nameof(VerificationManagerFactory));
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
@@ -12,7 +14,9 @@ using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Prover.Application.Extensions;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
 using Prover.Domain.EvcVerifications;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Infrastructure.SampleData;
@@ -131,10 +135,12 @@ namespace Prover.Infrastructure
             _provider = provider;
         }
 
+        
+
         public async Task SeedDatabase( int records = 1)
         {
             Debug.WriteLine($"Seeding data...");
-
+            var results = new List<EvcVerificationTest>();
             var random = new Random(10000);
             var watch = Stopwatch.StartNew();
 
@@ -148,8 +154,10 @@ namespace Prover.Infrastructure
                 var device = deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
                 device.SetItemValue(serialNumberItem, random.Next(10000, 999999).ToString());
                 device.SetItemValue(201, random.Next(10000, 999999).ToString());
-
+                
                 var testVm = testService.NewVerification(device);
+
+                testVm.SubmittedDateTime = testVm.TestDateTime.Value.AddSeconds(random.Next(180, 720));
 
                 testVm.SetItems<TemperatureItems>(device, 0, ItemFiles.TempLowItems);
                 testVm.SetItems<TemperatureItems>(device, 1, ItemFiles.TempMidItems);
@@ -159,10 +167,15 @@ namespace Prover.Infrastructure
                 testVm.SetItems<PressureItems>(device, 1, ItemFiles.PressureTest(1));
                 testVm.SetItems<PressureItems>(device, 2, ItemFiles.PressureTest(2));
 
-                await testService.AddOrUpdate(testVm);
+                results.Add(testService.CreateModel(testVm));
+
+                //await testService.AddOrUpdate(testVm);
 
                 Debug.WriteLine($"Created verification test {i} of {records}.");
             }
+
+            await results.ToObservable().ForEachAsync(r => testService.AddOrUpdate(r));
+
             watch.Stop();
             Debug.WriteLine($"Seeding completed in {watch.ElapsedMilliseconds} ms");
         }

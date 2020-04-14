@@ -6,6 +6,6 @@ namespace Prover.Application.Interfaces
 {
     public interface IVerificationManagerFactory
     {
-        Task<ITestManager> StartNew(DeviceType deviceType);
+        Task<IDeviceQaTestManager> StartNew(DeviceType deviceType);
     }
 }
