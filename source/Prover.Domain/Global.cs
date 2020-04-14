@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Prover.Domain.EvcVerifications;
+
 namespace Prover.Domain
 {
     /// <summary>
@@ -41,5 +44,36 @@ namespace Prover.Domain
         public const decimal UNCOR_ERROR_THRESHOLD = 0.1M;
 
         public static decimal ENERGY_PASS_TOLERANCE = 1.0m;
+
+        
+    }
+
+    public static class ProverDefaults
+    {
+        
+        public static readonly ICollection<CorrectionTestDefinition> TestDefinitions = new List<CorrectionTestDefinition>
+        {
+                new CorrectionTestDefinition
+                {
+                        Level = 0,
+                        TemperatureGauge = 32,
+                        PressureGaugePercent = 80,
+                        IsVolumeTest = true
+                },
+                new CorrectionTestDefinition
+                {
+                        Level = 1,
+                        TemperatureGauge = 60,
+                        PressureGaugePercent = 50,
+                        IsVolumeTest = false
+                },
+                new CorrectionTestDefinition
+                {
+                        Level = 2,
+                        TemperatureGauge = 90,
+                        PressureGaugePercent = 20,
+                        IsVolumeTest = false
+                }
+        };
     }
 }

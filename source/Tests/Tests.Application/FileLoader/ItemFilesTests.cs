@@ -23,6 +23,7 @@ namespace Tests.Application.FileLoader
     public class ItemFilesTests
     {
         private string _filePath = ".\\MiniMax.json";
+        private string _templatefilePath = ".\\Template.json";
         private ItemAndTestFile _itemFile;
         private Mock<IDeviceSessionManager> _deviceManagerMock = new Mock<IDeviceSessionManager>();
         private Mock<LiveReadCoordinator> _liveReadMock = new Mock<LiveReadCoordinator>();
@@ -39,6 +40,16 @@ namespace Tests.Application.FileLoader
             var items = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, _filePath);
             
             Assert.IsTrue(items != null);
+        }  
+
+        [TestMethod()]
+        public async Task LoadFromTemplate()
+        {
+            var loader = new ItemLoader(StorageTestsInitialize.DeviceRepo, StorageTestsInitialize.ViewModelService);
+            
+            var test = await loader.LoadTemplate(_templatefilePath);
+            
+            Assert.IsTrue(test != null);
         }  
         
         [TestMethod()]

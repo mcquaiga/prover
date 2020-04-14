@@ -6,11 +6,15 @@
 
   <ItemGroup>
     <None Remove="MiniMax.json" />
+    <None Remove="Template.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="MiniMax.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Template.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

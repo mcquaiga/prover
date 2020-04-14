@@ -3,68 +3,81 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Prover.Shared;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Devices.Core.Interfaces
 {
     public class DeviceInstanceJsonConverter : JsonConverter<DeviceInstance>
     {
-        private JsonSerializerOptions _options = new JsonSerializerOptions()
+        private readonly IDeviceRepository _deviceRepository;
+
+        private readonly JsonSerializerOptions _options = new JsonSerializerOptions
         {
                 PropertyNameCaseInsensitive = true
         };
 
-        private readonly IDeviceRepository _deviceRepository;
+        private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
+        {
+                Formatting = Formatting.None,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
 
         public DeviceInstanceJsonConverter()
         {
             if (DeviceRepository.Instance == null) throw new NullReferenceException("Device repository has not been initialized");
-
             _deviceRepository = DeviceRepository.Instance;
         }
 
-        public DeviceInstanceJsonConverter(IDeviceRepository deviceRepository)
-        {
-            _deviceRepository = deviceRepository;
-        }
+        public DeviceInstanceJsonConverter(IDeviceRepository deviceRepository) => _deviceRepository = deviceRepository;
 
         /// <inheritdoc />
-        public override DeviceInstance Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public DeviceInstance Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-
             var json = reader.GetString();
-            var device = JsonSerializer.Deserialize<Device>(json, _options);
-            
+            var device = System.Text.Json.JsonSerializer.Deserialize<Device>(json, _options);
             var deviceType = _deviceRepository.GetById(device.DeviceTypeId);
             return deviceType.CreateInstance(device.Values);
         }
 
         /// <inheritdoc />
-        public override void Write(Utf8JsonWriter writer, DeviceInstance value, JsonSerializerOptions options)
+        public override DeviceInstance ReadJson(JsonReader reader, Type objectType, DeviceInstance existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var device = Device.Create(value);
-            writer.WriteStringValue(JsonSerializer.Serialize(device, _options));
+            var jObject = JToken.Load(reader);
+            
+            var tempDevice =jObject.ToObject<Device>();
+       
+            var deviceType = _deviceRepository.GetById(tempDevice.DeviceTypeId);
+            return deviceType.CreateInstance(tempDevice.Values);
         }
 
+        /// <inheritdoc />
+        public void Write(Utf8JsonWriter writer, DeviceInstance value, JsonSerializerOptions options)
+        {
+            var device = Device.Create(value);
+            writer.WriteStringValue(System.Text.Json.JsonSerializer.Serialize(device, _options));
+        }
+
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, DeviceInstance value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Nested type: Device
 
         private class Device
         {
-            internal static Device Create(DeviceInstance instance)
-            {
-                return new Device(instance);
-            }
-
             public Device()
             {
             }
 
-
-            private Device(Guid deviceTypeId, Dictionary<string, string> values)
+            [JsonConstructor]
+            public Device(Guid deviceTypeId, Dictionary<string, string> values)
             {
                 DeviceTypeId = deviceTypeId;
                 Values = values;
@@ -76,17 +89,34 @@ namespace Devices.Core.Interfaces
                 Values = value.Values.ToItemValuesDictionary();
             }
 
-            public Guid DeviceTypeId { get; set; }
-            public Dictionary<string, string> Values { get; set; }
+            public Guid DeviceTypeId { get; }
+            public Dictionary<string, string> Values { get; }
+
+            internal static Device Create(DeviceInstance instance) => new Device(instance);
+
+            internal static Device Create(string deviceTypeId, string values)
+            {
+                if (!Guid.TryParse(deviceTypeId, out var id))
+                    throw new ArgumentException(nameof(deviceTypeId));
+                var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(values);
+                return new Device(id, dict);
+            }
+
+            internal static Device Create(Guid deviceTypeId, Dictionary<string, string> values) => new Device(deviceTypeId, values);
         }
+
+        #endregion
     }
 
+    //public class DeviceInstanceJsonConverterSystemJson : DeviceInstanceJsonConverterBase<DeviceInstance>
+    //{
 
+    //}
+    // [System.Text.Json.Serialization.JsonConverter(typeof(DeviceInstanceJsonConverter))]
     [JsonConverter(typeof(DeviceInstanceJsonConverter))]
     public abstract class DeviceInstance
     {
-        protected readonly ConcurrentDictionary<Type, ItemGroup> GroupCache =
-            new ConcurrentDictionary<Type, ItemGroup>();
+        protected readonly ConcurrentDictionary<Type, ItemGroup> GroupCache = new ConcurrentDictionary<Type, ItemGroup>();
 
         protected readonly HashSet<ItemValue> ItemValues = new HashSet<ItemValue>();
 
@@ -102,30 +132,28 @@ namespace Devices.Core.Interfaces
 
         public ICollection<ItemValue> Values => ItemValues.ToList();
 
-        public virtual TGroup CreateItemGroup<TGroup>() where TGroup : ItemGroup =>
-            DeviceType.GetGroup<TGroup>(Values);
+        public void ClearCache()
+        {
+            GroupCache.Clear();
+        }
+
+        public virtual TGroup CreateItemGroup<TGroup>() where TGroup : ItemGroup => DeviceType.GetGroup<TGroup>(Values);
+
+        public virtual TGroup CreateItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
+        {
+            var joined = values.Union(Values, new ItemValueComparer())
+                               .ToList();
+            return DeviceType.GetGroup<TGroup>(joined);
+        }
 
         public virtual TGroup ItemGroup<TGroup>() where TGroup : ItemGroup
         {
             if (GroupCache.TryGetValue(typeof(TGroup), out var cacheItem)) return (TGroup) cacheItem;
-
             var result = DeviceType.GetGroup<TGroup>(Values);
             GroupCache.TryAdd(typeof(TGroup), result);
             return result;
         }
 
-        public virtual TGroup CreateItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
-        {
-            var joined = values.Union(Values, new ItemValueComparer()).ToList();
-
-            return DeviceType.GetGroup<TGroup>(joined);
-        }
-
-        public void ClearCache()
-        {
-            GroupCache.Clear();
-        }
-   
         public virtual void SetItemValues(IEnumerable<ItemValue> itemValues)
         {
             ClearCache();
@@ -147,6 +175,4 @@ namespace Devices.Core.Interfaces
         public PulseOutputItems PulseOutput => _device.ItemGroup<PulseOutputItems>();
         public VolumeItems Volume => _device.ItemGroup<VolumeItems>();
     }
-
-
 }

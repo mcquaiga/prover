@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Prover.Domain.EvcVerifications;
 
 namespace Prover.Application
 {
@@ -33,5 +35,6 @@ namespace Prover.Application
 
             return path;
         }
+
     }
 }
