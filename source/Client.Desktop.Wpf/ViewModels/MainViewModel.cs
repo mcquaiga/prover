@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
 using Prover.Application.Dashboard;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Client.Desktop.Wpf.ViewModels
 {
@@ -14,21 +17,25 @@ namespace Client.Desktop.Wpf.ViewModels
     {
         private readonly IConfiguration _config;
 
-        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, 
-                IConfiguration config
+        public MainViewModel(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems, IConfiguration config
                 )
         {
             _config = config;
             ScreenManager = screenManager;
             ToolbarItems = toolbarItems;
 
+
             NavigateForward = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);
-            NavigateHome = ReactiveCommand.CreateFromTask(async () => await ScreenManager.GoHome());
+            NavigateHome = ReactiveCommand.CreateFromTask(async () =>
+            {
+                await NotificationInteractions.SnackBarMessage.Handle("WELCOME HOME!");
+                await ScreenManager.GoHome();
+            });
          
         }
 
-        public SnackbarMessageQueue MessageQueue { get; } = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));
+        [Reactive] public SnackbarMessageQueue MessageQueue { get; set; } = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));
 
         public string AppTitle { get; } = App.Title;
 

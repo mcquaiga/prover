@@ -6,7 +6,7 @@ using Prover.Shared;
 namespace Devices.Core.Items.ItemGroups
 {
 
-    public class PressureItems :  ItemGroup, IHaveFactor
+    public class PressureItems :  ItemGroup, ICorrectionFactor, IItemGroup
     {
         #region Public Properties
 

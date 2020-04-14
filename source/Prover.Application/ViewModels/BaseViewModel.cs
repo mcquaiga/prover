@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
+using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 
@@ -25,6 +28,7 @@ namespace Prover.Application.ViewModels
         protected virtual void Disposing()
         {
         }
+
     }
 
     public abstract class ViewModelWithIdBase : ViewModelBase

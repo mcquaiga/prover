@@ -27,8 +27,7 @@ namespace Prover.Application.ViewModels
 
         public PressureFactorViewModel Pressure => VerificationTests.OfType<PressureFactorViewModel>().FirstOrDefault();
 
-        public TemperatureFactorViewModel Temperature =>
-            VerificationTests.OfType<TemperatureFactorViewModel>().FirstOrDefault();
+        public TemperatureFactorViewModel Temperature => VerificationTests.OfType<TemperatureFactorViewModel>().FirstOrDefault();
 
         public SuperFactorViewModel SuperFactor => VerificationTests.OfType<SuperFactorViewModel>().FirstOrDefault();
 

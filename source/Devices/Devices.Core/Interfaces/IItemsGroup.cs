@@ -7,4 +7,5 @@ namespace Devices.Core.Interfaces
     {
         ICollection<ItemMetadata> RelatedItems();
     }
+
 }

@@ -30,7 +30,7 @@
     <Style x:Key="PrimaryTestHeaderStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{StaticResource PrimaryTextColor}" />
         <Setter Property="FontSize" Value="20" />
-        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontWeight" Value="Light" />
         <Setter Property="Margin" Value="4" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Left" />

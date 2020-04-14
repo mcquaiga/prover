@@ -2,14 +2,14 @@
 using Client.Desktop.Wpf.Extensions;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications.Managers
+namespace Client.Desktop.Wpf.Views.Verifications
 {
     /// <summary>
     ///     Interaction logic for EditTestView.xaml
     /// </summary>
-    public partial class RotaryTestManagerView
+    public partial class TestManagerView
     {
-        public RotaryTestManagerView()
+        public TestManagerView()
         {
             InitializeComponent();
 

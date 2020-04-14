@@ -12,6 +12,7 @@ using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
 using Microsoft.Extensions.Logging;
+using Prover.Application.FileLoader;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.Settings;
@@ -26,9 +27,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
         public NewTestRunViewModel(ILogger<NewTestRunViewModel> logger,
             IScreenManager screenManager,
-            ITestManagerFactory verificationManagerFactory,
-            IDeviceSessionManager commDeviceManager,
-            //FileDeviceSessionManager fileDeviceManager,
+            IVerificationManagerFactory verificationManagerFactory,
             IDeviceRepository deviceRepository)
         {
             deviceRepository.All.Connect()
@@ -54,19 +53,23 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             BaudRates = baudRates;                      
             
             ApplicationSettings.Local.VerificationFilePath = "";
-            LoadFromFile = ReactiveCommand.CreateFromObservable<string>(() =>
+
+            LoadFromFile = ReactiveCommand.CreateFromObservable(() =>
             {
                 var fileDialog = new OpenFileDialog();
-                if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+
+                if (fileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK || !fileDialog.CheckFileExists)
+                    return Observable.Empty<ITestManager>();
+
+                ApplicationSettings.Local.VerificationFilePath = fileDialog.FileName;
+                
+                return Observable.StartAsync(async () =>
                 {
-                    if (fileDialog.CheckFileExists)
-                    {
-                        ApplicationSettings.Local.VerificationFilePath = fileDialog.FileName;                      
-                        return Observable.Return(fileDialog.FileName);
-                    }                    
-                }
-                return Observable.Return(string.Empty);
+                    var itemFile = await ItemLoader.LoadFromFile(deviceRepository, fileDialog.FileName);
+                    return await verificationManagerFactory.StartNew(itemFile.Device.DeviceType);
+                });
             });
+            
 
             StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
             {
@@ -74,13 +77,12 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 return Observable.StartAsync(async () => await verificationManagerFactory.StartNew(SelectedDeviceType));
             }).DisposeWith(_cleanup);
 
-            //var changeScreens = ReactiveCommand.CreateFromTask<ITestManager>(async vm => await screenManager.ChangeView(vm));
-            StartTestCommand
-                .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));          
+            StartTestCommand.Merge(LoadFromFile)
+                            .InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));          
         }
 
         public LocalSettings Selected => ApplicationSettings.Local;
-        public ReactiveCommand<Unit, string> LoadFromFile { get; protected set; }
+        public ReactiveCommand<Unit, ITestManager> LoadFromFile { get; protected set; }
         public ReactiveCommand<Unit, ITestManager> StartTestCommand { get; set; }
         public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
         public ReadOnlyObservableCollection<int> BaudRates { get; set; }
@@ -90,6 +92,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         [Reactive] public string SelectedCommPort { get; set; }
         [Reactive] public DeviceType SelectedDeviceType { get; set; }
         [Reactive] public int SelectedBaudRate { get; set; }
+        [Reactive] public string TestDefinitionFilePath { get; set; }
 
         private void SetLastUsedSettings()
         {            

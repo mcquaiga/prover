@@ -1,21 +1,19 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Client.Desktop.Wpf.Views.Verifications.Managers.RotaryTestManagerView"
+    x:Class="Client.Desktop.Wpf.Views.Verifications.TestManagerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interfaces="clr-namespace:Prover.Application.Interfaces;assembly=Prover.Application"
-    xmlns:local="clr-namespace:Client.Desktop.Wpf.Views.Verifications"
-    xmlns:managers="clr-namespace:Client.Desktop.Wpf.Views.Verifications.Managers"
+    xmlns:managers="clr-namespace:Client.Desktop.Wpf.Views.Verifications"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:verifications="clr-namespace:Prover.Application.Verifications;assembly=Prover.Application"
-    x:Name="RotaryTestManager"
-    d:DataContext="{d:DesignInstance verifications:RotaryTestManager,
+    xmlns:verifications1="clr-namespace:Client.Desktop.Wpf.ViewModels.Verifications"
+    x:Name="TestManagerControl"
+    d:DataContext="{d:DesignInstance verifications1:TestManager,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="verifications:RotaryTestManager"
+    x:TypeArguments="verifications1:TestManager"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="CorrectionsTestDataTemplate">
@@ -26,7 +24,7 @@
                 Margin="8,-2,8,12"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:RotaryTestManagerView}}}"
+                Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
                 CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
                 Style="{StaticResource MaterialDesignRaisedDarkButton}">
                 <materialDesign:PackIcon
@@ -43,7 +41,7 @@
                 <Button
                     Width="150"
                     Margin="15,5"
-                    Command="{Binding ViewModel.VolumeTestManager.StartTest, RelativeSource={RelativeSource AncestorType={x:Type managers:RotaryTestManagerView}}}"
+                    Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
                     Content="Run Volume Test"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}" />
             </StackPanel>
@@ -100,7 +98,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ContentControl
+        <!--<ContentControl
             x:Name="TestToolBarContent"
             Grid.Row="0"
             Grid.RowSpan="2"
@@ -108,7 +106,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Stretch"
             ContentTemplate="{StaticResource ToolbarControl}"
-            DataContext="{Binding}" />
+            DataContext="{Binding}" />-->
         <reactiveUi:ViewModelViewHost
             x:Name="TestViewContent"
             Grid.Row="0"
@@ -117,7 +115,9 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center" />
+            VerticalContentAlignment="Center">
+            <reactiveUi:ViewModelViewHost.Resources />
+        </reactiveUi:ViewModelViewHost>
     </Grid>
 
 

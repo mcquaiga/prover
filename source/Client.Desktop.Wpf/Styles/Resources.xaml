@@ -23,6 +23,7 @@
 
         <ResourceDictionary Source="DrawerHost.CustomTemplate.xaml" />
         <ResourceDictionary>
+            <converters:PackIconConverter x:Key="PackIconConverter" />
 
 
             <converters:BoolToVisibilityConverter

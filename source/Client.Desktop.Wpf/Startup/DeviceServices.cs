@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Client.Desktop.Wpf.Extensions;
 using Client.Desktop.Wpf.ViewModels;
 using Client.Desktop.Wpf.ViewModels.Devices;
+using Client.Desktop.Wpf.ViewModels.Verifications;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using Prover.Shared.Interfaces;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Factories;
+using Prover.Application.Verifications.Volume;
 using Prover.Application.ViewModels.Factories;
 
 namespace Client.Desktop.Wpf.Startup
@@ -31,27 +33,14 @@ namespace Client.Desktop.Wpf.Startup
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
         {
             services.AddSingleton<IVerificationViewModelFactory, VerificationViewModelFactory>();
-
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager, ITestManager>>(c => (test, volumeManager) =>
-                    ActivatorUtilities.CreateInstance<RotaryTestManager>(c, test, volumeManager));
-
-            services.AddTransient<ITestManagerFactory, VerificationTestManagerFactory>();
-            services.AddTransient<TestManagerFactoryCoordinator>();
-            services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
-            {
-                var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
-                return volumeFactory.CreateVolumeManager(evcTest);
-            });
-
+            
+            services.AddVerificationManagers();
             services.AddDeviceCommunication();
             services.AddPulseOutputListeners();
             services.AddTachometer();
 
             services.AddSingleton<DeviceSessionDialogManager>();
-
             services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
-            services.AddSingleton<ICorrectionTestsManager, StabilizerCorrectionTestManager>();
 
             services.AddAllTypes<IEventsSubscriber>(lifetime: ServiceLifetime.Singleton);
 
@@ -66,7 +55,6 @@ namespace Client.Desktop.Wpf.Startup
             _provider.GetService<DeviceSessionDialogManager>();
 
             InitializeEventSubscribers();
-
 
             await Task.CompletedTask;
         }

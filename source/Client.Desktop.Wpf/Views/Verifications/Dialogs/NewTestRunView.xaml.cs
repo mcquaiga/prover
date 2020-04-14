@@ -23,10 +23,10 @@ namespace Client.Desktop.Wpf.Views.Verifications
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.CommPorts.ItemsSource).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.BaudRates, v => v.BaudRates.ItemsSource, 
-                    value => value.Select(x => x.ToString()))
-                    .DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.BaudRates, v => v.BaudRates.ItemsSource, value => value.Select(x => x.ToString())).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.TachCommPorts.ItemsSource).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.TestDefinitionFilePath, v => v.FilePathTextBlock.Text).DisposeWith(d);
+
 
                 this.Bind(ViewModel, vm => vm.SelectedDeviceType, v => v.DeviceTypes.SelectedItem).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.Selected.TachCommPort, v => v.TachCommPorts.SelectedItem).DisposeWith(d);

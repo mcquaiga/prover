@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Reactive;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 
@@ -13,16 +15,33 @@ namespace Prover.Application.Verifications
                 OnInitialize { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
         public static VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel> 
-                OnSubmit { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
+                OnSubmit { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>(); 
+        
+        public static VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel> 
+                OnVerified { get; } = new VerificationEvent<EvcVerificationViewModel, EvcVerificationViewModel>();
 
+        public static class TestEvents<TManager>
+        {
+            public static VerificationEvent<TManager, Unit> OnStart { get; } = new VerificationEvent<TManager, Unit>();
+            public static VerificationEvent<TManager, Unit> OnComplete { get; } = new VerificationEvent<TManager, Unit>();
+        }
 
-        public static class CorrectionTest
+        public static class CorrectionTests
         {
             public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
                     OnStart { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
 
             public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
-                    OnFinish { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+                    OnComplete { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+
+            public static VerificationEvent<LiveReadCoordinator, LiveReadCoordinator> 
+                    OnLiveReadStart { get; } = new VerificationEvent<LiveReadCoordinator, LiveReadCoordinator>(); 
+            
+            public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
+                    OnLiveReadComplete { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
+
+            public static VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel> 
+                    BeforeDownload { get; } = new VerificationEvent<VerificationTestPointViewModel, VerificationTestPointViewModel>();
         }
 
         public static void DefaultSubscribers(ILogger<VerificationEvents> logger = null)
@@ -32,8 +51,8 @@ namespace Prover.Application.Verifications
             OnInitialize.Subscribe(e => SetResponse(e, e.Input, nameof(OnInitialize)));
             OnSubmit.Subscribe(e => SetResponse(e, e.Input, nameof(OnSubmit)));
             
-            CorrectionTest.OnStart.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTest.OnStart)));
-            CorrectionTest.OnFinish.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTest.OnFinish)));
+            CorrectionTests.OnStart.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTests.OnStart)));
+            CorrectionTests.OnComplete.Subscribe(e => SetResponse(e, e.Input, nameof(CorrectionTests.OnComplete)));
 
             void SetResponse<TIn, TOut>(EventContext<TIn, TOut> context, TOut output, string name)
             {

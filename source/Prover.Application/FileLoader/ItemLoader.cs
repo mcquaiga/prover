@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using Newtonsoft.Json;
 using Prover.Application.Interactions;
@@ -69,6 +70,7 @@ namespace Prover.Application.FileLoader
 
             public ICollection<Dictionary<string, string>> PressureTests { get; set; }
             public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
+            public Dictionary<string, string> VolumeTest { get; set; }
         }
 
         #endregion
@@ -80,6 +82,11 @@ namespace Prover.Application.FileLoader
 
         public Dictionary<int, List<ItemValue>> PressureTests { get; set; }
         public Dictionary<int, List<ItemValue>> TemperatureTests { get; set; }
+        public Tuple<List<ItemValue>, List<ItemValue>> VolumeTest { get; set; }
+
+        public Dictionary<int, TemperatureItems> TemperatureTestItems { get; set; } 
+        public Dictionary<int, PressureItems> PressureTestItems { get; set; } 
+        public Dictionary<int, TemperatureItems> VolumeTestItems { get; set; } 
     }
 
 }

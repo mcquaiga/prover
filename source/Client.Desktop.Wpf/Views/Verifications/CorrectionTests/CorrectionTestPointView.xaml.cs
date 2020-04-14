@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using System.Reactive.Disposables;
 using Client.Desktop.Wpf.Extensions;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;
 
-namespace Client.Desktop.Wpf.Views.Verifications
+namespace Client.Desktop.Wpf.Views.Verifications.CorrectionTests
 {
     /// <summary>
     /// Interaction logic for CorrectionTestPointView.xaml
@@ -32,7 +33,7 @@ namespace Client.Desktop.Wpf.Views.Verifications
                                 return success;
                             }
                             return false;
-                        })).DisposeWith(d);
+                        })).DisposeWith<IReactiveBinding<CorrectionTestPointView, VerificationTestPointViewModel, IEnumerable>>(d);
 
                     //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentHost.ViewModel).DisposeWith(d);
                     //this.OneWayBind(ViewModel, vm => vm.Volume, v => v.VolumeContentSection.Visibility, 

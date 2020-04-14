@@ -21,10 +21,11 @@
         </Style>
     </UserControl.Resources>
     <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
         <Viewbox
-            Width="Auto"
-            DockPanel.Dock="Left"
-            Stretch="Uniform">
+            MinWidth="200"
+            MaxWidth="400"
+            DockPanel.Dock="Left">
             <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="5" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
@@ -55,7 +56,7 @@
                                 Padding="4"
                                 BorderThickness="0"
                                 Style="{StaticResource SubSectionDividerBorder}">
-                                <Grid HorizontalAlignment="Stretch">
+                                <Grid HorizontalAlignment="Center">
                                     <ContentControl
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
