@@ -14,7 +14,7 @@ namespace Devices.Core.Interfaces
 {
     public class DeviceInstanceJsonConverter : JsonConverter<DeviceInstance>
     {
-        private readonly IDeviceRepository _deviceRepository;
+        private IDeviceRepository _deviceRepository;
 
         private readonly JsonSerializerOptions _options = new JsonSerializerOptions
         {
@@ -29,7 +29,8 @@ namespace Devices.Core.Interfaces
 
         public DeviceInstanceJsonConverter()
         {
-            if (DeviceRepository.Instance == null) throw new NullReferenceException("Device repository has not been initialized");
+            if (DeviceRepository.Instance == null) 
+                throw new NullReferenceException("Device repository has not been initialized");
             _deviceRepository = DeviceRepository.Instance;
         }
 

@@ -42,7 +42,7 @@ namespace Prover.Application.Services
 
         public async Task<EvcVerificationViewModel> AddOrUpdate(EvcVerificationViewModel viewModel)
         {
-            viewModel.TestDateTime = viewModel.TestDateTime ?? DateTime.Now;
+            viewModel.TestDateTime = viewModel.TestDateTime;
 
             var model =
                     await AddOrUpdate(

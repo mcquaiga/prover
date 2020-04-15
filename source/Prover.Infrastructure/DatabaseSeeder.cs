@@ -46,7 +46,7 @@ namespace Prover.Infrastructure
                 
                 var testVm = testService.NewVerification(device);
 
-                testVm.SubmittedDateTime = testVm.TestDateTime.Value.AddSeconds(random.Next(180, 720));
+                testVm.SubmittedDateTime = testVm.TestDateTime.AddSeconds(random.Next(180, 720));
 
                 testVm.SetItems<TemperatureItems>(device, 0, ItemFiles.TempLowItems);
                 testVm.SetItems<TemperatureItems>(device, 1, ItemFiles.TempMidItems);
