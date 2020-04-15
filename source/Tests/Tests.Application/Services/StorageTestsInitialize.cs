@@ -46,7 +46,7 @@ namespace Tests.Application.Services
             //await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
             DeviceRepo = DeviceRepository.Instance;
 
-            StorageDefaults.CreateLiteDb("FileName=.\\prover_test.db;Connection=shared");
+            StorageDefaults.CreateLiteDb("prover_test.db;");
             TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, DeviceRepo);
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");

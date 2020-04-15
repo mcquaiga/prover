@@ -788,18 +788,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
-      <Project>{FFBCA1C4-59CC-4401-BC0B-B97C53A9559B}</Project>
-      <Name>Prover.CommProtocol.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
-      <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
-      <Name>Prover.CommProtocol.MiHoneywell</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
-      <Project>{35fe4429-b8f5-4761-b401-a215d1b4eba2}</Project>
-      <Name>Prover.Core.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Prover.Core\Prover.Core.csproj">
       <Project>{de48160f-095d-40b1-8790-6cb560024ce5}</Project>
       <Name>Prover.Core</Name>

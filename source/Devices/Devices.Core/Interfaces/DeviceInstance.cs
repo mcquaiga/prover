@@ -66,7 +66,9 @@ namespace Devices.Core.Interfaces
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, DeviceInstance value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var device = Device.Create(value);
+            
+            serializer.Serialize(writer, device);
         }
 
         #region Nested type: Device
