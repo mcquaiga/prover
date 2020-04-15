@@ -22,6 +22,7 @@ namespace Prover.Core.Storage
             return _proverContext.Instruments
                 .IncludeOptimized(v => v.VerificationTests)
                 .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
+
                 .AsQueryable();
         }
 
