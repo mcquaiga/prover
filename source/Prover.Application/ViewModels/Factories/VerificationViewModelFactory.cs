@@ -16,6 +16,8 @@ namespace Prover.Application.ViewModels.Factories
         EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest);
     }
 
+
+
     public class VerificationViewModelFactory : IVerificationViewModelFactory
     {
         private readonly ILoginService _loginService;
@@ -51,6 +53,15 @@ namespace Prover.Application.ViewModels.Factories
             _testDefinitions = testDefinitions ?? _testDefinitions;
         }
 
+        private VerificationViewModelFactory(){}
+
+        public static EvcVerificationViewModel Create(DeviceInstance device)
+        {
+            var model = new EvcVerificationTest(device);
+            return new VerificationViewModelFactory()
+                    .CreateViewModel(model);
+        }
+
         public EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest)
         {
             var viewModel = evcTest.ToViewModel();
@@ -62,7 +73,7 @@ namespace Prover.Application.ViewModels.Factories
             return viewModel;
         }
 
-        private IEnumerable<VerificationViewModel> BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel, ICollection<CorrectionTestDefinition>
+        public IEnumerable<VerificationViewModel> BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel, ICollection<CorrectionTestDefinition>
                 testDefinitions)
         {
             return testDefinitions.Select(td => BuildTestPointViewModel(device, viewModel, td));

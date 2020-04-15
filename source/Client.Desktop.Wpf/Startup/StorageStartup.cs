@@ -34,7 +34,7 @@ namespace Client.Desktop.Wpf.Startup
         public StorageStartup(IServiceProvider provider, DatabaseSeeder seeder = null)
         {
             _provider = provider;
-            _seeder = seeder ?? new DatabaseSeeder(provider);
+            //_seeder = seeder ?? new DatabaseSeeder(provider);
         }
 
         #region IStartupTask Members

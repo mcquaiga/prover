@@ -28,7 +28,7 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public IVolumeInputType DriveType { get; set; }
 
-        [Reactive] public DateTime? TestDateTime { get; set; }
+        [Reactive] public DateTime TestDateTime { get; set; }
 
         [Reactive] public DateTime? ExportedDateTime { get; set; }
 

@@ -39,6 +39,6 @@ namespace Prover.Application.ViewModels
 
         public extern string EmployeeName { [ObservableAsProperty] get; }
 
-        public DateTime TestDateTime => Test.TestDateTime ?? _startTestDate;
+        public DateTime TestDateTime => Test.TestDateTime;
     }
 }

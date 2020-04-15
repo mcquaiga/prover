@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devices.Romet.Tests", "Devi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prover.Modules.UnionGas.Tests", "Prover.Modules.UnionGas.Tests\Prover.Modules.UnionGas.Tests.csproj", "{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoTesting", "MongoTesting\MongoTesting.csproj", "{2222E076-7745-458C-B042-9A3E52C55E29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -963,6 +965,46 @@ Global
 		{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}.Release|x64.Build.0 = Release|Any CPU
 		{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}.Release|x86.ActiveCfg = Release|Any CPU
 		{E2F6C57C-0548-4ADC-8F03-74EF76A057F2}.Release|x86.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|x64.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Debug|x86.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|Any CPU.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|iPhone.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|iPhone.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|x64.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|x64.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|x86.ActiveCfg = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.MiProtocolConsole|x86.Build.0 = Debug|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|Any CPU.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|Any CPU.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|iPhone.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|iPhone.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|iPhoneSimulator.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|x64.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|x64.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|x86.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release - Union Gas|x86.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|iPhone.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|x64.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|x64.Build.0 = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|x86.ActiveCfg = Release|Any CPU
+		{2222E076-7745-458C-B042-9A3E52C55E29}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
