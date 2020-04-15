@@ -4,6 +4,7 @@ using Client.Desktop.Wpf.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,13 +58,13 @@ namespace Client.Desktop.Wpf
             }
             catch (AggregateException aggEx)
             {
-                foreach (var ex in aggEx.InnerExceptions) Console.WriteLine(ex.Message);
+                foreach (var ex in aggEx.InnerExceptions) Debug.WriteLine(ex.Message);
                 App.Shutdown();
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 App.Shutdown();
             }
         }

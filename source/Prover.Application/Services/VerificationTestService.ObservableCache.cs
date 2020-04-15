@@ -18,8 +18,7 @@ namespace Prover.Application.Services
         private CompositeDisposable _cleanup;
         private IObservableList<EvcVerificationTest> _data;
 
-        public IObservableCache<EvcVerificationTest, Guid> Updates { get; private set; }//=> _cacheUpdates.AsObservableCache();
-        //public IObservableCache<EvcVerificationTest, Guid> Updates => _cacheUpdates.AsObservableCache();
+        public IObservableCache<EvcVerificationTest, Guid> Updates { get; private set; }
 
         public IObservableList<EvcVerificationTest> Data(Func<EvcVerificationTest, bool> filter = null) => _data.Connect(filter).AsObservableList();
 
@@ -28,8 +27,7 @@ namespace Prover.Application.Services
 
         public IObservableCache<EvcVerificationTest, Guid> Load()
         {
-            Observable.StartAsync(LoadAsync)
-                      .Subscribe();
+            _ = LoadAsync();
 
             return Updates;
         }

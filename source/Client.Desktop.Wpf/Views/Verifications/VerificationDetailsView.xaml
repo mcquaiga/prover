@@ -70,10 +70,18 @@
 
                 <Viewbox Grid.Row="1">
                     <Border Padding="2" Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
 
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource PrimaryTestHeaderStyle}" Text="Volume" />
+                                <TextBlock
+                                    Margin="0,0,0,5"
+                                    RenderTransformOrigin=".5,.5"
+                                    Style="{StaticResource PrimaryTestHeaderStyle}"
+                                    Text="Volume">
+                                    <TextBlock.LayoutTransform>
+                                        <RotateTransform Angle="-90" />
+                                    </TextBlock.LayoutTransform>
+                                </TextBlock>
                                 <ContentControl x:Name="VolumeTestContent" ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
                             </StackPanel>
 

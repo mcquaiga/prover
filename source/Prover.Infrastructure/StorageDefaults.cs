@@ -156,6 +156,8 @@ namespace Prover.Infrastructure
                 device.SetItemValue(201, random.Next(10000, 999999).ToString());
                 
                 var testVm = testService.NewVerification(device);
+                testVm.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(4, 30)));
+                testVm.SubmittedDateTime = testVm.TestDateTime.Value.AddSeconds(random.Next(180, 720));
 
                 testVm.SubmittedDateTime = testVm.TestDateTime.Value.AddSeconds(random.Next(180, 720));
 
@@ -174,7 +176,7 @@ namespace Prover.Infrastructure
                 Debug.WriteLine($"Created verification test {i} of {records}.");
             }
 
-            await results.ToObservable().ForEachAsync(r => testService.AddOrUpdate(r));
+            results.ForEach(r => testService.AddOrUpdate(r));
 
             watch.Stop();
             Debug.WriteLine($"Seeding completed in {watch.ElapsedMilliseconds} ms");

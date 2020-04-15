@@ -37,6 +37,7 @@ namespace Client.Desktop.Wpf.Views.Dashboards
                 this.OneWayBind(ViewModel, vm => vm.DefaultSelectedDate, v => v.DateFiltersControl.SelectedItem).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.LoadCaches, v => v.RefreshDataButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.RefreshData, v => v.RefreshDataButton).DisposeWith(d);
 
                 this.WhenAnyValue(x => x.ViewModel.ApplyDateFilter)
                     .SelectMany(x => x.Execute(ViewModel.DefaultSelectedDate))
