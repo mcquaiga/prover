@@ -25,7 +25,7 @@ namespace Prover.Application.Dashboard
 
             ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.DateTimeFilter, outputScheduler: RxApp.MainThreadScheduler);
             
-            DashboardItems = dashboardFactory.CreateDashboard()
+            DashboardItems = dashboardFactory.CreateDashboard(BuildTestDateTimeFilter)
                                              .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
                                              .ToList();
             GroupedItems = DashboardItems

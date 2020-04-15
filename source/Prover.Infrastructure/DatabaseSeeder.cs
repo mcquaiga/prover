@@ -26,7 +26,7 @@ namespace Prover.Infrastructure
 
         
 
-        public async Task SeedDatabase( int records = 1)
+        public Task SeedDatabase( int records = 1)
         {
             Debug.WriteLine($"Seeding data...");
             var results = new List<EvcVerificationTest>();
@@ -63,10 +63,15 @@ namespace Prover.Infrastructure
                 Debug.WriteLine($"Created verification test {i} of {records}.");
             }
 
-            await results.ToObservable().ForEachAsync(r => testService.AddOrUpdate(r));
 
             watch.Stop();
             Debug.WriteLine($"Seeding completed in {watch.ElapsedMilliseconds} ms");
+
+            return results.ToObservable()
+                          .ForEachAsync(r => testService.AddOrUpdate(r));
+
+
+
         }
     }
 }

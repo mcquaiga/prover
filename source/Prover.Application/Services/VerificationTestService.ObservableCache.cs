@@ -35,7 +35,7 @@ namespace Prover.Application.Services
         }
 
         /// <inheritdoc />
-        public async Task LoadAsync()
+        public Task LoadAsync()
         {
             if (_cleanup == null)
             {
@@ -51,7 +51,7 @@ namespace Prover.Application.Services
                 //LogChanges().DisposeWith(_cleanup);
             }
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public void Update()
@@ -66,6 +66,7 @@ namespace Prover.Application.Services
         {
             Updates = _cacheUpdates.AsObservableCache();
             _data = Updates.Connect().RemoveKey().AsObservableList();
+            LoadAsync();
         }
 
         private IDisposable LogChanges()

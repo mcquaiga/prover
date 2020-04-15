@@ -13,6 +13,7 @@ using Devices.Romet.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Dashboard;
+using Prover.Application.Extensions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
@@ -25,7 +26,7 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Startup
 {
-    public partial class StorageStartup : IStartupTask
+    public partial class StorageStartup : IStartupTask, IHostedService
     {
         private const string KeyValueStoreConnectionString = "LiteDb";
         private readonly IServiceProvider _provider;
@@ -42,8 +43,6 @@ namespace Client.Desktop.Wpf.Startup
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await StartCaches(cancellationToken);
-
-            //TaskPoolScheduler.Default.ScheduleLongRunning(async ct => await _seeder.SeedDatabase(250));
         }
 
         #endregion
@@ -61,16 +60,34 @@ namespace Client.Desktop.Wpf.Startup
             //                                 .Merge())
             //                .RunAsync(cancellationToken);
 
-            var devices = DeviceRepository.Instance;
+           
 
-            return _provider.GetServices<ICacheManager>()
-                            .ToObservable()
-                            .ForEachAsync(async c => await c.LoadAsync(), cancellationToken);
+            return Task.CompletedTask;
                     
                      
                      //.Concat()
                      //.RunAsync(cancellationToken)
                      ;
+        }
+
+        /// <inheritdoc />
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            var devices = DeviceRepository.Instance;
+
+            //_provider.GetServices<ICacheManager>()
+                     
+            //         .ForEachAsync(c => c.LoadAsync(), cancellationToken)
+            //         .
+
+            //TaskPoolScheduler.Default.ScheduleLongRunning(ct => _seeder.SeedDatabase(250));
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 
@@ -81,6 +98,7 @@ namespace Client.Desktop.Wpf.Startup
             var config = host.Configuration;
 
             services.AddStartTask<StorageStartup>();
+            services.AddHostedService<StorageStartup>();
 
             if (config.IsLiteDb())
                 AddLiteDb(services, host);

@@ -25,7 +25,7 @@ namespace Prover.Application.Dashboard
         private readonly IDeviceRepository _deviceRepository;
         private readonly IEntityDataCache<EvcVerificationTest> _entityCache;
 
-        private readonly Subject<Func<EvcVerificationTest, bool>> _parentFilterObservable = new Subject<Func<EvcVerificationTest, bool>>();
+        private readonly IObservable<Func<EvcVerificationTest, bool>> _parentFilterObservable = new Subject<Func<EvcVerificationTest, bool>>();
 
         public DashboardFactory(IEntityDataCache<EvcVerificationTest> entityCache, IDeviceRepository deviceRepository)
         {
@@ -59,11 +59,7 @@ namespace Prover.Application.Dashboard
 
         public void DateTimeFilter(string dateTimeKey)
         {
-            bool buildFilter(EvcVerificationTest test)
-                => DateFilters[dateTimeKey]
-                        .Invoke(test.TestDateTime);
-
-            _parentFilterObservable.OnNext(buildFilter);
+            _parentFilterObservable.OnNext(test => DateFilters[dateTimeKey].Invoke(test.TestDateTime));
         }
 
         private IEnumerable<IDashboardItem> CreateVerifiedViews(IObservable<Func<EvcVerificationTest, bool>> parentFilter)

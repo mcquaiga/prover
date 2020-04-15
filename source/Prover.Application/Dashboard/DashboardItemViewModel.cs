@@ -37,21 +37,22 @@ namespace Prover.Application.Dashboard
         protected IObservableList<EvcVerificationTest> GenerateListStream(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {
             //filter = filter ?? (v => true);
-            if (ListStreamInstance == null)
+            if (ListStreamInstance != null)
             {
-                parentFilter = parentFilter ?? Observable.Return<Func<EvcVerificationTest, bool>>(test => true);
-
-                ListStreamInstance = entityCache?.Data()
-                                                .Connect()
-                                                .ObserveOn(RxApp.MainThreadScheduler)
-                                                .Throttle(TimeSpan.FromMilliseconds(50))
-                                                .Filter(parentFilter)
-                                                //.DelaySubscription(TimeSpan.FromSeconds(2))
-                                                .AsObservableList()
-                                                .DisposeWith(Cleanup);
+                return ListStreamInstance;
             }
 
-            return ListStreamInstance;
+            parentFilter = parentFilter ?? Observable.Return<Func<EvcVerificationTest, bool>>(test => true);
+
+            return entityCache?.Data()
+                                            .Connect()
+                                            .ObserveOn(RxApp.MainThreadScheduler)
+                                            .Throttle(TimeSpan.FromMilliseconds(50))
+                                            .Filter(parentFilter)
+                                            //.DelaySubscription(TimeSpan.FromSeconds(2))
+                                            .AsObservableList()
+                                            .DisposeWith(Cleanup);
+
         }
         
         protected IObservable<IChangeSet<EvcVerificationTest>> GenerateCacheStream(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter)
