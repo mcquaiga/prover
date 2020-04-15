@@ -1,8 +1,69 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>v4.7.2</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.0" />
+    <PackageReference Include="EntityFramework.SqlServerCompact" Version="6.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\lib\legacy\Prover.Core\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\lib\legacy\Prover.Core\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\lib\legacy\Prover.Core\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="MccDaq">
+      <HintPath>..\lib\legacy\Prover.Core\MccDaq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\lib\legacy\Prover.Core\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\legacy\Prover.Core\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\lib\legacy\Prover.Core\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.CommProtocol.Common">
+      <HintPath>..\lib\legacy\Prover.CommProtocol.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.CommProtocol.MiHoneywell">
+      <HintPath>..\lib\legacy\Prover.CommProtocol.MiHoneywell.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.CommProtocol.MiHoneywell.CRC">
+      <HintPath>..\lib\legacy\Prover.CommProtocol.MiHoneywell.CRC.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.Core">
+      <HintPath>..\lib\legacy\Prover.Core\Prover.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.Core.Shared">
+      <HintPath>..\lib\legacy\Prover.Core.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="PubSub">
+      <HintPath>..\lib\legacy\Prover.Core\PubSub.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperFactorCalculations">
+      <HintPath>..\lib\legacy\SuperFactorCalculations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe">
+      <HintPath>..\lib\legacy\Prover.Core\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\lib\legacy\Prover.Core\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="Z.EntityFramework.Plus.EF6">
+      <HintPath>..\lib\legacy\Prover.Core\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

@@ -132,7 +132,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             if (!body.Contains(ControlCharacters.ETX))
                 body = string.Concat(body, ControlCharacters.ETX);
 
-            var crc = CRC.CRC.CalcCRC(body);
+            var crc = CRC.CalcCRC(body);
             return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
         }
     }

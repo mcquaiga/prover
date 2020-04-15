@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\source\lib\legacy\Prover.Core\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -54,17 +54,17 @@
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\source\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServerCompact, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.SqlServerCompact.6.2.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+      <HintPath>..\..\source\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="MccDaq, Version=2.6.0.0, Culture=neutral, PublicKeyToken=a37eefcf5c6ca10a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\MccDaq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\source\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.3\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -72,8 +72,23 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.8\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="Prover.CommProtocol.Common">
+      <HintPath>..\..\source\lib\legacy\Prover.CommProtocol.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.CommProtocol.MiHoneywell">
+      <HintPath>..\..\source\lib\legacy\Prover.CommProtocol.MiHoneywell.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.CommProtocol.MiHoneywell.CRC">
+      <HintPath>..\..\source\lib\legacy\Prover.CommProtocol.MiHoneywell.CRC.dll</HintPath>
+    </Reference>
+    <Reference Include="Prover.Core.Shared">
+      <HintPath>..\..\source\lib\legacy\Prover.Core.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="PubSub, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fe4ede83ff72b2e0, processorArchitecture=MSIL">
       <HintPath>..\packages\PubSub.3.0.0\lib\netstandard2.0\PubSub.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperFactorCalculations">
+      <HintPath>..\..\source\lib\legacy\SuperFactorCalculations.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -227,24 +242,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Prover.CommProtocol.Common\Prover.CommProtocol.Common.csproj">
-      <Project>{ffbca1c4-59cc-4401-bc0b-b97c53a9559b}</Project>
-      <Name>Prover.CommProtocol.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.CommProtocol.MiHoneywell\Prover.CommProtocol.MiHoneywell.csproj">
-      <Project>{07facec7-67d1-49a8-bb19-ddc7b636c689}</Project>
-      <Name>Prover.CommProtocol.MiHoneywell</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.Core.Shared\Prover.Core.Shared.csproj">
-      <Project>{35FE4429-B8F5-4761-B401-A215D1B4EBA2}</Project>
-      <Name>Prover.Core.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prover.SuperFactorCalculations\Prover.SuperFactorCalculations.vbproj">
-      <Project>{d39db1d2-6243-4faa-931c-95febaa3a9c7}</Project>
-      <Name>Prover.SuperFactorCalculations</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exports\CsvFiles\" />
