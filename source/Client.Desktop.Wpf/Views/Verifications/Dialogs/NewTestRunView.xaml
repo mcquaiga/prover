@@ -73,7 +73,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Row="1" Grid.Column="0">
+                <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
@@ -163,24 +163,32 @@
             VerticalAlignment="Center"
             DockPanel.Dock="Bottom"
             Orientation="Vertical">
-            <TextBlock x:Name="FilePath" Style="{StaticResource MaterialDesignBody1TextBlock}" />
-            <Expander HorizontalAlignment="Right" DockPanel.Dock="Right">
-                <StackPanel>
-                    <Button
-                        x:Name="LoadFromFileButton"
-                        Margin="15"
-                        Content="Load From File..."
-                        Style="{StaticResource MaterialDesignFlatLightBgButton}" />
-                    <Button
-                        Margin="15"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Command="{Binding StartRotarySmokeTestCommand}"
-                        Content="Run Rotary Smoke Test"
-                        FontSize="14"
-                        Style="{StaticResource MaterialDesignFlatButton}" />
-                </StackPanel>
-            </Expander>
+
+            <StackPanel Orientation="Vertical">
+                <materialDesign:PopupBox HorizontalAlignment="Right" DockPanel.Dock="Right">
+
+                    <StackPanel>
+
+                        <Button
+                            x:Name="LoadFromFileButton"
+                            Margin="15"
+                            Content="Load From File..."
+                            Style="{StaticResource MaterialDesignFlatLightBgButton}" />
+                        <Button
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Command="{Binding StartRotarySmokeTestCommand}"
+                            Content="Run Rotary Smoke Test"
+                            FontSize="14"
+                            Style="{StaticResource MaterialDesignFlatButton}" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
+                <TextBlock
+                    x:Name="FilePathTextBlock"
+                    Height="Auto"
+                    Style="{StaticResource MaterialDesignBody1TextBlock}" />
+            </StackPanel>
 
             <Grid HorizontalAlignment="Stretch">
                 <Button

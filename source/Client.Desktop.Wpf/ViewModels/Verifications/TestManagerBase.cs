@@ -6,12 +6,13 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems
+    public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems, IQaTestRunManager
     {
         protected TestManagerBase(){}
 
@@ -27,6 +28,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
                 string urlSegment = null) //: base(screenManager, urlSegment ?? "VerificationManager")
         {
             TestViewModel = testViewModel;
+
             SaveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 logger.LogDebug("Saving test...");
@@ -48,9 +50,11 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             {
                 if (true)
                 {
-                    TestViewModel.TestDateTime = DateTime.Now;
-
+                    TestViewModel.SubmittedDateTime = DateTime.Now;
                     await SaveCommand.Execute();
+
+                    await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+
                     (TestViewModel as IDisposable)?.Dispose();
                     await screenManager.GoHome();
                 }
@@ -73,6 +77,8 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
         public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
         public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
         public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
+
+        /// <inheritdoc />
         public EvcVerificationViewModel TestViewModel { get; set; }
     }
 }

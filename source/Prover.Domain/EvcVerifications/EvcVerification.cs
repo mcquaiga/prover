@@ -25,6 +25,8 @@ namespace Prover.Domain.EvcVerifications
 
         public DateTime TestDateTime { get; set; } = DateTime.Now;
 
+        public DateTime? SubmittedDateTime { get; set; }
+
         public DateTime? ExportedDateTime { get; set; } = null;
 
         public DeviceInstance Device { get; protected set; }

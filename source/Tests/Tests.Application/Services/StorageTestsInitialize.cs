@@ -41,10 +41,12 @@ namespace Tests.Application.Services
         [AssemblyInitialize]
         public static async Task AssemblyInitialize(TestContext context)
         {
-            DeviceRepo = new DeviceRepository();
-            await DeviceRepo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
-            await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
+            //DeviceRepo = new DeviceRepository();
+            //await DeviceRepo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
+            //await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
+            DeviceRepo = DeviceRepository.Instance;
 
+            StorageDefaults.CreateLiteDb();
             TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, DeviceRepo);
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");

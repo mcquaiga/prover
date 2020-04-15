@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -10,52 +9,79 @@ using Devices.Communications.Interfaces;
 using Devices.Communications.Status;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-using ReactiveUI;
+using Prover.Application.Services.LiveReadCorrections;
+using Prover.Application.Verifications;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.FileLoader
 {
-    public class FileCommunicationsClient : ICommunicationsClient
+    public class LiveReadSimulator
     {
-        private readonly CompositeDisposable _cleanup;
-
-        private readonly IDeviceRepository _deviceRepository;
+        private readonly List<ItemLiveReadStatus> _liveReadItems = new List<ItemLiveReadStatus>();
 
         private readonly Dictionary<ItemMetadata, decimal> _mockedLiveReadValues =
-            new Dictionary<ItemMetadata, decimal>();
+                new Dictionary<ItemMetadata, decimal>();
 
-        private readonly ISubject<StatusMessage> _statusSubject = new Subject<StatusMessage>();
-        private ItemAndTestFile _itemFile;
-
-        public FileCommunicationsClient(IDeviceRepository deviceRepository, IActionsExecutioner actionsExecutioner)
+        public LiveReadSimulator()
         {
-            _deviceRepository = deviceRepository;
+            VerificationEvents.CorrectionTests.OnLiveReadStart.Subscribe(context =>
+            {
+                var random = new Random(DateTime.Now.Second);
+                var liveReader = context.Input;
 
-            var status = _statusSubject.Publish();
-            StatusMessageObservable = status.AsObservable();
+                _liveReadItems.Clear();
+                _mockedLiveReadValues.Clear();
 
-            //actionsExecutioner.RegisterAction(VerificationTestStep.OnCorrectionTestStart, test =>
-            //{
-            //    if (!_mockedLiveReadValues.ContainsKey(itemNumber))
-            //    {
-            //        var value =
-            //            await MessageInteractions.GetInputNumber.Handle(
-            //                    $"Enter simulating value for {itemNumber.Description} - #{itemNumber.Number}:")
-            //                .ObserveOn(RxApp.MainThreadScheduler);
+                liveReader.LiveReadItems
+                          .Select(itemStatus => (ItemLiveReadStatus)itemStatus.Clone())
+                          .ForEach(_liveReadItems.Add)
+                          .ForEach(i => _mockedLiveReadValues.Add(i.Item, i.TargetValue + GetRandom()));
 
-            //        _mockedLiveReadValues.Add(itemNumber, value);
-            //    }
-            //});
+                decimal GetRandom() => Round.Gauge(
+                        random.Next(1, 100) / 100m);
+            });
 
-            _cleanup = new CompositeDisposable(status.Connect());
+            VerificationEvents.CorrectionTests.OnLiveReadComplete.Subscribe(testPoint => { });
         }
 
+        public ItemValue GenerateLiveReadValue(ItemMetadata item) => ItemValue.Create(item, _mockedLiveReadValues[item]);
+
+        //private async Task<IEnumerable<ItemValue>> GetItemsAfterLiveRead()
+        //{
+        //    var testNumber = await MessageInteractions.GetInputInteger.Handle("Enter test number to load (1, 2, 3):");
+        //    _mockedLiveReadValues.Clear();
+        //    return _fileDeviceClient._itemFile.TemperatureTests[testNumber].ToList().Union(_fileDeviceClient._itemFile.PressureTests[testNumber]).ToList();
+        //}
+    }
+
+    public class FileDeviceClient : ICommunicationsClient
+    {
+        private readonly CompositeDisposable _cleanup;
+        private readonly ItemAndTestFile _itemFile;
+        private readonly LiveReadSimulator _liveReadSimulator;
+        private readonly ISubject<StatusMessage> _statusSubject = new Subject<StatusMessage>();
+
+        private readonly List<ItemValue> _queuedValues = new List<ItemValue>();
+
+        private FileDeviceClient()
+        {
+            _liveReadSimulator = new LiveReadSimulator();
+            var status = _statusSubject.Publish();
+            StatusMessageObservable = status.AsObservable();
+            _cleanup = new CompositeDisposable(status.Connect());
+
+            VerificationEvents.CorrectionTests.BeforeDownload.Subscribe(context =>
+            {
+                _queuedValues.Clear();
+                _queuedValues.AddRange(_itemFile.PressureTests[context.Input.TestNumber]
+                                                .Union(
+                                                        _itemFile.TemperatureTests[context.Input.TestNumber]));
+            });
+        }
+
+        public FileDeviceClient(ItemAndTestFile itemFile) : this() => _itemFile = itemFile;
         public bool IsConnected { get; private set; }
-
         public IObservable<StatusMessage> StatusMessageObservable { get; }
-
-        public string FilePath { get; private set; }
 
         public void Cancel()
         {
@@ -63,12 +89,21 @@ namespace Prover.Application.FileLoader
 
         public async Task ConnectAsync(int retryAttempts = 10, TimeSpan? timeout = null)
         {
-            if (string.IsNullOrEmpty(FilePath))
-                throw new NullReferenceException("ItemFile cannot be null. Call SetItemFileAndTestDefinition first.");
-
-            _itemFile = await ItemLoader.LoadFromFile(_deviceRepository, FilePath);
-
             IsConnected = true;
+            await Task.CompletedTask;
+        }
+
+        public static FileDeviceClient Create(IDeviceRepository deviceRepository, string filePath)
+        {
+            var itemFile = Observable.StartAsync(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath))
+                                     .Wait();
+            return new FileDeviceClient(itemFile);
+        }
+
+        public static async Task<FileDeviceClient> CreateAsync(IDeviceRepository deviceRepository, string filePath)
+        {
+            var itemFile = await Observable.StartAsync(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath)).FirstAsync();
+            return new FileDeviceClient(itemFile);
         }
 
         public async Task Disconnect()
@@ -84,33 +119,33 @@ namespace Prover.Application.FileLoader
 
         public async Task<IEnumerable<ItemValue>> GetItemsAsync(IEnumerable<ItemMetadata> itemNumbers)
         {
-            if (_mockedLiveReadValues.Any())
-                return await GetItemsAfterLiveRead();
+            await Task.CompletedTask;
+
+            if (_queuedValues.Any())
+            {
+                var values = _queuedValues.Where(qv => itemNumbers.Contains(qv.Metadata)).ToList();
+                _queuedValues.Clear();
+                return values;
+            }
 
             if (itemNumbers == null)
                 return _itemFile.Device.Values;
-
+            
             return _itemFile.Device.Values.Where(i => itemNumbers.Contains(i.Metadata));
         }
 
         public async Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber)
         {
-            return ItemValue.Create(itemNumber, _mockedLiveReadValues[itemNumber]);
+            await Task.CompletedTask;
+
+            return _liveReadSimulator.GenerateLiveReadValue(itemNumber);
         }
 
-        public void SetFilePath(string filePath)
+        public async Task<bool> SetItemValue(int itemNumber, string value)
         {
-            if (File.Exists(filePath))
-                FilePath = filePath;
-        }
-
-        public Task<bool> SetItemValue(int itemNumber, string value) => throw new NotImplementedException();
-
-        private async Task<IEnumerable<ItemValue>> GetItemsAfterLiveRead()
-        {
-            var testNumber = await MessageInteractions.GetInputInteger.Handle("Enter test number to load (1, 2, 3):");
-            _mockedLiveReadValues.Clear();
-            return _itemFile.TemperatureTests[testNumber].ToList().Union(_itemFile.PressureTests[testNumber]).ToList();
+            var newValue = ItemValue.Create(_itemFile.Device.Values.GetItem(itemNumber).Metadata, value);
+            _itemFile.Device.SetItemValues(new[] {newValue});
+            return await Task.FromResult(true);
         }
     }
 }

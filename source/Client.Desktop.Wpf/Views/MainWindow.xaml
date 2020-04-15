@@ -95,7 +95,6 @@
                                     VerticalAlignment="Bottom"
                                     Orientation="Vertical" />
 
-
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>

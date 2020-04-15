@@ -129,8 +129,41 @@
                     Margin="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
+
+                    <TextBlock
+                        x:Name="TemperatureValueTextBlock"
+                        Margin="25"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignHeadline1TextBlock}" />
+                    <StackPanel
+                        Margin="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Vertical">
+                        <TextBlock
+                            x:Name="TemperatureTargetValueTextBlock"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                            Text="Target" />
+                    </StackPanel>
+
+                </Grid>
+
+
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <materialDesign:PackIcon
+                        Width="48"
+                        Height="48"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Kind="TemperatureFahrenheit" />
+
                     <materialDesign:PopupBox
-                        HorizontalAlignment="Left"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         StaysOpen="True">
                         <materialDesign:PopupBox.ToggleContent>
@@ -179,38 +212,7 @@
                             </StackPanel>
                         </UniformGrid>
                     </materialDesign:PopupBox>
-                    <TextBlock
-                        x:Name="TemperatureValueTextBlock"
-                        Margin="25"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource MaterialDesignHeadline1TextBlock}" />
-                    <StackPanel
-                        Margin="1"
-                        HorizontalAlignment="Right"
-                        Orientation="Vertical">
-                        <TextBlock
-                            x:Name="TemperatureTargetValueTextBlock"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                            Text="Target" />
-                    </StackPanel>
-
                 </Grid>
-
-
-                <materialDesign:PackIcon
-                    Width="48"
-                    Height="48"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Kind="TemperatureFahrenheit" />
-
-
 
                 <!--<ProgressBar
                     x:Name="TemperatureStableProgressBar"

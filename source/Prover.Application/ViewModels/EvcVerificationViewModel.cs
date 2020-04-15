@@ -32,6 +32,8 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public DateTime? ExportedDateTime { get; set; }
 
+        [Reactive] public DateTime? SubmittedDateTime { get; set; }
+
         [Reactive] public DateTime? ArchivedDateTime { get; set; }
 
         [Reactive] public string JobId { get; set; }

@@ -4,8 +4,8 @@ using Prover.Application.Services;
 
 namespace Prover.Application.Interfaces
 {
-    public interface ITestManagerFactory
+    public interface IVerificationManagerFactory
     {
-        Task<ITestManager> StartNew(DeviceType deviceType);
+        Task<IDeviceQaTestManager> StartNew(DeviceType deviceType);
     }
 }

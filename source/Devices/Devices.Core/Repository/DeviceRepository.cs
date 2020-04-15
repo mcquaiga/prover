@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Reflection;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -41,12 +44,15 @@ namespace Devices.Core.Repository
         private readonly CompositeDisposable _disposer;
         private readonly ILogger<DeviceRepository> _logger;
 
+        private static Lazy<IDeviceRepository> _lazy = new Lazy<IDeviceRepository>(() => Observable.StartAsync(CreateRepository)
+                                                                                                     .Wait());
+
         //IEnumerable<IDeviceTypeDataSource<DeviceType>> deviceRepositories,
         public DeviceRepository(ILogger<DeviceRepository> logger = null,
             IDeviceTypeCacheSource<DeviceType> cacheRepository = null) : this()
         {
             _logger = logger ?? NullLogger<DeviceRepository>.Instance;
-
+            
             _cacheSource = cacheRepository;
         }
 
@@ -64,11 +70,16 @@ namespace Devices.Core.Repository
             Devices = deviceTypes;
 
             _disposer = new CompositeDisposable(All, _deviceSourceCache, devices.Connect(), allDevice);
-
-            Instance = this;
         }
 
-        public static IDeviceRepository Instance { get; private set; }
+        private static async Task<IDeviceRepository> CreateRepository()
+        {
+            var repo = new DeviceRepository();
+            await repo.FindDeviceTypeDataSources();
+            return repo;
+        }
+
+        public static IDeviceRepository Instance { get; } = _lazy.Value;
 
         public ReadOnlyObservableCollection<DeviceType> Devices { get; }
 
@@ -116,6 +127,11 @@ namespace Devices.Core.Repository
                     Save();
             }
 
+            if (sources == null || !sources.Any())
+            {
+                await FindDeviceTypeDataSources();
+            }
+
             return this;
         }
 
@@ -157,6 +173,18 @@ namespace Devices.Core.Repository
                 throw new KeyNotFoundException($"Device with name {name} not found.");
 
             return result;
+        }
+
+        private async Task FindDeviceTypeDataSources(IEnumerable<Assembly> assemblies = null)
+        {
+            var loaded = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "Devices.*.Core.dll");
+            await loaded.Select(Assembly.LoadFrom)
+                        .SelectMany(a
+                                => a.DefinedTypes.Where(x
+                                        => x.ImplementedInterfaces.Contains(typeof(IDeviceDataSourceInstance))))
+                        .Select(t => (IDeviceTypeDataSource<DeviceType>) Activator.CreateInstance(t))
+                        .ToObservable()
+                        .ForEachAsync(async ds => await UpdateCachedTypes(ds));
         }
     }
 }

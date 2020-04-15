@@ -12,6 +12,11 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications.Events
 {
+    public static class VerificationEventMixins
+    {
+        //public static IDisposable Subscribe<TInput>(EventContext<TInput, Unit> co)
+    }
+
     public sealed class VerificationEvent<TInput, TOutput>
     {
         private readonly IList<Func<EventContext<TInput, TOutput>, IObservable<Unit>>> _handlers;

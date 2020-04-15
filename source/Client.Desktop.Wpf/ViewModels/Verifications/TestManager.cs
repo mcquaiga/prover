@@ -1,6 +1,7 @@
 using System;
 using System.Reactive;
 using System.Reactive.Disposables;
+using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
@@ -11,24 +12,23 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.ViewModels.Verifications
 {
-    public sealed class RotaryTestManager : TestManagerBase, ITestManager, IRoutableViewModel
+    public sealed class TestManager : TestManagerBase, IDeviceQaTestManager, IRoutableViewModel
     {
         private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         private readonly IScreenManager _screenManager;
-        private readonly IDeviceSessionManager _deviceManager;
+        public IDeviceSessionManager DeviceManager { get; }
         private readonly IVerificationTestService _verificationService;
-        private readonly ILogger<RotaryTestManager> _logger;
+        private readonly ILogger<TestManager> _logger;
 
-        public RotaryTestManager(
-                ILogger<RotaryTestManager> logger,
+        public TestManager(
+                ILogger<TestManager> logger,
                 IScreenManager screenManager,
                 IDeviceSessionManager deviceSessionManager,
-                IVerificationTestService verificationService
-        ) 
+                IVerificationTestService verificationService) 
         {
-            _logger = logger ?? NullLogger<RotaryTestManager>.Instance;
+            _logger = logger ?? NullLogger<TestManager>.Instance;
             _screenManager = screenManager;
-            _deviceManager = deviceSessionManager;
+            DeviceManager = deviceSessionManager;
             _verificationService = verificationService;
         }
 
@@ -37,21 +37,7 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
 
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunVolumeVerifications { get; }
-
-        //private RotaryTestManager(
-        //    ILogger<RotaryTestManager> logger,
-        //    IScreenManager screenManager,
-        //    IDeviceSessionManager deviceSessionManager,
-        //    IVerificationTestService verificationService,
-        //    IVolumeTestManager volumeTestManager,
-        //    ICorrectionTestsManager correctionVerificationRunner,
-        //    EvcVerificationViewModel verificationViewModel)
-        //        : base(logger, screenManager, verificationService, verificationViewModel)
-        //{
-
-
-        //}
-
+        
         public void Setup(EvcVerificationViewModel verificationViewModel, IVolumeTestManager volumeTestManager, ICorrectionTestsManager correctionVerificationRunner)
         {
             base.Initialize(_logger, _screenManager, _verificationService, verificationViewModel);
@@ -66,12 +52,16 @@ namespace Client.Desktop.Wpf.ViewModels.Verifications
             RunCorrectionVerifications.DisposeWith(_cleanup);
         }
 
+        public void StartTest(DeviceType deviceType)
+        {
+
+        }
         //public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
 
         protected override void Disposing()
         {
             _logger.LogDebug("Disposing instance.");
-            _deviceManager.EndSession();
+            DeviceManager.EndSession();
             _cleanup?.Dispose();
         }
 

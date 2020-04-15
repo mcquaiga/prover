@@ -9,7 +9,7 @@ namespace Devices.Core.Items.ItemGroups
     //    public abstract void SetPropertyValue(PropertyInfo property, ItemValue value);
     //}
 
-    public class SuperFactorItems : ItemGroup, IHaveFactor
+    public class SuperFactorItems : ItemGroup, ICorrectionFactor
     {
         public virtual  decimal Factor { get; set; }
         public virtual  decimal Co2 { get; set; }
