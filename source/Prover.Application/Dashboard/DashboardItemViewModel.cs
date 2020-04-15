@@ -59,7 +59,7 @@ namespace Prover.Application.Dashboard
             //filter = filter ?? (v => true);
             parentFilter = parentFilter ?? Observable.Empty<Func<EvcVerificationTest, bool>>(test => true);
 
-            return entityCache?.Data().Change
+            return entityCache?.Data().Connect()
                               .Filter(parentFilter)
                               .Throttle(TimeSpan.FromMilliseconds(50))
                               .ObserveOn(RxApp.MainThreadScheduler)

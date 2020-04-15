@@ -14,7 +14,7 @@ using ReactiveUI;
 
 namespace Prover.Application.Services
 {
-    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IVerificationAction, IDisposable
+    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IDisposable
             where TUser : IUser, new()
     {
         private readonly CompositeDisposable _cleanup;

@@ -17,7 +17,6 @@ namespace Prover.Modules.UnionGas.Login
 
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.WelcomeTextBlock.Text, value => $"{value}").DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);

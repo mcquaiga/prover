@@ -81,24 +81,20 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <materialDesign:PopupBox
-                    Margin="2,15"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Bottom"
-                    StaysOpen="True">
-                    <ItemsControl x:Name="ToolbarItemsControl">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
 
-                                <StackPanel
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    Orientation="Vertical" />
+                <ItemsControl x:Name="ToolbarItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
 
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </materialDesign:PopupBox>
+                            <StackPanel
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                Orientation="Vertical" />
+
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
             </Grid>
 
             <rxui:RoutedViewHost

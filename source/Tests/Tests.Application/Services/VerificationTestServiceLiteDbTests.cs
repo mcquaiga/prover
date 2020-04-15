@@ -42,6 +42,7 @@ namespace Tests.Application.Services
 
         private static IAsyncRepository<EvcVerificationTest> _testRepo;
         private static IVerificationTestService _viewModelService;
+        private static IEntityDataCache<EvcVerificationTest> _entityCache;
       
 
         [TestMethod]
@@ -92,10 +93,9 @@ namespace Tests.Application.Services
             var scheduler = new TestScheduler();
             scheduler.StartStopwatch();
             
-            var results = _viewModelService.FetchTests()
-                                           .Connect(t => t.ExportedDateTime == null)
-                .Bind(out var data, 25)
-                .Subscribe();
+            var results = _entityCache.Updates.Connect(t => t.ExportedDateTime == null)
+                                      .Bind(out var data, 25)
+                                      .Subscribe();
             
             scheduler.Start();
             Assert.IsNotNull(data);

@@ -59,7 +59,7 @@ namespace Prover.Application.Dashboard
                 .Select(total => (TotalPassed / total.ToDecimal() * 100m).ToInt32())
                 .ToPropertyEx(this, x => x.PassPercentage).DisposeWith(Cleanup);
 
-            countChanged.SelectMany(i => listStream.Items).Average(x => x.SubmittedDateTime?.Subtract(x.TestDateTime).TotalSeconds)
+            cacheStream.Avg(x => x.SubmittedDateTime?.Subtract(x.TestDateTime).TotalSeconds)
                        .Select<double, TimeSpan?>(d => TimeSpan.FromSeconds(d))
                        .ToPropertyEx(this, x => x.AverageDuration)
                        .DisposeWith(Cleanup);

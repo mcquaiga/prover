@@ -20,7 +20,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid
-        Margin="15,2"
+        Margin="2"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch">
 
@@ -30,12 +30,14 @@
             VerticalAlignment="Center"
             Visibility="Collapsed"
             ZIndex="1">
+            <ProgressBar IsIndeterminate="True" />
             <TextBlock
                 x:Name="WaitingForLoginMessage"
                 HorizontalAlignment="left"
                 VerticalAlignment="Center"
                 Style="{StaticResource MaterialDesignBody1TextBlock}"
-                Text="Signing in..." />
+                Text="Signing in..."
+                Visibility="Collapsed" />
         </StackPanel>
 
         <StackPanel
@@ -44,13 +46,15 @@
             VerticalAlignment="Center">
             <Button
                 x:Name="LoginButton"
-                Width="90"
-                Margin="8"
+                Width="Auto"
+                Height="Auto"
+                Margin="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 materialDesign:RippleAssist.IsCentered="True"
-                Content="Sign in"
-                Style="{DynamicResource MaterialDesignRaisedAccentButton}" />
+                Content="{materialDesign:PackIcon UserOff,
+                                                  Size=48}"
+                Style="{DynamicResource MaterialDesignIconButton}" />
         </StackPanel>
 
         <StackPanel
@@ -59,32 +63,38 @@
             VerticalAlignment="Stretch"
             Orientation="Vertical"
             Visibility="Collapsed">
-            <StackPanel
-                Margin="0"
+
+            <materialDesign:PopupBox
+                Margin="2,15"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                Orientation="Horizontal">
-                <materialDesign:PackIcon
-                    Width="24"
-                    Height="24"
-                    Margin="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Kind="Account" />
-                <TextBlock
-                    x:Name="WelcomeTextBlock"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Style="{StaticResource MaterialDesignBody1TextBlock}" />
-            </StackPanel>
-            <Button
-                x:Name="LogoutButton"
-                Width="90"
-                Height="28"
-                HorizontalAlignment="Right"
-                Content="Sign out"
-                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                VerticalAlignment="Bottom"
+                StaysOpen="True" />
+            <materialDesign:PopupBox
+                Padding="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <materialDesign:PopupBox.ToggleContent>
+                    <Button
+                        materialDesign:ButtonAssist.CornerRadius="0"
+                        IsHitTestVisible="False"
+                        Style="{StaticResource MaterialDesignFlatButton}">
+                        <materialDesign:PackIcon Kind="Account" />
+                    </Button>
+                </materialDesign:PopupBox.ToggleContent>
+                <StackPanel>
+                    <Button
+                        x:Name="LogoutButton"
+                        Width="90"
+                        Height="28"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource MaterialDesignRaisedLightButton}" />
+
+
+                </StackPanel>
+
+            </materialDesign:PopupBox>
+
+
         </StackPanel>
 
 
