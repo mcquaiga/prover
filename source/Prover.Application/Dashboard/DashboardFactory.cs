@@ -38,9 +38,9 @@ namespace Prover.Application.Dashboard
             var items = new List<IDashboardItem>();
 
             items.AddRange(CreateDeviceViews(_parentFilterObservable));
-            //items.AddRange(CreateVerifiedViews(_parentFilterObservable));
             items.Add(CreateSummaryItem(_parentFilterObservable ));
 
+            //_parentFilterObservable.Subscribe();
             return items;
         }
 
@@ -57,7 +57,7 @@ namespace Prover.Application.Dashboard
                                             v => v.Device.DeviceType.Id == d.Id));
         }
 
-        public void DateTimeFilter(string dateTimeKey)
+        public void BuildGlobalFilter(string dateTimeKey)
         {
             bool buildFilter(EvcVerificationTest test)
                 => DateFilters[dateTimeKey]
@@ -77,7 +77,7 @@ namespace Prover.Application.Dashboard
 
         private IDashboardItem CreateSummaryItem(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {
-            return new TestsSummaryDashboardViewModel(_entityCache, parentFilter);
+            return new SummaryDashboardViewModel(_entityCache, parentFilter);
         }
 
         private IDashboardValueViewModel GetCounterItem(string title, string groupName, Func<EvcVerificationTest, bool> predicate, IObservable<Func<EvcVerificationTest, bool>> parentFilter)

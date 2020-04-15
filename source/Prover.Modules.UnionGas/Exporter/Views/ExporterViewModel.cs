@@ -31,7 +31,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ExporterViewModel(IScreenManager screenManager,
             IVerificationTestService verificationTestService,
-            IEntityDataCache<EvcVerificationTest> cache,
+            IEntityDataCache<EvcVerificationTest> verificationCache,
             IDeviceRepository deviceRepository,
             IExportVerificationTest exporter,
             ILoginService<EmployeeDTO> loginService,
@@ -65,7 +65,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
 
-            var visibleItems = cache.Data().Connect()
+            var visibleItems = verificationCache.Data().Connect()
                                     .Filter(FilterByTypeCommand)
                                     .Filter(FilterIncludeExported) //, changeObservable.Select(x => Unit.Default)
                                     .Filter(FilterIncludeArchived) //, changeObservable.Select(x => Unit.Default))
@@ -98,7 +98,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             ToolbarViewModel = exporterToolbarFactory.Invoke(selectedItems);
 
-            cache.Data().Connect()
+            verificationCache.Data().Connect()
                                    .Filter(x => !string.IsNullOrEmpty(x.JobId))
                                    .DistinctValues(x => x.JobId)
                                    .Bind(out var jobIds)

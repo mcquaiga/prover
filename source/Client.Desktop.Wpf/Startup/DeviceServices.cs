@@ -40,7 +40,7 @@ namespace Client.Desktop.Wpf.Startup
             services.AddTachometer();
 
             services.AddSingleton<DeviceSessionDialogManager>();
-            services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
+            //services.AddSingleton<IActionsExecutioner, VerificationActionsExecutor>();
 
             services.AddAllTypes<IEventsSubscriber>(lifetime: ServiceLifetime.Singleton);
 

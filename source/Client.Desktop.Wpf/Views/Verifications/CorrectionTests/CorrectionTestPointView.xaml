@@ -20,6 +20,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
         <TextBlock
             x:Name="TestLevelBlock"
@@ -35,6 +39,7 @@
         <ItemsControl
             x:Name="TestItems"
             Grid.Row="1"
+            Grid.Column="1"
             DataContext="{Binding}">
             <ItemsControl.Resources />
             <ItemsControl.ItemsPanel>

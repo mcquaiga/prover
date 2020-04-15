@@ -25,7 +25,7 @@ using ReactiveUI;
 
 namespace Client.Desktop.Wpf.Startup
 {
-    public partial class StorageStartup : IStartupTask
+    public partial class StorageStartup : IStartupTask, IHostedService
     {
         private const string KeyValueStoreConnectionString = "LiteDb";
         private readonly IServiceProvider _provider;
@@ -72,6 +72,16 @@ namespace Client.Desktop.Wpf.Startup
                      //.RunAsync(cancellationToken)
                      ;
         }
+
+        /// <inheritdoc />
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            TaskPoolScheduler.Default.Schedule(ct => _seeder.SeedDatabase(15));
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task StopAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
     }
 
     public partial class StorageStartup

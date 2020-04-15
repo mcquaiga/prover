@@ -9,7 +9,7 @@ using Prover.Application.ViewModels;
 namespace Prover.Application.Verifications.Events
 {
 
-    public abstract class ItemFileValidation<TValue> : IVerificationAction
+    public abstract class ItemFileValidation<TValue> : IEventsSubscriber
     {
         private readonly IDeviceSessionManager _deviceManager;
 
@@ -60,6 +60,12 @@ namespace Prover.Application.Verifications.Events
             if (itemValue != null) device.SetItemValues(new []{itemValue});
 
             return itemValue != null;
+        }
+
+        /// <inheritdoc />
+        public void SubscribeToEvents()
+        {
+            VerificationEvents.OnInitialize.Subscribe(async (input) => { await Execute(input.Input); });
         }
     }
 }
