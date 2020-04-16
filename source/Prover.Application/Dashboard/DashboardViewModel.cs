@@ -5,8 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Extensions;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {

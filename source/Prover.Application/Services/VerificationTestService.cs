@@ -11,9 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
-using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Application.Services

@@ -16,6 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="CalibrationLibrary">
+      <HintPath>..\..\lib\CalibrationLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="ProtocolLibrary">
+      <HintPath>..\..\lib\ProtocolLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Utilities">
       <HintPath>..\lib\Utilities.dll</HintPath>
     </Reference>

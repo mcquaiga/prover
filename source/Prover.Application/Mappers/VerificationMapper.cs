@@ -2,13 +2,12 @@
 using System.Linq;
 using AutoMapper;
 using Prover.Application.Extensions;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Application.ViewModels.Factories;
 using Prover.Application.ViewModels.Factories.Volume;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 
 namespace Prover.Application.Mappers
 {

@@ -1,16 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.Application.Services;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Disposables;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Interfaces;
 using Tests.Application.Services;
 

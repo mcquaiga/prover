@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Client.Desktop.Wpf.Dialogs;
-using Prover.Application.ViewModels;
+using Prover.UI.Desktop.Dialogs;
 using Prover.Modules.UnionGas.DcrWebService;
 
 namespace Prover.Modules.UnionGas.Exporter.MeterDTODialog

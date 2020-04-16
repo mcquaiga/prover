@@ -2,9 +2,8 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Prover.Domain;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -12,7 +11,7 @@ namespace Prover.Application.ViewModels.Corrections
 {
     public sealed class PressureFactorViewModel : CorrectionTestViewModel<PressureItems>
     {
-        private const decimal Tolerance = Global.PRESSURE_ERROR_TOLERANCE;
+        private const decimal Tolerance = Tolerances.PRESSURE_ERROR_TOLERANCE;
 
         public PressureFactorViewModel(PressureItems items, decimal gauge, decimal atmosphericGauge) : base(items, Tolerance)
         {

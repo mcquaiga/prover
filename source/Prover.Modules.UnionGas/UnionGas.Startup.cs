@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
-using System.Threading;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.Extensions;
-using Client.Desktop.Wpf.Startup;
-using Client.Desktop.Wpf.ViewModels;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Infrastructure.KeyValueStore;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
@@ -24,6 +16,9 @@ using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
+using Prover.UI.Desktop.Extensions;
+using Prover.UI.Desktop.Startup;
+using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas

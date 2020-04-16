@@ -7,7 +7,6 @@ using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using ReactiveUI;

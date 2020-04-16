@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -32,6 +31,9 @@ namespace Prover.Application.Dashboard
                         .ToPropertyEx(this, model => model.Failed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
                         .DisposeWith(Cleanup);
 
+            this.WhenAnyValue(x => x.Passed, x => x.Failed, (p, f) => p + f)
+                .ToPropertyEx(this, x => x.Total)
+                .DisposeWith(Cleanup);
             //IObservable<int> CountStream(Func<EvcVerificationTest, bool> func)
             //{
             //    return stream.Filter(func).AsObservableList()
@@ -42,6 +44,7 @@ namespace Prover.Application.Dashboard
 
         public extern int Passed { [ObservableAsProperty] get; }
         public extern int Failed { [ObservableAsProperty] get; }
+        public extern int Total { [ObservableAsProperty] get; }
     }
 }
 

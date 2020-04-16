@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Styles/Resources.xaml" />
+                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

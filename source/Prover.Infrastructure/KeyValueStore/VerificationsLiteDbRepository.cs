@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reactive.Linq;
 using Devices.Core.Repository;
 using LiteDB;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Infrastructure.KeyValueStore

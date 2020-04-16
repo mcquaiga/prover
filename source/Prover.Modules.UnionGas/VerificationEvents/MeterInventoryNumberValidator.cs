@@ -6,8 +6,8 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
 

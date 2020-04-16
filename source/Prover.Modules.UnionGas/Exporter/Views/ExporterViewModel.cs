@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Client.Desktop.Wpf.Reports;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
@@ -13,13 +12,14 @@ using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
 using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Models;
 using Prover.Modules.UnionGas.VerificationEvents;
 using Prover.Shared.Interfaces;
+using Prover.UI.Desktop.Reports;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views

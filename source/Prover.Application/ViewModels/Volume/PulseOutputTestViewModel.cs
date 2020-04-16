@@ -1,10 +1,9 @@
 ﻿using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Domain;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -15,7 +14,7 @@ namespace Prover.Application.ViewModels.Volume
         private readonly VolumeTestRunViewModelBase _volumeTest;
 
         public PulseOutputTestViewModel(PulseOutputItems.ChannelItems pulseChannelItems) 
-            : base(Global.PULSE_VARIANCE_THRESHOLD)
+            : base(Tolerances.PULSE_VARIANCE_THRESHOLD)
         {
             Items = pulseChannelItems;
         }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Windows.Input;
 using Devices.Core.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.Exporter.Views;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;

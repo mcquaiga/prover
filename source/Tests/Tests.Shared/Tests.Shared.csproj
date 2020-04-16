@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Prover.Domain\Prover.Domain.csproj" />
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 

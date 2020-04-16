@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
 using Devices.Core.Repository;
-using DynamicData;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Extensions;
 
 namespace Prover.Application.Dashboard

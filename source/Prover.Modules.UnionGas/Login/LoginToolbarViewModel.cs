@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.ViewModels;
 using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;

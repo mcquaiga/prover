@@ -2,12 +2,10 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Devices.Core.Items.ItemGroups;
 using DynamicData;
 using DynamicData.Aggregation;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Extensions;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

@@ -4,9 +4,9 @@ using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 
 namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities
 {

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
-using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Extensions;
 using ReactiveUI;
 
 namespace Prover.Application.Dashboard

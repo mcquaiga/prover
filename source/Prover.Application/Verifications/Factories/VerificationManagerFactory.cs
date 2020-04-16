@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
-using Prover.Application.Verifications.Corrections;
 using Prover.Application.ViewModels;
 
 namespace Prover.Application.Verifications.Factories

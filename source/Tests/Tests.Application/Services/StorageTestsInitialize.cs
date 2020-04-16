@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository.JsonRepository;
-using Devices.Romet.Core.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

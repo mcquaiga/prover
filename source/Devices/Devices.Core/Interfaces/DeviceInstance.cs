@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Prover.Shared;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Devices.Core.Interfaces

@@ -4,9 +4,9 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
 using Prover.Application.Mappers;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Factories.Volume;
-using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Application.ViewModels.Factories

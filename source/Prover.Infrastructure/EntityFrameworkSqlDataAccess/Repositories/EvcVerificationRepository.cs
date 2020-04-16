@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities;
 using Prover.Infrastructure.EntityFrameworkSqlDataAccess.Storage;
 using Prover.Shared.Interfaces;

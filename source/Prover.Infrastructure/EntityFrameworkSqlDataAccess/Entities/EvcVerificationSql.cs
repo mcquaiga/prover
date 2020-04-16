@@ -4,9 +4,9 @@ using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Builders;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Builders;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
 
 namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Entities

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
 using Microsoft.Extensions.Logging;
-using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 
 namespace Prover.Application.Services
 {

@@ -1,0 +1,148 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Prover.UI.Desktop.Views.Dashboards.SummaryCardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dashboard="clr-namespace:Prover.Application.Dashboard;assembly=Prover.Application"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    x:TypeArguments="dashboard:SummaryDashboardViewModel"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DashboardStyles.xaml" />
+
+                <ResourceDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Width="1600" Style="{StaticResource DashboardItemStyle}">
+        <materialDesign:Card
+            Padding="0"
+            materialDesign:ShadowAssist.Darken="True"
+            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+            Background="{StaticResource MaterialDesignPaper}"
+            Style="{DynamicResource DashboardCardStyle}">
+            <!--    -->
+            <UniformGrid
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Rows="1">
+                <StackPanel Margin="20,5" HorizontalAlignment="Center">
+                    <TextBlock x:Name="TotalTestsTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
+
+                    <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Total tests" />
+
+                </StackPanel>
+                <Border
+                    Margin="1,15"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    BorderThickness="1,0,0,0"
+                    Style="{StaticResource SubSectionDividerBorder}">
+
+                    <Grid Margin="4" HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            x:Name="PassedTotalTextBlock"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            FontSize="28"
+                            Style="{StaticResource ValueTextBlockStyle}" />
+                        <materialDesign:PackIcon
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource PassColour}"
+                            Kind="Circle" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="8,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="28"
+                            Style="{StaticResource ValueTextBlockStyle}"
+                            Text="Passed" />
+
+
+                        <TextBlock
+                            x:Name="FailedTotalTextBlock"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            FontSize="28"
+                            Style="{StaticResource ValueTextBlockStyle}" />
+                        <materialDesign:PackIcon
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource FailColour}"
+                            Kind="Circle" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Margin="8,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="28"
+                            Style="{StaticResource ValueTextBlockStyle}"
+                            Text="Failed" />
+
+
+
+                    </Grid>
+                </Border>
+                <StackPanel Margin="20,5" HorizontalAlignment="Center">
+                    <TextBlock>
+
+                        <TextBlock x:Name="PassPercentageTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
+                        <TextBlock
+                            FontSize="32"
+                            Style="{StaticResource SummaryValueTextBlockStyle}"
+                            Text=" %" />
+
+                    </TextBlock>
+
+                    <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Pass percentage" />
+
+                </StackPanel>
+
+                <StackPanel Margin="20,5" HorizontalAlignment="Center">
+                    <TextBlock x:Name="AverageDurationTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
+
+                    <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Average duration" />
+
+                </StackPanel>
+
+                <StackPanel Margin="20,5" HorizontalAlignment="Center">
+                    <TextBlock x:Name="TotalNotExportedTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
+
+                    <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Waiting for export" />
+
+                </StackPanel>
+
+            </UniformGrid>
+
+
+        </materialDesign:Card>
+
+
+    </Grid>
+</reactiveUi:ReactiveUserControl>

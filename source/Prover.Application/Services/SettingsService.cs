@@ -109,9 +109,9 @@ namespace Prover.Application.Services
         ///     The RefreshSettings
         /// </summary>
         /// <returns>The <see cref="System.Threading.Tasks.Task{TResult}" /></returns>
-        public async Task RefreshSettings()
+        public Task RefreshSettings()
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 HasInitialized = false;
 
@@ -121,7 +121,7 @@ namespace Prover.Application.Services
 
                 HasInitialized = true;
             });
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

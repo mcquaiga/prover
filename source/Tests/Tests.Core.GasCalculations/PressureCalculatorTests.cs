@@ -1,7 +1,7 @@
-﻿using Core.GasCalculations;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Prover.Calculations;
 using Prover.Shared;
 
 namespace Tests.Core.GasCalculations

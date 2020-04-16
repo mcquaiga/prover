@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Devices.Core.Items.ItemGroups;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Application.ViewModels.Volume.Rotary;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
-using Prover.Domain.EvcVerifications.Verifications.Volume;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 
 namespace Prover.Application.Mappers
 {

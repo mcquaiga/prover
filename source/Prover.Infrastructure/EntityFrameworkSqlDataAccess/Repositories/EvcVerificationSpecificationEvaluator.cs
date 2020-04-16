@@ -1,6 +1,6 @@
 ﻿using System;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Specifications;
-using Prover.Domain.EvcVerifications;
 
 namespace Prover.Infrastructure.EntityFrameworkSqlDataAccess.Repositories
 {

@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:evcVerifications="clr-namespace:Prover.Domain.EvcVerifications;assembly=Prover.Domain"
     xmlns:local="clr-namespace:Prover.Modules.UnionGas.Exporter.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -18,7 +17,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Styles/Resources.xaml" />
+                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
 
 
             </ResourceDictionary.MergedDictionaries>
