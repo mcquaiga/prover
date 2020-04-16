@@ -176,6 +176,7 @@ namespace Prover.Infrastructure
                 Debug.WriteLine($"Created verification test {i} of {records}.");
             }
 
+            await testService.AddOrUpdateBatch(results);
             results.ForEach(r => testService.AddOrUpdate(r));
 
             watch.Stop();

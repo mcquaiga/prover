@@ -202,7 +202,8 @@ namespace Tests.Application.Services
             _deviceType = _repo.GetByName("Mini-Max");
 
             _testRepo = StorageTestsInitialize.TestRepo; 
-            _viewModelService =StorageTestsInitialize.ViewModelService;
+            _viewModelService = StorageTestsInitialize.ViewModelService;
+            _entityCache = StorageTestsInitialize.ViewModelService;
             await Task.CompletedTask;
         }
 

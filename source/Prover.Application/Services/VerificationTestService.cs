@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -58,6 +59,21 @@ namespace Prover.Application.Services
             _cacheUpdates.AddOrUpdate(evcVerificationTest);
 
             return evcVerificationTest;
+        }
+
+        public async Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
+        {
+            _cacheUpdates.Edit(updater =>
+            {
+                evcVerificationTest.ToObservable()
+                                   .ForEachAsync(async test =>
+                                   {
+                                       await _verificationRepository.UpsertAsync(test);
+                                       updater.AddOrUpdate(test);
+                                   });
+            });
+
+            await Task.CompletedTask;
         }
 
         public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel) => VerificationMapper.MapViewModelToModel(viewModel);

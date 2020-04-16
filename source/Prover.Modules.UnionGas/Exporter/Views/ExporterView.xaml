@@ -136,12 +136,13 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button
+                                    <RadioButton
                                         Margin="4,0"
                                         Command="{Binding ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
                                         CommandParameter="{Binding}"
                                         Content="{Binding Name}"
                                         FontSize="16"
+                                        GroupName="DeviceTypes"
                                         Style="{StaticResource MaterialDesignTabRadioButton}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

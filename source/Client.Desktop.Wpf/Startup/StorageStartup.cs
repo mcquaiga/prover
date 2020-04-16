@@ -52,7 +52,7 @@ namespace Client.Desktop.Wpf.Startup
         {
             //await Observable.StartAsync(
             //                        () => _provider.GetService<IDeviceRepository>()
-            //                                           .Load(new[] {RometJsonDeviceTypeDataSource.Instance, MiJsonDeviceTypeDataSource.Instance}))
+            //                                           .Load(new[] { RometJsonDeviceTypeDataSource.Instance, MiJsonDeviceTypeDataSource.Instance }))
             //                .LastAsync()
             //                .Select(_ => Unit.Default)
             //                .Concat(
@@ -61,14 +61,10 @@ namespace Client.Desktop.Wpf.Startup
             //                                 .Merge())
             //                .RunAsync(cancellationToken);
 
-            var devices = DeviceRepository.Instance;
-
-            return _provider.GetServices<ICacheManager>()
-                            .ToObservable()
-                            .ForEachAsync(async c => await c.LoadAsync(), cancellationToken);
+          
                     
-                     
-                     //.Concat()
+            return Task.CompletedTask;
+            //.Concat()
                      //.RunAsync(cancellationToken)
                      ;
         }
@@ -76,12 +72,22 @@ namespace Client.Desktop.Wpf.Startup
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            TaskPoolScheduler.Default.Schedule(ct => _seeder.SeedDatabase(15));
+            var devices = DeviceRepository.Instance;
+
+            _provider.GetServices<ICacheManager>()
+                     .ToObservable()
+                     //.ObserveOn(ThreadPoolScheduler.Instance)
+                     .ForEachAsync(c => c.LoadAsync(), cancellationToken);
+
+            //RxApp.TaskpoolScheduler.Schedule(() => _seeder.SeedDatabase(200));
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 
     public partial class StorageStartup
@@ -91,6 +97,7 @@ namespace Client.Desktop.Wpf.Startup
             var config = host.Configuration;
 
             services.AddStartTask<StorageStartup>();
+            services.AddHostedService<StorageStartup>();
 
             if (config.IsLiteDb())
                 AddLiteDb(services, host);

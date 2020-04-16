@@ -87,7 +87,7 @@
                     Style="{StaticResource MaterialDesignHeadline4TextBlock}">
                     EVC Prover
                 </TextBlock>
-                <TextBlock
+                <!--<TextBlock
                     x:Name="DashboardHeader"
                     Height="Auto"
                     Margin="0,0,15,0"
@@ -97,7 +97,7 @@
                     FontWeight="Light"
                     Style="{StaticResource MaterialDesignHeadline5TextBlock}">
                     Dashboard
-                </TextBlock>
+                </TextBlock>-->
             </StackPanel>
 
             <ListBox
@@ -135,6 +135,7 @@
                             Command="{Binding ViewModel.ApplyDateFilter, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
                             Content="{Binding}"
+                            FontSize="20"
                             GroupName="DateFilterGroup"
                             Style="{StaticResource MaterialDesignTabRadioButton}">
                             <RadioButton.IsChecked>
