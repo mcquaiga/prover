@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
 using Microsoft.Extensions.Logging;
-using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 
 namespace Prover.Application.Services
 {
@@ -18,8 +17,7 @@ namespace Prover.Application.Services
         private CompositeDisposable _cleanup;
         private IObservableList<EvcVerificationTest> _data;
 
-        public IObservableCache<EvcVerificationTest, Guid> Updates { get; private set; }//=> _cacheUpdates.AsObservableCache();
-        //public IObservableCache<EvcVerificationTest, Guid> Updates => _cacheUpdates.AsObservableCache();
+        public IObservableCache<EvcVerificationTest, Guid> Updates { get; private set; }
 
         public IObservableList<EvcVerificationTest> Data(Func<EvcVerificationTest, bool> filter = null) => _data.Connect(filter).AsObservableList();
 
@@ -28,8 +26,7 @@ namespace Prover.Application.Services
 
         public IObservableCache<EvcVerificationTest, Guid> Load()
         {
-            Observable.StartAsync(LoadAsync)
-                      .Subscribe();
+            _ = LoadAsync();
 
             return Updates;
         }

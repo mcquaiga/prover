@@ -1,20 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using DynamicData;
-using Prover.Application.Extensions;
-using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Builders;
-using Prover.Shared.Interfaces;
-
-namespace Prover.Application.Services
+﻿namespace Prover.Application.Services
 {
     //public class EvcVerificationTestService : IDisposable
     //{

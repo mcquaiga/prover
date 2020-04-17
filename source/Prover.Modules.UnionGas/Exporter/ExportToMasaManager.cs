@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
+using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas.Exporter
@@ -18,7 +17,7 @@ namespace Prover.Modules.UnionGas.Exporter
     /// <summary>
     ///     Defines the <see cref="ExportToMasaManager" />
     /// </summary>
-    public class ExportToMasaManager : IExportVerificationTest
+    internal class ExportToMasaManager : IExportVerificationTest
     {
         /// <summary>
         ///     Defines the Log
@@ -35,7 +34,7 @@ namespace Prover.Modules.UnionGas.Exporter
         /// <summary>
         ///     Defines the _loginService
         /// </summary>
-        private readonly ILoginService<EmployeeDTO> _loginService;
+        private readonly ILoginService<Employee> _loginService;
 
         private readonly ILogger<ExportToMasaManager> _logger;
 
@@ -44,7 +43,7 @@ namespace Prover.Modules.UnionGas.Exporter
         /// </summary>
         private readonly IVerificationTestService _testRunService;
 
-        public ExportToMasaManager(ILogger<ExportToMasaManager> logger, IVerificationTestService testRunService, ILoginService<EmployeeDTO> loginService,
+        public ExportToMasaManager(ILogger<ExportToMasaManager> logger, IVerificationTestService testRunService, ILoginService<Employee> loginService,
             IExportService<QARunEvcTestResult> exportService,
             IMeterService<MeterDTO> meterService)
         {
@@ -95,7 +94,7 @@ namespace Prover.Modules.UnionGas.Exporter
             if (meterDto == null)
                 throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
-            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.Id);
+            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.UserId);
             return await _exportService.SubmitQaTestRunResults(new[] {failedTest});
         }
     }

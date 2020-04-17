@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Windows.Input;
 using Devices.Core.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.Exporter.Views;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -17,7 +13,7 @@ namespace Prover.Modules.UnionGas.Models
     {
         public VerificationProxy(EvcVerificationTest verification,
             IObservable<EvcVerificationTest> changeUpdates,
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IReactiveCommand viewReport)
         {
         }
@@ -31,7 +27,7 @@ namespace Prover.Modules.UnionGas.Models
 
         public EvcVerificationProxy(EvcVerificationTest verification, 
             IObservable<EvcVerificationTest> changeUpdates, 
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IReactiveCommand viewReport)
         {
             ViewReport = viewReport;
@@ -53,7 +49,7 @@ namespace Prover.Modules.UnionGas.Models
                 .ToPropertyEx(this, x => x.IsLocked);
         }
 
-        
+        public bool Verified => Test.Verified;
         public extern EvcVerificationTest Test { [ObservableAsProperty] get; }
         
         public extern bool IsLocked { [ObservableAsProperty] get; }

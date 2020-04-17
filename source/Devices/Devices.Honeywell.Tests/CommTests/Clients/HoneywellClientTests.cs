@@ -7,7 +7,7 @@ using Devices.Honeywell.Comm;
 using Devices.Honeywell.Comm.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 using Messages = Devices.Honeywell.Tests.CommTests.Messaging.Messages;
 
 namespace Devices.Honeywell.Tests.CommTests.Clients

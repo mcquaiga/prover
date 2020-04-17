@@ -1,5 +1,4 @@
-﻿using Core.GasCalculations;
-using Prover.Shared.Extensions;
+﻿using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -8,9 +7,8 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Items.ItemGroups;
 using DynamicData;
+using Prover.Calculations;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -52,7 +50,7 @@ namespace Prover.Application.ViewModels.Corrections
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
                 .ToCollection()
-                .Select(x => x.Any() && x.All(y => y.Verified))
+                .Select(x => x.Any() && x.All(y => y != null && y.Verified))
                 .ObserveOn(RxApp.TaskpoolScheduler);
         }
     }

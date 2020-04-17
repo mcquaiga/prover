@@ -6,7 +6,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 using RJCP.IO.Ports;
 
 namespace Devices.Communications.IO

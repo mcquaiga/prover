@@ -1,6 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 
 namespace Tests.Application.Models.EvcVerifications.CorrectionTests
 {

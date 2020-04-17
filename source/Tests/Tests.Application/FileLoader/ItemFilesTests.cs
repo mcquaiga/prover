@@ -1,20 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using Prover.Application.FileLoader;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.Verifications;
-using Prover.Application.ViewModels.Corrections;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Tests.Application.Services;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 

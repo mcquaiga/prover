@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interfaces;
-using Prover.Domain;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -14,7 +10,7 @@ namespace Prover.Application.ViewModels.Volume
 {
     public class CorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
     {
-        private const decimal Tolerance = Global.COR_ERROR_THRESHOLD;
+        private const decimal Tolerance = Tolerances.COR_ERROR_THRESHOLD;
 
         public CorrectedVolumeTestViewModel(UncorrectedVolumeTestViewModel uncorrected,
             ICalculateTrueCorrectedFactor trueCorrectedFactor, VolumeItems startValues, VolumeItems endValues)

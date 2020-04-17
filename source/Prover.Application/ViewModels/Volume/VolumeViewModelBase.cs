@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
 using System.Reactive.Disposables;
 using Devices.Core.Items.ItemGroups;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
-using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Volume

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 using Prover.Shared;
 
 namespace Prover.Application.Services

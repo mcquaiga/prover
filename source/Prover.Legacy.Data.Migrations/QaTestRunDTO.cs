@@ -4,10 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core;
-using Prover.Application.Interfaces;
-using Prover.Application.Services;
-using Prover.Infrastructure;
 
 namespace Prover.Legacy.Data.Migrations
 {

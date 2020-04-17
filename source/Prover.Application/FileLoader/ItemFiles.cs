@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Repository;
 using Newtonsoft.Json;
 
 namespace Prover.Application.FileLoader

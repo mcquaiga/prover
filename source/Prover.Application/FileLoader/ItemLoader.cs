@@ -11,12 +11,9 @@ using Devices.Core.Repository;
 using Newtonsoft.Json;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
-using Prover.Domain;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
-using Prover.Shared;
-using Prover.Shared.Interfaces;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 
 namespace Prover.Application.FileLoader
 {

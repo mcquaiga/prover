@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 
 namespace Prover.Application.Services
 {

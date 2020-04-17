@@ -5,36 +5,37 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Client.Desktop.Wpf.Reports;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
-using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Models;
-using Prover.Modules.UnionGas.VerificationEvents;
+using Prover.Modules.UnionGas.Verifications;
 using Prover.Shared.Interfaces;
+using Prover.UI.Desktop.Reports;
+using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class ExporterViewModel : ViewModelBase, IRoutableViewModel
+    public class ExporterViewModel : ViewModelWpfBase, IRoutableViewModel, IHaveToolbarItems
     {
         private readonly ReadOnlyObservableCollection<EvcVerificationProxy> _data;
         private Func<EvcVerificationTest, ExportToolbarViewModel> _exporterToolbarFactory;
 
         public ExporterViewModel(IScreenManager screenManager,
             IVerificationTestService verificationTestService,
-            IEntityDataCache<EvcVerificationTest> cache,
+            IEntityDataCache<EvcVerificationTest> verificationCache,
             IDeviceRepository deviceRepository,
             IExportVerificationTest exporter,
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             TestsByJobNumberViewModel testsByJobNumberViewModel,
             MeterInventoryNumberValidator inventoryNumberValidator,
             Func<ReadOnlyObservableCollection<EvcVerificationTest>, ExportToolbarViewModel> exporterToolbarFactory =
@@ -65,7 +66,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
 
-            var visibleItems = cache.Data().Connect()
+            var visibleItems = verificationCache.Data().Connect()
                                     .Filter(FilterByTypeCommand)
                                     .Filter(FilterIncludeExported) //, changeObservable.Select(x => Unit.Default)
                                     .Filter(FilterIncludeArchived) //, changeObservable.Select(x => Unit.Default))
@@ -97,8 +98,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                                                                                 inventoryNumberValidator, selected);
 
             ToolbarViewModel = exporterToolbarFactory.Invoke(selectedItems);
+            this.AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
 
-            cache.Data().Connect()
+            verificationCache.Data().Connect()
                                    .Filter(x => !string.IsNullOrEmpty(x.JobId))
                                    .DistinctValues(x => x.JobId)
                                    .Bind(out var jobIds)

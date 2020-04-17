@@ -2,7 +2,6 @@
 using System.Reactive.Linq;
 using Devices.Core.Items.DriveTypes;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Domain;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -11,7 +10,7 @@ namespace Prover.Application.ViewModels.Volume.Rotary
     public sealed class RotaryMeterTestViewModel : ItemVarianceTestViewModel<RotaryMeterItems>
     {
         public RotaryMeterTestViewModel(RotaryMeterItems rotaryItems) : base(rotaryItems,
-            Global.METER_DIS_ERROR_THRESHOLD)
+            Tolerances.METER_DIS_ERROR_THRESHOLD)
         {
             Items = rotaryItems;
 

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.Mappers;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Newtonsoft.Json;
 
 
 namespace Prover.Legacy.Data.Migrations

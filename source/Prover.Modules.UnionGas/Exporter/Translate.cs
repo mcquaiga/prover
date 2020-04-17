@@ -1,10 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading.Tasks;
-using Devices.Core.Items;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Prover.Domain.EvcVerifications;
+﻿using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
 
 namespace Prover.Modules.UnionGas.Exporter

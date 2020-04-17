@@ -19,15 +19,15 @@ namespace Prover.Modules.UnionGas.MasaWebService
         Task<bool> SubmitQaTestRunResults(IEnumerable<TResult> evcQaRuns);
     }
 
-    public class MasaService : 
+    public class MasaWebService : 
         IUserService<EmployeeDTO>, 
         IMeterService<MeterDTO>, 
         IExportService<QARunEvcTestResult>
     {
-        private readonly ILogger<MasaService> _logger;
+        private readonly ILogger<MasaWebService> _logger;
         private readonly DCRWebServiceSoap _webService;
 
-        public MasaService(ILogger<MasaService> logger, DCRWebServiceSoap webService)
+        public MasaWebService(ILogger<MasaWebService> logger, DCRWebServiceSoap webService)
         {
             _logger = logger;
             _webService = webService;
