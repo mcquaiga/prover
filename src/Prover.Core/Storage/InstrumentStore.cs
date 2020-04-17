@@ -19,11 +19,14 @@ namespace Prover.Core.Storage
 
         public IQueryable<Instrument> Query()
         {
-            return _proverContext.Instruments
-                .IncludeOptimized(v => v.VerificationTests)
-                .IncludeOptimized(v => v.VerificationTests.Select(vt => vt.VolumeTest))
-
-                .AsQueryable();
+            return _proverContext.Instruments.AsQueryable();
+                    //query
+                    //.IncludeOptimized(i => i.VerificationTests(vt => vt.InstrumentId == i.Id)
+                    //                        .IncludeOptimized(v => v.TemperatureTest)
+                    //                        .IncludeOptimized(v => v.PressureTest)
+                    //                        .IncludeOptimized(v => v.SuperFactorTest)
+                    //                        .IncludeOptimized(v => v.VolumeTest))
+                    //                  .AsQueryable();
         }
 
         public Instrument Get(Guid id)

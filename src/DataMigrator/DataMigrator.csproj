@@ -33,17 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Core.GasCalculations">
-      <HintPath>..\..\..\EvcProver-vNext\source\Prover.Domain\bin\Debug\netstandard2.0\Core.GasCalculations.dll</HintPath>
-    </Reference>
-    <Reference Include="Core.GasCalculations.ZFactor">
-      <HintPath>..\..\..\EvcProver-vNext\source\Prover.Domain\bin\Debug\netstandard2.0\Core.GasCalculations.ZFactor.dll</HintPath>
-    </Reference>
     <Reference Include="Devices.Core">
       <HintPath>..\..\..\EvcProver-vNext\source\Prover.Domain\bin\Debug\netstandard2.0\Devices.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Prover.Domain">
-      <HintPath>..\..\..\EvcProver-vNext\source\Prover.Domain\bin\Debug\netstandard2.0\Prover.Domain.dll</HintPath>
     </Reference>
     <Reference Include="Prover.Shared">
       <HintPath>..\..\..\EvcProver-vNext\source\Prover.Domain\bin\Debug\netstandard2.0\Prover.Shared.dll</HintPath>
@@ -98,6 +89,15 @@
     </PackageReference>
     <PackageReference Include="Microsoft.SqlServer.Compact">
       <Version>4.0.8876.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>10.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rx-Linq">
+      <Version>2.2.5</Version>
+    </PackageReference>
+    <PackageReference Include="Z.EntityFramework.Plus.EF6">
+      <Version>1.7.9</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
