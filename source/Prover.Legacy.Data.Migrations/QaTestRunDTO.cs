@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
+using Devices.Core.Items;
 using Devices.Core.Repository;
+using Newtonsoft.Json;
+using Prover.Application.Interfaces;
+using Prover.Application.Mappers;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Shared.Storage.Interfaces;
+using Prover.Storage.LiteDb;
 
 namespace Prover.Legacy.Data.Migrations
 {
@@ -12,30 +20,49 @@ namespace Prover.Legacy.Data.Migrations
     {
         private static SessionContext _session;
         private static List<DeviceType> _devices;
-        private DataTransfer()
+        static DataTransfer()
         {
-            _session = new SessionContext();   
+            _session = new SessionContext();
+            _devices = Devices.Core.Repository.DeviceRepository.Instance.GetAll().ToList();
         }
 
-        public static async Task<QaTestRunDTO> Create(int deviceId, Dictionary<string, string> values)
+        public static Guid GetDeviceTypeId(int deviceId)
         {
             if (_devices == null)
             {
                 var repo = DeviceRepository.Instance;
                 _devices = repo.GetAll().ToList();
             }
-               
 
-            if (Mappers.DeviceTypeMappings.ContainsKey(deviceId))
+            return Mappers.DeviceTypeMappings[deviceId];
+        }
+
+        public static async Task ImportTests(VerificationsLiteDbRepository testRepo, string folderPath)
+        {
+            
+            if (!Directory.Exists(folderPath)) throw new DirectoryNotFoundException($"{folderPath}");
+
+            var testModels = new List<EvcVerificationTest>();
+
+            foreach (var file in Directory.EnumerateFiles(folderPath))
             {
-                if (_session == null)
-                    _session = new SessionContext();
+                using (var reader = new StreamReader(file))
+                {
+                    var json = await reader.ReadToEndAsync();
 
-
-                //_session.TestItems.Add();
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var qaTest = JsonConvert.DeserializeObject<QaTestRunDTO>(json);
+                        var deviceType = DeviceRepository.Instance.GetById(qaTest.Device.DeviceTypeId);
+                        var device = deviceType.CreateInstance(qaTest.Device.Items);
+                        var model = new EvcVerificationTest(device);
+                        testModels.Add(model);
+                        await testRepo.UpsertAsync(model);
+                    }
+                }
             }
-            return new QaTestRunDTO(Mappers.DeviceTypeMappings[deviceId], values); 
-           // VerificationTestService
+
+
         }
 
         public static DeviceType GetDevice(int deviceId)
@@ -73,14 +100,14 @@ namespace Prover.Legacy.Data.Migrations
 
     public class QaTestRunDTO
     {
-        internal QaTestRunDTO(Guid deviceTypeId, Dictionary<string, string> values)
+        public QaTestRunDTO(Guid deviceTypeId, Dictionary<string, string> values)
         {
-
+            Device = new DeviceDTO() {DeviceTypeId = deviceTypeId, Items = values};
         }
         
         public DeviceDTO Device { get; set; }
 
-        public ICollection<TestDTO> Tests { get; } = new List<TestDTO>();
+        public ICollection<TestDTO> Tests { get; set; } = new List<TestDTO>();
     
         public DateTime TestDateTime { get; set; }
 
@@ -113,7 +140,9 @@ namespace Prover.Legacy.Data.Migrations
 
     public class TestDTO
     {
+        public int TestNumber { get; set; }
         public Dictionary<string, string> Values { get; set; }
+        public Dictionary<string, string> EndValues { get; set; } = new Dictionary<string, string>();
     }
 
 
@@ -127,7 +156,9 @@ namespace Prover.Legacy.Data.Migrations
     {
         public static Dictionary<int, Guid> DeviceTypeMappings = new Dictionary<int, Guid>
         {
-                { 4, Guid.Parse("f29d8c85-8183-4256-9b14-369ef440ec60")}
+                { 4, Guid.Parse("f29d8c85-8183-4256-9b14-369ef440ec60")},
+                { 99, Guid.Parse("8b247a7e-0ed2-41d4-a6b9-45834b7f14e1")},
+                { 3, Guid.Parse("ced367b2-58dd-4ddd-bccf-43662f4ab36d")}
         };
     }
 }

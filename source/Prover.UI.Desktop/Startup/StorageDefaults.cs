@@ -13,9 +13,9 @@ using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Interfaces;
+using Prover.Shared.SampleData;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
-using Prover.Storage.SampleData;
 
 // ReSharper disable RedundantTypeArgumentsOfMethod
 
@@ -40,7 +40,9 @@ namespace Prover.UI.Desktop.Startup
         public static ILiteDatabase CreateLiteDb(string path = null)
         {
             if (!Lazy.IsValueCreated && !string.IsNullOrEmpty(path))
+            {
                 ConnectionString = path;
+            }
 
             return Database;
         }
@@ -138,8 +140,8 @@ namespace Prover.UI.Desktop.Startup
             var random = new Random(10000);
             var watch = Stopwatch.StartNew();
 
-            var deviceType = ServiceProviderServiceExtensions.GetService<IDeviceRepository>(_provider).GetByName("Mini-Max");
-            var testService = ServiceProviderServiceExtensions.GetService<IVerificationTestService>(_provider);
+            var deviceType = _provider.GetService<IDeviceRepository>().GetByName("Mini-Max");
+            var testService = _provider.GetService<IVerificationTestService>();
             
             var serialNumberItem = deviceType.GetItemMetadata(62);
 

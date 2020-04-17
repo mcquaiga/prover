@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Prover.Storage.SampleData
+namespace Prover.Shared.SampleData
 {
     public static class ItemFiles
     {
