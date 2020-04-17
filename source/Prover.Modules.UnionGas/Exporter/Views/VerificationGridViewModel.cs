@@ -9,7 +9,7 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -22,7 +22,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             ILogger<VerificationGridViewModel> logger,
             EvcVerificationTest verificationTest,
             IVerificationTestService verificationTestService,
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IExportVerificationTest exporter,
             ExporterViewModel exporterViewModel) : base(logger)
         {
@@ -45,11 +45,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 {
                     if (loginService.User != null)
                     {
-                        Test.EmployeeId = loginService.User?.Id;
+                        Test.EmployeeId = loginService.User?.UserId;
                         await verificationTestService.AddOrUpdate(Test);
                     }
 
-                    return loginService.User?.Id;
+                    return loginService.User?.UserId;
                 }, canAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
                 //canAddUser.DefaultIfEmpty(loginService.IsSignedOn).Subscribe();
 
@@ -111,7 +111,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             }
         }
 
-        public ILoginService<EmployeeDTO> LoginService { get; set; }
+        public ILoginService<Employee> LoginService { get; set; }
         public ExporterViewModel ExporterViewModel { get; }
         public IObservable<bool> IsLoggedOnObservable { get; set; }
 

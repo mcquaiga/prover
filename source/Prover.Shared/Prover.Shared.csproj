@@ -6,8 +6,25 @@
 
   <ItemGroup>
     <Compile Remove="Calculations\**" />
+    <Compile Remove="Interfaces\Repositories\**" />
     <EmbeddedResource Remove="Calculations\**" />
+    <EmbeddedResource Remove="Interfaces\Repositories\**" />
     <None Remove="Calculations\**" />
+    <None Remove="Interfaces\Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SampleData\MiniMax.json" />
+    <None Remove="SampleData\TemperatureTests.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SampleData\MiniMax.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\TemperatureTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -17,9 +34,5 @@
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\Repositories\" />
   </ItemGroup>
 </Project>

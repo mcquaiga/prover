@@ -32,83 +32,86 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Rows="1">
-                <StackPanel Margin="20,5" HorizontalAlignment="Center">
-                    <TextBlock x:Name="TotalTestsTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
 
-                    <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Total tests" />
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="20,5" HorizontalAlignment="Center">
+                        <TextBlock x:Name="TotalTestsTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
 
+                        <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Total tests" />
+
+                    </StackPanel>
+                    <Border
+                        Margin="15,15"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        BorderThickness="1,0,0,0"
+                        Style="{StaticResource SubSectionDividerBorder}">
+
+                        <Grid Margin="25,0" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                x:Name="PassedTotalTextBlock"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                FontSize="28"
+                                Style="{StaticResource ValueTextBlockStyle}" />
+                            <materialDesign:PackIcon
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{StaticResource PassColour}"
+                                Kind="Circle" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="8,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="28"
+                                Style="{StaticResource ValueTextBlockStyle}"
+                                Text="Passed" />
+
+
+                            <TextBlock
+                                x:Name="FailedTotalTextBlock"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                FontSize="28"
+                                Style="{StaticResource ValueTextBlockStyle}" />
+                            <materialDesign:PackIcon
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{StaticResource FailColour}"
+                                Kind="Circle" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="8,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="28"
+                                Style="{StaticResource ValueTextBlockStyle}"
+                                Text="Failed" />
+
+
+                        </Grid>
+                    </Border>
                 </StackPanel>
-                <Border
-                    Margin="1,15"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    BorderThickness="1,0,0,0"
-                    Style="{StaticResource SubSectionDividerBorder}">
 
-                    <Grid Margin="4" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock
-                            x:Name="PassedTotalTextBlock"
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="8,0"
-                            VerticalAlignment="Center"
-                            FontSize="28"
-                            Style="{StaticResource ValueTextBlockStyle}" />
-                        <materialDesign:PackIcon
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Foreground="{StaticResource PassColour}"
-                            Kind="Circle" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            Margin="8,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            FontSize="28"
-                            Style="{StaticResource ValueTextBlockStyle}"
-                            Text="Passed" />
-
-
-                        <TextBlock
-                            x:Name="FailedTotalTextBlock"
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="8,0"
-                            VerticalAlignment="Center"
-                            FontSize="28"
-                            Style="{StaticResource ValueTextBlockStyle}" />
-                        <materialDesign:PackIcon
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Foreground="{StaticResource FailColour}"
-                            Kind="Circle" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            Margin="8,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            FontSize="28"
-                            Style="{StaticResource ValueTextBlockStyle}"
-                            Text="Failed" />
-
-
-
-                    </Grid>
-                </Border>
                 <StackPanel Margin="20,5" HorizontalAlignment="Center">
                     <TextBlock>
 

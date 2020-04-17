@@ -9,7 +9,8 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Shared.Interfaces;
+using Prover.Modules.UnionGas.Models;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -22,11 +23,11 @@ namespace Prover.Modules.UnionGas.Login
     /// <summary>
     ///     Defines the <see cref="MasaLoginService" />
     /// </summary>
-    public class MasaLoginService : LoginServiceBase<EmployeeDTO>, IDisposable
+    public class MasaLoginService : LoginServiceBase<Employee>, IDisposable
     {
-        private readonly IRepository<string, EmployeeDTO> _employeeCache;
+        private readonly IRepository<Employee> _employeeCache;
 
-        private readonly List<EmployeeDTO> _employees = new List<EmployeeDTO>();
+        private readonly List<Employee> _employees = new List<Employee>();
 
         /// <summary>
         ///     Defines the _log
@@ -39,14 +40,14 @@ namespace Prover.Modules.UnionGas.Login
         private readonly IUserService<EmployeeDTO> _webService;
 
         public MasaLoginService(ILogger<MasaLoginService> log, IUserService<EmployeeDTO> employeeService,
-            IRepository<string, EmployeeDTO> employeeCache)
+            IRepository<Employee> employeeCache)
         {
             _log = log ?? NullLogger<MasaLoginService>.Instance;
             _webService = employeeService;
             _employeeCache = employeeCache;
         }
 
-        protected override string UserId => User?.Id;
+        protected override string UserId => User?.UserId;
 
         /// <inheritdoc />
         public override async Task<string> GetDisplayName<T>(T id)
@@ -54,27 +55,28 @@ namespace Prover.Modules.UnionGas.Login
             if (string.IsNullOrEmpty(id?.ToString())) return string.Empty;
 
             var employee = await GetUserDetails(id.ToString());
-            return employee.EmployeeName;
+            return employee.UserName;
         }
 
         public override async Task<string> GetLoginDetails() =>
             await MessageInteractions.GetInputString.Handle("Employee number:");
 
         /// <inheritdoc />
-        public override async Task<EmployeeDTO> GetUserDetails<TId>(TId id)
+        public override async Task<Employee> GetUserDetails<TId>(TId id)
         {
             _log.LogDebug($"Getting user details for employee #{id.ToString()}");
+
             var idString = id.ToString();
-            if (User?.Id == idString)
+            if (User?.UserId == idString)
                 return User;
 
-            return GetUsers().FirstOrDefault(u => u.EmployeeNbr == idString) 
-                ?? await _webService.GetUser(idString);
+            return GetUsers().FirstOrDefault(u => u.UserId == idString);
         }
 
-        public override IEnumerable<EmployeeDTO> GetUsers()
+        public override IEnumerable<Employee> GetUsers()
         {
             _log.LogDebug($"Getting employees.");
+
             if (_employees.Any() == false)
                 _employees.AddRange(_employeeCache?.GetAll());
 
@@ -83,14 +85,25 @@ namespace Prover.Modules.UnionGas.Login
 
         public override async Task<bool> Login(string username, string password = null)
         {
-            User = await _webService.GetUser(username);
+            var employeeDto = await _webService.GetUser(username);
 
-            LoggedInSubject.OnNext(User != null);
+            if (employeeDto != null)
+            {
+                User = new Employee()
+                {
+                    UserId = employeeDto.Id,
+                    UserName = employeeDto.EmployeeName //_employeeCache.GetAll().Where(e => e.UserId == employeeDto.Id)
+                };
 
-            _employeeCache.Add(User);
-            _employees.Add(User);
+                LoggedInSubject.OnNext(User != null);
 
-            return !User?.Id.IsNullOrEmpty() ?? false;
+                _employeeCache.Add(User);
+                _employees.Add(User);
+            }
+
+            return !User?.UserId.IsNullOrEmpty() ?? false;
         }
+
+        
     }
 }

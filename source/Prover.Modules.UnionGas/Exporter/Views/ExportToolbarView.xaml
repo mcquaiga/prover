@@ -42,42 +42,45 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Orientation="Horizontal">
+        <ItemsControl Style="{StaticResource ToolbarActionItemsStrip}">
+            <Button
+                x:Name="EditJobIdButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Edit Job #">
+                <materialDesign:PackIcon Kind="PencilAdd" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
 
-        <Button
-            x:Name="EditJobIdButton"
-            Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="Edit Job #">
-            <materialDesign:PackIcon Kind="PencilAdd" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-        </Button>
+            <Button
+                x:Name="AddUserToTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Add currently logged in user">
+                <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
 
-        <Button
-            x:Name="AddUserToTestButton"
-            Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="Add currently logged in user">
-            <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-        </Button>
+            <Button
+                x:Name="ExportTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Export">
+                <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
 
-        <Button
-            x:Name="ExportTestButton"
-            Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="Export">
-            <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-        </Button>
+            <Button
+                x:Name="ArchiveTestButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="Archive Test">
+                <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
 
-        <Button
-            x:Name="ArchiveTestButton"
-            Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="Archive Test">
-            <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-        </Button>
+            <Button
+                x:Name="PrintTestReportButton"
+                Style="{StaticResource FloatingActionButtonStyle}"
+                ToolTip="View QA Test Report"
+                Visibility="Collapsed">
+                <materialDesign:PackIcon Kind="FileFind" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+            </Button>
 
-        <Button
-            x:Name="PrintTestReportButton"
-            Style="{StaticResource FloatingActionButtonStyle}"
-            ToolTip="View QA Test Report"
-            Visibility="Collapsed">
-            <materialDesign:PackIcon Kind="FileFind" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-        </Button>
+        </ItemsControl>
+
     </StackPanel>
 
 

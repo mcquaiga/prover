@@ -10,9 +10,11 @@ using Prover.Application.Dashboard;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
-using Prover.Infrastructure;
-using Prover.Infrastructure.KeyValueStore;
+using Prover.Shared.Domain;
+using Prover.Storage;
+using Prover.Storage.LiteDb;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 using Prover.UI.Desktop.Extensions;
 
 namespace Prover.UI.Desktop.Startup
@@ -99,6 +101,8 @@ namespace Prover.UI.Desktop.Startup
 
             var deviceRepo = DeviceRepository.Instance;
             services.AddSingleton<IDeviceRepository>(deviceRepo);
+
+            //services.AddSingleton(typeof(IRepository<>), typeof(IRepository<AggregateRoot>));
 
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));

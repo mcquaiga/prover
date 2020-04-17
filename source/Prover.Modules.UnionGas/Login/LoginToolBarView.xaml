@@ -16,6 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
+                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -46,15 +47,8 @@
             VerticalAlignment="Center">
             <Button
                 x:Name="LoginButton"
-                Width="Auto"
-                Height="Auto"
-                Margin="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                materialDesign:RippleAssist.IsCentered="True"
-                Content="{materialDesign:PackIcon UserOff,
-                                                  Size=48}"
-                Style="{DynamicResource MaterialDesignIconButton}" />
+                Content="{materialDesign:PackIcon UserOff}"
+                Style="{StaticResource MainToolbarButtonStyle}" />
         </StackPanel>
 
         <StackPanel
@@ -64,33 +58,33 @@
             Orientation="Vertical"
             Visibility="Collapsed">
 
-            <materialDesign:PopupBox
+            <!--<materialDesign:PopupBox
                 Margin="2,15"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
-                StaysOpen="True" />
+                StaysOpen="True" />-->
             <materialDesign:PopupBox
                 Padding="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-                <materialDesign:PopupBox.ToggleContent>
-                    <Button
-                        materialDesign:ButtonAssist.CornerRadius="0"
-                        IsHitTestVisible="False"
-                        Style="{StaticResource MaterialDesignFlatButton}">
-                        <materialDesign:PackIcon Kind="Account" />
-                    </Button>
-                </materialDesign:PopupBox.ToggleContent>
-                <StackPanel>
-                    <Button
-                        x:Name="LogoutButton"
-                        Width="90"
-                        Height="28"
-                        HorizontalAlignment="Right"
-                        Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                <materialDesign:PopupBox.ToggleContentTemplate>
+                    <DataTemplate>
+                        <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{StaticResource MainToolbarButtonStyle}">
+                            <materialDesign:PackIcon Kind="Account" />
+                        </Button>
+                    </DataTemplate>
+                </materialDesign:PopupBox.ToggleContentTemplate>
+                <materialDesign:PopupBox.Content>
+                    <StackPanel>
+                        <Button
+                            x:Name="LogoutButton"
+                            Content="Sign Out"
+                            Style="{StaticResource MainToolbarButtonStyle}" />
 
 
-                </StackPanel>
+                    </StackPanel>
+                </materialDesign:PopupBox.Content>
+
 
             </materialDesign:PopupBox>
 

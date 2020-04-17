@@ -10,68 +10,48 @@
     xmlns:viewModels="clr-namespace:Prover.UI.Desktop.ViewModels"
     x:Name="MainWindowView"
     Title="EVC Prover"
-    Width="964"
-    Height="750"
     x:TypeArguments="viewModels:MainViewModel"
     Style="{StaticResource DialogWindowStyle}"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
     mc:Ignorable="d">
-    <Window.Resources />
+    <Window.Resources>
+        <ResourceDictionary />
+
+    </Window.Resources>
 
     <Grid>
-        <DockPanel
-            Margin="2"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid
-                Width="Auto"
+                Width="75"
                 Margin="0,0,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
                 DockPanel.Dock="Left">
                 <StackPanel
                     x:Name="NavigationBar"
-                    HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     Orientation="Vertical">
-                    <StackPanel.Resources>
-                        <Style BasedOn="{StaticResource MaterialDesignIconButton}" TargetType="{x:Type Button}">
-                            <Setter Property="Margin" Value="8,2,8,2" />
-                            <Setter Property="Width" Value="Auto" />
-                            <Setter Property="Height" Value="Auto" />
-                        </Style>
-                    </StackPanel.Resources>
-                    <Button x:Name="GoHomeButton" Content="{materialDesign:PackIcon Home, Size=48}" />
-                    <Button x:Name="GoBackButton" Content="{materialDesign:PackIcon NavigateBefore, Size=48}" />
+                    <Button
+                        x:Name="GoHomeButton"
+                        Content="{materialDesign:PackIcon Home}"
+                        Style="{StaticResource MainToolbarButtonStyle}" />
+                    <Button
+                        x:Name="GoBackButton"
+                        Content="{materialDesign:PackIcon NavigateBefore}"
+                        Style="{StaticResource MainToolbarButtonStyle}" />
                 </StackPanel>
 
-                <ItemsControl x:Name="ToolbarActionItemsControl" Margin="0,0,4,0">
+                <ItemsControl x:Name="ToolbarActionItemsControl">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid
+                            <StackPanel
                                 MinHeight="250"
-                                Margin="0,8"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Columns="1">
-                                <UniformGrid.Resources>
-                                    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
-                                        <Setter Property="Width" Value="Auto" />
-                                        <Setter Property="Height" Value="Auto" />
-                                        <Setter Property="Margin" Value="0,12" />
-                                        <Setter Property="HorizontalAlignment" Value="Left" />
-                                    </Style>
-                                    <Style TargetType="materialDesign:PackIcon">
-                                        <Setter Property="Width" Value="36" />
-                                        <Setter Property="Height" Value="36" />
-                                        <Setter Property="FontSize" Value="64" />
-                                    </Style>
-                                </UniformGrid.Resources>
-                            </UniformGrid>
+                                VerticalAlignment="Center" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
-                            <Button Command="{Binding ToolbarAction}">
+                            <Button Command="{Binding ToolbarAction}" Style="{StaticResource MainToolbarButtonStyle}">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
                                 </Button.Content>

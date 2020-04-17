@@ -124,7 +124,7 @@
     <ProjectReference Include="..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Externals.MccDaq\Prover.Externals.MccDaq.csproj" />
-    <ProjectReference Include="..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+    <ProjectReference Include="..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
   </ItemGroup>
 
 
@@ -223,6 +223,7 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
+    <Folder Include="Storage\" />
     <Folder Include="Views\Verifications\Managers\" />
   </ItemGroup>
 

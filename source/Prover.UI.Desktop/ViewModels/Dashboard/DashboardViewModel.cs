@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
 
 namespace Prover.UI.Desktop.ViewModels.Dashboard

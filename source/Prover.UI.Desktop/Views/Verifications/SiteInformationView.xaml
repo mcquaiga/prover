@@ -148,7 +148,7 @@
                     Width="36"
                     Height="36"
                     Margin="5"
-                    HorizontalAlignment="Center" />
+                    Style="{StaticResource PassFailIcon}" />
 
                 <TextBlock
                     x:Name="DeviceNameTextBlock"

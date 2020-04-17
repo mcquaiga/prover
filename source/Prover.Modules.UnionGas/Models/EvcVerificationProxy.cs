@@ -13,7 +13,7 @@ namespace Prover.Modules.UnionGas.Models
     {
         public VerificationProxy(EvcVerificationTest verification,
             IObservable<EvcVerificationTest> changeUpdates,
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IReactiveCommand viewReport)
         {
         }
@@ -27,7 +27,7 @@ namespace Prover.Modules.UnionGas.Models
 
         public EvcVerificationProxy(EvcVerificationTest verification, 
             IObservable<EvcVerificationTest> changeUpdates, 
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IReactiveCommand viewReport)
         {
             ViewReport = viewReport;
@@ -49,7 +49,7 @@ namespace Prover.Modules.UnionGas.Models
                 .ToPropertyEx(this, x => x.IsLocked);
         }
 
-        
+        public bool Verified => Test.Verified;
         public extern EvcVerificationTest Test { [ObservableAsProperty] get; }
         
         public extern bool IsLocked { [ObservableAsProperty] get; }

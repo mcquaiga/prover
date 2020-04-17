@@ -11,8 +11,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
-using Prover.Infrastructure;
-using Prover.Infrastructure.KeyValueStore;
+using Prover.Storage.LiteDb;
 
 namespace Tests.Application.Services
 {
@@ -43,8 +42,8 @@ namespace Tests.Application.Services
             //await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
             DeviceRepo = DeviceRepository.Instance;
 
-            StorageDefaults.CreateLiteDb();
-            TestRepo = new VerificationsLiteDbRepository(StorageDefaults.Database, DeviceRepo);
+            LiteDbStorageDefaults.CreateLiteDb();
+            TestRepo = new VerificationsLiteDbRepository(LiteDbStorageDefaults.Database, DeviceRepo);
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");
         }
@@ -82,7 +81,7 @@ namespace Tests.Application.Services
 
         public static void DropCollection()
         {
-            StorageDefaults.Database.DropCollection("EvcVerificationTest");
+            LiteDbStorageDefaults.Database.DropCollection("EvcVerificationTest");
         }
     }
 }

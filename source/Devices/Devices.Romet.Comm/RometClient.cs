@@ -6,7 +6,7 @@ using Devices.Core.Items;
 using Devices.Honeywell.Comm.CommClients;
 using Devices.Honeywell.Comm.Messaging.Requests;
 using Devices.Romet.Core;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Romet.Comm
 {

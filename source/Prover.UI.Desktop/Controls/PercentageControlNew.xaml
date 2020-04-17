@@ -9,8 +9,9 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
-            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
-            <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/VerificationStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid DataContext="{Binding ElementName=PercentUserControl}">
@@ -26,7 +27,8 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Foreground="{Binding Path=IconBackground, ElementName=PercentUserControl}"
-                Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}" />
+                Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}"
+                Style="{StaticResource PassFailIcon}" />
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock

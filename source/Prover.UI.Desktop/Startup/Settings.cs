@@ -7,6 +7,7 @@ using Prover.Application;
 using Prover.Application.Services;
 using Prover.Application.Settings;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.UI.Desktop.Startup
 {

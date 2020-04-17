@@ -50,7 +50,7 @@ namespace Prover.Application.ViewModels.Corrections
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
                 .ToCollection()
-                .Select(x => x.Any() && x.All(y => y.Verified))
+                .Select(x => x.Any() && x.All(y => y != null && y.Verified))
                 .ObserveOn(RxApp.TaskpoolScheduler);
         }
     }

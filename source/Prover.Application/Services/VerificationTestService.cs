@@ -15,6 +15,7 @@ using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Application.Services
 {

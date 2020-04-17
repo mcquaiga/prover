@@ -49,11 +49,7 @@ namespace Prover.UI.Desktop.Startup
             _logger.LogDebug("Verification Event subscribers:");
 
             var eventSubscribers = _provider.GetServices<IEventsSubscriber>();
-            eventSubscribers.ForEach(e =>
-            {
-                _logger.LogDebug($"   Type: {e}");
-                e.SubscribeToEvents();
-            });
+            eventSubscribers.ForEach(e => _logger.LogDebug($"   Type: {e}"));
         }
 
         /// <inheritdoc />

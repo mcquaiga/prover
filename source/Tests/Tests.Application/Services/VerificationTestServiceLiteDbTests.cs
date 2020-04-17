@@ -17,6 +17,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 using Tests.Shared;
 
 namespace Tests.Application.Services

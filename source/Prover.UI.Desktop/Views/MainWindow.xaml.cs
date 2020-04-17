@@ -1,5 +1,7 @@
 ﻿using System.Reactive;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
+using System.Windows;
 using Prover.Application.Interactions;
 using ReactiveUI;
 
@@ -30,7 +32,7 @@ namespace Prover.UI.Desktop.Views
                 
                 //this.BindCommand(ViewModel, x => x., x => x.GoHomeButton).DisposeWith(d);
                 //this.BindCommand(ViewModel, x => x.OpenDialog, x => x.ShowDialogButton).DisposeWith(d);
-                
+              
             });
             RegisterNotificationInteractions();
            
@@ -38,22 +40,12 @@ namespace Prover.UI.Desktop.Views
 
         private void RegisterNotificationInteractions()
         {
-            NotificationInteractions.SnackBarMessage.RegisterHandler(message =>
+            NotificationInteractions.SnackBarMessage.RegisterHandler(async message =>
             {
                 ViewModel.MessageQueue.Enqueue(message.Input);
-
-                //NotificationSnackBar.Message.Content = message.Input;
-                //NotificationSnackBar.IsActive = true;
-
-                //Observable.Timer(TimeSpan.FromSeconds(2))
-                //          .ObserveOn(RxApp.MainThreadScheduler)
-                //          .Subscribe(_ =>
-                //          {
-                //              NotificationSnackBar.IsActive = false;
-                //              NotificationSnackBar.Message.Content = string.Empty;
-                //          });
-
+                
                 message.SetOutput(Unit.Default);
+                await Task.CompletedTask;
             });
         }
     }

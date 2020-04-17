@@ -81,12 +81,12 @@ namespace Prover.UI.Desktop.Controls
         {
             if (myObj.Passed)
             {
-                myObj.IconKind = PackIconKind.Check;
+                myObj.IconKind = (PackIconKind) (myObj.Resources["PassIcon"] as PackIcon)?.Kind;
                 myObj.IconBackground = (Brush) myObj.Resources["PassColour"];
             }
             else
             {
-                myObj.IconKind = PackIconKind.AlertCircleOutline;
+                myObj.IconKind = (PackIconKind) (myObj.Resources["FailIcon"] as PackIcon)?.Kind;
                 myObj.IconBackground = (Brush) myObj.Resources["FailColour"];
             }
         }

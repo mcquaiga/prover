@@ -18,11 +18,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
+                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/VerificationStyles.xaml" />
 
 
             </ResourceDictionary.MergedDictionaries>
 
-            <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
+            <!--<SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
             <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
 
             <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
@@ -32,7 +33,7 @@
                         <Setter Property="Foreground" Value="{StaticResource PassColour}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Test.Verified}" Value="False">
-                        <Setter Property="Kind" Value="AlertCircleOutline" />
+                        <Setter Property="Kind" Value="CloseCircle" />
                         <Setter Property="Foreground" Value="{StaticResource FailColour}" />
                     </DataTrigger>
                 </Style.Triggers>
@@ -40,7 +41,7 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Width" Value="32" />
                 <Setter Property="Height" Value="32" />
-            </Style>
+            </Style>-->
 
             <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
                 <Setter Property="FontSize" Value="16" />
@@ -62,11 +63,10 @@
                     x:Name="DataGridColumnHeadersStyle"
                     BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}"
                     TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="Margin" Value="8,2" />
                     <Setter Property="Width" Value="Auto" />
-                    <Setter Property="Height" Value="50" />
-                    <Setter Property="FontSize" Value="14" />
-
+                    <Setter Property="Height" Value="Auto" />
+                    <Setter Property="FontSize" Value="18" />
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.RowStyle>
@@ -76,14 +76,24 @@
                     <Setter Property="VerticalAlignment" Value="Top" />
                     <Setter Property="VerticalContentAlignment" Value="Top" />
                     <Setter Property="Height" Value="Auto" />
+
+
                     <!--<Setter Property="Foreground" Value="Black" />-->
                     <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True" />
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Trigger>
                     </Style.Triggers>
+
                 </Style>
             </DataGrid.RowStyle>
-
+            <DataGrid.CellStyle>
+                <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
+
                 <DataGridCheckBoxColumn
                     Width="70"
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
@@ -111,18 +121,25 @@
                     Width="80"
                     Header="Verified"
                     SortMemberPath="Test.Verified">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="Margin" Value="0" />
+                    <!--<DataGridTemplateColumn.HeaderStyle>
+                    -->
+                    <!--<Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                    -->
+                    <!--<Setter Property="Margin" Value="0" />
                             <Setter Property="Width" Value="Auto" />
                             <Setter Property="Height" Value="50" />
                             <Setter Property="FontSize" Value="14" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
+                            <Setter Property="HorizontalAlignment" Value="Center" />-->
+                    <!--
+                        </Style>-->
+                    <!--
+                    </DataGridTemplateColumn.HeaderStyle>-->
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <materialDesign:PackIcon x:Name="VerifiedStatusIcon" Style="{StaticResource PassFailIcon}" />
+                            <materialDesign:PackIcon
+                                x:Name="VerifiedStatusIcon"
+                                Style="{StaticResource PassFailIcon}"
+                                Tag="{Binding Test.Verified}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -184,7 +201,7 @@
 
                 <materialDesign:DataGridTextColumn
                     x:Name="EmployeeColumn"
-                    Binding="{Binding Employee.EmployeeName, Mode=OneWay}"
+                    Binding="{Binding Employee.UserName, Mode=OneWay}"
                     Header="Employee" />
 
                 <materialDesign:DataGridTextColumn

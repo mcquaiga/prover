@@ -7,15 +7,17 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Infrastructure.KeyValueStore;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter;
 using Prover.Modules.UnionGas.Exporter.Views;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Login;
 using Prover.Modules.UnionGas.MasaWebService;
-using Prover.Modules.UnionGas.VerificationEvents;
+using Prover.Modules.UnionGas.Models;
+using Prover.Modules.UnionGas.Verifications;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
+using Prover.Storage.LiteDb;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
 using Prover.UI.Desktop.ViewModels;
@@ -56,20 +58,20 @@ namespace Prover.Modules.UnionGas
                         c.GetService<ILogger<VerificationGridViewModel>>(),
                         evcTest,
                         c.GetService<IVerificationTestService>(),
-                        c.GetService<ILoginService<EmployeeDTO>>(),
+                        c.GetService<ILoginService<Employee>>(),
                         c.GetService<IExportVerificationTest>(),
                         exporter
                     ));
 
            
             services.AddSingleton<MasaLoginService>();
-            services.AddSingleton<ILoginService<EmployeeDTO>>(c => c.GetRequiredService<MasaLoginService>());
+            services.AddSingleton<ILoginService<Employee>>(c => c.GetRequiredService<MasaLoginService>());
             services.AddSingleton<ILoginService>(c => c.GetRequiredService<MasaLoginService>());
             //services.AddHostedService<MasaLoginService>();
 
             services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
             services.AddTransient<TestsByJobNumberViewModel>();
-            services.AddSingleton<IRepository<string, EmployeeDTO>, LiteDbRepository<string, EmployeeDTO>>();
+            services.AddSingleton<IRepository<Employee>, LiteDbRepository<Employee>>();
             
             AddVerificationActions(services);
 
@@ -82,12 +84,8 @@ namespace Prover.Modules.UnionGas
         private void AddVerificationActions(IServiceCollection services)
         {
             services.AddSingleton<MeterInventoryNumberValidator>();
-            //services.AddSingleton<MasaVerificationActions>();
 
             services.AddAllTypes<IEventsSubscriber>(lifetime: ServiceLifetime.Singleton);
-            //services.AddSingleton<IOnInitializeAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            //services.AddSingleton<IOnSubmitAction>(c => c.GetRequiredService<MasaVerificationActions>());
-            //services.AddSingleton<IVerificationAction>(c => c.GetRequiredService<MasaVerificationActions>());
         }
 
         private void AddMasaWebService(IServiceCollection services, string remoteAddress = null)
@@ -98,10 +96,10 @@ namespace Prover.Modules.UnionGas
                     : new DCRWebServiceSoapClient(DCRWebServiceSoapClient.EndpointConfiguration.DCRWebServiceSoap,
                         remoteAddress));
 
-            services.AddSingleton<MasaService>();
-            services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<MasaService>());
-            services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<MasaService>());
-            services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<MasaService>());
+            services.AddSingleton<MasaWebService.MasaWebService>();
+            services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<MasaWebService.MasaWebService>());
+            services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<MasaWebService.MasaWebService>());
+            services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<MasaWebService.MasaWebService>());
         }
 
         private void DevelopmentServices(IServiceCollection services)

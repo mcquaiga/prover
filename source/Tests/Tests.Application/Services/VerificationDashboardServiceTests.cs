@@ -6,6 +6,7 @@ using Devices.Core.Repository;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 using Tests.Application.Services;
 
 namespace Prover.Application.Services.Tests

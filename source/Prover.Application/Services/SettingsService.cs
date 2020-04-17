@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Prover.Application.Settings;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Application.Services
 {

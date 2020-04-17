@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
@@ -24,9 +25,21 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock
+
+        <materialDesign:PackIcon
+            x:Name="TestLevelIconControl"
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="48"
+            Height="48"
+            Kind="Number1"
+            RenderSize="42 45" />
+
+        <!--<TextBlock
             x:Name="TestLevelBlock"
+            Grid.Row="0"
             Grid.RowSpan="3"
+            Grid.Column="0"
             Margin="0,0,0,5"
             VerticalAlignment="Bottom"
             RenderTransformOrigin=".5,.5"
@@ -35,10 +48,10 @@
                 <RotateTransform Angle="-90" />
             </TextBlock.LayoutTransform>
 
-        </TextBlock>
+        </TextBlock>-->
         <ItemsControl
             x:Name="TestItems"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="1"
             DataContext="{Binding}">
             <ItemsControl.Resources />
@@ -50,7 +63,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border
-                        Padding="4"
+                        Padding="0"
                         BorderThickness="0,0,0,0"
                         Style="{StaticResource SubSectionDividerBorder}">
                         <reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}">

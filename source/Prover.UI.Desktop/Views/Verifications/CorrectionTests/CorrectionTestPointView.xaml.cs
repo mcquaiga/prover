@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reactive.Disposables;
+using MaterialDesignThemes.Wpf;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using Prover.UI.Desktop.Extensions;
@@ -19,7 +21,13 @@ namespace Prover.UI.Desktop.Views.Verifications.CorrectionTests
 
             this.WhenActivated(d =>
                 {
-                    this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}").DisposeWith(d);
+                   // this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}").DisposeWith(d);
+                    this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelIconControl.Kind,
+                            value =>
+                            {
+                                var iconKind = $"Number{value + 1}";
+                                return Enum.Parse(typeof(PackIconKind), iconKind);
+                            }).DisposeWith(d);
 
                     this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestItems.ItemsSource, 
                         tests => tests.Where(t =>

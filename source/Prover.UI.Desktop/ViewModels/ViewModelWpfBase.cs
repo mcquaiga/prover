@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,15 @@ namespace Prover.UI.Desktop.ViewModels
         {
             _toolbarActionItems.Add(new ToolbarActionItem(iconKind.ToString(), command));
         }
-        
+
+        protected void AddToolbarItem(IToolbarActionItem toolbarItem)
+        {
+            _toolbarActionItems.Add(toolbarItem);
+        }
+
+        protected void AddToolbarItem(IEnumerable<IToolbarActionItem> toolbarItems)
+        {
+            toolbarItems.ForEach(AddToolbarItem);
+        }
     }
 }
