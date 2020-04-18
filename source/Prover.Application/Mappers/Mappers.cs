@@ -7,6 +7,7 @@ using Prover.Application.Models.EvcVerifications.Verifications.Volume;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
+using Prover.Application.ViewModels.Factories.Volume;
 using Prover.Application.ViewModels.Volume;
 using Prover.Application.ViewModels.Volume.Rotary;
 
@@ -50,6 +51,9 @@ namespace Prover.Application.Mappers
 
                 cfg.CreateMap<RotaryMeterTestViewModel, RotaryMeterTest>();
                 cfg.CreateMap<RotaryMeterTest, RotaryMeterTestViewModel>();
+
+                cfg.CreateMap<EnergyVolumeTestViewModel, EnergyTest>();
+                cfg.CreateMap<EnergyTest, EnergyVolumeTestViewModel>();
 
                 cfg.CreateMap<VerificationTestPointViewModel, VerificationTestPoint>();
                 cfg.CreateMap<VerificationTestPoint, VerificationTestPointViewModel>()

@@ -52,8 +52,13 @@
     <SolidColorBrush x:Key="PassColour" Color="ForestGreen" />
     <SolidColorBrush x:Key="FailColour" Color="IndianRed" />
 
-    <materialDesign:PackIcon x:Key="PassIcon" Kind="Check" />
-    <materialDesign:PackIcon x:Key="FailIcon" Kind="CloseCircleOutline" />
+    <materialDesign:PackIconKind x:Key="PassIcon">
+        Check
+    </materialDesign:PackIconKind>
+
+    <materialDesign:PackIconKind x:Key="FailIcon">
+        CloseCircleOutline
+    </materialDesign:PackIconKind>
 
     <Style x:Key="PassFailIcon" TargetType="materialDesign:PackIcon">
         <Style.Triggers>

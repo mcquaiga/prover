@@ -45,7 +45,7 @@ namespace Prover.Application.ViewModels.Factories
                 }
         };
 
-        public VerificationViewModelFactory(ILoginService loginService, ICollection<CorrectionTestDefinition> testDefinitions = null)
+        public VerificationViewModelFactory(ILoginService loginService = null, ICollection<CorrectionTestDefinition> testDefinitions = null)
         {
             _loginService = loginService;
             _testDefinitions = testDefinitions ?? _testDefinitions;

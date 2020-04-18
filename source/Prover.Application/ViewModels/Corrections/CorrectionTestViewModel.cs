@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Devices.Core.Items.ItemGroups;
 using DynamicData;
 using Prover.Calculations;
 
@@ -64,6 +65,12 @@ namespace Prover.Application.ViewModels.Corrections
         bool Verified { get; }
     }
 
+    public interface IDeviceItemsGroup<T>
+        where T : class
+    {
+        T Items { get; set; }
+    }
+
     public abstract class VarianceTestViewModel : VerificationViewModel, IAssertExpectedActual
     {
         protected VarianceTestViewModel()
@@ -89,7 +96,7 @@ namespace Prover.Application.ViewModels.Corrections
         public extern decimal PercentError { [ObservableAsProperty] get; }
     }
 
-    public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification
+    public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification, IDeviceItemsGroup<T>
         where T : class
     {
         protected DeviationTestViewModel()
@@ -121,7 +128,7 @@ namespace Prover.Application.ViewModels.Corrections
         public extern bool Verified { [ObservableAsProperty] get; }
     }
 
-    public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel
+    public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel, IDeviceItemsGroup<T>
         where T : class
     {
         protected ItemVarianceTestViewModel(T items, decimal passTolerance) : base(passTolerance) => Items = items;

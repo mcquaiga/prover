@@ -121,25 +121,19 @@
                     Width="80"
                     Header="Verified"
                     SortMemberPath="Test.Verified">
-                    <!--<DataGridTemplateColumn.HeaderStyle>
-                    -->
-                    <!--<Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                    -->
-                    <!--<Setter Property="Margin" Value="0" />
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Width" Value="Auto" />
                             <Setter Property="Height" Value="50" />
-                            <Setter Property="FontSize" Value="14" />
-                            <Setter Property="HorizontalAlignment" Value="Center" />-->
-                    <!--
-                        </Style>-->
-                    <!--
-                    </DataGridTemplateColumn.HeaderStyle>-->
+
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+
+                        </Style>
+
+                    </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <materialDesign:PackIcon
-                                x:Name="VerifiedStatusIcon"
-                                Style="{StaticResource PassFailIcon}"
-                                Tag="{Binding Test.Verified}" />
+                            <materialDesign:PackIcon x:Name="VerifiedStatusIcon" Style="{StaticResource PassFailIcon}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

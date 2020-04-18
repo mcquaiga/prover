@@ -24,6 +24,17 @@ namespace Devices.Core.Interfaces
             return joined;
         }
 
+        public static ItemGroup GetGroupValues(this DeviceInstance deviceInstance, IEnumerable<ItemValue> itemValues, Type groupType)
+        {
+            var combinedValues = deviceInstance.CombineValuesWithItemFile(itemValues);
+            return deviceInstance.DeviceType.GetGroupValues(combinedValues, groupType);
+        }
+
+        public static IEnumerable<ItemValue> CombineValuesWithItemFile(this DeviceInstance deviceInstance, IEnumerable<ItemValue> itemValues)
+        {
+            return itemValues.Union(deviceInstance.Values);
+        }
+
         public static ItemValue SetItemValue(this DeviceInstance device, ItemMetadata itemMetadata, string value)
         {
             var itemValue = ItemValue.Create(itemMetadata, value);

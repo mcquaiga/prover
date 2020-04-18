@@ -11,8 +11,6 @@ namespace Prover.Application.ViewModels.Volume.Rotary
         {
         }
 
-        public CorrectedVolumeTestViewModel Corrected => AllTests().OfType<CorrectedVolumeTestViewModel>().FirstOrDefault();
-        public UncorrectedVolumeTestViewModel Uncorrected => AllTests().OfType<UncorrectedVolumeTestViewModel>().FirstOrDefault();
         public RotaryMeterTestViewModel RotaryMeterTest => AllTests().OfType<RotaryMeterTestViewModel>().FirstOrDefault();
 
         protected override ICollection<VerificationViewModel> GetSpecificTests() => AllTests();

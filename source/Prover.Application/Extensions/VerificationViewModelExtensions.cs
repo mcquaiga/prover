@@ -54,6 +54,50 @@ namespace Prover.Application.Extensions
                 testOfT.Items = device.CreateItemGroup<T>(itemValues);
         }
 
+        public static void UpdateValues(this VerificationTestPointViewModel test, ICollection<ItemValue> values, DeviceInstance device)
+        {
+            //foreach (var correction in test.GetCorrectionTests())
+            //{
+            //    var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+
+            //    itemType?.SetValue(correction, device.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            //}
+            values = device.CombineValuesWithItemFile(values).ToList();
+            foreach (var verificationTest in test.GetCorrectionTests())
+            {
+                var itemType = verificationTest.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+
+                itemType?.SetValue(verificationTest, device.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            }
+        }
+
+        public static void UpdateValues(this VerificationTestPointViewModel test, ICollection<ItemValue> startValues, ICollection<ItemValue> endValues, DeviceInstance device)
+        {
+            //foreach (var correction in test.GetCorrectionTests())
+            //{
+            //    var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+
+            //    itemType?.SetValue(correction, device.DeviceType.GetGroupValues(values, itemType.PropertyType));
+            //}
+
+            if (test.Volume == null) return;
+
+            startValues = device.CombineValuesWithItemFile(startValues)
+                                .ToList();
+
+            endValues = device.CombineValuesWithItemFile(endValues)
+                              .ToList();
+
+            foreach (var verificationTest in test.Volume?.AllTests().OfType<IDeviceStartAndEndValues<VolumeItems>>())
+            {
+                var itemType = verificationTest.GetProperty(nameof(IDeviceStartAndEndValues<VolumeItems>.StartValues));
+                itemType?.SetValue(verificationTest, device.DeviceType.GetGroupValues(startValues, itemType.PropertyType));
+
+                itemType = verificationTest.GetProperty(nameof(IDeviceStartAndEndValues<VolumeItems>.EndValues));
+                itemType?.SetValue(verificationTest, device.DeviceType.GetGroupValues(endValues, itemType.PropertyType));
+            }
+        }
+
         public static string TestDateTimePretty(this EvcVerificationViewModel test) => $"{test.TestDateTime:g}";
     }
 }

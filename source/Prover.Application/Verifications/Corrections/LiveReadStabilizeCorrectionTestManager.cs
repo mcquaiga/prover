@@ -14,6 +14,7 @@ using CorrectionEvents = Prover.Application.Verifications.VerificationEvents.Cor
 
 namespace Prover.Application.Verifications.Corrections
 {
+
     public abstract class CorrectionTestManagerBase
     {
         

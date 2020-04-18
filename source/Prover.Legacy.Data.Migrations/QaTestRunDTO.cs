@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +8,11 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Newtonsoft.Json;
+using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications;
+using Prover.Application.ViewModels;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
 
@@ -37,7 +40,7 @@ namespace Prover.Legacy.Data.Migrations
             return Mappers.DeviceTypeMappings[deviceId];
         }
 
-        public static async Task ImportTests(VerificationsLiteDbRepository testRepo, string folderPath)
+        public static async Task ImportTests(IVerificationTestService testService, string folderPath)
         {
             
             if (!Directory.Exists(folderPath)) throw new DirectoryNotFoundException($"{folderPath}");
@@ -55,9 +58,42 @@ namespace Prover.Legacy.Data.Migrations
                         var qaTest = JsonConvert.DeserializeObject<QaTestRunDTO>(json);
                         var deviceType = DeviceRepository.Instance.GetById(qaTest.Device.DeviceTypeId);
                         var device = deviceType.CreateInstance(qaTest.Device.Items);
-                        var model = new EvcVerificationTest(device);
-                        testModels.Add(model);
-                        await testRepo.UpsertAsync(model);
+                        var viewModel = testService.NewVerification(device);
+
+                        viewModel.VerificationTests.OfType<VerificationTestPointViewModel>()
+                                 .ForEach(vt =>
+                                 {
+                                     try
+                                     {
+                                         var qaVt = qaTest.Tests.FirstOrDefault(qa => qa.TestNumber == vt.TestNumber);
+
+                                         var values = deviceType.ToItemValues(qaVt?.Values)
+                                                                .ToList();
+                                         vt.UpdateValues(values, device);
+
+                                         if (vt.Volume != null)
+                                         {
+                                             vt.UpdateValues(values,
+                                                     deviceType.ToItemValues(qaVt?.EndValues)
+                                                               .ToList(),
+                                                     device);
+                                         }
+                                     }
+                                     catch (Exception ex)
+                                     {
+                                         Debug.WriteLine(ex);
+                                         Console.WriteLine(ex);
+                                     }
+                                     
+                                 });
+                        //qaTest.Tests.ForEach(t =>
+                        //{
+                        //    viewModel.SetItems<>();
+                        //})
+                        //viewModel.SetItems<>();
+                        //var model = new EvcVerificationTest(device);
+                        //testModels.Add(model);
+                        await testService.AddOrUpdate(viewModel);
                     }
                 }
             }

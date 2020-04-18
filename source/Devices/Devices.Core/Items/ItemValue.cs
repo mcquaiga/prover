@@ -1,14 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items
 {
-    public class ItemValue : IEquatable<ItemValue>, IEqualityComparer<ItemValue>
+    public class ItemValue : IEquatable<ItemValue>//, IEqualityComparer
     {
-        private ItemValue() { }
-
         public static ItemValue Create(ItemMetadata metadata, object value)
         {
             if (value.ToString().Equals("! Unsupported"))
@@ -29,6 +28,10 @@ namespace Devices.Core.Items
             SetValue(value);
         }
 
+        public ItemValue()
+        {
+
+        }
         #region Public Properties
 
         public object RawValue { get; protected set; }
@@ -74,26 +77,29 @@ namespace Devices.Core.Items
 
         #region Public Methods
 
-        public bool Equals(ItemValue other) => Id == other?.Id;
+        public bool Equals(ItemValue other) => Metadata.Number == other?.Metadata.Number;
 
         public override string ToString()
         {
-            return $" {Metadata?.Description} - #{Metadata?.Number} {Environment.NewLine}" +
-                   $"   Item Value: {Value} {Environment.NewLine}";
+            return $"{Metadata?.Number} - {Metadata?.Description} = {Value}";
         }
 
         #endregion
 
+        /// <inheritdoc />
+        public override bool Equals(object obj) => Equals(obj as ItemValue);
 
-        public bool Equals(ItemValue x, ItemValue y)
-        {
-            return x?.Id == y?.Id;
-        }
+        /// <inheritdoc />
+        public override int GetHashCode() => (Metadata.Number).GetHashCode();
 
-        public int GetHashCode(ItemValue obj)
-        {
-            return obj.Id.GetHashCode();
-        }
+    
+      
+
+        /// <inheritdoc />
+        //public bool Equals(object x, object y) => Equals(x, y);
+
+        /// <inheritdoc />
+        //public int GetHashCode(object obj) => throw new NotImplementedException();
     }
 
 
@@ -120,27 +126,5 @@ namespace Devices.Core.Items
         }
     }
 
-    //public class ItemValueWithDescription44 : ItemValue
-    //{
-    //    public ItemValueWithDescription44(ItemMetadata metadata, object value) : base(metadata, value)
-    //    {
-    //        ItemDescription = Metadata?.GetItemDescription(Value);
-    //    }
-
-    //    #region Public Properties
-
-    //    public ItemDescription ItemDescription { get; }
-
-    //    public override object GetValue()
-    //    {
-    //        return ItemDescription.GetValue();
-    //    }
-
-    //    public override string GetDescription()
-    //    {
-    //        return ItemDescription.Description;
-    //    }
-
-    //    #endregion
-    //}
+ 
 }

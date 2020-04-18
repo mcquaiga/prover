@@ -23,11 +23,11 @@ namespace Prover.Legacy.Data.Migrations
 
             //await Migrator.Startup("Data Source=C:\\Users\\mcqua\\Downloads\\prover_data.sdf;Persist Security Info=False;", "");
 
-            var db = LiteDbStorageDefaults.CreateLiteDb("C:\\Users\\mcqua\\source\\repos\\EvcProver\\build\\Debug\\prover_data.db");
-            var repo = new VerificationsLiteDbRepository(LiteDbStorageDefaults.Database, DeviceRepository.Instance);
+            //var db = LiteDbStorageDefaults.CreateLiteDb("C:\\Users\\mcqua\\source\\repos\\EvcProver\\build\\Debug\\prover_data.db");
+            //var repo = new VerificationsLiteDbRepository(LiteDbStorageDefaults.Database, DeviceRepository.Instance);
            
-            //var testService = new VerificationTestService(null, repo, new VerificationViewModelFactory(), null);
-            await DataTransfer.ImportTests(repo, "C:\\Users\\mcqua\\source\\repos\\EvcProver\\src\\DataMigrator\\bin\\Debug\\ExportedTests");
+            ////var testService = new VerificationTestService(null, repo, new VerificationViewModelFactory(), null);
+            //await DataTransfer.ImportTests(repo, "C:\\Users\\mcqua\\source\\repos\\EvcProver\\src\\DataMigrator\\bin\\Debug\\ExportedTests");
         }
     }
 
