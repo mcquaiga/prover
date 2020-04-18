@@ -46,7 +46,7 @@ namespace DataMigrator
 
         public static async Task Load()
         {
-            var dbContext = new ProverContext();
+            var dbContext = new MigrateContext();
             // (dbContext as IStartable).Start();
             var store = new InstrumentStore(dbContext);
             //var service = new TestRunService(store);
@@ -58,7 +58,7 @@ namespace DataMigrator
                     Formatting = Formatting.Indented
             };
 
-            var myTests = store.Query()
+            var myTests = store.Query(i => i.Type == 4)
                                .OrderBy(x => x.TestDateTime)
                                .Skip(150)
                                .Take(100)
@@ -71,8 +71,8 @@ namespace DataMigrator
                 {
                     try
                     {
-                        var includedTest = store.Get(test.Id);
-                        var qa = await Translator.ToQaTestRun(includedTest);
+                        //var includedTest = store.Get(test.Id);
+                        var qa = await Translator.ToQaTestRun(test);
 
                         var json = JsonConvert.SerializeObject(qa, jsonSettings);
                         await writer.WriteAsync(json);
