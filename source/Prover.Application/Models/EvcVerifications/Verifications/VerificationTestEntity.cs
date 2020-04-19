@@ -1,5 +1,8 @@
+using System;
 using Devices.Core.Items.ItemGroups;
+using Prover.Calculations;
 using Prover.Shared.Domain;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
@@ -73,6 +76,25 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
         #endregion
     }
+
+    public abstract class CorrectionVerificationTest<T> : VerificationTestEntity<T>
+        where T : ItemGroup, ICorrectionFactor
+    {
+        protected CorrectionVerificationTest() { }
+        
+
+        protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
+
+        protected void Update(decimal passTolerance)
+        {
+            ExpectedValue = CalculatorFactory.Invoke()
+                                             .CalculateFactor();
+
+            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+            Verified = PercentError.IsBetween(Tolerances.TEMP_ERROR_TOLERANCE);
+        }
+    }
+
 
     public abstract class VerificationTestEntity<TStart, TEnd> : VerificationTestEntity
         where TStart : ItemGroup

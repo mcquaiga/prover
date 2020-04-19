@@ -144,9 +144,11 @@ namespace Devices.Core.Interfaces
  
         public virtual TGroup CreateItemGroup<TGroup>(IEnumerable<ItemValue> values) where TGroup : ItemGroup
         {
-            var joined = values.Union(Values, new ItemValueComparer())
-                               .ToList();
-            return DeviceType.GetGroup<TGroup>(joined);
+
+            var joined = values?.Union(Values) // new ItemValueComparer()
+                                .ToList();
+
+            return DeviceType.GetGroup<TGroup>(joined ?? Values);
         }
 
         public virtual TGroup ItemGroup<TGroup>() where TGroup : ItemGroup

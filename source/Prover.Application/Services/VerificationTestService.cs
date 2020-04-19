@@ -61,6 +61,9 @@ namespace Prover.Application.Services
             return evcVerificationTest;
         }
 
+        /// <inheritdoc />
+        public EvcVerificationTest NewVerificationModel(DeviceInstance device) => throw new NotImplementedException();
+
         public async Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
         {
             _cacheUpdates.Edit(updater =>

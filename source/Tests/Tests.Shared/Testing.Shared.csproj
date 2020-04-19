@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Prover.Shared.SampleData
 {
-    public static class ItemFiles
+    public static class SampleItemFiles
     {
         public static Dictionary<string, string> MiniMaxItemFile 
             => _lazy.Value.Items;

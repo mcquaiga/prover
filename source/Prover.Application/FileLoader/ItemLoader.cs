@@ -163,7 +163,7 @@ namespace Prover.Application.FileLoader
 
             if (_device.HasLiveTemperature())
             {
-                tests.Add(new TemperatureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.TemperatureGauge, decimal.Zero, decimal.Zero, 100m));
+                tests.Add(new TemperatureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.TemperatureGauge));
             }
 
             //if (_device.HasLivePressure())

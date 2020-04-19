@@ -1,5 +1,28 @@
-﻿namespace Prover.Application.Models.EvcVerifications
+﻿using System.Collections.Generic;
+
+namespace Prover.Application.Models.EvcVerifications
 {
+    public class VerificationTestOptions
+    {
+        public ICollection<CorrectionTestDefinition> CorrectionTestDefinitions { get; set; }
+
+        public ICollection<VolumeTestDefinition> VolumeTestDefinitions { get; set; }
+
+        public static VerificationTestOptions Defaults = new VerificationTestOptions()
+        {
+                CorrectionTestDefinitions = CorrectionTestDefinition.Defaults,
+                VolumeTestDefinitions = new List<VolumeTestDefinition> {VolumeTestDefinition.Default}
+        };
+    }
+
+    public class VolumeTestDefinition
+    {
+        public ICollection<VolumeInputTestSample> VolumeInputTargets { get; set; }
+        public int Level { get; set; }
+
+        public static VolumeTestDefinition Default = new VolumeTestDefinition(){ Level = 0, VolumeInputTargets = new List<VolumeInputTestSample>()};
+    }
+
     public class CorrectionTestDefinition
     {
         #region Public Properties
@@ -16,7 +39,30 @@
 
         #endregion
 
-        
+        public static ICollection<CorrectionTestDefinition> Defaults = new List<CorrectionTestDefinition>
+        {
+                new CorrectionTestDefinition
+                {
+                        Level = 0,
+                        TemperatureGauge = 32,
+                        PressureGaugePercent = 80,
+                        IsVolumeTest = true
+                },
+                new CorrectionTestDefinition
+                {
+                        Level = 1,
+                        TemperatureGauge = 60,
+                        PressureGaugePercent = 50,
+                        IsVolumeTest = false
+                },
+                new CorrectionTestDefinition
+                {
+                        Level = 2,
+                        TemperatureGauge = 90,
+                        PressureGaugePercent = 20,
+                        IsVolumeTest = false
+                }
+        };
     }
 
     public class VolumeInputTestSample

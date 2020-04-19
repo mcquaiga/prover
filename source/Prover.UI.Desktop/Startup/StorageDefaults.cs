@@ -147,7 +147,7 @@ namespace Prover.UI.Desktop.Startup
 
             for (int i = 0; i < records; i++)
             {
-                var device = deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
+                var device = deviceType.CreateInstance(SampleItemFiles.MiniMaxItemFile);
                 device.SetItemValue(serialNumberItem, random.Next(10000, 999999).ToString());
                 device.SetItemValue(201, random.Next(10000, 999999).ToString());
                 
@@ -157,13 +157,13 @@ namespace Prover.UI.Desktop.Startup
 
                 testVm.SubmittedDateTime = testVm.TestDateTime.AddSeconds(random.Next(180, 720));
 
-                testVm.SetItems<TemperatureItems>(device, 0, ItemFiles.TempLowItems);
-                testVm.SetItems<TemperatureItems>(device, 1, ItemFiles.TempMidItems);
-                testVm.SetItems<TemperatureItems>(device, 2, ItemFiles.TempHighItems);
+                testVm.SetItems<TemperatureItems>(device, 0, SampleItemFiles.TempLowItems);
+                testVm.SetItems<TemperatureItems>(device, 1, SampleItemFiles.TempMidItems);
+                testVm.SetItems<TemperatureItems>(device, 2, SampleItemFiles.TempHighItems);
                 
-                testVm.SetItems<PressureItems>(device, 0, ItemFiles.PressureTest(0));
-                testVm.SetItems<PressureItems>(device, 1, ItemFiles.PressureTest(1));
-                testVm.SetItems<PressureItems>(device, 2, ItemFiles.PressureTest(2));
+                testVm.SetItems<PressureItems>(device, 0, SampleItemFiles.PressureTest(0));
+                testVm.SetItems<PressureItems>(device, 1, SampleItemFiles.PressureTest(1));
+                testVm.SetItems<PressureItems>(device, 2, SampleItemFiles.PressureTest(2));
 
                 results.Add(testService.CreateModel(testVm));
 

@@ -1,24 +1,35 @@
 ﻿using Devices.Core.Items.ItemGroups;
+using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Calculations;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 {
-
-
     public class CorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>, IPulseOutputVerification
     {
-        private CorrectedVolumeTestRun()
-        {
-        }
-
-        public CorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue,
-            decimal actualValue, decimal percentError, bool verified, decimal totalCorrectionFactor,
-            decimal uncorrectedInputVolume)
-            : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
+        public CorrectedVolumeTestRun
+        (VolumeItems startValues, VolumeItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified, decimal totalCorrectionFactor,
+                decimal uncorrectedInputVolume
+        ) : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
         {
             TotalCorrectionFactor = totalCorrectionFactor;
             UncorrectedInputVolume = uncorrectedInputVolume;
+        }
+
+        public CorrectedVolumeTestRun
+                (VolumeItems startValues, VolumeItems endValues, decimal actualValue, decimal totalCorrectionFactor, decimal uncorrectedInputVolume) : base(startValues,
+                endValues,
+                0m,
+                actualValue,
+                100m,
+                false)
+        {
+            TotalCorrectionFactor = totalCorrectionFactor;
+            UncorrectedInputVolume = uncorrectedInputVolume;
+        }
+
+        public CorrectedVolumeTestRun()
+        {
         }
 
         public decimal TotalCorrectionFactor { get; set; }
@@ -32,7 +43,6 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
         {
             ActualValue = VolumeCalculator.TotalVolume(StartValues.CorrectedReading, EndValues.CorrectedReading, StartValues.CorrectedMultiplier);
             ExpectedValue = VolumeCalculator.TrueCorrected(TotalCorrectionFactor, UncorrectedInputVolume);
-
             PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
         }
 
