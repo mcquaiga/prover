@@ -81,7 +81,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         where T : ItemGroup, ICorrectionFactor
     {
         protected CorrectionVerificationTest() { }
-        
+
 
         protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
 

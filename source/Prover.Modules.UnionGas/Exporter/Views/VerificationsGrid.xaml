@@ -3,13 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:evcVerifications="clr-namespace:Prover.Application.Models.EvcVerifications;assembly=Prover.Application"
     xmlns:local="clr-namespace:Prover.Modules.UnionGas.Exporter.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Prover.Modules.UnionGas.Models"
     xmlns:rx="http://reactiveui.net"
     x:Name="VerificationsGridControl"
-    d:DataContext="{d:DesignInstance models:EvcVerificationProxy,
+    d:DataContext="{d:DesignInstance evcVerifications:EvcVerificationTest,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -70,7 +71,11 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.RowStyle>
-                <Style BasedOn="{StaticResource MaterialDesignDataGridRow}" TargetType="{x:Type DataGridRow}">
+                <Style
+                    x:Name="DataGridRowStyle"
+                    BasedOn="{StaticResource MaterialDesignDataGridRow}"
+                    TargetType="{x:Type DataGridRow}">
+
                     <Setter Property="HorizontalAlignment" Value="Left" />
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="VerticalAlignment" Value="Top" />
@@ -78,23 +83,45 @@
                     <Setter Property="Height" Value="Auto" />
 
 
-                    <!--<Setter Property="Foreground" Value="Black" />-->
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="BorderThickness" Value="0" />
-                        </Trigger>
-                    </Style.Triggers>
-
                 </Style>
             </DataGrid.RowStyle>
+
             <DataGrid.CellStyle>
                 <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="{x:Type DataGridCell}">
                     <Setter Property="BorderThickness" Value="0" />
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <materialDesign:PopupBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <!--<rx:ViewModelViewHost ViewModel="{Binding ToolbarViewModel, ElementName=VerificationsGridControl}" />-->
+                                    <!--<local:ExportToolbarView DataContext="{Binding ToolbarViewModel, ElementName=VerificationsGridControl}" />-->
+                                    <!--<Button
+                                        x:Name="PrintTestReportButton"
+                                        Margin="15,4,50,4"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding ViewReport}"
+                                        CommandParameter="{Binding Test}"
+                                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                        ToolTip="View QA Test Report">
+                                        <materialDesign:PackIcon
+                                            Width="36"
+                                            Height="36"
+                                            Foreground="Gray"
+                                            Kind="PrintPreview" />
+                                    </Button>-->
+                                </StackPanel>
 
-                <DataGridCheckBoxColumn
+                            </materialDesign:PopupBox>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+                <!--<DataGridCheckBoxColumn
                     Width="70"
                     Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                     SortMemberPath="IsSelected">
@@ -116,13 +143,13 @@
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
 
-                </DataGridCheckBoxColumn>
+                </DataGridCheckBoxColumn>-->
                 <DataGridTemplateColumn
                     Width="80"
                     Header="Verified"
                     SortMemberPath="Test.Verified">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="Width" Value="Auto" />
                             <Setter Property="Height" Value="50" />
 
@@ -151,19 +178,19 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
                                     FontSize="24"
-                                    Text="{Binding Test.Device.DeviceType.Name, Mode=OneTime}" />
-
+                                    Text="{Binding Device.DeviceType.Name, Mode=OneTime}" />
+                                <TextBlock
+                                    x:Name="CompositionTypeTextBlock"
+                                    HorizontalAlignment="Left"
+                                    Text="{Binding Device.Items.SiteInfo.CompositionType, Mode=OneTime}" />
 
 
                                 <TextBlock
                                     x:Name="DriveTypeTextBlock"
                                     HorizontalAlignment="Left"
-                                    Text="{Binding Test.DriveType.InputType, Mode=OneTime}" />
+                                    Text="{Binding DriveType.InputType, Mode=OneTime}" />
 
-                                <TextBlock
-                                    x:Name="CompositionTypeTextBlock"
-                                    HorizontalAlignment="Left"
-                                    Text="{Binding Composition, Mode=OneTime}" />
+
                             </StackPanel>
 
 
@@ -173,64 +200,56 @@
                 </DataGridTemplateColumn>
 
                 <materialDesign:DataGridTextColumn
+                    x:Name="CompositionTypeTextBlock"
+                    Binding="{Binding Device.Items.SiteInfo.CompositionType, Mode=OneTime}"
+                    Header="Composition" />
+
+                <materialDesign:DataGridTextColumn
                     x:Name="DateTestedColumn"
-                    Binding="{Binding Test.TestDateTime, Mode=OneTime}"
+                    Binding="{Binding TestDateTime, Mode=OneTime}"
                     Header="Date Tested" />
+
 
                 <materialDesign:DataGridTextColumn
                     x:Name="InventoryNumberColumn"
-                    Binding="{Binding InventoryNumber, Mode=OneTime}"
+                    Binding="{Binding Device.Items.SiteInfo.SiteId2, Mode=OneTime}"
                     Header="Inventory #" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="SerialNumberColumn"
-                    Binding="{Binding SerialNumber, Mode=OneTime}"
+                    Binding="{Binding Device.Items.SiteInfo.SerialNumber, Mode=OneTime}"
                     Header="Serial #"
                     SortMemberPath="" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="JobIdColumn"
-                    Binding="{Binding Test.JobId, Mode=OneWay}"
+                    Binding="{Binding JobId, Mode=OneWay}"
                     Header="Job #" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="EmployeeColumn"
-                    Binding="{Binding Employee.UserName, Mode=OneWay}"
+                    Binding="{Binding EmployeeId, Mode=OneWay}"
                     Header="Employee" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="ExportedColumn"
-                    Binding="{Binding Test.ExportedDateTime, Mode=OneWay}"
+                    Binding="{Binding ExportedDateTime, Mode=OneWay}"
                     Header="Exported" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="ArchivedColumn"
-                    Binding="{Binding Test.ArchivedDateTime, Mode=OneWay}"
+                    Binding="{Binding ArchivedDateTime, Mode=OneWay}"
                     Header="Archived" />
 
 
                 <DataGridTemplateColumn Width="*">
 
                     <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button
-                                x:Name="PrintTestReportButton"
-                                Margin="15,4,50,4"
-                                HorizontalAlignment="Right"
-                                Command="{Binding ViewReport}"
-                                CommandParameter="{Binding Test}"
-                                Style="{StaticResource MaterialDesignIconForegroundButton}"
-                                ToolTip="View QA Test Report">
-                                <materialDesign:PackIcon
-                                    Width="36"
-                                    Height="36"
-                                    Foreground="Gray"
-                                    Kind="PrintPreview" />
-                            </Button>
-                        </DataTemplate>
+                        <DataTemplate />
                     </DataGridTemplateColumn.CellTemplate>
 
                 </DataGridTemplateColumn>
+
             </DataGrid.Columns>
 
         </DataGrid>

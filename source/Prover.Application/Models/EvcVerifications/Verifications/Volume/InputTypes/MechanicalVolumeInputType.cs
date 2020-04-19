@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Items.ItemGroups;
 using Prover.Calculations;
@@ -13,19 +14,20 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume.InputT
 
         }
 
-        public VolumeItems VolumeItems { get; }
-        public IEnumerable<VolumeInputTestSample> UncorrectedTestLimits { get; }
+        public VolumeItems VolumeItems { get; set; }
+        //public IEnumerable<VolumeInputTestSample> UncorrectedTestLimits { get; set; }
 
-        public MechanicalVolumeInputType(VolumeItems volumeItems, IEnumerable<VolumeInputTestSample> uncorrectedTestLimits = null)
+        public MechanicalVolumeInputType(VolumeItems volumeItems)
         {
             VolumeItems = volumeItems;
-            UncorrectedTestLimits = uncorrectedTestLimits;
+            //UncorrectedTestLimits = uncorrectedTestLimits;
         }
 
         public int MaxUncorrectedPulses()
         {
-            return UncorrectedTestLimits?.FirstOrDefault(x => x.CuFtValue == VolumeItems.UncorrectedMultiplier)?.UncorrectedPulseTarget 
-                   ?? 10;
+            throw new NotImplementedException();
+            //return UncorrectedTestLimits?.FirstOrDefault(x => x.CuFtValue == VolumeItems.UncorrectedMultiplier)?.UncorrectedPulseTarget 
+            //       ?? 10;
         }
 
         public VolumeInputType InputType => VolumeInputType.Mechanical;

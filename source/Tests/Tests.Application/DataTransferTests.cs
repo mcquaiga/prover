@@ -17,7 +17,8 @@ namespace Tests.Application
         [TestMethod()]
         public async Task ImportTestsTest()
         {
-            var db = new LiteDatabase("C:\\Users\\mcqua\\source\\repos\\EvcProver\\build\\Debug\\prover_data.db");
+            //var db = new LiteDatabase("C:\\Users\\mcqua\\source\\repos\\EvcProver\\build\\Debug\\prover_data.db");
+            var db = new LiteDatabase("C:\\Users\\mcqua\\AppData\\Local\\EvcProver\\prover_data.db");
             var repo = new VerificationsLiteDbRepository(db, DeviceRepository.Instance);
             
             var testService = new VerificationTestService(null, repo, new VerificationViewModelFactory(), null);

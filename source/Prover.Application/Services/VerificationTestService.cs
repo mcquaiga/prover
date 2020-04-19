@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
 using Prover.Shared.Storage.Interfaces;
@@ -62,7 +63,7 @@ namespace Prover.Application.Services
         }
 
         /// <inheritdoc />
-        public EvcVerificationTest NewVerificationModel(DeviceInstance device) => throw new NotImplementedException();
+        public EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null) => throw new NotImplementedException();
 
         public async Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
         {
@@ -99,11 +100,13 @@ namespace Prover.Application.Services
             return evcTests.ToList();
         }
 
-        public EvcVerificationViewModel NewVerification(DeviceInstance device)
+        public EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null)
         {
-            var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
-
-            return _verificationViewModelFactory.CreateViewModel(testModel);
+            options = options ?? VerificationTestOptions.Defaults;
+            //var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
+            var testModel = device.NewVerification(options);
+            return testModel.ToViewModel();
+            //return _verificationViewModelFactory.CreateViewModel(testModel);
         }
     }
 }

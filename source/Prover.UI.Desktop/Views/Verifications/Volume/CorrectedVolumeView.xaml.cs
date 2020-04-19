@@ -27,11 +27,11 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.ExpectedValue, v => v.PulsesExpectedControl.Value).DisposeWith(d);
-
-                this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value, 
-                    value => value ? "PASS" : "FAIL").DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Foreground, 
-                    value => value ? Brushes.Black : Brushes.DarkRed).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.PulseOutputTest.ActualValue, v => v.CorrectedPulseCountControl.Value).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value, 
+                //    value => value ? "PASS" : "FAIL").DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Foreground, 
+                //    value => value ? Brushes.Black : Brushes.DarkRed).DisposeWith(d);
 
                 this.CleanUpDefaults().DisposeWith(d);
             });

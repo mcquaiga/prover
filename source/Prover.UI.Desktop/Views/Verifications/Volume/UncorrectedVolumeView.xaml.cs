@@ -26,8 +26,9 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.ActualValueControl.Value).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.ExpectedValue, v => v.PulsesExpectedControl.Value).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value,
-                    value => value == true ? "PASS" : "FAIL").DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.PulseOutputTest.ActualValue, v => v.UncorrectedPulseCountControl.Value).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.PulseOutputTest.Verified, v => v.PulsesVerifiedControl.Value,
+                //    value => value == true ? "PASS" : "FAIL").DisposeWith(d);
                 //Value="{Binding Volume.UnCorPulsesPassed, Converter={StaticResource BoolToPassFailConverter}}"
                 this.CleanUpDefaults().DisposeWith(d);
             });

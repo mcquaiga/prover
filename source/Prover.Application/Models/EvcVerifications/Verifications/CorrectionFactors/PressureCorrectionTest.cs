@@ -46,7 +46,10 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         public decimal AtmosphericGauge { get; set; }
 
         #endregion
-
+        public decimal GetTotalGauge()
+        {
+            return PressureCalculator.GetGasPressure(Items.TransducerType, Gauge, AtmosphericGauge);
+        }
         //public void Update(decimal? gauge = null, decimal? atmGauge = null)
         //{
         //    Gauge = gauge ?? Gauge;

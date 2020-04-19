@@ -36,7 +36,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
         public ICorrectionTestsManager CorrectionVerifications { get; set; }
 
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }
-        public ReactiveCommand<VerificationTestPointViewModel, Unit> RunVolumeVerifications { get; }
+        public ReactiveCommand<Unit, Unit> RunVolumeVerifications { get; set; }
         
         public void Setup(EvcVerificationViewModel verificationViewModel, IVolumeTestManager volumeTestManager, ICorrectionTestsManager correctionVerificationRunner)
         {
@@ -48,8 +48,9 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             RunCorrectionVerifications =
                     ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests);
             RunCorrectionVerifications.ThrownExceptions.LogErrors("Error downloading items from instrument.")
-                                      .Subscribe();
-            RunCorrectionVerifications.DisposeWith(_cleanup);
+                                      .Subscribe().DisposeWith(_cleanup);
+
+            RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.RunStartActions);
         }
 
         public void StartTest(DeviceType deviceType)

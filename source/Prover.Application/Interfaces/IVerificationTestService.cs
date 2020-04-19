@@ -23,8 +23,8 @@ namespace Prover.Application.Interfaces
         Task<ICollection<EvcVerificationViewModel>> GetViewModel(
             IEnumerable<EvcVerificationTest> verificationTests);
 
-        EvcVerificationViewModel NewVerification(DeviceInstance device);
-        EvcVerificationTest NewVerificationModel(DeviceInstance device);
+        EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null);
+        EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null);
         Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest);
 
     }

@@ -124,54 +124,46 @@
 
             </ControlTemplate>
 
-            <Style
-                x:Key="SectionHeaderTextBlockStyle"
-                BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}"
-                TargetType="{x:Type TextBlock}">
-
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontWeight" Value="Regular" />
-                <Setter Property="Margin" Value="0,2,0,0" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="VerticalAlignment" Value="Top" />
-            </Style>
 
 
         </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderThickness="0,0,1,0" Style="{StaticResource TestSectionOuterBorder}">
         <StackPanel Orientation="Vertical">
-            <StackPanel Margin="0">
+            <Grid Margin="15" HorizontalAlignment="Stretch">
 
                 <materialDesign:PackIcon
                     x:Name="VerifiedStatusIcon"
                     Width="36"
                     Height="36"
-                    Margin="5"
+                    Margin="15"
+                    HorizontalAlignment="Left"
                     Style="{StaticResource PassFailIcon}" />
 
-                <TextBlock
-                    x:Name="DeviceNameTextBlock"
-                    Margin="0,5"
-                    HorizontalAlignment="Center"
-                    FontSize="32" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                    <TextBlock
+                        x:Name="DeviceNameTextBlock"
+                        Margin="0,5"
+                        HorizontalAlignment="Center"
+                        FontSize="32" />
 
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock
-                        x:Name="CompositionTypeTextBlock"
-                        FontWeight="Light"
-                        Style="{StaticResource ValueTextBlockStyle}" />
-                    <TextBlock
-                        FontWeight="UltraLight"
-                        Style="{StaticResource ValueTextBlockStyle}"
-                        Text=" | " />
-                    <TextBlock
-                        x:Name="DriveTypeTextBlock"
-                        FontWeight="Light"
-                        Style="{StaticResource ValueTextBlockStyle}" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock
+                            x:Name="CompositionTypeTextBlock"
+                            FontWeight="Light"
+                            Style="{StaticResource ValueTextBlockStyle}" />
+                        <TextBlock
+                            FontWeight="UltraLight"
+                            Style="{StaticResource ValueTextBlockStyle}"
+                            Text=" | " />
+                        <TextBlock
+                            x:Name="DriveTypeTextBlock"
+                            FontWeight="Light"
+                            Style="{StaticResource ValueTextBlockStyle}" />
+                    </StackPanel>
+
+                    <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
                 </StackPanel>
-
-                <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
 
                 <!--<TextBlock
                     x:Name="ClientTextBlock"
@@ -191,7 +183,7 @@
 
                 </UniformGrid>
 
-            </StackPanel>
+            </Grid>
 
             <!--  Site Information  -->
             <Border Style="{StaticResource SubSectionDividerBorder}">
@@ -219,7 +211,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
-                        Columns="2">
+                        Columns="3">
                         <ContentControl
                             x:Name="CompanyNumberText"
                             Tag="Inventory #"

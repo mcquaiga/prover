@@ -19,14 +19,17 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 //this.OneWayBind(ViewModel, vm => vm.TestsByJobNumberViewModel,
                 //    view => view.TestsByJobNumberContentControl.ViewModel).DisposeWith(d);
 
-                //this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.ToolbarViewHost.ViewModel).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.VerificationsGrid.ToolbarViewModel).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.SelectedItems.Count, v => v.SelectedCountTextBlock.Text)
                     .DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Data.Count, v => v.TestCountTextBlock.Text,
                     value => value == 1 ? $"{value} test" : $"{value} tests").DisposeWith(d);
+                
+                
                 this.OneWayBind(ViewModel, vm => vm.Data, v => v.VerificationsGrid.DataContext).DisposeWith(d);
-
+                
+             
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
                 //this.OneWayBind(ViewModel, vm => vm.JobIdsList, v => v.JobIdsComboBox.ItemsSource).DisposeWith(d);
 

@@ -40,6 +40,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             AddSignedOnUser = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                     {
+                        tests = SelectedObservable;
                         return Observable.Create<EvcVerificationTest>(async obs =>
                         {
                             tests.ForEach(t => t.EmployeeId = _loginService.User?.UserId);
@@ -55,6 +56,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             AddJobId = ReactiveCommand.CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(
                 tests =>
                 {
+                    tests = SelectedObservable;
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
                         var updatedTests = new List<EvcVerificationTest>();
@@ -94,6 +96,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             ArchiveVerification = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                 {
+                    tests = SelectedObservable;
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
                         if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))

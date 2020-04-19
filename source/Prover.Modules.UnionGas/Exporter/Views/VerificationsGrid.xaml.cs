@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -20,5 +21,13 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             get => (DataTemplate) GetValue(PrintDataTemplateProperty);
             set => SetValue(PrintDataTemplateProperty, value);
         }
+
+        public static readonly DependencyProperty ToolbarViewModelProperty = DependencyProperty.Register("ToolbarViewModel", typeof(ReactiveObject), typeof(VerificationsGrid), new PropertyMetadata(default(ReactiveObject)));
+
+        public ReactiveObject ToolbarViewModel
+        {
+            get { return (ReactiveObject) GetValue(ToolbarViewModelProperty); }
+            set { SetValue(ToolbarViewModelProperty, value); }
+        }   
     }
 }

@@ -21,21 +21,21 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         public SuperCorrectionTest(SuperFactorItems items, TemperatureCorrectionTest temperatureCorrectionTest, PressureCorrectionTest pressureCorrectionTest)
         {
             Items = items;
-            ActualValue = Items.Factor;
-            GaugePressure = pressureCorrectionTest.Gauge;
+            ActualValue = pressureCorrectionTest.Items.UnsqrFactor;
+            GaugePressure = pressureCorrectionTest.GetTotalGauge();
             GaugeTemp = temperatureCorrectionTest.Gauge;
         
             Update(Tolerances.SUPER_FACTOR_TOLERANCE);
+            SquaredFactor = Calculators.SquaredFactor(ExpectedValue);
         }
 
         #region Public Properties
 
-        public decimal GaugePressure { get; private set; }
-        public decimal GaugeTemp { get; private set; }
-
+        public decimal GaugePressure { get; set; }
+        public decimal GaugeTemp { get; set; }
+        public decimal SquaredFactor { get; set; }
 
         #endregion
-
 
         /// <inheritdoc />
         protected override Func<ICorrectionCalculator> CalculatorFactory => () =>

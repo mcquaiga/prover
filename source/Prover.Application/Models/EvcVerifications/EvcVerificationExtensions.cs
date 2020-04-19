@@ -10,47 +10,7 @@ using Prover.Calculations;
 
 namespace Prover.Application.Models.EvcVerifications
 {
-    public static class VerificationTestFactoryEx
-    {
-        public static VerificationBuilder BuildVerification(this DeviceInstance deviceInstance)
-        {
-            return VerificationBuilder.CreateNew(deviceInstance);
-        }
-
-        public static EvcVerificationTest NewVerification(this DeviceInstance deviceInstance, VerificationTestOptions options = null)
-        {
-            options = options ?? VerificationTestOptions.Defaults;
-
-            var builder = VerificationBuilder.CreateNew(deviceInstance);
-
-            options.CorrectionTestDefinitions.ForEach(def =>
-            {
-                builder.AddTestPoint(tp =>
-                {
-                    if (deviceInstance.HasLivePressure())
-                    {
-                        var gaugePressure = PressureCalculator.GetGaugePressure(deviceInstance.Items.Pressure.Range, def.PressureGaugePercent);
-                        tp.WithPressure(gaugePressure, deviceInstance.Items.Pressure.AtmosphericPressure);
-                    }
-
-                    if (deviceInstance.HasLiveTemperature())
-                        tp.WithTemperature(def.TemperatureGauge);
-
-                    if (deviceInstance.HasLiveSuper() 
-                            || (deviceInstance.HasLivePressure() && deviceInstance.HasLiveTemperature()))
-                        tp.WithSuperFactor();
-
-                    if (def.IsVolumeTest)
-                        tp.WithVolume();
-
-                    return tp;
-                });
-            });
-
-            return builder.Build();
-        }
-
-    }
+  
 
 
     public static class EvcVerificationExtensions

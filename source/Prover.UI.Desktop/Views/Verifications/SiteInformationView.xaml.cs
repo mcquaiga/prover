@@ -32,6 +32,8 @@ namespace Prover.UI.Desktop.Views.Verifications
                                 value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Content).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Visibility, value => 
+                        string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible).DisposeWith(d);
 
                 SetWithViewModel(ViewModel);
 

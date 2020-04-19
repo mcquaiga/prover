@@ -75,25 +75,15 @@
                 </Viewbox>
                 <Viewbox Grid.Row="1">
                     <Border Padding="0" Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel HorizontalAlignment="Left" Orientation="Vertical">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+
                             <ContentControl
                                 x:Name="VolumeTestContent"
                                 Margin="5"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Center"
                                 ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="4,8"
-                                    RenderTransformOrigin=".5,.5"
-                                    Style="{StaticResource PrimaryTestHeaderStyle}"
-                                    Text="Volume">
-                                    <TextBlock.LayoutTransform>
-                                        <RotateTransform Angle="-90" />
-                                    </TextBlock.LayoutTransform>
-                                </TextBlock>
-                                <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
-                            </StackPanel>
 
+                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
 
 
                         </StackPanel>

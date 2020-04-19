@@ -21,13 +21,13 @@ namespace Prover.UI.Desktop.Views.Verifications.CorrectionTests
 
             this.WhenActivated(d =>
                 {
-                   // this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value+1}").DisposeWith(d);
-                    this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelIconControl.Kind,
-                            value =>
-                            {
-                                var iconKind = $"Number{value + 1}";
-                                return Enum.Parse(typeof(PackIconKind), iconKind);
-                            }).DisposeWith(d);
+                   this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"{value+1}").DisposeWith(d);
+                    //this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelIconControl.Kind,
+                    //        value =>
+                    //        {
+                    //            var iconKind = $"Number{value + 1}";
+                    //            return Enum.Parse(typeof(PackIconKind), iconKind);
+                    //        }).DisposeWith(d);
 
                     this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestItems.ItemsSource, 
                         tests => tests.Where(t =>

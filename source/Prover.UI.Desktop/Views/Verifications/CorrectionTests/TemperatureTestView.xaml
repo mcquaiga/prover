@@ -24,7 +24,7 @@
         <Border Style="{StaticResource SubSectionDividerBorder}">
             <TextBlock
                 Grid.Row="0"
-                Style="{StaticResource SecondaryTestHeaderStyle}"
+                Style="{StaticResource SectionHeaderTextBlockStyle}"
                 Text="Temperature" />
         </Border>
         <controls:PercentageControlNew

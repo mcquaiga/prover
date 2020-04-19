@@ -9,6 +9,7 @@ using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Factories.Volume;
 using Prover.Application.ViewModels.Volume;
+using Prover.Application.ViewModels.Volume.Mechanical;
 using Prover.Application.ViewModels.Volume.Rotary;
 
 namespace Prover.Application.Mappers

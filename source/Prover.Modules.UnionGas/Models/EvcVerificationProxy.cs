@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using Devices.Core.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.Exporter.Views;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -25,10 +26,10 @@ namespace Prover.Modules.UnionGas.Models
         public IReactiveCommand ViewReport { get; }
         private readonly IObservable<EvcVerificationTest> _changeUpdates;
 
-        public EvcVerificationProxy(EvcVerificationTest verification, 
-            IObservable<EvcVerificationTest> changeUpdates, 
-            ILoginService<Employee> loginService,
-            IReactiveCommand viewReport)
+        public EvcVerificationProxy
+        (EvcVerificationTest verification, IObservable<EvcVerificationTest> changeUpdates, ILoginService<Employee> loginService, IReactiveCommand viewReport,
+                ExportToolbarViewModel toolbarViewModel
+        )
         {
             ViewReport = viewReport;
             _changeUpdates = changeUpdates;

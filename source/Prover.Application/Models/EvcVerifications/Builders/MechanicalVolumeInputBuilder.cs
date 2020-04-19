@@ -24,7 +24,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         /// <inheritdoc />
         public override IVolumeInputType BuildVolumeType()
         {
-            return new MechanicalVolumeInputType(Device.CreateItemGroup<VolumeItems>());
+            return new MechanicalVolumeInputType(Device.ItemGroup<VolumeItems>());
         }
     }
 }
