@@ -48,7 +48,7 @@ jobs:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: '**\*tests**.csproj'
+        projects: 'source\**\*tests**.csproj'
     - task: VSTest@2
       displayName: Run tests
       inputs:
