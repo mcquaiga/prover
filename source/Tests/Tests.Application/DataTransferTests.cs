@@ -14,7 +14,7 @@ namespace Tests.Application
     {
 
 
-        [TestMethod()]
+        //[TestMethod()]
         public async Task ImportTestsTest()
         {
             //var db = new LiteDatabase("C:\\Users\\mcqua\\source\\repos\\EvcProver\\build\\Debug\\prover_data.db");
