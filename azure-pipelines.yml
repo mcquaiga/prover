@@ -36,8 +36,21 @@ jobs:
         command: 'build'
         arguments: '$(project) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Binaries Artifact
+      inputs:
+        PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+        ArtifactName: 'v$(Build.BuildNumber)-$(Build.SourceBranchName)'
+        publishLocation: 'Container'
+
+  - job: Tests
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**\*tests**.csproj'
     - task: VSTest@2
-      displayName: Tests
+      displayName: Run tests
       inputs:
         testSelector: 'testAssemblies'  
         testAssemblyVer2: |
@@ -47,14 +60,7 @@ jobs:
           !**\Tests.Shared.dll  
         searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         rerunFailedTests: True
-        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publish Binaries Artifact
-      inputs:
-        PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-        ArtifactName: 'v$(Build.BuildNumber)-$(Build.SourceBranchName)'
-        publishLocation: 'Container'
+        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'  
 
     - task: PublishBuildArtifacts@1
       displayName: Publish Test Artifact
