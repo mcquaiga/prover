@@ -8,11 +8,13 @@ using DynamicData;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Services
 {
     public partial class VerificationTestService : IEntityDataCache<EvcVerificationTest>, ICacheManager
     {
+        private readonly Expression<Func<EvcVerificationTest, bool>> _defaultPredicate = test => test.TestDateTime.IsLessThanTimeAgo(TimeSpan.FromDays(30));
         private readonly ISourceCache<EvcVerificationTest, Guid> _cacheUpdates = new SourceCache<EvcVerificationTest, Guid>(k => k.Id);
         private CompositeDisposable _cleanup;
         private IObservableList<EvcVerificationTest> _data;
@@ -40,7 +42,9 @@ namespace Prover.Application.Services
 
                 _cacheUpdates.PopulateFrom(loader);
 
-                Updates = _cacheUpdates.Connect().AsObservableCache();
+                Updates = _cacheUpdates.Connect()
+                                       .Filter(v => v.TestDateTime.IsLessThanTimeAgo(TimeSpan.FromDays(30)))
+                                       .AsObservableCache();
                 
                 _cleanup = new CompositeDisposable(
                         loader.Connect(), Updates, _data, _cacheUpdates);
@@ -57,7 +61,8 @@ namespace Prover.Application.Services
                     GetTests().ToListObservable());
         }
 
-        private IObservable<EvcVerificationTest> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null) => _verificationRepository.Query(predicate).ToObservable();
+        private IObservable<EvcVerificationTest> GetTests(Expression<Func<EvcVerificationTest, bool>> predicate = null) => 
+                _verificationRepository.Query(predicate).ToObservable();
 
         private void SetupCache()
         {

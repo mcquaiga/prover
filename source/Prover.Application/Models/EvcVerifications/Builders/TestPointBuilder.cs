@@ -73,7 +73,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         {
             Device = device;
             _volumeBuilder = volumeBuilder;
-            _deviceValues = deviceValues ?? Device.Values;
+            _deviceValues = deviceValues.IsNotNullOrEmpty() ? deviceValues : Device.Values;
             _testPoint = new VerificationTestPoint(testsCount);
         }
 

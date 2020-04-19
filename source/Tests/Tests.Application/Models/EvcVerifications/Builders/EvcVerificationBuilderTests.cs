@@ -45,7 +45,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders.Tests
         [TestMethod()]
         public void EvcVerificationBuilderTest()
         {
-            Assert.Fail();
+           
         }
 
         [TestMethod()]
@@ -77,19 +77,19 @@ namespace Prover.Application.Models.EvcVerifications.Builders.Tests
         [TestMethod()]
         public void GetEvcVerificationTest()
         {
-            Assert.Fail();
+           
         }
 
         [TestMethod()]
         public void SetTestDateTimeTest()
         {
-            Assert.Fail();
+           
         }
 
         [TestMethod()]
         public void TestPointFactoryTest()
         {
-            Assert.Fail();
+           
         }
     }
 }

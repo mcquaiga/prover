@@ -71,39 +71,51 @@ namespace Prover.Legacy.Data.Migrations
                             if (qaTest.Device != null)
                             {
                                 var deviceType = DeviceRepository.Instance.GetById(qaTest.Device.DeviceTypeId);
-                                if (deviceType.Name == "Mini-Max")
+                                var device = deviceType?.CreateInstance(qaTest.Device.Items);
+                                if (device != null)
                                 {
-                                    var device = deviceType.CreateInstance(qaTest.Device.Items);
-                                    if (device.Items.Volume.VolumeInputType == VolumeInputType.Rotary)
+                                    try
                                     {
                                         var builder = device.BuildVerification();
-                                        
-                                        qaTest.Tests
-                                              .OrderBy(x => x.TestNumber)
+
+                                        qaTest.Tests.OrderBy(x => x.TestNumber)
                                               .ForEach(vt =>
-                                        {
-                                            var testDef = VerificationTestOptions.Defaults.CorrectionTestDefinitions.First(x => x.Level == vt.TestNumber);
+                                              {
+                                                  var testDef = VerificationTestOptions.Defaults.CorrectionTestDefinitions.First(x => x.Level == vt.TestNumber);
 
-                                            builder.AddTestPoint(tp =>
-                                            {
-                                                var gaugePressure = device.Items.Pressure != null ? PressureCalculator.GetGaugePressure(device.Items.Pressure.Range, testDef.PressureGaugePercent) : 0m;
-                                                var result = tp.Generate(gaugePressure, testDef.TemperatureGauge, vt.Values);
+                                                  builder.AddTestPoint(tp =>
+                                                  {
+                                                      var gaugePressure = device.Items.Pressure != null
+                                                              ? PressureCalculator.GetGaugePressure(device.Items.Pressure.Range, testDef.PressureGaugePercent)
+                                                              : 0m;
+                                                      var result = tp.Generate(gaugePressure, testDef.TemperatureGauge, vt.Values);
 
-                                                if (vt.EndValues != null && testDef.IsVolumeTest == true)
-                                                    result.WithVolume(vt.Values, vt.EndValues, vt.AppliedInput.ToInt32(), vt.CorPulses, vt.UnCorPulses);
+                                                      if (vt.EndValues != null && testDef.IsVolumeTest == true)
+                                                          result.WithVolume(vt.Values, vt.EndValues, vt.AppliedInput.ToInt32(), vt.CorPulses, vt.UnCorPulses);
 
-                                                return result;
-                                            });
-                                        });
-                                        var random = new Random(DateTime.Now.Millisecond);
+                                                      return result;
+                                                  });
+                                              });
+                                            
                                         var model = builder.Build();
+                                        var random = new Random(DateTime.Now.Millisecond);
 
-                                        model.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 30)));
-                                        model.SubmittedDateTime = model.TestDateTime.AddSeconds(random.Next(180, 720));
+                                        var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 60)));
+                                        model.TestDateTime =  testDate.AddHours(random.Next(-12, 18));
+
+                                        model.SubmittedDateTime = model.TestDateTime.AddSeconds(random.Next(180, 660));
                                         model.Verified = qaTest.IsPassed;
                                         await testService.AddOrUpdate(model);
-
                                     }
+                                    catch (AggregateException aggregateException)
+                                    {
+                                        aggregateException.Flatten().InnerExceptions.ForEach(x => Debug.WriteLine(x.Message));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine(ex.Message);
+                                    }
+                                        
                                 }
                             }
                         }

@@ -21,7 +21,8 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         protected VolumeInputTestBuilder(DeviceInstance device)
         {
             Device = device;
-            SetItemValues(Device.CreateItemGroup<VolumeItems>(), _endItems = Device.CreateItemGroup<VolumeItems>());
+            _startItems = Device.CreateItemGroup<VolumeItems>();
+            _endItems = Device.CreateItemGroup<VolumeItems>();
         }
 
         protected DeviceInstance Device { get; }
