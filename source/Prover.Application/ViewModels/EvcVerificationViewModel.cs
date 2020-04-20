@@ -14,7 +14,7 @@ namespace Prover.Application.ViewModels
 {
     public class EvcVerificationViewModel : VerificationViewModel
     {
-        public EvcVerificationViewModel()
+        private EvcVerificationViewModel()
         {
         }
 

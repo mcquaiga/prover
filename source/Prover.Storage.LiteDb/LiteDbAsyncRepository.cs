@@ -17,14 +17,13 @@ namespace Prover.Storage.LiteDb
             where T : AggregateRoot
     {
         protected readonly ILiteDatabase Context;
-        protected ISubject<T> All;
 
         public LiteDbAsyncRepository(ILiteDatabase context) => Context = context;
 
         public async Task<T> UpsertAsync(T entity)
         {
             var success = Context.GetCollection<T>().Upsert(entity);
-            All?.OnNext(entity);
+           
             return success ? entity : null;
         }
 
@@ -57,7 +56,6 @@ namespace Prover.Storage.LiteDb
                 await Observable.StartAsync(async () =>
                 {
                     Context.GetCollection<T>().Upsert(entity);
-                    All?.OnNext(entity);
                     await Task.CompletedTask;
                 });
             }

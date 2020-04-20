@@ -24,9 +24,9 @@
 
         <Viewbox
             MinWidth="200"
-            MaxWidth="400"
-            DockPanel.Dock="Left">
-            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="0" />
+            MaxWidth="600"
+            DockPanel.Dock="Right">
+            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="8" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
 

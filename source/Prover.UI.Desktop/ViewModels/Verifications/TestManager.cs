@@ -30,6 +30,8 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             _screenManager = screenManager;
             DeviceManager = deviceSessionManager;
             _verificationService = verificationService;
+
+            
         }
 
         public IVolumeTestManager VolumeTestManager { get; set; }

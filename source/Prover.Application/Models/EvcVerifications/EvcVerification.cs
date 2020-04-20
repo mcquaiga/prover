@@ -20,12 +20,13 @@ namespace Prover.Application.Models.EvcVerifications
         public EvcVerificationTest(DeviceInstance device)
         {
             Device = device;
+            TestDateTime = DateTime.UtcNow;
             DriveType = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
         }
 
         public DateTime? ArchivedDateTime { get; set; } = null;
 
-        public DateTime TestDateTime { get; set; } = DateTime.Now;
+        public DateTime TestDateTime { get; set; }
 
         public DateTime? SubmittedDateTime { get; set; }
 

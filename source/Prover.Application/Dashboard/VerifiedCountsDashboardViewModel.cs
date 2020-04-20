@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using DynamicData;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
@@ -13,33 +14,25 @@ namespace Prover.Application.Dashboard
     {
 
         /// <inheritdoc />
-        public VerifiedCountsDashboardViewModel
-        (IEntityDataCache<EvcVerificationTest> entityCache, string title, string groupName,
-                IObservable<Func<EvcVerificationTest, bool>> parentFilter, Func<EvcVerificationTest, bool> filter = null
-        ) : base(title, groupName)
+        public VerifiedCountsDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, string title, string groupName,
+                IObservable<Func<EvcVerificationTest, bool>> parentFilter, Func<EvcVerificationTest, bool> filter = null) 
+            : base(title, groupName)
         {
             filter = filter ?? (t => true);
             
-            var list = GenerateListStream(entityCache, parentFilter);
-            
-            var countChanged = list.CountChanged;
-
-            countChanged.Select(x => list.Items.Count(test => test.Verified && filter.Invoke(test)))
+            var cache = GenerateCacheStream(entityCache, parentFilter).Filter(filter).AsObservableList();
+            var countChanged = cache.CountChanged;
+           
+            countChanged.Select(x => cache.Items.Count(test => test.Verified))
                         .ToPropertyEx(this, model => model.Passed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
                         .DisposeWith(Cleanup);
-            countChanged.Select(_ => list.Items.Count(test => test.Verified == false && filter.Invoke(test)))
+            countChanged.Select(_ => cache.Items.Count(test => test.Verified == false))
                         .ToPropertyEx(this, model => model.Failed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
                         .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Passed, x => x.Failed, (p, f) => p + f)
                 .ToPropertyEx(this, x => x.Total)
                 .DisposeWith(Cleanup);
-            //IObservable<int> CountStream(Func<EvcVerificationTest, bool> func)
-            //{
-            //    return stream.Filter(func).AsObservableList()
-            //                 .CountChanged
-            //                 .Throttle(TimeSpan.FromMilliseconds(150));
-            //}
         }
 
         public extern int Passed { [ObservableAsProperty] get; }

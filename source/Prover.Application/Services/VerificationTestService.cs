@@ -44,9 +44,7 @@ namespace Prover.Application.Services
 
         public async Task<EvcVerificationViewModel> AddOrUpdate(EvcVerificationViewModel viewModel)
         {
-            viewModel.TestDateTime = viewModel.TestDateTime;
-
-            var model =
+           var model =
                     await AddOrUpdate(
                             VerificationMapper.MapViewModelToModel(viewModel));
 

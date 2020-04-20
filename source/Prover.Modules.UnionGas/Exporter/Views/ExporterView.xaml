@@ -91,7 +91,7 @@
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="55" />
+                    <RowDefinition Height="70" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -134,7 +134,7 @@
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel
-                                        Margin="15,0"
+                                        Margin="15,5,0,0"
                                         VerticalAlignment="Bottom"
                                         Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
@@ -182,7 +182,7 @@
 
                         <materialDesign:PopupBox
                             Margin="20,2,8,2"
-                            PlacementMode="BottomAndAlignLeftEdges"
+                            PlacementMode="BottomAndAlignRightEdges"
                             PopupMode="Click"
                             StaysOpen="False">
                             <materialDesign:PopupBox.Resources>

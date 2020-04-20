@@ -12,8 +12,6 @@ namespace Tests.Application
     [TestClass()]
     public class DataTransferTests
     {
-
-
         [TestMethod()]
         public async Task ImportTestsTest()
         {
