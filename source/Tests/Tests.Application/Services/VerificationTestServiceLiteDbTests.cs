@@ -1,32 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using DynamicData;
-using DynamicData.Binding;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
-using ReactiveUI;
-using Tests.Application.ExternalDevices.DInOutBoards;
+using Prover.Shared.Storage.Interfaces;
 using Tests.Shared;
 
 namespace Tests.Application.Services
@@ -42,6 +33,7 @@ namespace Tests.Application.Services
 
         private static IAsyncRepository<EvcVerificationTest> _testRepo;
         private static IVerificationTestService _viewModelService;
+        private static IEntityDataCache<EvcVerificationTest> _entityCache;
       
 
         [TestMethod]
@@ -92,10 +84,9 @@ namespace Tests.Application.Services
             var scheduler = new TestScheduler();
             scheduler.StartStopwatch();
             
-            var results = _viewModelService.FetchTests()
-                                           .Connect(t => t.ExportedDateTime == null)
-                .Bind(out var data, 25)
-                .Subscribe();
+            var results = _entityCache.Updates.Connect(t => t.ExportedDateTime == null)
+                                      .Bind(out var data, 25)
+                                      .Subscribe();
             
             scheduler.Start();
             Assert.IsNotNull(data);
@@ -202,7 +193,8 @@ namespace Tests.Application.Services
             _deviceType = _repo.GetByName("Mini-Max");
 
             _testRepo = StorageTestsInitialize.TestRepo; 
-            _viewModelService =StorageTestsInitialize.ViewModelService;
+            _viewModelService = StorageTestsInitialize.ViewModelService;
+            _entityCache = StorageTestsInitialize.ViewModelService;
             await Task.CompletedTask;
         }
 

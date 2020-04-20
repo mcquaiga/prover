@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Disposables;
-using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.ViewModels
@@ -20,15 +16,19 @@ namespace Prover.Application.ViewModels
         
         public void Dispose()
         {
-            Logger.LogTrace($"Disposing - {this}");
-            Disposing();
-            Cleanup.Dispose();
+            Dispose(true);
+            
+            GC.SuppressFinalize(this);
         }
 
-        protected virtual void Disposing()
+        protected virtual void Dispose(bool isDisposing)
         {
+            if (isDisposing)
+            {
+                Logger.LogTrace($"Disposing - {this}");
+                Cleanup.Dispose();
+            }
         }
-
     }
 
     public abstract class ViewModelWithIdBase : ViewModelBase

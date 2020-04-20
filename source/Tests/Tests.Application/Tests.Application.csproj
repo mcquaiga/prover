@@ -21,10 +21,19 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="EntityFrameworkSqlDataAccess\**" />
+    <Compile Remove="Verifications\CustomActions\**" />
+    <EmbeddedResource Remove="EntityFrameworkSqlDataAccess\**" />
+    <EmbeddedResource Remove="Verifications\CustomActions\**" />
+    <None Remove="EntityFrameworkSqlDataAccess\**" />
+    <None Remove="Verifications\CustomActions\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="DeepEqual" Version="2.0.0" />
-    <PackageReference Include="LiteDB" Version="5.0.5" />
+    <PackageReference Include="LiteDB" Version="5.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Microsoft.Reactive.Testing" Version="4.4.1" />
     <PackageReference Include="MongoDB.Bson" Version="2.10.3" />
@@ -44,15 +53,10 @@
     <ProjectReference Include="..\..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\..\MongoTesting\MongoTesting.csproj" />
     <ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
-    <ProjectReference Include="..\..\Prover.Domain\Prover.Domain.csproj" />
-    <ProjectReference Include="..\..\Prover.Infrastructure\Prover.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Prover.Legacy.Data.Migrations\Prover.Legacy.Data.Migrations.csproj" />
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\Tests.Shared\Tests.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="EntityFrameworkSqlDataAccess\Repositories\" />
-    <Folder Include="Verifications\CustomActions\" />
+    <ProjectReference Include="..\..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
+    <ProjectReference Include="..\Tests.Shared\Testing.Shared.csproj" />
   </ItemGroup>
 
 </Project>

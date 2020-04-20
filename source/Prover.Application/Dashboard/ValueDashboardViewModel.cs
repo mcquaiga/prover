@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

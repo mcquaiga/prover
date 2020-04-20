@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
 
 namespace Prover.Application.Interfaces
 {
@@ -23,7 +23,9 @@ namespace Prover.Application.Interfaces
         Task<ICollection<EvcVerificationViewModel>> GetViewModel(
             IEnumerable<EvcVerificationTest> verificationTests);
 
-        EvcVerificationViewModel NewVerification(DeviceInstance device);
-        
+        EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null);
+        EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null);
+        Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest);
+
     }
 }

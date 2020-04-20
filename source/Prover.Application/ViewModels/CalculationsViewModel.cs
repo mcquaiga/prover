@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

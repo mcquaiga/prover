@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Devices.Core.Repository
 {
@@ -25,7 +26,7 @@ namespace Devices.Core.Repository
 
         public IObservable<ItemMetadata> GetItems()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(GetItems));
         }
 
         public void Save(IEnumerable<DeviceType> deviceTypes)

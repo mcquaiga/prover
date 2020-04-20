@@ -1,5 +1,5 @@
 using Devices.Honeywell.Core;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Honeywell.Comm.CommClients
 {

@@ -43,7 +43,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\..\Tests\Tests.Shared\Tests.Shared.csproj" />
+    <ProjectReference Include="..\..\Tests\Tests.Shared\Testing.Shared.csproj" />
     <ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />

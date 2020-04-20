@@ -11,9 +11,11 @@ namespace Prover.Application.ViewModels.Factories.Volume
             VerificationTestPointViewModel testPoint)
         {
             var rotaryViewModel = new RotaryVolumeViewModel(_startVolumeItems, _endVolumeItems);
+            rotaryViewModel.DriveType = verificationViewModel.DriveType;
+            
             rotaryViewModel.AddVerificationTest(CreateUncorrectedVolumeTest(verificationViewModel.DriveType));
             rotaryViewModel.AddVerificationTest(CreateCorrectedVolumeTest(verificationViewModel.DriveType, rotaryViewModel.Uncorrected));
-            rotaryViewModel.DriveType = verificationViewModel.DriveType;
+            
 
             CreatePulseOutputTests(device, rotaryViewModel.Uncorrected, rotaryViewModel.Corrected);
             

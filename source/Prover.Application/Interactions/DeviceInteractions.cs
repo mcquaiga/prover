@@ -3,7 +3,6 @@ using System.Reactive;
 using System.Threading;
 using Devices.Communications.Status;
 using Prover.Application.Interfaces;
-using Prover.Application.ViewModels.Volume.Rotary;
 using ReactiveUI;
 
 namespace Prover.Application.Interactions

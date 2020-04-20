@@ -6,7 +6,7 @@ using Devices.Communications.IO;
 using Devices.Honeywell.Core;
 using Devices.Honeywell.Tests.CommTests.Messaging;
 using Moq;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Honeywell.Tests.CommTests
 {

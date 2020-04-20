@@ -1,5 +1,5 @@
 ﻿using Devices.Communications.IO;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Communications.Interfaces
 {

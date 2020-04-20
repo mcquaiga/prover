@@ -46,12 +46,28 @@ namespace Devices.Honeywell.Core
             ItemFactory.Create<TGroup>(this, itemValues);
 
         public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
-            => ItemFactory.Create(this, itemValues, groupType);
+        {
+            return ItemFactory.Create(this, itemValues, groupType);
+        }
 
         public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
         {
             var items = GetItemNumbersByGroup<T>();
             return Items.GetMatchingItemMetadata(items);
+        }
+    }
+
+    public static class HoneywellDeviceExtensions
+    {
+        public static ItemGroup GetGroupValues(this HoneywellDeviceInstance deviceInstance, IEnumerable<ItemValue> itemValues, Type groupType)
+        {
+            var combinedValues = deviceInstance.CombineValuesWithItemFile(itemValues);
+            return deviceInstance.DeviceType.GetGroupValues(combinedValues, groupType);
+        }
+
+        public static IEnumerable<ItemValue> CombineValuesWithItemFile(this HoneywellDeviceInstance deviceInstance, IEnumerable<ItemValue> itemValues)
+        {
+            return itemValues.Join(deviceInstance.Values, inner => inner.Metadata.Number, outer => outer.Metadata.Number, (inner, outer) => inner);
         }
     }
 }

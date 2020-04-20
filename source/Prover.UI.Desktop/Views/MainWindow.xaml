@@ -1,0 +1,121 @@
+﻿<rxui:ReactiveWindow
+    x:Class="Prover.UI.Desktop.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="clr-namespace:Prover.Application.Interactions;assembly=Prover.Application"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    xmlns:viewModels="clr-namespace:Prover.UI.Desktop.ViewModels"
+    x:Name="MainWindowView"
+    Title="EVC Prover"
+    x:TypeArguments="viewModels:MainViewModel"
+    Style="{StaticResource DialogWindowStyle}"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    mc:Ignorable="d">
+    <Grid>
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <materialDesign:Card
+                materialDesign:ShadowAssist.Darken="True"
+                materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                materialDesign:ShadowAssist.ShadowEdges="Right"
+                DockPanel.Dock="Left">
+                <Grid Width="Auto" Margin="0,0,0,0">
+                    <StackPanel
+                        x:Name="NavigationBar"
+                        VerticalAlignment="Top"
+                        Orientation="Vertical">
+                        <Button
+                            x:Name="GoHomeButton"
+                            Content="{materialDesign:PackIcon Home}"
+                            Style="{StaticResource MainToolbarButtonStyle}" />
+                        <Button
+                            x:Name="GoBackButton"
+                            Content="{materialDesign:PackIcon NavigateBefore}"
+                            Style="{StaticResource MainToolbarButtonStyle}" />
+                    </StackPanel>
+
+                    <ItemsControl x:Name="ToolbarActionItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                    MinHeight="250"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
+                                <Button Command="{Binding ToolbarAction}" Style="{StaticResource MainToolbarButtonStyle}">
+                                    <Button.Content>
+                                        <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+
+                    <ItemsControl x:Name="ToolbarItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+
+                                <StackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Orientation="Vertical" />
+
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                </Grid>
+            </materialDesign:Card>
+
+            <rxui:RoutedViewHost
+                x:Name="RoutedViewHost"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                DockPanel.Dock="Right" />
+
+        </DockPanel>
+        <materialDesign:Snackbar
+            x:Name="NotificationSnackBar"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            d:LayoutOverrides="Width">
+            <materialDesign:Snackbar.Resources>
+                <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="materialDesign:SnackbarMessage">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="materialDesign:SnackbarMessage">
+                                <Grid>
+                                    <ContentPresenter
+                                        MaxHeight="60"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Content="{TemplateBinding Content}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                                    <!--  Needed by the template, wont use it though  -->
+                                    <Button
+                                        x:Name="PART_ActionButton"
+                                        VerticalAlignment="Bottom"
+                                        Content="Adam"
+                                        Visibility="Collapsed" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Background" Value="White" />
+                </Style>
+            </materialDesign:Snackbar.Resources>
+            <materialDesign:SnackbarMessage HorizontalAlignment="Stretch" />
+        </materialDesign:Snackbar>
+    </Grid>
+
+
+</rxui:ReactiveWindow>

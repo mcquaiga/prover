@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.Application.Verifications.Events;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Prover.Application.Verifications.Events.Tests

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 
 namespace Prover.Application.Interfaces
 {

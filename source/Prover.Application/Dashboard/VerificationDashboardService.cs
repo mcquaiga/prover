@@ -4,7 +4,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 
 namespace Prover.Application.Dashboard

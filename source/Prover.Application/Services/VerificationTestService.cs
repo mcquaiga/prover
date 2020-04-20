@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -10,10 +11,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Application.Services
 {
@@ -42,9 +44,7 @@ namespace Prover.Application.Services
 
         public async Task<EvcVerificationViewModel> AddOrUpdate(EvcVerificationViewModel viewModel)
         {
-            viewModel.TestDateTime = viewModel.TestDateTime;
-
-            var model =
+           var model =
                     await AddOrUpdate(
                             VerificationMapper.MapViewModelToModel(viewModel));
 
@@ -58,6 +58,24 @@ namespace Prover.Application.Services
             _cacheUpdates.AddOrUpdate(evcVerificationTest);
 
             return evcVerificationTest;
+        }
+
+        /// <inheritdoc />
+        public EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null) => throw new NotImplementedException(nameof(NewVerificationModel));
+
+        public async Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
+        {
+            _cacheUpdates.Edit(updater =>
+            {
+                evcVerificationTest.ToObservable()
+                                   .ForEachAsync(async test =>
+                                   {
+                                       await _verificationRepository.UpsertAsync(test);
+                                       updater.AddOrUpdate(test);
+                                   });
+            });
+
+            await Task.CompletedTask;
         }
 
         public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel) => VerificationMapper.MapViewModelToModel(viewModel);
@@ -80,11 +98,13 @@ namespace Prover.Application.Services
             return evcTests.ToList();
         }
 
-        public EvcVerificationViewModel NewVerification(DeviceInstance device)
+        public EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null)
         {
-            var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
-
-            return _verificationViewModelFactory.CreateViewModel(testModel);
+            options = options ?? VerificationTestOptions.Defaults;
+            //var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
+            var testModel = device.NewVerification(options);
+            return testModel.ToViewModel();
+            //return _verificationViewModelFactory.CreateViewModel(testModel);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DynamicData;
-using Prover.Domain.EvcVerifications;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Domain;
 
 namespace Prover.Application.Interfaces

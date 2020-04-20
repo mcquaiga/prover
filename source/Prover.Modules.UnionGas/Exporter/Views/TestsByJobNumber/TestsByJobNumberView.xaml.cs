@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Controls;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber

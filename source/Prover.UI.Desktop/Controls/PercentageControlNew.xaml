@@ -1,0 +1,47 @@
+﻿<UserControl
+    x:Class="Prover.UI.Desktop.Controls.PercentageControlNew"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="PercentUserControl"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/VerificationStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid DataContext="{Binding ElementName=PercentUserControl}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <materialDesign:PackIcon
+                Width="32"
+                Height="32"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="{Binding Path=IconBackground, ElementName=PercentUserControl}"
+                Kind="{Binding Path=IconKind, ElementName=PercentUserControl, FallbackValue=AlertCircleOutline}" />
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Bottom"
+                    FontSize="24"
+                    FontWeight="Normal"
+                    Text="{Binding Path=DisplayValue, ElementName=PercentUserControl, FallbackValue=0.01}" />
+                <TextBlock
+                    VerticalAlignment="Bottom"
+                    FontSize="16"
+                    Text="%" />
+
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</UserControl>

@@ -6,7 +6,15 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Volume
 {
-    public abstract class VolumeTestRunViewModelBase : VarianceTestViewModel
+    public interface IDeviceStartAndEndValues<T>
+     where T: ItemGroup, IItemGroup
+    {
+        T StartValues { get; set; }
+        T EndValues { get; set; }
+    }
+
+    public abstract class VolumeTestRunViewModelBase : VarianceTestViewModel, IDeviceStartAndEndValues<VolumeItems>
+        
     {
         protected VolumeTestRunViewModelBase(decimal passTolerance, VolumeItems startValues, VolumeItems endValues) :
             base(passTolerance)

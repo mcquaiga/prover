@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
 using DynamicData;
+using Prover.Application.Extensions;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 
@@ -46,12 +49,21 @@ namespace Prover.Application.ViewModels
             RegisterVerificationsForVerified(VerificationTests);
         }
 
-        public void UpdateItemValues(ICollection<ItemValue> itemValues)
-        {
-            _items.Edit(update => update.AddOrUpdate(itemValues));
-        }
+        //public void UpdateItemValues(DeviceType deviceType, ICollection<ItemValue> itemValues)
+        //{
+        //    this.UpdateValues(itemValues, deviceType);
 
-        protected override void Disposing()
+        //    foreach (var correction in this.GetCorrectionTests())
+        //    {
+        //        var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+
+        //        itemType?.SetValue(correction, deviceType.GetGroupValues(itemValues, itemType.PropertyType));
+        //    }
+            
+        //    _items.Edit(update => update.AddOrUpdate(itemValues));
+        //}
+
+        protected override void Dispose(bool isDisposing)
         {
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();

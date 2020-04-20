@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Prover.Application.Helpers.Query;
-using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Application.Specifications
 {

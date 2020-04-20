@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Client.Desktop.Wpf.ViewModels;
 using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
-using Prover.Modules.UnionGas.DcrWebService;
+using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -14,7 +12,7 @@ namespace Prover.Modules.UnionGas.Login
 {
     public class LoginToolbarViewModel : ViewModelBase, IToolbarItem
     {
-        public LoginToolbarViewModel(ILoginService<EmployeeDTO> loginService)
+        public LoginToolbarViewModel(ILoginService<Employee> loginService)
         {
             LoginService = loginService;
             LogIn = ReactiveCommand.CreateFromTask(async () =>
@@ -34,12 +32,12 @@ namespace Prover.Modules.UnionGas.Login
             LogOut = ReactiveCommand.CreateFromTask(loginService.Logout);
 
             loginService.LoggedIn
-                .Select(x => x ? loginService.User?.EmployeeName : "")
+                .Select(x => x ? loginService.User?.UserName : "")
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToPropertyEx(this, vm => vm.DisplayName);
         }
 
-        public ILoginService<EmployeeDTO> LoginService { get; }
+        public ILoginService<Employee> LoginService { get; }
 
         public extern string DisplayName { [ObservableAsProperty] get; }
 

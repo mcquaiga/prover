@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Prover.Domain;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Volume
 {
-    public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
+    public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModelBase,IDeviceStartAndEndValues<VolumeItems>
     {
-        private const decimal Tolerance = Global.UNCOR_ERROR_THRESHOLD;
+        private const decimal Tolerance = Tolerances.UNCOR_ERROR_THRESHOLD;
 
         public UncorrectedVolumeTestViewModel(IVolumeInputType driveType, VolumeItems startValues, VolumeItems endValues) 
             : base(Tolerance, startValues, endValues)
@@ -48,7 +47,7 @@ namespace Prover.Application.ViewModels.Volume
 
         public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
         
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Devices.Communications.Interfaces;
 using Devices.Romet.Core;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Romet.Comm
 {

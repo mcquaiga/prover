@@ -1,34 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.Services
 {
-    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IVerificationAction, IDisposable
+    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IDisposable
             where TUser : IUser, new()
     {
-        private readonly CompositeDisposable _cleanup;
+        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
         protected readonly ISubject<bool> LoggedInSubject = new Subject<bool>();
 
         protected LoginServiceBase()
         {
-            var loggedIn = LoggedInSubject.ObserveOn(RxApp.MainThreadScheduler).Publish();
-
-            LoggedIn = loggedIn;
-
-            LoggedIn.Subscribe(x => IsSignedOn = x);
-
-            _cleanup = new CompositeDisposable(loggedIn.Connect());
+            LoggedIn = LoggedInSubject;
+            
+            LoggedIn.Subscribe(x => IsSignedOn = x).DisposeWith(_cleanup);
 
             LoggedInSubject.OnNext(false);
         }
@@ -50,7 +43,8 @@ namespace Prover.Application.Services
         {
             await Task.CompletedTask;
 
-            LoggedIn.Subscribe(x => { verification.EmployeeId = UserId; }).DisposeWith(_cleanup);
+            LoggedIn.Subscribe(x => { verification.EmployeeId = UserId; })
+                    .DisposeWith(_cleanup);
 
             return true;
         }
@@ -74,10 +68,10 @@ namespace Prover.Application.Services
 
         public async Task<bool> Login()
         {
-            await GetLoginDetails()
-                    .ContinueWith(task => { Login(task.Result); });
-
-            return await Task.FromResult(true);
+            var username = await GetLoginDetails();
+            var success = await Login(username);
+            LoggedInSubject.OnNext(success);
+            return await Task.FromResult(success);
         }
 
         public virtual async Task Logout()
@@ -89,7 +83,7 @@ namespace Prover.Application.Services
 
         public IObservable<bool> SignOn()
         {
-            return Observable.StartAsync(async () =>
+            return Observable.FromAsync(async () =>
             {
                 var username = await GetLoginDetails();
                 return await Login(username);

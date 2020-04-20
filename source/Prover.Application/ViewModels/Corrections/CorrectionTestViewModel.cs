@@ -1,5 +1,4 @@
-﻿using Core.GasCalculations;
-using Prover.Shared.Extensions;
+﻿using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -8,9 +7,10 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Core.Items.ItemGroups;
 using DynamicData;
+using Prover.Application.Extensions;
+using Prover.Calculations;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -52,8 +52,11 @@ namespace Prover.Application.ViewModels.Corrections
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
                 .ToCollection()
-                .Select(x => x.Any() && x.All(y => y.Verified))
-                .ObserveOn(RxApp.TaskpoolScheduler);
+                .Select(x => x.Any() && x.All(y => y != null && y.Verified))
+                .LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
+                .LogErrors(Logger)
+                .LoggedCatch(this, VerifiedObservable)
+                .ObserveOn(RxApp.MainThreadScheduler);
         }
     }
 
@@ -64,6 +67,12 @@ namespace Prover.Application.ViewModels.Corrections
         decimal ActualValue { get; }
         decimal PercentError { get; }
         bool Verified { get; }
+    }
+
+    public interface IDeviceItemsGroup<T>
+        where T : class
+    {
+        T Items { get; set; }
     }
 
     public abstract class VarianceTestViewModel : VerificationViewModel, IAssertExpectedActual
@@ -91,7 +100,7 @@ namespace Prover.Application.ViewModels.Corrections
         public extern decimal PercentError { [ObservableAsProperty] get; }
     }
 
-    public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification
+    public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification, IDeviceItemsGroup<T>
         where T : class
     {
         protected DeviationTestViewModel()
@@ -123,7 +132,7 @@ namespace Prover.Application.ViewModels.Corrections
         public extern bool Verified { [ObservableAsProperty] get; }
     }
 
-    public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel
+    public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel, IDeviceItemsGroup<T>
         where T : class
     {
         protected ItemVarianceTestViewModel(T items, decimal passTolerance) : base(passTolerance) => Items = items;

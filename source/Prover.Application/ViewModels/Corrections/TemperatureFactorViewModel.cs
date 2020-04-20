@@ -2,9 +2,8 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Prover.Domain;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -12,7 +11,7 @@ namespace Prover.Application.ViewModels.Corrections
 {
     public sealed class TemperatureFactorViewModel : CorrectionTestViewModel<TemperatureItems>
     {
-        private const decimal Tolerance = Global.TEMP_ERROR_TOLERANCE;
+        private const decimal Tolerance = Tolerances.TEMP_ERROR_TOLERANCE;
 
         [Reactive] public decimal Gauge { get; set; }
 

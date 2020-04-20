@@ -22,7 +22,7 @@ pool:
 
 variables:
   solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
-  project: 'source\Client.Desktop.Wpf\Client.Desktop.Wpf.csproj'
+  project: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
 

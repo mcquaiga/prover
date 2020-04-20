@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Subjects;
 using Devices.Core.Items;
-using Newtonsoft.Json;
 
 namespace Prover.Application.Services.LiveReadCorrections
 {

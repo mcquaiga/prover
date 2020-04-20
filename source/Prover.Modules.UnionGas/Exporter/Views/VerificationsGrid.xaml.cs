@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
     /// <summary>
     /// Interaction logic for VerificationsGrid.xaml
     /// </summary>
-    public partial class VerificationsGrid
+    public partial class VerificationsGrid : IDisposable
     {
         public VerificationsGrid()
         {
@@ -30,6 +23,27 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             get => (DataTemplate) GetValue(PrintDataTemplateProperty);
             set => SetValue(PrintDataTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty ToolbarViewModelProperty = DependencyProperty.Register("ToolbarViewModel", typeof(ExportToolbarViewModel), typeof(VerificationsGrid), new PropertyMetadata(default(ExportToolbarViewModel)));
+
+        public ExportToolbarViewModel ToolbarViewModel
+        {
+            get { return (ExportToolbarViewModel) GetValue(ToolbarViewModelProperty); }
+            set { SetValue(ToolbarViewModelProperty, value); }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            BindingOperations.ClearAllBindings(this);
+        }
+
+        private void VerificationsDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ToolbarViewModel.PrintReport
+                            .Execute(ToolbarViewModel.Selected)
+                            .Subscribe();
         }
     }
 }

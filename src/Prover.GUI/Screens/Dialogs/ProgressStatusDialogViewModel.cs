@@ -1,6 +1,6 @@
 ﻿namespace Prover.GUI.Screens.Dialogs
 {
-    using Prover.Core.Models.Instruments;
+    using Core.Models.Instruments;
     using Prover.Core.VerificationTests.Events;
     using PubSub.Extension;
     using ReactiveUI;

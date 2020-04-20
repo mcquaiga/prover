@@ -1,10 +1,9 @@
-﻿using Core.GasCalculations;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Shared;
 
-namespace Tests.Core.GasCalculations
+namespace Prover.Calculations.Tests
 {
     [TestClass()]
     public class PressureCalculatorTests
