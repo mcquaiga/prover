@@ -71,28 +71,7 @@ namespace Prover.UI.Desktop
                         host.ConfigureModules(services);
                     })
                     .Build();
-
-        private async Task ExecuteStartUpTasks()
-        {
-            //var startTasks = AppHost.Services.GetServices<IStartupTask>()
-            //                        .Select(t =>
-            //                                t.ExecuteAsync(CancellationTokenSource.Token))
-            //                        .ForEach(t => t.Start())
-            //                        .ToArray();
-
-            ////startTasks.ForEach(t => t.Start());
-            //await Task.WhenAll(startTasks);
-
-            ////if (startTasks.Any(t => t.IsFaulted))
-            //    foreach (var ex in startTasks.Where(t => t.IsFaulted))
-            //    {
-            //        ex.Exception.InnerExceptions.ForEach(x =>
-            //                _logger.LogError(x, "An error occured on start up."));
-            //    }
-
-                await Task.CompletedTask;
-        }
-
+        
         private void InitializeLogging()
         {
             var logFactory = AppHost.Services.GetService<ILoggerFactory>();

@@ -274,6 +274,17 @@
                 </DataGridTemplateColumn>
 
                 <materialDesign:DataGridTextColumn
+                    x:Name="InventoryNumberColumn"
+                    Binding="{Binding Device.Items.SiteInfo.SiteId2, Mode=OneTime}"
+                    CellStyle="{StaticResource MaterialDesignDataGridCell}"
+                    Header="Inventory #" />
+
+                <materialDesign:DataGridTextColumn
+                    x:Name="SerialNumberColumn"
+                    Binding="{Binding Device.Items.SiteInfo.SerialNumber, Mode=OneTime}"
+                    Header="Serial #" />
+
+                <materialDesign:DataGridTextColumn
                     x:Name="CompositionTypeTextBlock"
                     Binding="{Binding Device.Items.SiteInfo.CompositionType, Mode=OneTime}"
                     CellStyle="{StaticResource CenteredGridCellStyle}"
@@ -284,16 +295,6 @@
                     Binding="{Binding TestDateTime, Mode=OneTime}"
                     Header="Date Tested" />
 
-
-                <materialDesign:DataGridTextColumn
-                    x:Name="InventoryNumberColumn"
-                    Binding="{Binding Device.Items.SiteInfo.SiteId2, Mode=OneTime}"
-                    Header="Inventory #" />
-
-                <materialDesign:DataGridTextColumn
-                    x:Name="SerialNumberColumn"
-                    Binding="{Binding Device.Items.SiteInfo.SerialNumber, Mode=OneTime}"
-                    Header="Serial #" />
 
                 <materialDesign:DataGridTextColumn
                     x:Name="JobIdColumn"
