@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using DynamicData;
-using DynamicData.Binding;
+using System.Reactive.Subjects;
 using MaterialDesignThemes.Wpf;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.Models;
 using Prover.Modules.UnionGas.Verifications;
 using Prover.Shared.Interfaces;
+using Prover.UI.Desktop.Reports;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -25,176 +23,179 @@ namespace Prover.Modules.UnionGas.Exporter.Views
     {
         private readonly ILoginService<Employee> _loginService;
 
-        public ExportToolbarViewModel(
-            IScreenManager screenManager,
-            IVerificationTestService verificationTestService,
-            ILoginService<Employee> loginService,
-            IExportVerificationTest exporter,
-            MeterInventoryNumberValidator inventoryNumberValidator,
-            ReadOnlyObservableCollection<EvcVerificationTest> selectedObservable = null)
+        public ExportToolbarViewModel
+        (IScreenManager screenManager, IVerificationTestService verificationTestService, ILoginService<Employee> loginService, IExportVerificationTest exporter,
+                MeterInventoryNumberValidator inventoryNumberValidator, ReadOnlyObservableCollection<EvcVerificationTest> selectedObservable = null
+        )
         {
             _loginService = loginService;
-            SelectedObservable = selectedObservable;
-            SetCanExecutes(selectedObservable.ToObservableChangeSet());
+        
+            //var selectedSubject = new Subject<EvcVerificationTest>();
+            //SelectedItem = selectedSubject;
+            //SetSelectedItem = ReactiveCommand.Create<EvcVerificationTest>(selectedSubject.OnNext);
+            
+            SetCanExecutes(this.WhenAnyValue(x => x.Selected).Where(s => s != null));
+            
+            this.WhenAnyValue(x => x.Selected)
+                .Where(s => s != null)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(x => Debug.WriteLine($"Selection changed {x.TestDateTime}"));
 
-            AddSignedOnUser = ReactiveCommand
-                .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
-                    {
-                        tests = SelectedObservable;
-                        return Observable.Create<EvcVerificationTest>(async obs =>
-                        {
-                            tests.ForEach(t => t.EmployeeId = _loginService.User?.UserId);
-                            tests.ForEach(t => verificationTestService.AddOrUpdate(t));
-                            tests.ForEach(obs.OnNext);
-                        });
-                    },
-                    CanAddUser,
-                    RxApp.MainThreadScheduler).DisposeWith(Cleanup);
-            AddToolbarItem(AddSignedOnUser, PackIconKind.UserAdd);
-
-
-            AddJobId = ReactiveCommand.CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(
-                tests =>
+            AddSignedOnUser = ReactiveCommand.CreateFromObservable<EvcVerificationTest, EvcVerificationTest>(test =>
+            {
+                return Observable.FromAsync(async () =>
                 {
-                    tests = SelectedObservable;
-                    return Observable.Create<EvcVerificationTest>(async obs =>
+                    test.EmployeeId = _loginService.User?.UserId;
+                    return await verificationTestService.AddOrUpdate(test);
+                });
+            }, CanAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+
+           
+
+            AddJobId = ReactiveCommand.CreateFromObservable<EvcVerificationTest, EvcVerificationTest>(test =>
+            {
+                return Observable.FromAsync(async () =>
+                {
+                    var meterDto = await inventoryNumberValidator.ValidateInventoryNumber(test);
+
+                    if (meterDto != null)
                     {
-                        var updatedTests = new List<EvcVerificationTest>();
-                        //var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
-                        foreach (var evcVerificationTest in tests)
-                        {
-                            var meterDto = await inventoryNumberValidator.ValidateInventoryNumber(evcVerificationTest);
-                            if (meterDto != null)
-                            {
-                                evcVerificationTest.JobId = meterDto.JobNumber.ToString();
-                                updatedTests.Add(evcVerificationTest);
-                            }
-                        }
-                        
-                        updatedTests.ForEach(async t => 
-                            obs.OnNext(await verificationTestService.AddOrUpdate(t)));
-                    });
-                }, CanAddJobId).DisposeWith(Cleanup);
-            AddToolbarItem(AddJobId, PackIconKind.Add);
+                        test.JobId = meterDto.JobNumber.ToString();
+                        test = await verificationTestService.AddOrUpdate(test);
+                    }
+
+                    return test;
+                });
+            },
+            CanAddJobId).DisposeWith(Cleanup);
 
             //_canExportTest = this.
-            ExportVerification = ReactiveCommand
-                .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
+            ExportVerification = ReactiveCommand.CreateFromObservable<EvcVerificationTest, EvcVerificationTest>(test =>
+            {
+                return Observable.FromAsync(async () =>
                 {
-                    tests = SelectedObservable;
-                    return Observable.Create<EvcVerificationTest>(async obs =>
-                    {
-                        foreach (var evcVerificationTest in tests)
-                        {
-                            var success = await exporter.Export(evcVerificationTest);
-                            if (success) obs.OnNext(evcVerificationTest);
-                        }
-                    });
-                }, CanExport).DisposeWith(Cleanup);
-            AddToolbarItem(ExportVerification, PackIconKind.Export);
+                    await exporter.Export(test);
+                    return test;
+                });
+            },
+            CanExport).DisposeWith(Cleanup);
 
-            ArchiveVerification = ReactiveCommand
-                .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
+            ArchiveVerification = ReactiveCommand.CreateFromObservable<EvcVerificationTest, EvcVerificationTest>(test =>
+            {
+                return Observable.FromAsync(async () =>
                 {
-                    tests = SelectedObservable;
-                    return Observable.Create<EvcVerificationTest>(async obs =>
+                    if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))
                     {
-                        if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))
-                            foreach (var evcVerificationTest in tests)
-                            {
-                                evcVerificationTest.ArchivedDateTime = DateTime.Now;
-                                var test = await verificationTestService.AddOrUpdate(evcVerificationTest);
-                                obs.OnNext(test);
-                            }
-                    });
-                }, CanArchive).DisposeWith(Cleanup);
-            AddToolbarItem(ArchiveVerification, PackIconKind.Archive);
-            Updates = this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification,
-                x => x.ExportVerification);
+                        test.ArchivedDateTime = DateTime.Now;
+                        await verificationTestService.AddOrUpdate(test);
+                    }
 
-            
-            //PrintReport = ReactiveCommand.CreateFromTask<ICollection<EvcVerificationTest>>(async tests =>
-            //{
-            //    var test = tests.FirstOrDefault();
-            //    if (test == null) return;
+                    return test;
+                });
+            },
+            CanArchive).DisposeWith(Cleanup);
 
-            //    var viewModel = await verificationTestService.GetViewModel(test);
-            //    var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
-            //    reportViewModel.ContentViewModel = viewModel;
-            //}).DisposeWith(Cleanup);
+            Updates = this.WhenAnyObservable(x => x.AddSignedOnUser,
+            x => x.AddJobId,
+            x => x.ArchiveVerification,
+            x => x.ExportVerification);
+
+            PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
+            {
+                if (test == null) return;
+                var viewModel = await verificationTestService.GetViewModel(test);
+                var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
+                reportViewModel.ContentViewModel = viewModel;
+            }).DisposeWith(Cleanup);
+
+            //AddToolbarItem(ExportVerification, PackIconKind.Export);
+            //AddToolbarItem(ArchiveVerification, PackIconKind.Archive);
+            //AddToolbarItem(AddJobId,PackIconKind.Add);
+            //AddToolbarItem(AddSignedOnUser, PackIconKind.UserAdd);
         }
 
         //public EvcVerificationProxy VerificationProxy { get; protected set; }
-        public ICollection<EvcVerificationTest> SelectedItems => SelectedObservable;
-
         public IObservable<EvcVerificationTest> Updates { get; set; }
+        public IObservable<EvcVerificationTest> SelectedItem { get; } = new Subject<EvcVerificationTest>();
 
-        public ReadOnlyObservableCollection<EvcVerificationTest> SelectedObservable { get; }
+        [Reactive] public EvcVerificationTest Selected { get; set; }
+
         public extern EvcVerificationTest VerificationTest { [ObservableAsProperty] get; }
 
+        public IObservable<bool> CanEdit { get; set; }
         public IObservable<bool> CanAddUser { get; protected set; }
         public IObservable<bool> CanAddJobId { get; protected set; }
         public IObservable<bool> CanArchive { get; protected set; }
         public IObservable<bool> CanExport { get; protected set; }
 
-        public ReactiveCommand<ICollection<EvcVerificationTest>, Unit> PrintReport { get; protected set; }
+        public ReactiveCommand<EvcVerificationTest, Unit> PrintReport { get; protected set; }
+        public ReactiveCommand<EvcVerificationTest, EvcVerificationTest> AddSignedOnUser { get; }
+        public ReactiveCommand<EvcVerificationTest, EvcVerificationTest> AddJobId { get; }
+        public ReactiveCommand<EvcVerificationTest, EvcVerificationTest> ArchiveVerification { get; }
+        public ReactiveCommand<EvcVerificationTest, EvcVerificationTest> ExportVerification { get; }
+        public ReactiveCommand<EvcVerificationTest, Unit> SetSelectedItem { get; }
 
-        public ReactiveCommand<ICollection<EvcVerificationTest>, EvcVerificationTest> AddSignedOnUser { get; }
-
-        public ReactiveCommand<ICollection<EvcVerificationTest>, EvcVerificationTest> AddJobId { get; }
-
-        public ReactiveCommand<ICollection<EvcVerificationTest>, EvcVerificationTest> ArchiveVerification { get; }
-
-        public ReactiveCommand<ICollection<EvcVerificationTest>, EvcVerificationTest> ExportVerification { get; }
-
-        private void SetCanExecutes(EvcVerificationTest evcVerification = null)
+        public void SetCanExecutes(IObservable<EvcVerificationTest> selectedTest)
         {
-            if (evcVerification == null) return;
+            CanEdit = selectedTest.Select(t => !t.ArchivedDateTime.HasValue && !t.ExportedDateTime.HasValue).ObserveOn(RxApp.MainThreadScheduler);
 
+            CanAddUser = selectedTest.Select(t => string.IsNullOrEmpty(t.EmployeeId)).CombineLatest(CanEdit,
+            (hasNoId, canEdit) => hasNoId && canEdit).CombineLatest(_loginService.LoggedIn,
+            (noEmployeeId, isLoggedIn) => noEmployeeId && isLoggedIn).ObserveOn(RxApp.MainThreadScheduler);
 
-            this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification,
-                    x => x.ExportVerification)
-                .ToPropertyEx(this, x => x.VerificationTest, evcVerification);
+            CanAddJobId = selectedTest.Select(t => string.IsNullOrEmpty(t.JobId)).CombineLatest(CanEdit,
+            (hasNoId, canEdit) => canEdit && hasNoId).ObserveOn(RxApp.MainThreadScheduler);
+            CanArchive = CanEdit;
 
-            CanAddUser = this.WhenAnyValue(x => x.VerificationTest)
-                .Select(t => string.IsNullOrEmpty(t.EmployeeId))
-                .CombineLatest(_loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler), (b1, b2) => b1 && b2);
-
-            CanAddJobId = this.WhenAnyValue(x => x.VerificationTest).Select(t => string.IsNullOrEmpty(t.JobId));
-            CanArchive = this.WhenAnyValue(x => x.VerificationTest)
-                .Select(x => !x.ArchivedDateTime.HasValue && !x.ExportedDateTime.HasValue);
-            CanExport = this.WhenAnyValue(x => x.VerificationTest).Select(x =>
-                !x.ExportedDateTime.HasValue && !string.IsNullOrEmpty(x.JobId) && !x.ArchivedDateTime.HasValue);
+            CanExport = this.WhenAnyObservable(x => x.CanAddUser,
+            x => x.CanAddJobId,
+            x => x.CanEdit,
+            (canAddUser, canAddJob, canEdit) => !canAddUser && !canAddJob && canEdit).ObserveOn(RxApp.MainThreadScheduler);
         }
 
-        private void SetCanExecutes(IObservable<IChangeSet<EvcVerificationTest>> selectedTests)
-        {
-            CanAddUser =
-                selectedTests.AutoRefreshOnObservable(e => _loginService.LoggedIn)
-                    .ToCollection()
-                    .Select(tests => tests.Any() && tests.All(test => string.IsNullOrEmpty(test.EmployeeId)))
-                    .CombineLatest(_loginService.LoggedIn,
-                        (noEmployeeId, isLoggedIn) => noEmployeeId && isLoggedIn)
-                    .ObserveOn(RxApp.MainThreadScheduler);
 
-            CanAddJobId = selectedTests
-                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
-                .ToCollection()
-                .Select(tests => tests.Any() && tests.All(y => string.IsNullOrEmpty(y.JobId)));
 
-            CanArchive = selectedTests
-                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
-                .ToCollection()
-                .Select(tests =>
-                    tests.Any() && tests.All(y => !y.ArchivedDateTime.HasValue && !y.ExportedDateTime.HasValue));
+        //public void SetCanExecutes(IObservable<IChangeSet<EvcVerificationTest>> selectedTests)
+        //{
+        //    CanAddUser = selectedTests.AutoRefreshOnObservable(e => _loginService.LoggedIn)
+        //                              .ToCollection()
+        //                              .Select(tests => tests.Any() && tests.All(test => string.IsNullOrEmpty(test.EmployeeId)))
+        //                              .CombineLatest(_loginService.LoggedIn, (noEmployeeId, isLoggedIn) => noEmployeeId && isLoggedIn)
+        //                              .ObserveOn(RxApp.MainThreadScheduler);
 
-            CanExport = selectedTests
-                .AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
-                .ToCollection()
-                .Select(tests => tests.Any() && tests.All(
-                    test => !test.ExportedDateTime.HasValue && !test.ArchivedDateTime.HasValue &&
-                            !string.IsNullOrEmpty(test.JobId) &&
-                            !string.IsNullOrEmpty(test.EmployeeId)));
-        }
+        //    CanAddJobId = selectedTests.AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+        //                               .ToCollection()
+        //                               .Select(tests => tests.Any() && tests.All(y => string.IsNullOrEmpty(y.JobId)));
+
+        //    CanArchive = selectedTests.AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+        //                              .ToCollection()
+        //                              .Select(tests => tests.Any() && tests.All(y => !y.ArchivedDateTime.HasValue && !y.ExportedDateTime.HasValue));
+
+        //    CanExport = selectedTests.AutoRefreshOnObservable(e => SelectedObservable.ToObservable())
+        //                             .ToCollection()
+        //                             .Select(tests => tests.Any() && tests.All(test
+        //                                     => !test.ExportedDateTime.HasValue && !test.ArchivedDateTime.HasValue && !string.IsNullOrEmpty(test.JobId) && !string.IsNullOrEmpty(test.EmployeeId)));
+        //}
+
+        //private void SetCanExecutes(EvcVerificationTest evcVerification = null)
+        //{
+        //    if (evcVerification == null) return;
+
+        //    this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification, x => x.ExportVerification)
+        //        .ToPropertyEx(this, x => x.VerificationTest, evcVerification);
+
+        //    CanAddUser = this.WhenAnyValue(x => x.VerificationTest)
+        //                     .Select(t => string.IsNullOrEmpty(t.EmployeeId))
+        //                     .CombineLatest(_loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler), (b1, b2) => b1 && b2);
+
+        //    CanAddJobId = this.WhenAnyValue(x => x.VerificationTest)
+        //                      .Select(t => string.IsNullOrEmpty(t.JobId));
+
+        //    CanArchive = this.WhenAnyValue(x => x.VerificationTest)
+        //                     .Select(x => !x.ArchivedDateTime.HasValue && !x.ExportedDateTime.HasValue);
+
+        //    CanExport = this.WhenAnyValue(x => x.VerificationTest)
+        //                    .Select(x => !x.ExportedDateTime.HasValue && !string.IsNullOrEmpty(x.JobId) && !x.ArchivedDateTime.HasValue);
+        //}
     }
 }

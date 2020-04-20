@@ -15,19 +15,33 @@
         <TextBlock Style="{StaticResource SectionHeaderTextBlockStyle}" Text="Corrected" />
         <controls:PercentageControlNew x:Name="PercentErrorControl" HorizontalAlignment="Center" />
         <UniformGrid Columns="2">
-            <controls:ValueDescriptionControl x:Name="StartReadingControl" Label="Start" />
+            <controls:ValueDescriptionControl
+                x:Name="StartReadingControl"
+                IsTabStop="False"
+                Label="Start" />
             <controls:ValueDescriptionControl
                 x:Name="EndReadingControl"
                 IsReadOnly="False"
+                IsTabStop="False"
                 Label="End" />
-            <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="True" />
-            <controls:ValueDescriptionControl x:Name="ActualValueControl" Label="EVC" />
-            <controls:ValueDescriptionControl x:Name="PulsesExpectedControl" Label="True Pulses" />
+            <controls:ValueDescriptionControl
+                x:Name="ExpectedValueControl"
+                Focusable="False"
+                IsTabStop="False"
+                Label="True" />
+            <controls:ValueDescriptionControl
+                x:Name="ActualValueControl"
+                Focusable="False"
+                IsTabStop="False"
+                Label="EVC" />
+            <controls:ValueDescriptionControl
+                x:Name="PulsesExpectedControl"
+                IsTabStop="False"
+                Label="True Pulses" />
             <controls:ValueDescriptionControl
                 x:Name="CorrectedPulseCountControl"
                 IsReadOnly="False"
-                Label="EVC Pulses"
-                TabIndex="2" />
+                Label="EVC Pulses" />
             <!--<controls:ValueDescriptionControl
                 x:Name="PulsesVerifiedControl"
                 Label="Pulses Ver'd"

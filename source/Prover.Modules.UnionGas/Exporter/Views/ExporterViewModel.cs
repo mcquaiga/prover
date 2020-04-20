@@ -33,7 +33,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public ExporterViewModel
         (IScreenManager screenManager, IVerificationTestService verificationTestService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
                 IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
-                Func<ReadOnlyObservableCollection<EvcVerificationTest>, ExportToolbarViewModel> exporterToolbarFactory = null
+                Func<ExportToolbarViewModel> exporterToolbarFactory = null
         )
         {
             ScreenManager = screenManager;
@@ -59,8 +59,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter);
             var changeObservable = this.WhenAnyObservable(x => x.ToolbarViewModel.Updates);
 
-            if (exporterToolbarFactory == null)
-                exporterToolbarFactory = selected => new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator, selected);
+            
 
             //var visibleItems = verificationCache.Data()
             //                                    .Connect()
@@ -100,7 +99,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                              .Subscribe()
                              .DisposeWith(Cleanup);
 
-            ToolbarViewModel = exporterToolbarFactory.Invoke(new ReadOnlyObservableCollection<EvcVerificationTest>(new ObservableCollection<EvcVerificationTest>()));
+            //exporterToolbarFactory ??= () => new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
+            
+            ToolbarViewModel = exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
             AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
             
             JobIdsList = jobIds;

@@ -115,7 +115,7 @@
                     <Viewbox
                         Grid.Column="1"
                         Margin="5,5"
-                        HorizontalAlignment="Stretch">
+                        HorizontalAlignment="Left">
                         <Viewbox.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
                                 <Setter Property="Margin" Value="2,0" />

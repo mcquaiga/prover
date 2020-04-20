@@ -17,7 +17,10 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         {
             AddUncorrected(withPulseOutputs);
             AddCorrected(withPulseOutputs);
-            var energyTest = new EnergyTest(Device.CreateItemGroup<EnergyItems>(), Device.CreateItemGroup<EnergyItems>(), 0m, 0m, 100m, false);
+            
+            var energyTest = 
+                    new EnergyTest(Device.CreateItemGroup<EnergyItems>(), Device.CreateItemGroup<EnergyItems>(), current.GetTest<CorrectedVolumeTestRun>().ActualValue);
+            
             return this;
         }
 

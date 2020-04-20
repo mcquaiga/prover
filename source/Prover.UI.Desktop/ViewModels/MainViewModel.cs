@@ -28,7 +28,6 @@ namespace Prover.UI.Desktop.ViewModels
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);
             NavigateHome = ReactiveCommand.CreateFromTask(async () =>
             {
-                await NotificationInteractions.SnackBarMessage.Handle("WELCOME HOME!");
                 await ScreenManager.GoHome();
             });
          

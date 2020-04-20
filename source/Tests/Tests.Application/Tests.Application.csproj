@@ -23,8 +23,11 @@
 
   <ItemGroup>
     <Compile Remove="EntityFrameworkSqlDataAccess\**" />
+    <Compile Remove="Verifications\CustomActions\**" />
     <EmbeddedResource Remove="EntityFrameworkSqlDataAccess\**" />
+    <EmbeddedResource Remove="Verifications\CustomActions\**" />
     <None Remove="EntityFrameworkSqlDataAccess\**" />
+    <None Remove="Verifications\CustomActions\**" />
   </ItemGroup>
 
 
@@ -51,10 +54,6 @@
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
     <ProjectReference Include="..\..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
     <ProjectReference Include="..\Tests.Shared\Testing.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Verifications\CustomActions\" />
   </ItemGroup>
 
 </Project>

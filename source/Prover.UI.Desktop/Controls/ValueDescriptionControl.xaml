@@ -48,6 +48,8 @@
                 FontSize="{Binding ValueFontSize}"
                 Foreground="{StaticResource PrimaryText}"
                 IsReadOnly="{Binding Path=IsReadOnly}"
+                IsTabStop="{Binding Path=IsTabStop}"
+                TabIndex="{Binding Path=TabIndex}"
                 Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock

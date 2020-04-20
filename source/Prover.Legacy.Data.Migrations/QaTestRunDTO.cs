@@ -53,12 +53,10 @@ namespace Prover.Legacy.Data.Migrations
         {
             if (!Directory.Exists(folderPath)) throw new DirectoryNotFoundException($"{folderPath}");
             var testModels = new List<EvcVerificationTest>();
-
+            int recordCount = 0;
             foreach (var file in Directory.EnumerateFiles(folderPath))
                 try
                 {
-                    Debug.WriteLine($"Loading {file}");
-
                     using (var reader = new StreamReader(file))
                     {
                         var json = await reader.ReadToEndAsync();
@@ -106,6 +104,7 @@ namespace Prover.Legacy.Data.Migrations
                                         model.SubmittedDateTime = model.TestDateTime.AddSeconds(random.Next(180, 660));
                                         model.Verified = qaTest.IsPassed;
                                         await testService.AddOrUpdate(model);
+                                        recordCount++;
                                     }
                                     catch (AggregateException aggregateException)
                                     {
@@ -126,6 +125,9 @@ namespace Prover.Legacy.Data.Migrations
                     Debug.WriteLine(ex);
                     Console.WriteLine(ex);
                 }
+
+            
+            Debug.WriteLine($"Imported {recordCount} records.");
         }
     }
 

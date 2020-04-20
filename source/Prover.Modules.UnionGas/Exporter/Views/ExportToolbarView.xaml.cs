@@ -14,16 +14,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             this.WhenActivated(d =>
             {
-                this.BindCommand(ViewModel, vm => vm.AddSignedOnUser, v => v.AddUserToTestButton, vm => vm.SelectedItems)
-                    .DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.AddJobId, v => v.EditJobIdButton, vm => vm.SelectedItems)
-                    .DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.PrintReport, v => v.PrintTestReportButton, vm => vm.SelectedItems)
-                    .DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.ArchiveVerification, v => v.ArchiveTestButton, vm => vm.SelectedItems)
-                    .DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.ExportVerification, v => v.ExportTestButton, vm => vm.SelectedItems)
-                    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.AddSignedOnUser, v => v.AddUserToTestButton, vm => vm.SelectedItems)
+                //    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.AddJobId, v => v.EditJobIdButton, vm => vm.SelectedItems)
+                //    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.PrintReport, v => v.PrintTestReportButton, vm => vm.SelectedItems)
+                //    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.ArchiveVerification, v => v.ArchiveTestButton, vm => vm.SelectedItems)
+                //    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.ExportVerification, v => v.ExportTestButton, vm => vm.SelectedItems)
+                //    .DisposeWith(d);
             });
         }
     }

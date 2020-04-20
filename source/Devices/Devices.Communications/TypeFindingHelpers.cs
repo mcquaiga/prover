@@ -8,7 +8,7 @@ namespace Devices.Communications
     {
         public static IEnumerable<Type> GetAllTypesImplementingOpenGenericType(Type openGenericType, Assembly[] assemblies)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(GetAllTypesImplementingOpenGenericType));
             //var types = assemblies.Where(a => a.FullName.Contains("Devices."))
             //    .SelectMany(ass => GetDerivedTypes(openGenericType, ass));
 

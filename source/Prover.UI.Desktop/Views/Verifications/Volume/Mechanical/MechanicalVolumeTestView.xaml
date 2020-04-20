@@ -16,6 +16,7 @@
             <controls:ValueDescriptionControl
                 x:Name="AppliedInputControl"
                 IsReadOnly="False"
+                IsTabStop="True"
                 Label="Applied Input"
                 TabIndex="0" />
 
@@ -37,20 +38,29 @@
             BorderThickness="1,0,0,0"
             Style="{StaticResource SubSectionDividerBorder}" />
 
-        <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="UncorrectedVolumeContent"
+            IsTabStop="False"
+            TabIndex="100" />
 
         <Border
             Margin="2,16"
             BorderThickness="1,0,0,0"
             Style="{StaticResource SubSectionDividerBorder}" />
-        <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="CorrectedVolumeContent"
+            IsTabStop="False"
+            TabIndex="200" />
 
         <Border
             Margin="2,16"
             BorderThickness="1,0,0,0"
             Style="{StaticResource SubSectionDividerBorder}" />
 
-        <reactiveUi:ViewModelViewHost x:Name="EnergyTestContent" />
+        <reactiveUi:ViewModelViewHost
+            x:Name="EnergyTestContent"
+            IsTabStop="False"
+            TabIndex="300" />
 
     </StackPanel>
 </reactiveUi:ReactiveUserControl>

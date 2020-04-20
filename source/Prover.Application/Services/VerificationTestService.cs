@@ -63,7 +63,7 @@ namespace Prover.Application.Services
         }
 
         /// <inheritdoc />
-        public EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null) => throw new NotImplementedException();
+        public EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null) => throw new NotImplementedException(nameof(NewVerificationModel));
 
         public async Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
         {

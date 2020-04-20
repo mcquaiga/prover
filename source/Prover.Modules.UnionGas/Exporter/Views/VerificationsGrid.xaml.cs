@@ -22,11 +22,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             set => SetValue(PrintDataTemplateProperty, value);
         }
 
-        public static readonly DependencyProperty ToolbarViewModelProperty = DependencyProperty.Register("ToolbarViewModel", typeof(ReactiveObject), typeof(VerificationsGrid), new PropertyMetadata(default(ReactiveObject)));
+        public static readonly DependencyProperty ToolbarViewModelProperty = DependencyProperty.Register("ToolbarViewModel", typeof(ExportToolbarViewModel), typeof(VerificationsGrid), new PropertyMetadata(default(ExportToolbarViewModel)));
 
-        public ReactiveObject ToolbarViewModel
+        public ExportToolbarViewModel ToolbarViewModel
         {
-            get { return (ReactiveObject) GetValue(ToolbarViewModelProperty); }
+            get { return (ExportToolbarViewModel) GetValue(ToolbarViewModelProperty); }
             set { SetValue(ToolbarViewModelProperty, value); }
         }   
     }

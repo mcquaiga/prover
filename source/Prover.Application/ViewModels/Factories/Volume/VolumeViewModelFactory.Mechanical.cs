@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Devices.Core.Interfaces;
+using Devices.Core.Items.DriveTypes;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume.Mechanical;
 
@@ -19,7 +20,7 @@ namespace Prover.Application.ViewModels.Factories.Volume
             
             CreatePulseOutputTests(device, vm.Uncorrected, vm.Corrected);
 
-            vm.AddVerificationTest(new EnergyVolumeTestViewModel(1m, _startVolumeItems, _endVolumeItems));
+            vm.AddVerificationTest(new EnergyVolumeTestViewModel(device.CreateItemGroup<EnergyItems>(), device.CreateItemGroup<EnergyItems>()));
             
             testPoint.AddTest(vm);
         }
