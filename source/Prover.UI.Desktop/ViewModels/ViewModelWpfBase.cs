@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,17 @@ namespace Prover.UI.Desktop.ViewModels
         protected void AddToolbarItem(IEnumerable<IToolbarActionItem> toolbarItems)
         {
             toolbarItems.ForEach(AddToolbarItem);
+        }
+
+        /// <inheritdoc />
+        protected override void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+            {
+                
+            }
+
+            base.Dispose(isDisposing);
         }
     }
 }

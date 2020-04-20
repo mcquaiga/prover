@@ -15,82 +15,66 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary />
-
-    </Window.Resources>
-
     <Grid>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid
-                Width="75"
-                Margin="0,0,0,0"
-                DockPanel.Dock="Left">
-                <StackPanel
-                    x:Name="NavigationBar"
-                    VerticalAlignment="Top"
-                    Orientation="Vertical">
-                    <Button
-                        x:Name="GoHomeButton"
-                        Content="{materialDesign:PackIcon Home}"
-                        Style="{StaticResource MainToolbarButtonStyle}" />
-                    <Button
-                        x:Name="GoBackButton"
-                        Content="{materialDesign:PackIcon NavigateBefore}"
-                        Style="{StaticResource MainToolbarButtonStyle}" />
-                </StackPanel>
+            <materialDesign:Card DockPanel.Dock="Left">
+                <Grid Width="75" Margin="0,0,0,0">
+                    <StackPanel
+                        x:Name="NavigationBar"
+                        VerticalAlignment="Top"
+                        Orientation="Vertical">
+                        <Button
+                            x:Name="GoHomeButton"
+                            Content="{materialDesign:PackIcon Home}"
+                            Style="{StaticResource MainToolbarButtonStyle}" />
+                        <Button
+                            x:Name="GoBackButton"
+                            Content="{materialDesign:PackIcon NavigateBefore}"
+                            Style="{StaticResource MainToolbarButtonStyle}" />
+                    </StackPanel>
 
-                <ItemsControl x:Name="ToolbarActionItemsControl">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel
-                                MinHeight="250"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
-                            <Button Command="{Binding ToolbarAction}" Style="{StaticResource MainToolbarButtonStyle}">
-                                <Button.Content>
-                                    <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
-                                </Button.Content>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <ItemsControl x:Name="ToolbarActionItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                    MinHeight="250"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
+                                <Button Command="{Binding ToolbarAction}" Style="{StaticResource MainToolbarButtonStyle}">
+                                    <Button.Content>
+                                        <materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
 
-                <ItemsControl x:Name="ToolbarItemsControl">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
+                    <ItemsControl x:Name="ToolbarItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
 
-                            <StackPanel
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Bottom"
-                                Orientation="Vertical" />
+                                <StackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Orientation="Vertical" />
 
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
 
-            </Grid>
+                </Grid>
+            </materialDesign:Card>
 
             <rxui:RoutedViewHost
                 x:Name="RoutedViewHost"
                 HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Stretch"
                 DockPanel.Dock="Right" />
-
-
-            <!--
-                Visibility="Collapsed"
-                
-                VerticalAlignment="Bottom"
-                HorizontalContentAlignment="Stretch"
-            -->
-            <!--  MessageQueue="{Binding MessageQueue}"  -->
-
 
         </DockPanel>
         <materialDesign:Snackbar

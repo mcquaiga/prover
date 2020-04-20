@@ -38,66 +38,76 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel
+                        Grid.Row="1"
                         Grid.Column="0"
-                        Margin="20,5"
-                        HorizontalAlignment="Stretch"
+                        Margin="20,4"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Center">
                         <TextBlock x:Name="TotalTestsTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
 
                         <!--<TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Total tests" />-->
 
                     </StackPanel>
+
                     <TextBlock
                         x:Name="TitleTextBlock"
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Grid.Column="0"
                         Margin="4,2"
                         Style="{StaticResource TitleTextBlockStyle}"
                         Text="Today" />
-                    <StackPanel
-                        Grid.Row="0"
+                    <Border
+                        Grid.Row="1"
                         Grid.Column="1"
-                        Margin="8,0"
+                        Margin="0,5"
+                        Padding="2"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
-                        Orientation="Vertical">
+                        BorderThickness="1,0,0,0"
+                        Style="{StaticResource SubSectionDividerBorder}">
+
                         <StackPanel
-                            HorizontalAlignment="Right"
+                            Margin="15,0,0,0"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                            <TextBlock
-                                x:Name="PassCountTextBlock"
-                                Margin="4,0"
-                                VerticalAlignment="Center"
-                                FontSize="28"
-                                Style="{StaticResource ValueTextBlockStyle}" />
-                            <materialDesign:PackIcon
+                            Orientation="Vertical">
+                            <StackPanel
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                HorizontalContentAlignment="Right"
-                                Foreground="{StaticResource PassColour}"
-                                Kind="Circle" />
-                        </StackPanel>
-                        <StackPanel
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                            <TextBlock
-                                x:Name="FailCountTextBlock"
-                                Margin="4,0"
-                                VerticalAlignment="Center"
-                                FontSize="28"
-                                Style="{StaticResource ValueTextBlockStyle}" />
-                            <materialDesign:PackIcon
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    x:Name="PassCountTextBlock"
+                                    Margin="4,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="28"
+                                    Style="{StaticResource ValueTextBlockStyle}" />
+                                <materialDesign:PackIcon
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Right"
+                                    Foreground="{StaticResource PassColour}"
+                                    Kind="Circle" />
+                            </StackPanel>
+                            <StackPanel
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                HorizontalContentAlignment="Right"
-                                Foreground="{StaticResource FailColour}"
-                                Kind="Circle" />
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    x:Name="FailCountTextBlock"
+                                    Margin="4,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="28"
+                                    Style="{StaticResource ValueTextBlockStyle}" />
+                                <materialDesign:PackIcon
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Right"
+                                    Foreground="{StaticResource FailColour}"
+                                    Kind="Circle" />
+                            </StackPanel>
+
                         </StackPanel>
-
-                    </StackPanel>
-
+                    </Border>
 
                     <!--<TextBlock
                         Grid.Row="0"

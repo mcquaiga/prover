@@ -36,5 +36,8 @@ namespace Prover.Application.Interactions
     public static class NotificationInteractions
     {
         public static Interaction<string, Unit> SnackBarMessage { get; } = new Interaction<string, Unit>();
+        
+        public static Interaction<string, Unit> ActionMessage { get; } = new Interaction<string, Unit>();
+
     }
 }

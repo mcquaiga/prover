@@ -27,14 +27,15 @@
     </UserControl.Resources>
     <Grid>
         <materialDesign:DrawerHost>
-            <materialDesign:DrawerHost.LeftDrawerContent>
+            <!--<materialDesign:DrawerHost.LeftDrawerContent>
                 <StackPanel MinWidth="300" VerticalAlignment="Stretch">
-                    <!--<Button
+
+            <Button
                         Margin="8"
                         HorizontalAlignment="Right"
                         Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
                         CommandParameter="{x:Static Dock.Left}"
-                        Style="{DynamicResource MaterialDesignFlatButton}" />-->
+                        Style="{DynamicResource MaterialDesignFlatButton}" />
 
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
@@ -43,7 +44,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <!--<StackPanel Grid.Row="0" Margin="8">
+                       <StackPanel Grid.Row="0" Margin="8">
                             <TextBlock Text="Export Tests by Job #" />
                             <ComboBox
                                 x:Name="JobIdsComboBox"
@@ -80,13 +81,13 @@
                         <reactiveUi:ViewModelViewHost
                             x:Name="TestsByJobNumberContentControl"
                             Grid.Row="2"
-                            Margin="8" />-->
+                            Margin="8" />
 
 
                     </Grid>
 
                 </StackPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>
+            </materialDesign:DrawerHost.LeftDrawerContent>-->
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
@@ -114,8 +115,9 @@
                     <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
                     <Viewbox
                         Grid.Column="1"
-                        Margin="5,5"
-                        HorizontalAlignment="Left">
+                        Margin="0,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom">
                         <Viewbox.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
                                 <Setter Property="Margin" Value="2,0" />
@@ -126,16 +128,15 @@
 
                         <ItemsControl
                             x:Name="DeviceTypes"
-                            Grid.Row="1"
                             d:DataContext="{d:DesignInstance interfaces:DeviceType,
                                                              IsDesignTimeCreatable=False}"
                             DataContext="{Binding}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid
+                                    <StackPanel
                                         Margin="15,0"
-                                        VerticalAlignment="Center"
-                                        Rows="1" />
+                                        VerticalAlignment="Bottom"
+                                        Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -169,10 +170,13 @@
 
                                 </Style>
                             </TextBlock.Resources>
-                            <TextBlock Text="Selected " />
-                            <TextBlock x:Name="SelectedCountTextBlock" />
-                            <TextBlock Text=" of " />
-                            <TextBlock x:Name="TestCountTextBlock" />
+                            <StackPanel>
+                                <TextBlock x:Name="TestCountTextBlock" />
+                                <TextBlock Text="Displayed tests" />
+                            </StackPanel>
+
+
+
                         </TextBlock>
 
 

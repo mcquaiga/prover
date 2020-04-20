@@ -86,13 +86,58 @@
 
     <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <!--<RowDefinition Height="Auto" />-->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <!--<ColumnDefinition Width="Auto" />-->
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <materialDesign:Snackbar
+            x:Name="ActionSnackbar"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            d:LayoutOverrides="Width">
+            <materialDesign:Snackbar.Resources>
+                <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="materialDesign:SnackbarMessage">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="materialDesign:SnackbarMessage">
+                                <Grid>
+                                    <ContentPresenter
+                                        MaxHeight="60"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Content="{TemplateBinding Content}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                                    <!--  Needed by the template, wont use it though  -->
+                                    <Button
+                                        x:Name="PART_YesActionButton"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Content="Yes" />
+
+                                    <Button
+                                        x:Name="PART_NoActionButton"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Content="No" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Background" Value="White" />
+                </Style>
+            </materialDesign:Snackbar.Resources>
+            <materialDesign:SnackbarMessage
+                x:Name="ActionSnackbarMessage"
+                HorizontalAlignment="Stretch"
+                ActionContent="SUBMIT" />
+
+        </materialDesign:Snackbar>
         <!--<ContentControl
             x:Name="TestToolBarContent"
             Grid.Row="0"
@@ -105,8 +150,6 @@
         <reactiveUi:ViewModelViewHost
             x:Name="TestViewContent"
             Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             HorizontalContentAlignment="Center"

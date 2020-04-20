@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
@@ -21,8 +22,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
                 this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.VerificationsGrid.ToolbarViewModel).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.SelectedItems.Count, v => v.SelectedCountTextBlock.Text)
-                    .DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.SelectedItems.Count, v => v.SelectedCountTextBlock.Text).DisposeWith(d);
+
                 this.OneWayBind(ViewModel, vm => vm.Data.Count, v => v.TestCountTextBlock.Text,
                     value => value == 1 ? $"{value} test" : $"{value} tests").DisposeWith(d);
                 
@@ -36,14 +37,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeExported, v => v.IncludeExportedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeArchived, v => v.IncludeArchivedCheckBox).DisposeWith(d);
 
-                this.WhenAnyValue(x => x.ViewModel.FilterIncludeExported)
-                    .SelectMany(x => x.Execute(false))
-                    .Subscribe();
+                //this.WhenAnyValue(x => x.ViewModel.FilterIncludeExported)
+                //    .SelectMany(x => x.Execute(false))
+                //    .Subscribe().DisposeWith(d);
 
-                this.WhenAnyValue(x => x.ViewModel.FilterIncludeArchived)
-                    .SelectMany(x => x.Execute(false))
-                    .Subscribe();
-                
+                //this.WhenAnyValue(x => x.ViewModel.FilterIncludeArchived)
+                //    .SelectMany(x => x.Execute(false))
+                //    .Subscribe().DisposeWith(d);
+
+                this.CleanUpDefaults().DisposeWith(d);
+
             });
         }
     }

@@ -65,7 +65,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
                 .Where(v => v)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(async x => await NotificationInteractions.SnackBarMessage.Handle("Verification Complete"))
+                .Do(async x => await NotificationInteractions.ActionMessage.Handle("Submit verified test?"))
                 .Subscribe()
                 .DisposeWith(Cleanup);
 

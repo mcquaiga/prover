@@ -16,15 +16,19 @@ namespace Prover.Application.ViewModels
         
         public void Dispose()
         {
-            Logger.LogTrace($"Disposing - {this}");
-            Disposing();
-            Cleanup.Dispose();
+            Dispose(true);
+            
+            GC.SuppressFinalize(this);
         }
 
-        protected virtual void Disposing()
+        protected virtual void Dispose(bool isDisposing)
         {
+            if (isDisposing)
+            {
+                Logger.LogTrace($"Disposing - {this}");
+                Cleanup.Dispose();
+            }
         }
-
     }
 
     public abstract class ViewModelWithIdBase : ViewModelBase

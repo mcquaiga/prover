@@ -52,6 +52,15 @@
                 NotNullValue="Hidden"
                 NullValue="Visible" />
 
+            <converters:NullToBoolConverter
+                x:Key="IfNullTrueConverter"
+                NotNullValue="False"
+                NullValue="True" />
+            <converters:NullToBoolConverter
+                x:Key="IfNotNullTrueConverter"
+                NotNullValue="True"
+                NullValue="False" />
+
             <SolidColorBrush
                 x:Key="PrimaryTextColor"
                 Opacity=".95"

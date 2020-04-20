@@ -34,8 +34,11 @@
                 Rows="1">
 
                 <StackPanel Orientation="Horizontal">
-                    <StackPanel Margin="20,5" HorizontalAlignment="Center">
-                        <TextBlock x:Name="TotalTestsTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
+                    <StackPanel Margin="20,5" HorizontalAlignment="Stretch">
+                        <TextBlock
+                            x:Name="TotalTestsTextBlock"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource SummaryValueTextBlockStyle}" />
 
                         <TextBlock Style="{StaticResource SummaryLabelTextBlockStyle}" Text="Total tests" />
 
@@ -113,7 +116,7 @@
                 </StackPanel>
 
                 <StackPanel Margin="20,5" HorizontalAlignment="Center">
-                    <TextBlock>
+                    <TextBlock HorizontalAlignment="Right">
 
                         <TextBlock x:Name="PassPercentageTextBlock" Style="{StaticResource SummaryValueTextBlockStyle}" />
                         <TextBlock

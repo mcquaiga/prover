@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Data;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
@@ -6,7 +8,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
     /// <summary>
     /// Interaction logic for VerificationsGrid.xaml
     /// </summary>
-    public partial class VerificationsGrid
+    public partial class VerificationsGrid : IDisposable
     {
         public VerificationsGrid()
         {
@@ -28,6 +30,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             get { return (ExportToolbarViewModel) GetValue(ToolbarViewModelProperty); }
             set { SetValue(ToolbarViewModelProperty, value); }
-        }   
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            BindingOperations.ClearAllBindings(this);
+        }
     }
 }

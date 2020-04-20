@@ -59,7 +59,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
         }
         //public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
 
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
             _logger.LogDebug("Disposing instance.");
             DeviceManager.EndSession();

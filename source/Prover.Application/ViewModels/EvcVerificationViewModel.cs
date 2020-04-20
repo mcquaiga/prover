@@ -58,7 +58,7 @@ namespace Prover.Application.ViewModels
             RegisterVerificationsForVerified(VerificationTests);
         }
 
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();

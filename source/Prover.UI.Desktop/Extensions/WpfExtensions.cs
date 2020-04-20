@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.Extensions.Logging;
 using Prover.Application;
@@ -19,15 +20,15 @@ namespace Prover.UI.Desktop.Extensions
         //}
         private static readonly ILogger _logger = ProverLogging.CreateLogger(typeof(WpfExtensions));
 
-        public static IDisposable CleanupChildren<T>(this IViewFor parentView, ILogger logger = null)
+        public static IDisposable CleanupChildren<T>(this DependencyObject parentView, ILogger logger = null)
             where T : DependencyObject
         {
             logger ??= _logger;
 
-            if (parentView is DependencyObject parent)
+            if (parentView != null)
                 return Disposable.Create(() =>
                 {
-                    var children = parent.FindAllChilds<T>();
+                    var children = parentView.FindAllChilds<T>();
                     foreach (var child in children.Reverse())
                     {
                         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -39,14 +40,18 @@ namespace Prover.UI.Desktop.Extensions
                     }
 
                     children.ForEach(c => c = null);
+                    BindingOperations.ClearAllBindings(parentView);
+                    GC.SuppressFinalize(parentView);
                 });
+
             logger.LogTrace($"{parentView} is not a {nameof(DependencyObject)}");
             return Disposable.Empty;
         }
 
-        public static IDisposable CleanUpDefaults(this IViewFor view, ILogger logger = null)
+        public static IDisposable CleanUpDefaults(this DependencyObject view, ILogger logger = null)
         {
             logger ??= _logger;
+            
             return new CompositeDisposable(
                 LogDisposable($"Disposed IViewFor - {view.GetType().Name}", logger),
                 view.CleanupChildren<ViewModelViewHost>()

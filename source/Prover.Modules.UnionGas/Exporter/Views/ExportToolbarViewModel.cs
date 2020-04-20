@@ -29,11 +29,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         )
         {
             _loginService = loginService;
-        
-            //var selectedSubject = new Subject<EvcVerificationTest>();
-            //SelectedItem = selectedSubject;
-            //SetSelectedItem = ReactiveCommand.Create<EvcVerificationTest>(selectedSubject.OnNext);
-            
+
             SetCanExecutes(this.WhenAnyValue(x => x.Selected).Where(s => s != null));
             
             this.WhenAnyValue(x => x.Selected)

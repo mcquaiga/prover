@@ -61,9 +61,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     .DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.AddJobId, v => v.EditJobIdButton)
                     .DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.ExporterViewModel.PrintReport, v => v.PrintTestReportButton,
-                        vm => vm.Test)
-                    .DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.ExporterViewModel.PrintReport, v => v.PrintTestReportButton,
+                //        vm => vm.Test)
+                //    .DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.ArchiveVerification, v => v.ArchiveTestButton)
                     .DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.ExportVerification, v => v.ExportTestButton)

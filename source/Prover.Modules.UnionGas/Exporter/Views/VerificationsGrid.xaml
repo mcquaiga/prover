@@ -66,6 +66,119 @@
                 <Setter Property="FontSize" Value="18" />
             </Style>
 
+            <Style
+                x:Key="DataGridRowStyle"
+                BasedOn="{StaticResource MaterialDesignDataGridRow}"
+                TargetType="{x:Type DataGridRow}">
+
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="FontSize" Value="20" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Cursor" Value="Hand" />
+                    </Trigger>
+                    <!--<Trigger Property="IsSelected" Value="True">
+                            <Setter Property="DetailsVisibility" Value="Visible" />
+                        </Trigger>-->
+                </Style.Triggers>
+
+            </Style>
+            <DataTemplate x:Key="ActionMenuItemsPopupBox" DataType="{x:Type local:ExportToolbarViewModel}">
+                <materialDesign:PopupBox x:Name="RowPopupBox" DataContext="{Binding ToolbarViewModel, ElementName=VerificationsGridControl}">
+                    <!--<materialDesign:PopupBox.Style>
+                    -->
+                    <!--<Style TargetType="materialDesign:PopupBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Selected, Converter={StaticResource IfNotNullTrueConverter}}" Value="True">
+                                    <Setter Property="IsPopupOpen" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    -->
+                    <!--
+                        ToggleCheckedContentCommand="{Binding SetSelectedItem, Mode=OneWay}"
+                        ToggleCheckedContentCommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                    -->
+                    <!--
+                    </materialDesign:PopupBox.Style>-->
+                    <StackPanel
+                        x:Name="ActionButtonsSection"
+                        Margin="5"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="PrintTestReportButton"
+                            Command="{Binding PrintReport}"
+                            CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                            Style="{StaticResource FloatingActionButtonStyle}"
+                            ToolTip="View QA Test Report">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="FileFind" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                <TextBlock>View Test</TextBlock>
+                            </StackPanel>
+
+                        </Button>
+
+                        <Button
+                            x:Name="EditJobIdButton"
+                            Command="{Binding AddJobId}"
+                            CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                            Style="{StaticResource FloatingActionButtonStyle}"
+                            ToolTip="Edit Job #">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="PencilAdd" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                <TextBlock>Add to job</TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                        <Button
+                            x:Name="AddUserToTestButton"
+                            Command="{Binding AddSignedOnUser}"
+                            CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                            Style="{StaticResource FloatingActionButtonStyle}"
+                            ToolTip="Add currently signed on user">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                <TextBlock>Add user</TextBlock>
+                            </StackPanel>
+
+                        </Button>
+
+                        <Button
+                            x:Name="ExportTestButton"
+                            Command="{Binding ExportVerification}"
+                            CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                            Style="{StaticResource FloatingActionButtonStyle}"
+                            ToolTip="Export">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                <TextBlock>Export</TextBlock>
+                            </StackPanel>
+
+                        </Button>
+
+                        <Button
+                            x:Name="ArchiveTestButton"
+                            Command="{Binding ArchiveVerification}"
+                            CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                            Style="{StaticResource FloatingActionButtonStyle}"
+                            ToolTip="Archive Test">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+                                <TextBlock>Archive</TextBlock>
+                            </StackPanel>
+
+                        </Button>
+                    </StackPanel>
+
+                </materialDesign:PopupBox>
+
+            </DataTemplate>
             <ControlTemplate x:Key="ActionItemPackIconControl" TargetType="materialDesign:PackIcon">
                 <materialDesign:PackIcon Kind="{TemplateBinding Kind}" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
             </ControlTemplate>
@@ -101,161 +214,19 @@
             EnableRowVirtualization="True"
             IsReadOnly="True"
             ItemsSource="{Binding}"
+            RowStyle="{StaticResource DataGridRowStyle}"
             SelectedItem="{Binding ToolbarViewModel.Selected, ElementName=VerificationsGridControl, Mode=TwoWay}"
             SelectionMode="Single">
-            <!--<DataGrid.>
-            -->
-            <!--<Style
-                    x:Name="DataGridColumnHeadersStyle"
-                    BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}"
-                    TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Margin" Value="8,2" />
-                    <Setter Property="Width" Value="Auto" />
-                    <Setter Property="Height" Value="Auto" />
-                    <Setter Property="FontSize" Value="18" />
-                </Style>-->
-            <!--
-            </DataGrid.>-->
-            <DataGrid.RowStyle>
-                <Style
-                    x:Name="DataGridRowStyle"
-                    BasedOn="{StaticResource MaterialDesignDataGridRow}"
-                    TargetType="{x:Type DataGridRow}">
-
-                    <Setter Property="HorizontalAlignment" Value="Center" />
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="VerticalAlignment" Value="Top" />
-                    <Setter Property="VerticalContentAlignment" Value="Top" />
-                    <Setter Property="Height" Value="Auto" />
-                    <Setter Property="FontSize" Value="20" />
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Cursor" Value="Hand" />
-                        </Trigger>
-                        <!--<Trigger Property="IsSelected" Value="True">
-                            <Setter Property="DetailsVisibility" Value="Visible" />
-                        </Trigger>-->
-                    </Style.Triggers>
-
-                </Style>
-            </DataGrid.RowStyle>
-
 
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate DataType="{x:Type local:ExportToolbarViewModel}">
-                            <materialDesign:PopupBox x:Name="RowPopupBox" DataContext="{Binding ToolbarViewModel, ElementName=VerificationsGridControl}">
-                                <materialDesign:PopupBox.Style>
-                                    <Style TargetType="materialDesign:PopupBox">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                <Setter Property="IsPopupOpen" Value="True" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                    <!--
-                                        ToggleCheckedContentCommand="{Binding SetSelectedItem, Mode=OneWay}"
-                                        ToggleCheckedContentCommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                    -->
-                                </materialDesign:PopupBox.Style>
-                                <StackPanel
-                                    x:Name="ActionButtonsSection"
-                                    Margin="5"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-                                    <Button
-                                        x:Name="PrintTestReportButton"
-                                        Command="{Binding PrintReport}"
-                                        CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                        Style="{StaticResource FloatingActionButtonStyle}"
-                                        ToolTip="View QA Test Report">
-                                        <StackPanel>
-                                            <materialDesign:PackIcon Kind="FileFind" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-                                            <TextBlock>View Test</TextBlock>
-                                        </StackPanel>
-
-                                    </Button>
-
-                                    <Button
-                                        x:Name="EditJobIdButton"
-                                        Command="{Binding AddJobId}"
-                                        CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                        Style="{StaticResource FloatingActionButtonStyle}"
-                                        ToolTip="Edit Job #">
-                                        <StackPanel>
-                                            <materialDesign:PackIcon Kind="PencilAdd" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-                                            <TextBlock>Add to job</TextBlock>
-                                        </StackPanel>
-                                    </Button>
-
-                                    <Button
-                                        x:Name="AddUserToTestButton"
-                                        Command="{Binding AddSignedOnUser}"
-                                        CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                        Style="{StaticResource FloatingActionButtonStyle}"
-                                        ToolTip="Add currently signed on user">
-                                        <StackPanel>
-                                            <materialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-                                            <TextBlock>Add user</TextBlock>
-                                        </StackPanel>
-
-                                    </Button>
-
-                                    <Button
-                                        x:Name="ExportTestButton"
-                                        Command="{Binding ExportVerification}"
-                                        CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                        Style="{StaticResource FloatingActionButtonStyle}"
-                                        ToolTip="Export">
-                                        <StackPanel>
-                                            <materialDesign:PackIcon Kind="Export" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-                                            <TextBlock>Export</TextBlock>
-                                        </StackPanel>
-
-                                    </Button>
-
-                                    <Button
-                                        x:Name="ArchiveTestButton"
-                                        Command="{Binding ArchiveVerification}"
-                                        CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                        Style="{StaticResource FloatingActionButtonStyle}"
-                                        ToolTip="Archive Test">
-                                        <StackPanel>
-                                            <materialDesign:PackIcon Kind="Archive" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
-                                            <TextBlock>Archive</TextBlock>
-                                        </StackPanel>
-
-                                    </Button>
-
-
-
-
-                                </StackPanel>
-
-                            </materialDesign:PopupBox>
-
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
-                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="50" CellTemplate="{StaticResource ActionMenuItemsPopupBox}" />
 
                 <DataGridTemplateColumn
                     Width="80"
                     CanUserResize="False"
                     Header="-"
+                    HeaderStyle="{StaticResource CenteredGridCellStyle}"
                     SortMemberPath="Verified">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeadersStyle}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="Width" Value="Auto" />
-                            <!--<Setter Property="Height" Value="50" />-->
-
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-
-                        </Style>
-
-                    </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <materialDesign:PackIcon x:Name="VerifiedStatusIcon" Style="{StaticResource PassFailIcon}" />
@@ -271,9 +242,9 @@
                         <DataTemplate>
 
                             <StackPanel
-                                Margin="4"
+                                Margin="4,0"
                                 HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
+                                VerticalAlignment="Center"
                                 Orientation="Vertical">
                                 <TextBlock
                                     x:Name="DeviceTypeTextBlock"
@@ -281,10 +252,10 @@
                                     VerticalAlignment="Top"
                                     FontSize="24"
                                     Text="{Binding Device.DeviceType.Name, Mode=OneTime}" />
-                                <TextBlock
+                                <!--<TextBlock
                                     x:Name="CompositionTypeTextBlock"
                                     HorizontalAlignment="Left"
-                                    Text="{Binding Device.Items.SiteInfo.CompositionType, Mode=OneTime}" />
+                                    Text="{Binding Device.Items.SiteInfo.CompositionType, Mode=OneTime}" />-->
 
 
                                 <TextBlock

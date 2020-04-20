@@ -30,4 +30,30 @@ namespace Prover.UI.Desktop.Converters
             throw new NotImplementedException();
         }
     }
+
+    [ValueConversion(typeof(object), typeof(bool))]
+    public sealed class NullToBoolConverter : IValueConverter
+    {
+        public NullToBoolConverter()
+        {
+            NullValue = false;
+            NotNullValue = true;
+        }
+
+        public bool NullValue { get; set; }
+        public bool NotNullValue { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string)
+                value = string.IsNullOrEmpty((string) value) ? null : value;
+
+            return value == null ? NullValue : NotNullValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
