@@ -3,6 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:evcVerifications="clr-namespace:Prover.Application.Models.EvcVerifications;assembly=Prover.Application"
+    xmlns:gui="clr-namespace:Prover.UI.Desktop;assembly=Prover.UI.Desktop"
     xmlns:interfaces="clr-namespace:Devices.Core.Interfaces;assembly=Devices.Core"
     xmlns:local="clr-namespace:Prover.Modules.UnionGas.Exporter.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -18,7 +20,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Client.Desktop.Wpf;component/Styles/Resources.xaml" />
+                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -54,9 +57,9 @@
                                 CommandParameter="{Binding Path=SelectedItem, ElementName=JobIdsComboBox}"
                                 Content="Export"
                                 Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>-->
+                        </StackPanel>
 
-                        <!--<StackPanel
+                        <StackPanel
                             Grid.Row="1"
                             Margin="8"
                             Orientation="Vertical">
@@ -72,9 +75,9 @@
                                 Command="{Binding ExportFailedTestCommand}"
                                 Content="Export"
                                 Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>-->
+                        </StackPanel>
 
-                        <!--<reactiveUi:ViewModelViewHost
+                        <reactiveUi:ViewModelViewHost
                             x:Name="TestsByJobNumberContentControl"
                             Grid.Row="2"
                             Margin="8" />-->
@@ -85,9 +88,9 @@
                 </StackPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <Grid VerticalAlignment="Stretch">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60" />
+                    <RowDefinition Height="55" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -95,8 +98,8 @@
                 <Grid Grid.Row="0" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
+                        <!--<ColumnDefinition Width="*" />-->
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
@@ -111,8 +114,8 @@
                     <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
                     <Viewbox
                         Grid.Column="1"
-                        Margin="0,2"
-                        HorizontalAlignment="Left">
+                        Margin="5,5"
+                        HorizontalAlignment="Stretch">
                         <Viewbox.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
                                 <Setter Property="Margin" Value="2,0" />
@@ -120,6 +123,7 @@
                                 <Setter Property="Height" Value="Auto" />
                             </Style>
                         </Viewbox.Resources>
+
                         <ItemsControl
                             x:Name="DeviceTypes"
                             Grid.Row="1"
@@ -128,38 +132,31 @@
                             DataContext="{Binding}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel
+                                    <UniformGrid
                                         Margin="15,0"
                                         VerticalAlignment="Center"
-                                        Orientation="Horizontal" />
+                                        Rows="1" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button
+                                    <RadioButton
                                         Margin="4,0"
                                         Command="{Binding ViewModel.FilterByTypeCommand, ElementName=ExporterViewControl}"
                                         CommandParameter="{Binding}"
                                         Content="{Binding Name}"
-                                        FontSize="16" />
+                                        FontSize="16"
+                                        GroupName="DeviceTypes"
+                                        Style="{StaticResource MaterialDesignTabRadioButton}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
                     </Viewbox>
 
-                    <Viewbox Grid.Column="2">
-
-                        <reactiveUi:ViewModelViewHost
-                            x:Name="ToolbarViewHost"
-                            Grid.Column="2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Center" />
-                    </Viewbox>
 
                     <StackPanel
-                        Grid.Column="3"
+                        Grid.Column="2"
                         Margin="0"
                         Orientation="Horizontal">
 
@@ -219,18 +216,17 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     HorizontalContentAlignment="Stretch">
+
+
                     <!--<local:VerificationsGrid.PrintDataTemplate>
-                        <DataTemplate>
+                        <DataTemplate> ToolbarViewModel="{Binding ToolbarViewModel}"
                             <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="View QA Test Report">
                                 <materialDesign:PackIcon Kind="Printer" Style="{StaticResource MaterialDesignFloatingActionButton}" />
                             </Button>
                         </DataTemplate>
                     </local:VerificationsGrid.PrintDataTemplate>-->
+
                 </local:VerificationsGrid>
-                <!--
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                -->
 
             </Grid>
 

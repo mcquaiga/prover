@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reactive;
-using System.Runtime.CompilerServices;
+﻿using System.Reactive;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Services.LiveReadCorrections;

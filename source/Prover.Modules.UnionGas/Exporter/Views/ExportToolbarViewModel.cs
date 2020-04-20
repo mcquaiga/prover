@@ -7,26 +7,28 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Binding;
+using MaterialDesignThemes.Wpf;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Domain.EvcVerifications;
-using Prover.Modules.UnionGas.DcrWebService;
-using Prover.Modules.UnionGas.VerificationEvents;
+using Prover.Modules.UnionGas.Models;
+using Prover.Modules.UnionGas.Verifications;
 using Prover.Shared.Interfaces;
+using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class ExportToolbarViewModel : ViewModelBase
+    public class ExportToolbarViewModel : ViewModelWpfBase, IHaveToolbarItems
     {
-        private readonly ILoginService<EmployeeDTO> _loginService;
+        private readonly ILoginService<Employee> _loginService;
 
         public ExportToolbarViewModel(
             IScreenManager screenManager,
             IVerificationTestService verificationTestService,
-            ILoginService<EmployeeDTO> loginService,
+            ILoginService<Employee> loginService,
             IExportVerificationTest exporter,
             MeterInventoryNumberValidator inventoryNumberValidator,
             ReadOnlyObservableCollection<EvcVerificationTest> selectedObservable = null)
@@ -38,19 +40,23 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             AddSignedOnUser = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                     {
+                        tests = SelectedObservable;
                         return Observable.Create<EvcVerificationTest>(async obs =>
                         {
-                            tests.ForEach(t => t.EmployeeId = _loginService.User?.Id);
+                            tests.ForEach(t => t.EmployeeId = _loginService.User?.UserId);
                             tests.ForEach(t => verificationTestService.AddOrUpdate(t));
                             tests.ForEach(obs.OnNext);
                         });
                     },
                     CanAddUser,
                     RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+            AddToolbarItem(AddSignedOnUser, PackIconKind.UserAdd);
+
 
             AddJobId = ReactiveCommand.CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(
                 tests =>
                 {
+                    tests = SelectedObservable;
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
                         var updatedTests = new List<EvcVerificationTest>();
@@ -69,11 +75,13 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                             obs.OnNext(await verificationTestService.AddOrUpdate(t)));
                     });
                 }, CanAddJobId).DisposeWith(Cleanup);
+            AddToolbarItem(AddJobId, PackIconKind.Add);
 
             //_canExportTest = this.
             ExportVerification = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                 {
+                    tests = SelectedObservable;
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
                         foreach (var evcVerificationTest in tests)
@@ -83,10 +91,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                         }
                     });
                 }, CanExport).DisposeWith(Cleanup);
+            AddToolbarItem(ExportVerification, PackIconKind.Export);
 
             ArchiveVerification = ReactiveCommand
                 .CreateFromObservable<ICollection<EvcVerificationTest>, EvcVerificationTest>(tests =>
                 {
+                    tests = SelectedObservable;
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
                         if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))
@@ -98,10 +108,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                             }
                     });
                 }, CanArchive).DisposeWith(Cleanup);
-
+            AddToolbarItem(ArchiveVerification, PackIconKind.Archive);
             Updates = this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification,
                 x => x.ExportVerification);
 
+            
             //PrintReport = ReactiveCommand.CreateFromTask<ICollection<EvcVerificationTest>>(async tests =>
             //{
             //    var test = tests.FirstOrDefault();

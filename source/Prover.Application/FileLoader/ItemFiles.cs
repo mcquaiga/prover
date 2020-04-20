@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Repository;
 using Newtonsoft.Json;
 
 namespace Prover.Application.FileLoader
@@ -37,6 +35,9 @@ namespace Prover.Application.FileLoader
             public ICollection<Dictionary<string, string>> PressureTests { get; set; }
             public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
         }
+
+    
+
         //internal class ItemFileConverter : JsonConverter
         //{
         //    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

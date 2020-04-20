@@ -11,7 +11,7 @@ using Devices.Communications.Status;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using Prover.Shared.IO;
+using Prover.Shared.Interfaces;
 
 namespace Devices.Communications
 {

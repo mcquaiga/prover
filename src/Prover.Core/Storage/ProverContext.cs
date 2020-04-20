@@ -21,8 +21,8 @@ namespace Prover.Core.Storage
     {
         private Logger _log = LogManager.GetCurrentClassLogger();
 
-        public ProverContext()
-            : base(@"name=ConnectionString")
+        public ProverContext(string connectionString = null)
+            : base(connectionString ?? @"name=ConnectionString")
         {
             this.Configuration.LazyLoadingEnabled = false;
 

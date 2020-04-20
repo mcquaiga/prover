@@ -6,8 +6,8 @@ namespace Prover.Shared.Interfaces
 {
     public interface IUser
     {
-        string Id { get; set; }
-        string EmployeeName { get; set; }
+        string UserId { get; set; }
+        string UserName { get; set; }
     }
 
     public interface ILoginService

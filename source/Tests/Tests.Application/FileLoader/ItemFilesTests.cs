@@ -1,21 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Newtonsoft.Json;
 using Prover.Application.FileLoader;
 using Prover.Application.Interfaces;
 using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.Verifications;
-using Prover.Application.ViewModels.Corrections;
-using Prover.Domain.EvcVerifications;
-using Prover.Domain.EvcVerifications.Verifications.CorrectionFactors;
 using Tests.Application.Services;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Tests.Application.FileLoader
 {
@@ -23,6 +20,7 @@ namespace Tests.Application.FileLoader
     public class ItemFilesTests
     {
         private string _filePath = ".\\MiniMax.json";
+        private string _templatefilePath = ".\\Template.json";
         private ItemAndTestFile _itemFile;
         private Mock<IDeviceSessionManager> _deviceManagerMock = new Mock<IDeviceSessionManager>();
         private Mock<LiveReadCoordinator> _liveReadMock = new Mock<LiveReadCoordinator>();
@@ -40,6 +38,16 @@ namespace Tests.Application.FileLoader
             
             Assert.IsTrue(items != null);
         }  
+
+        [TestMethod()]
+        public async Task LoadFromTemplate()
+        {
+            var loader = new ItemLoader(StorageTestsInitialize.DeviceRepo, StorageTestsInitialize.ViewModelService);
+            
+            var test = await loader.LoadTemplate(_templatefilePath);
+            
+            Assert.IsTrue(test != null);
+        }  
         
         [TestMethod()]
         public async Task FileCommunicationClientInstanceTest()
@@ -53,15 +61,15 @@ namespace Tests.Application.FileLoader
             var test = tests.First();
 
             var deviceRepo = StorageTestsInitialize.DeviceRepo;
-            //var serializeOptions = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true};
-            //serializeOptions.Converters.Add(new DeviceInstanceJsonConverter(StorageTestsInitialize.DeviceRepo));
+            var serializeOptions = new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+            
 
-            var json = JsonSerializer.Serialize(test.Device);
+            var json = JsonConvert.SerializeObject(test.Device, serializeOptions);
 
-            var instance = JsonSerializer.Deserialize<DeviceInstance>(json);
+            //var instance = JsonConvert.DeserializeObject<DeviceInstance>(json);
 
 
-            Assert.IsTrue(instance != null);
+            //Assert.IsTrue(instance != null);
             
             Assert.IsTrue(json != null);
         }

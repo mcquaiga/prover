@@ -1,19 +1,19 @@
 ﻿namespace Prover.GUI.Screens.Modules.QAProver.Screens
 {
     using Caliburn.Micro;
-    using Prover.CommProtocol.Common.IO;
-    using Prover.CommProtocol.Common.Models.Instrument;
-    using Prover.CommProtocol.MiHoneywell;
-    using Prover.Core.Models.Clients;
-    using Prover.Core.Models.Instruments;
-    using Prover.Core.Services;
+    using CommProtocol.Common.IO;
+    using CommProtocol.Common.Models.Instrument;
+    using CommProtocol.MiHoneywell;
+    using Core.Models.Clients;
+    using Core.Models.Instruments;
+    using Core.Services;
     using Prover.Core.Settings;
-    using Prover.Core.Shared.Extensions;
-    using Prover.Core.Testing;
-    using Prover.Core.VerificationTests;
-    using Prover.GUI.Reports;
-    using Prover.GUI.Screens.Dialogs;
-    using Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews;
+    using Core.Shared.Extensions;
+    using Core.Testing;
+    using Core.VerificationTests;
+    using Reports;
+    using Dialogs;
+    using PTVerificationViews;
     using ReactiveUI;
     using System;
     using System.Collections.Generic;
@@ -329,7 +329,7 @@
         /// <summary>
         /// Gets the BaudRate
         /// </summary>
-        public List<int> BaudRate => CommProtocol.Common.IO.SerialPort.BaudRates;
+        public List<int> BaudRate => SerialPort.BaudRates;
 
         /// <summary>
         /// Gets or sets the Clients

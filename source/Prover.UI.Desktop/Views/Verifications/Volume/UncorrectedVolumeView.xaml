@@ -1,0 +1,44 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Prover.UI.Desktop.Views.Verifications.Volume.UncorrectedVolumeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    xmlns:volume1="clr-namespace:Prover.Application.ViewModels.Volume;assembly=Prover.Application"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:TypeArguments="volume1:UncorrectedVolumeTestViewModel"
+    mc:Ignorable="d">
+    <StackPanel Grid.Column="2" VerticalAlignment="Top">
+        <TextBlock Style="{StaticResource SectionHeaderTextBlockStyle}" Text="Uncorrected" />
+
+        <controls:PercentageControlNew x:Name="PercentErrorControl" HorizontalAlignment="Center" />
+
+        <UniformGrid Columns="2">
+            <controls:ValueDescriptionControl
+                x:Name="StartReadingControl"
+                IsReadOnly="False"
+                Label="Start" />
+            <controls:ValueDescriptionControl
+                x:Name="EndReadingControl"
+                IsReadOnly="False"
+                Label="End" />
+
+            <controls:ValueDescriptionControl x:Name="ExpectedValueControl" Label="True" />
+            <controls:ValueDescriptionControl x:Name="ActualValueControl" Label="EVC" />
+
+            <controls:ValueDescriptionControl x:Name="PulsesExpectedControl" Label="True Pulses" />
+            <controls:ValueDescriptionControl
+                x:Name="UncorrectedPulseCountControl"
+                IsReadOnly="False"
+                Label="EVC Pulses"
+                TabIndex="1" />
+
+            <!--<controls:ValueDescriptionControl x:Name="PulsesVerifiedControl" Label="Pulses Ver'd" />-->
+
+        </UniformGrid>
+    </StackPanel>
+
+</reactiveUi:ReactiveUserControl>

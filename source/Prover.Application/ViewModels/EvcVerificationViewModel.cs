@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using Devices.Core.Interfaces;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
-using Prover.Domain.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI.Fody.Helpers;
@@ -28,7 +28,7 @@ namespace Prover.Application.ViewModels
 
         [Reactive] public IVolumeInputType DriveType { get; set; }
 
-        [Reactive] public DateTime? TestDateTime { get; set; }
+        [Reactive] public DateTime TestDateTime { get; set; }
 
         [Reactive] public DateTime? ExportedDateTime { get; set; }
 

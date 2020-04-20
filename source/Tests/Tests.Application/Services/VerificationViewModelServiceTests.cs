@@ -3,14 +3,13 @@ using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
-using Devices.Honeywell.Core.Repository.JsonRepository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.Interfaces;
-using Prover.Application.Services;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels.Factories;
-using Prover.Domain.EvcVerifications;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 using Tests.Shared;
 
 namespace Prover.Application.Services.Tests

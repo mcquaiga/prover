@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Devices.Core.Interfaces;
 using DynamicData;
@@ -15,6 +15,17 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Devices.Core.Repository
 {
+    public class AsyncLazy<T> : Lazy<Task<T>>
+    {
+        public AsyncLazy(Func<T> valueFactory) :
+                base(() => Task.Factory.StartNew(valueFactory)) { }
+
+        public AsyncLazy(Func<Task<T>> taskFactory) :
+                base(() => Task.Factory.StartNew(() => taskFactory()).Unwrap()) { }
+
+        public TaskAwaiter<T> GetAwaiter() { return Value.GetAwaiter(); }
+    }
+
     public interface IDeviceRepository
     {
         ReadOnlyObservableCollection<DeviceType> Devices { get; }
@@ -44,9 +55,12 @@ namespace Devices.Core.Repository
         private readonly CompositeDisposable _disposer;
         private readonly ILogger<DeviceRepository> _logger;
 
-        private static Lazy<IDeviceRepository> _lazy = new Lazy<IDeviceRepository>(() => Observable.StartAsync(CreateRepository)
-                                                                                                     .Wait());
-
+        private static DeviceRepository _instance;
+        
+        //private static AsyncLazy<IDeviceRepository> _lazy = new AsyncLazy<IDeviceRepository>(CreateRepository);
+        private static Lazy<Task<IDeviceRepository>> _lazy = new Lazy<Task<IDeviceRepository>>(async () => await CreateRepository());
+        //private static Lazy<Task<IDeviceRepository>> _lazy = new Lazy<Task<IDeviceRepository>>(async () => await Observable.StartAsync(CreateRepository));
+                                                                                                   
         //IEnumerable<IDeviceTypeDataSource<DeviceType>> deviceRepositories,
         public DeviceRepository(ILogger<DeviceRepository> logger = null,
             IDeviceTypeCacheSource<DeviceType> cacheRepository = null) : this()
@@ -74,12 +88,12 @@ namespace Devices.Core.Repository
 
         private static async Task<IDeviceRepository> CreateRepository()
         {
-            var repo = new DeviceRepository();
-            await repo.FindDeviceTypeDataSources();
-            return repo;
+            var instance = new DeviceRepository();
+            await instance.FindDeviceTypeDataSources();
+            return instance;
         }
 
-        public static IDeviceRepository Instance { get; } = _lazy.Value;
+        public static IDeviceRepository Instance { get; } = _lazy.Value.GetAwaiter().GetResult();
 
         public ReadOnlyObservableCollection<DeviceType> Devices { get; }
 

@@ -1,0 +1,74 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Prover.UI.Desktop.Views.Verifications.Volume.Rotary.RotaryVolumeTestView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
+    d:DesignHeight="450"
+    x:TypeArguments="rotary:RotaryVolumeViewModel"
+    mc:Ignorable="d">
+    <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+
+        <!--<StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
+        -->
+        <!--<TextBlock
+                Margin="4,8"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                RenderTransformOrigin=".5,.5"
+                Style="{StaticResource PrimaryTestHeaderStyle}"
+                Text="Volume">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="-90" />
+                </TextBlock.LayoutTransform>
+            </TextBlock>-->
+        <!--
+
+            <controls:ValueDescriptionControl
+                x:Name="AppliedInputControl"
+                VerticalAlignment="Bottom"
+                VerticalContentAlignment="Bottom"
+                IsReadOnly="False"
+                Label="Applied Input"
+                TabIndex="0" />
+
+        -->
+        <!--<controls:ValueDescriptionControl
+                x:Name="UncorrectedPulseCountControl"
+                IsReadOnly="False"
+                Label="Uncor Pulses"
+                TabIndex="1" />
+
+            <controls:ValueDescriptionControl
+                x:Name="CorrectedPulseCountControl"
+                IsReadOnly="False"
+                Label="Cor Pulses"
+                TabIndex="2" />-->
+        <!--
+        </StackPanel>-->
+
+        <!--<Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />-->
+
+        <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
+
+        <Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />
+        <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
+
+        <!--<Border
+            Margin="2,16"
+            BorderThickness="1,0,0,0"
+            Style="{StaticResource SubSectionDividerBorder}" />
+
+        <reactiveUi:ViewModelViewHost x:Name="RotaryMeterTestContent" />-->
+
+    </StackPanel>
+</reactiveUi:ReactiveUserControl>

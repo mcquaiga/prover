@@ -1,7 +1,5 @@
 ﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared;
 using ReactiveUI;
 
 namespace Prover.Application.ViewModels

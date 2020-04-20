@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Core.Items.ItemGroups;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

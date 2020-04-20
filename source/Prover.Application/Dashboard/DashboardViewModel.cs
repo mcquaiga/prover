@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Extensions;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -23,7 +23,7 @@ namespace Prover.Application.Dashboard
                 return Observable.Return(Unit.Default);
             });
 
-            ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.DateTimeFilter, outputScheduler: RxApp.MainThreadScheduler);
+            ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.BuildGlobalFilter, outputScheduler: RxApp.MainThreadScheduler);
             
             DashboardItems = dashboardFactory.CreateDashboard()
                                              .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
@@ -33,8 +33,15 @@ namespace Prover.Application.Dashboard
                                    .ToList();
 
             DateFilters = dashboardFactory.DateFilters.Keys;
+
+            RefreshData = ReactiveCommand.CreateFromObservable(() =>
+            {
+                return Observable.Return(caches.ToObservable().ForEachAsync(c => c.LoadAsync()));
+            });
         }
-        
+
+        public ReactiveCommand<Unit, Task> RefreshData { get; set; }
+
         [Reactive] public string DefaultSelectedDate { get; set; } = "7d";
 
         public ICollection<string> DateFilters { get; }

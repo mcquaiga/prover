@@ -45,7 +45,7 @@ namespace Prover.Externals.MccDaq
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="boardNumber">The boardNumber<see cref="int" /></param>
-        /// <param name="channelType">The channelType<see cref="MccDaq.DigitalPortType" /></param>
+        /// <param name="channelType">The channelType<see cref="DigitalPortType" /></param>
         /// <param name="channelNumber">The channelNumber<see cref="int" /></param>
         public  DataAcqBoardBase(ILogger logger, MccBoard board, DigitalPortType channelType,
             int channelNumber)

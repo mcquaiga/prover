@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Devices.Communications.Status;
-using Prover.Shared.IO;
 
 namespace Devices.Communications.Interfaces
 {

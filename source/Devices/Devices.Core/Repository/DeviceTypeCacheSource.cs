@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Prover.Shared.Interfaces;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Devices.Core.Repository
 {

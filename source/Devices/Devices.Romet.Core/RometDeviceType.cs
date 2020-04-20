@@ -6,7 +6,6 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups.Builders;
 using Devices.Honeywell.Core;
-using Devices.Honeywell.Core.Items.ItemGroups.Builders;
 using Devices.Romet.Core.Items.ItemGroups.Builders;
 
 namespace Devices.Romet.Core

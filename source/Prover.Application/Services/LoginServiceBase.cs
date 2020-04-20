@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 
 namespace Prover.Application.Services
 {
-    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IVerificationAction, IDisposable
+    public abstract class LoginServiceBase<TUser> : ILoginService<TUser>, IDisposable
             where TUser : IUser, new()
     {
         private readonly CompositeDisposable _cleanup;

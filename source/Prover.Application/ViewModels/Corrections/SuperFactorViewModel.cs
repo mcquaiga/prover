@@ -2,9 +2,8 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Core.GasCalculations;
 using Devices.Core.Items.ItemGroups;
-using Prover.Domain;
+using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -12,7 +11,7 @@ namespace Prover.Application.ViewModels.Corrections
 {
     public sealed class SuperFactorViewModel : CorrectionTestViewModel<SuperFactorItems>
     {
-        private const decimal Tolerance = Global.SUPER_FACTOR_TOLERANCE;
+        private const decimal Tolerance = Tolerances.SUPER_FACTOR_TOLERANCE;
 
 
         public SuperFactorViewModel(SuperFactorItems items) : base(items, Tolerance)

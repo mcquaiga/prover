@@ -5,8 +5,7 @@ using System.Reactive.Linq;
 using DynamicData;
 using DynamicData.Aggregation;
 using Prover.Application.Interfaces;
-using Prover.Domain.EvcVerifications;
-using Prover.Shared.Extensions;
+using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -19,19 +18,20 @@ namespace Prover.Application.Dashboard
         public static Func<EvcVerificationTest, bool> IsNotExported { get; } = test => test.ExportedDateTime == null;
     }
 
-    public class TestsSummaryDashboardViewModel : DashboardItemViewModel, IDashboardItem, IDisposable
+    public class SummaryDashboardViewModel : DashboardItemViewModel, IDashboardItem, IDisposable
     {
         protected string SummaryTitle = "Summary";
 
         /// <inheritdoc />
-        public TestsSummaryDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter = null)
+        public SummaryDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter = null)
             : base(groupName: "Summary", sortOrder: 0)
         {
             var cacheStream = GenerateCacheStream(entityCache, parentFilter);
-            var listStream = cacheStream.AsObservableList();
-            TestStream = cacheStream; 
+            var listStream = GenerateListStream(entityCache, parentFilter);
             var countChanged = listStream.CountChanged;
 
+            CountChangedObservable = countChanged;
+            Data = listStream;
             //var passed = cacheStream.Filter(DashboardFilters.IsVerified).AsObservableList();
             //var failed = cacheStream.Filter(DashboardFilters.IsNotVerified).AsObservableList();
             //var notExported = cacheStream.Filter(DashboardFilters.IsNotExported)
@@ -50,21 +50,22 @@ namespace Prover.Application.Dashboard
             //listStream.CountChanged.ToPropertyEx(this, x => x.TotalTests).DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.TotalPassed, x => x.TotalFailed, (p, f) => p + f)
-                .ToPropertyEx(this, x => x.TotalTests); 
+                .ToPropertyEx(this, x => x.TotalTests).DisposeWith(Cleanup); 
             
             this.WhenAnyValue(x => x.TotalTests)
                 .Where(c => c > 0)
                 .Select(total => (TotalPassed / total.ToDecimal() * 100m).ToInt32())
-                .ToPropertyEx(this, x => x.PassPercentage);
+                .ToPropertyEx(this, x => x.PassPercentage).DisposeWith(Cleanup);
 
-            cacheStream.Avg(x => x.SubmittedDateTime?.Subtract(x.TestDateTime).TotalSeconds)
+            cacheStream.Filter(t => t.SubmittedDateTime.HasValue)
+                       .Avg(x => x.SubmittedDateTime?.Subtract(x.TestDateTime).TotalSeconds)
                        .Select<double, TimeSpan?>(d => TimeSpan.FromSeconds(d))
                        .ToPropertyEx(this, x => x.AverageDuration)
                        .DisposeWith(Cleanup);
         }
 
-        [Reactive]public IObservable<IChangeSet<EvcVerificationTest>> TestStream { get; set; }
-
+        public IObservableList<EvcVerificationTest> Data { get; set; }
+        public IObservable<int> CountChangedObservable { get; }
 
         public extern int TotalTests { [ObservableAsProperty] get; }
         public extern int TotalPassed { [ObservableAsProperty] get; }

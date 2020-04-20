@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Devices.Core.Items.ItemGroups;
+using Prover.Shared;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Tests.Shared
@@ -19,12 +21,19 @@ namespace Tests.Shared
             => DeserializeItemFile("{\"8\":\"  80.134\",\"44\":\"  6.4402\",\"47\":\"  1.0076\"}");
 
         public static Dictionary<int, string> TempLowItems
-            => DeserializeItemFile("{\"26\":\" 32.44\",\"34\":\"  60.00\",\"35\":\"  0.3490\",\"45\":\"  1.0560\"}");
+            => DeserializeItemFile("{\"26\":\" 32.44\",\"35\":\"  0.3490\",\"45\":\"  1.0560\"}");
         public static Dictionary<int, string> TempMidItems
             => DeserializeItemFile("{\"26\":\"   59.65\",\"35\":\"  0.1662\",\"45\":\"  1.0007\"}");
-
         public static Dictionary<int, string> TempHighItems
             => DeserializeItemFile("{\"26\":\"   89.47\",\"35\":\" -0.4902\",\"45\":\"  0.9463\"}");
+
+        public static TemperatureItems HighTemperatureItems = new TemperatureItems()
+        {
+                Base = 60m,
+                Factor = 0.9463m,
+                GasTemperature = 89.47m,
+                Units = TemperatureUnitType.F
+        };
 
         private static Dictionary<int, string> ConvertToItemValues(Dictionary<string, string> dict)
         {
@@ -35,5 +44,7 @@ namespace Tests.Shared
         {
             return ConvertToItemValues(JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString));
         }
+
+        
     }
 }

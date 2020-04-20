@@ -5,6 +5,7 @@ using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
 using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
+using static Prover.CommProtocol.MiHoneywell.CRC.CRC;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 {
@@ -132,7 +133,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             if (!body.Contains(ControlCharacters.ETX))
                 body = string.Concat(body, ControlCharacters.ETX);
 
-            var crc = CRC.CRC.CalcCRC(body);
+            var crc = CalcCRC(body);
             return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
         }
     }

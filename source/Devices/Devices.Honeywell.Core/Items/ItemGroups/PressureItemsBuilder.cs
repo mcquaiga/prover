@@ -1,11 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
-using Devices.Core.Items.ItemGroups.Builders;
-using Prover.Shared;
-
 namespace Devices.Honeywell.Core.Items.ItemGroups
 {
     //public class PressureItemsBuilder : ItemGroupBuilderBase<PressureItems>, IBuildItemsFor<PressureItems>
