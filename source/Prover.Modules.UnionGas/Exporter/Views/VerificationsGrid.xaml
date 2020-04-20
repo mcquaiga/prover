@@ -214,6 +214,7 @@
             EnableRowVirtualization="True"
             IsReadOnly="True"
             ItemsSource="{Binding}"
+            MouseDoubleClick="VerificationsDataGrid_OnMouseDoubleClick"
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectedItem="{Binding ToolbarViewModel.Selected, ElementName=VerificationsGridControl, Mode=TwoWay}"
             SelectionMode="Single">
@@ -225,7 +226,7 @@
                     Width="80"
                     CanUserResize="False"
                     Header="-"
-                    HeaderStyle="{StaticResource CenteredGridCellStyle}"
+                    HeaderStyle="{StaticResource DataGridColumnHeadersStyle}"
                     SortMemberPath="Verified">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
@@ -36,6 +37,13 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public void Dispose()
         {
             BindingOperations.ClearAllBindings(this);
+        }
+
+        private void VerificationsDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ToolbarViewModel.PrintReport
+                            .Execute(ToolbarViewModel.Selected)
+                            .Subscribe();
         }
     }
 }

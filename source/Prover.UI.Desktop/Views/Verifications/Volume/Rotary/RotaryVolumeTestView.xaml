@@ -10,11 +10,19 @@
     d:DesignHeight="450"
     x:TypeArguments="rotary:RotaryVolumeViewModel"
     mc:Ignorable="d">
-    <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+    <StackPanel Orientation="Vertical">
+        <controls:ValueDescriptionControl
+            x:Name="AppliedInputControl"
+            VerticalAlignment="Bottom"
+            VerticalContentAlignment="Bottom"
+            IsReadOnly="False"
+            Label="Applied Input"
+            TabIndex="0" />
+        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
 
-        <!--<StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
-        -->
-        <!--<TextBlock
+            <!--<StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
+
+            <TextBlock
                 Margin="4,8"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -24,19 +32,13 @@
                 <TextBlock.LayoutTransform>
                     <RotateTransform Angle="-90" />
                 </TextBlock.LayoutTransform>
-            </TextBlock>-->
-        <!--
+            </TextBlock>
+
+
+
+
 
             <controls:ValueDescriptionControl
-                x:Name="AppliedInputControl"
-                VerticalAlignment="Bottom"
-                VerticalContentAlignment="Bottom"
-                IsReadOnly="False"
-                Label="Applied Input"
-                TabIndex="0" />
-
-        -->
-        <!--<controls:ValueDescriptionControl
                 x:Name="UncorrectedPulseCountControl"
                 IsReadOnly="False"
                 Label="Uncor Pulses"
@@ -46,29 +48,30 @@
                 x:Name="CorrectedPulseCountControl"
                 IsReadOnly="False"
                 Label="Cor Pulses"
-                TabIndex="2" />-->
-        <!--
+                TabIndex="2" />
+
         </StackPanel>-->
 
-        <!--<Border
-            Margin="2,16"
-            BorderThickness="1,0,0,0"
-            Style="{StaticResource SubSectionDividerBorder}" />-->
+            <Border
+                Margin="2,16"
+                BorderThickness="1,0,0,0"
+                Style="{StaticResource SubSectionDividerBorder}" />
 
-        <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
+            <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
 
-        <Border
-            Margin="2,16"
-            BorderThickness="1,0,0,0"
-            Style="{StaticResource SubSectionDividerBorder}" />
-        <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
+            <Border
+                Margin="2,16"
+                BorderThickness="1,0,0,0"
+                Style="{StaticResource SubSectionDividerBorder}" />
+            <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
 
-        <!--<Border
-            Margin="2,16"
-            BorderThickness="1,0,0,0"
-            Style="{StaticResource SubSectionDividerBorder}" />
+            <Border
+                Margin="2,16"
+                BorderThickness="1,0,0,0"
+                Style="{StaticResource SubSectionDividerBorder}" />
 
-        <reactiveUi:ViewModelViewHost x:Name="RotaryMeterTestContent" />-->
+            <reactiveUi:ViewModelViewHost x:Name="RotaryMeterTestContent" />
 
+        </StackPanel>
     </StackPanel>
 </reactiveUi:ReactiveUserControl>

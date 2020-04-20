@@ -36,10 +36,8 @@ namespace Prover.Application.Models.EvcVerifications.Builders
             Tests.Add(corrected);
             return this;
         }
-
-        /// <param name="current"></param>
-        /// <inheritdoc />
-        public abstract VolumeInputTestBuilder AddDefaults(VerificationTestPoint current, bool withPulseOutputs = true);
+        
+        public abstract VolumeInputTestBuilder AddDefaults(VerificationTestPoint currentool, bool withPulseOutputs = true);
 
         public virtual VolumeInputTestBuilder AddUncorrected(bool withPulseOutputs = true)
         {
@@ -69,10 +67,10 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         }
 
 
-        public virtual void SetItemValues(VolumeItems startValues, VolumeItems endValues, int? appliedInput = null, int? corPulses = null, int? uncorPulses = null)
+        public virtual void SetItemValues(ICollection<ItemValue> startValues, ICollection<ItemValue> endValues, int? appliedInput = null, int? corPulses = null, int? uncorPulses = null)
         {
-            _startItems = startValues ?? _startItems;
-            _endItems = endValues ?? _endItems;
+            _startItems = Device.CreateItemGroup<VolumeItems>(startValues) ?? _startItems;
+            _endItems = Device.CreateItemGroup<VolumeItems>(endValues) ?? _endItems;
 
             _appliedInput = appliedInput ?? 0;
             _uncorPulses = uncorPulses ?? 0;

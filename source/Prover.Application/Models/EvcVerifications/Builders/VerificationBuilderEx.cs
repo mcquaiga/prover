@@ -93,8 +93,8 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         public static TestPointBuilder WithPressure(this TestPointBuilder builder, decimal gauge, decimal atm, Dictionary<string, string> values) => builder.WithPressure(gauge, atm, builder.Device.CreateItemGroup<PressureItems>(values));
         public static TestPointBuilder WithSuperFactor(this TestPointBuilder builder, Dictionary<string, string> values) => builder.WithSuperFactor(builder.Device.CreateItemGroup<SuperFactorItems>(values));
         public static TestPointBuilder WithSuperFactor(this TestPointBuilder builder, Dictionary<int, string> values) => builder.WithSuperFactor(builder.Device.CreateItemGroup<SuperFactorItems>(values));
-        public static TestPointBuilder WithVolume(this TestPointBuilder builder, Dictionary<string, string> startValues, Dictionary<string, string> endValues) => builder.WithVolume(builder.Device.CreateItemGroup<VolumeItems>(startValues), builder.Device.CreateItemGroup<VolumeItems>(endValues));
+        public static TestPointBuilder WithVolume(this TestPointBuilder builder, Dictionary<string, string> startValues, Dictionary<string, string> endValues) => builder.WithVolume(builder.Device.ToItemValues(startValues), builder.Device.ToItemValues(endValues));
         public static TestPointBuilder WithVolume(this TestPointBuilder builder, Dictionary<string, string> startValues, Dictionary<string, string> endValues, int appliedInput, int correctedPulses, int uncorrectedPulses) 
-            => builder.WithVolume(builder.Device.CreateItemGroup<VolumeItems>(startValues), builder.Device.CreateItemGroup<VolumeItems>(endValues), appliedInput: appliedInput, corPulses: correctedPulses, uncorPulses:uncorrectedPulses);
+            => builder.WithVolume(builder.Device.ToItemValues(startValues), builder.Device.ToItemValues(endValues), appliedInput: appliedInput, corPulses: correctedPulses, uncorPulses:uncorrectedPulses);
     }
 }

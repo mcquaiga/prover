@@ -9,6 +9,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Devices.Core.Items.ItemGroups;
 using DynamicData;
+using Prover.Application.Extensions;
 using Prover.Calculations;
 
 namespace Prover.Application.ViewModels.Corrections
@@ -52,7 +53,10 @@ namespace Prover.Application.ViewModels.Corrections
                 .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
                 .ToCollection()
                 .Select(x => x.Any() && x.All(y => y != null && y.Verified))
-                .ObserveOn(RxApp.TaskpoolScheduler);
+                .LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
+                .LogErrors(Logger)
+                .LoggedCatch(this, VerifiedObservable)
+                .ObserveOn(RxApp.MainThreadScheduler);
         }
     }
 

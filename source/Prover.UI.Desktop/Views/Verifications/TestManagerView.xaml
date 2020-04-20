@@ -96,37 +96,55 @@
 
         <materialDesign:Snackbar
             x:Name="ActionSnackbar"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            d:LayoutOverrides="Width">
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            d:LayoutOverrides="All">
             <materialDesign:Snackbar.Resources>
                 <Style BasedOn="{StaticResource {x:Type materialDesign:SnackbarMessage}}" TargetType="materialDesign:SnackbarMessage">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="materialDesign:SnackbarMessage">
-                                <Grid>
+                                <StackPanel Orientation="Vertical">
                                     <ContentPresenter
-                                        MaxHeight="60"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
+                                        Height="250"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
                                         Content="{TemplateBinding Content}"
                                         ContentStringFormat="{TemplateBinding ContentStringFormat}"
                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                         ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+
                                     <!--  Needed by the template, wont use it though  -->
+
                                     <Button
                                         x:Name="PART_YesActionButton"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Bottom"
-                                        Content="Yes" />
+                                        Content="Yes"
+                                        Visibility="Collapsed" />
 
-                                    <Button
+                                    <!--<Button
                                         x:Name="PART_NoActionButton"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
-                                        Content="No" />
-                                </Grid>
+                                        Content="No" />-->
+                                </StackPanel>
                             </ControlTemplate>
+                        </Setter.Value>
+
+                    </Setter>
+                    <Setter Property="ActionContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Button
+                                        x:Name="PART_YesActionButton"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Content="SUBMIT" />
+                                </StackPanel>
+
+                            </DataTemplate>
                         </Setter.Value>
                     </Setter>
                     <Setter Property="Background" Value="White" />

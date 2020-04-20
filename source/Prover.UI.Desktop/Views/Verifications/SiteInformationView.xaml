@@ -140,7 +140,10 @@
                     HorizontalAlignment="Left"
                     Style="{StaticResource PassFailIcon}" />
 
-                <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical">
                     <TextBlock
                         x:Name="DeviceNameTextBlock"
                         Margin="0,5"
@@ -164,26 +167,29 @@
 
                     <TextBlock x:Name="TestDateBlock" Style="{StaticResource LabelFontStyle}" />
                 </StackPanel>
-
-                <!--<TextBlock
+            </Grid>
+            <!--<TextBlock
                     x:Name="ClientTextBlock"
                     Margin="0,5,0,0"
                     HorizontalAlignment="Center" />-->
 
-                <UniformGrid HorizontalAlignment="Stretch" Rows="1">
+            <UniformGrid
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Rows="1">
 
-                    <ContentControl
-                        x:Name="JobIdTextControl"
-                        Tag="Job #"
-                        Template="{StaticResource ValueLabelControlTemplate}" />
-                    <ContentControl
-                        x:Name="EmployeeIdTextControl"
-                        Tag="Employee"
-                        Template="{StaticResource ValueLabelControlTemplate}" />
+                <ContentControl
+                    x:Name="JobIdTextControl"
+                    Tag="Job #"
+                    Template="{StaticResource ValueLabelControlTemplate}" />
+                <ContentControl
+                    x:Name="EmployeeIdTextControl"
+                    Tag="Employee"
+                    Template="{StaticResource ValueLabelControlTemplate}" />
 
-                </UniformGrid>
+            </UniformGrid>
 
-            </Grid>
+
 
             <!--  Site Information  -->
             <Border Style="{StaticResource SubSectionDividerBorder}">

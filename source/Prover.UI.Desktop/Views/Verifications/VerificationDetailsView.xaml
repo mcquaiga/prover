@@ -33,7 +33,7 @@
 
         <Viewbox
             Grid.Row="0"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Stretch="Uniform">
             <Grid>
@@ -42,7 +42,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Viewbox HorizontalAlignment="Left" Stretch="Uniform">
+                <Viewbox HorizontalAlignment="Stretch" Stretch="Uniform">
                     <ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -73,20 +73,25 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Viewbox>
-                <Viewbox Grid.Row="1">
+                <Viewbox Grid.Row="1" HorizontalAlignment="Stretch">
                     <Border Padding="0" Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                        <Grid HorizontalAlignment="Stretch">
 
                             <ContentControl
                                 x:Name="VolumeTestContent"
                                 Margin="5"
                                 HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
                                 ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
-                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+                            <reactiveUi:ViewModelViewHost
+                                x:Name="VolumeContentHost"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                HorizontalContentAlignment="Left" />
 
 
-                        </StackPanel>
+                        </Grid>
                     </Border>
                 </Viewbox>
 

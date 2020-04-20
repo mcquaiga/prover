@@ -129,6 +129,13 @@ namespace Devices.Core.Items
             var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
             return deviceType.ToItemValues(dict);
         }
+        
+        public static ICollection<ItemValue> ToItemValues(this DeviceInstance device,
+            IDictionary<string, string> itemValuesDictionary)
+        {
+            var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
+            return device.DeviceType.ToItemValues(dict).ToList();
+        }
 
         public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)
         {
