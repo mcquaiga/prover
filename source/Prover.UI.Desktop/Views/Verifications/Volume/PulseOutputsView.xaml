@@ -9,7 +9,7 @@
     xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:TypeArguments="volume:PulseOutputTestViewModel"
+    x:TypeArguments="volume:VolumeViewModelBase"
     mc:Ignorable="d">
     <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
         <controls:ValueDescriptionControl

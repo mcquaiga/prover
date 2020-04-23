@@ -11,46 +11,43 @@
     x:TypeArguments="rotary:RotaryVolumeViewModel"
     mc:Ignorable="d">
     <StackPanel Orientation="Vertical">
-        <controls:ValueDescriptionControl
-            x:Name="AppliedInputControl"
-            VerticalAlignment="Bottom"
-            VerticalContentAlignment="Bottom"
-            IsReadOnly="False"
-            Label="Applied Input"
-            TabIndex="0" />
-        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+        <TextBlock
+            Margin="4,8"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            RenderTransformOrigin=".5,.5"
+            Style="{StaticResource PrimaryTestHeaderStyle}"
+            Text="Volume">
+            <!--<TextBlock.LayoutTransform>
+                    <RotateTransform Angle="-90" />
+                </TextBlock.LayoutTransform>-->
+        </TextBlock>
 
+        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+            <reactiveUi:ViewModelViewHost x:Name="PulseOutputsContent" />
             <!--<StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
 
-            <TextBlock
-                Margin="4,8"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                RenderTransformOrigin=".5,.5"
-                Style="{StaticResource PrimaryTestHeaderStyle}"
-                Text="Volume">
-                <TextBlock.LayoutTransform>
-                    <RotateTransform Angle="-90" />
-                </TextBlock.LayoutTransform>
-            </TextBlock>
+                <controls:ValueDescriptionControl
+                    x:Name="AppliedInputControl"
+                    VerticalAlignment="Bottom"
+                    VerticalContentAlignment="Bottom"
+                    IsReadOnly="False"
+                    Label="Applied Input"
+                    TabIndex="0" />
 
+                <controls:ValueDescriptionControl
+                    x:Name="UncorrectedPulseCountControl"
+                    IsReadOnly="False"
+                    Label="Uncor Pulses"
+                    TabIndex="1" />
 
+                <controls:ValueDescriptionControl
+                    x:Name="CorrectedPulseCountControl"
+                    IsReadOnly="False"
+                    Label="Cor Pulses"
+                    TabIndex="2" />
 
-
-
-            <controls:ValueDescriptionControl
-                x:Name="UncorrectedPulseCountControl"
-                IsReadOnly="False"
-                Label="Uncor Pulses"
-                TabIndex="1" />
-
-            <controls:ValueDescriptionControl
-                x:Name="CorrectedPulseCountControl"
-                IsReadOnly="False"
-                Label="Cor Pulses"
-                TabIndex="2" />
-
-        </StackPanel>-->
+            </StackPanel>-->
 
             <Border
                 Margin="2,16"

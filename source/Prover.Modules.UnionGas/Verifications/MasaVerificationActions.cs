@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interfaces;
+using Prover.Application.Verifications;
+using Prover.Application.ViewModels;
+using Prover.Modules.UnionGas.Models;
+using Prover.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.Interfaces;
-using Prover.Application.ViewModels;
-using Prover.Application.Verifications;
-using Prover.Modules.UnionGas.Models;
-using Prover.Shared.Interfaces;
 
 namespace Prover.Modules.UnionGas.Verifications
 {
@@ -40,7 +40,7 @@ namespace Prover.Modules.UnionGas.Verifications
 
             VerificationEvents.OnSubmit.Subscribe(async e =>
             {
-                await OnSubmit(e.Input);
+                //await OnSubmit(e.Input);
             }).DisposeWith(_cleanup);
         }
 
@@ -60,13 +60,13 @@ namespace Prover.Modules.UnionGas.Verifications
                 await _loginService.Login();
             }
 
-            _disposer.Disposable = 
+            _disposer.Disposable =
                 _loginService
                     .LoggedIn
                     .Subscribe(x => verification.EmployeeId = _loginService.User?.UserId);
 
             var meterDto = await _companyNumberValidator.ValidateInventoryNumber(verification, updateDeviceItemValue: true);
-           
+
             verification.JobId = meterDto?.JobNumber.ToString();
             verification.EmployeeId = _loginService.User?.UserId;
         }
@@ -77,6 +77,6 @@ namespace Prover.Modules.UnionGas.Verifications
             await Task.CompletedTask;
         }
 
-      
+
     }
 }

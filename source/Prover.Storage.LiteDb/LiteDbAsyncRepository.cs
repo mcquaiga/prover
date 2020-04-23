@@ -1,15 +1,13 @@
-﻿using System;
+﻿using LiteDB;
+using Prover.Shared.Domain;
+using Prover.Shared.Storage.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using LiteDB;
-using Prover.Shared.Domain;
-using Prover.Shared.Interfaces;
-using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Storage.LiteDb
 {
@@ -23,11 +21,18 @@ namespace Prover.Storage.LiteDb
         public async Task<T> UpsertAsync(T entity)
         {
             var success = Context.GetCollection<T>().Upsert(entity);
-           
+
             return success ? entity : null;
         }
 
         public Task<int> CountAsync(ISpecification<T> spec) => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null)
+        {
+            var results = predicate != null ? Context.GetCollection<T>().Find(predicate) : Context.GetCollection<T>().FindAll();
+            return await Task.FromResult(results);
+        }
 
         public Task DeleteAsync(T entity) => throw new NotImplementedException();
 
@@ -45,9 +50,9 @@ namespace Prover.Storage.LiteDb
             return Context.GetCollection<T>().FindAll().ToList();
         }
 
-        public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => predicate != null
-                ? Context.GetCollection<T>().Find(predicate)
-                : Context.GetCollection<T>().FindAll();
+        //public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => predicate != null
+        //        ? Context.GetCollection<T>().Find(predicate)
+        //        : Context.GetCollection<T>().FindAll();
 
         public async Task UpdateAsync(T entity)
         {

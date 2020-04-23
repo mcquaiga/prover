@@ -27,67 +27,6 @@
     </UserControl.Resources>
     <Grid>
         <materialDesign:DrawerHost>
-            <!--<materialDesign:DrawerHost.LeftDrawerContent>
-                <StackPanel MinWidth="300" VerticalAlignment="Stretch">
-
-            <Button
-                        Margin="8"
-                        HorizontalAlignment="Right"
-                        Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
-                        CommandParameter="{x:Static Dock.Left}"
-                        Style="{DynamicResource MaterialDesignFlatButton}" />
-
-                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                       <StackPanel Grid.Row="0" Margin="8">
-                            <TextBlock Text="Export Tests by Job #" />
-                            <ComboBox
-                                x:Name="JobIdsComboBox"
-                                Width="Auto"
-                                DisplayMemberPath="."
-                                Style="{StaticResource MaterialDesignComboBox}" />
-                            <Button
-                                x:Name="ExportTestsByJobNumberButton"
-                                Margin="10"
-                                HorizontalAlignment="Right"
-                                CommandParameter="{Binding Path=SelectedItem, ElementName=JobIdsComboBox}"
-                                Content="Export"
-                                Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>
-
-                        <StackPanel
-                            Grid.Row="1"
-                            Margin="8"
-                            Orientation="Vertical">
-                            <TextBlock Text="Export Failed Test" />
-                            <TextBox
-                                Width="Auto"
-                                materialDesign:HintAssist.Hint="Enter Inventory #"
-                                Text="{Binding FailedCompanyNumber}" />
-                            <Button
-                                x:Name="ExportFailedTestButton"
-                                Margin="10"
-                                HorizontalAlignment="Right"
-                                Command="{Binding ExportFailedTestCommand}"
-                                Content="Export"
-                                Style="{StaticResource MaterialDesignFlatAccentButton}" />
-                        </StackPanel>
-
-                        <reactiveUi:ViewModelViewHost
-                            x:Name="TestsByJobNumberContentControl"
-                            Grid.Row="2"
-                            Margin="8" />
-
-
-                    </Grid>
-
-                </StackPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>-->
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
@@ -96,38 +35,26 @@
                 </Grid.RowDefinitions>
 
 
-                <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+                <Grid HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <!--<ColumnDefinition Width="*" />-->
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
+                            <Setter Property="Margin" Value="2,0" />
+                            <Setter Property="Width" Value="Auto" />
+                            <Setter Property="Height" Value="Auto" />
+                        </Style>
+                    </Grid.Resources>
 
 
-                    <!--<ToggleButton
-                            x:Name="MenuToggleButton"
-                            Grid.Column="0"
-                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                            CommandParameter="{x:Static Dock.Left}"
-                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
-
-                    <!--<TextBlock Style="{StaticResource MaterialDesignTextBlock}" Text="Filter by Instrument Type" />-->
-                    <Viewbox
-                        Grid.Column="1"
-                        Margin="0,5"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom">
-                        <Viewbox.Resources>
-                            <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type Button}">
-                                <Setter Property="Margin" Value="2,0" />
-                                <Setter Property="Width" Value="Auto" />
-                                <Setter Property="Height" Value="Auto" />
-                            </Style>
-                        </Viewbox.Resources>
-
+                    <Grid Grid.Column="0" HorizontalAlignment="Stretch">
                         <ItemsControl
                             x:Name="DeviceTypes"
+                            HorizontalAlignment="Stretch"
                             d:DataContext="{d:DesignInstance interfaces:DeviceType,
                                                              IsDesignTimeCreatable=False}"
                             DataContext="{Binding}">
@@ -135,6 +62,7 @@
                                 <ItemsPanelTemplate>
                                     <StackPanel
                                         Margin="15,5,0,0"
+                                        HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
@@ -153,63 +81,76 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                    </Viewbox>
+                    </Grid>
 
+
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <DatePicker
+                            x:Name="FromDateDisplay"
+                            Width="Auto"
+                            Height="Auto"
+                            Margin="8,0"
+                            materialDesign:HintAssist.HelperText="From Date"
+                            DisplayDate="{Binding FromDateTime}"
+                            FontSize="22"
+                            Style="{StaticResource MaterialDesignDatePicker}" />
+                        <DatePicker
+                            x:Name="ToDateDisplay"
+                            Margin="8,4"
+                            materialDesign:HintAssist.HelperText="To Date"
+                            DisplayDate="{Binding ToDateTime}"
+                            FontSize="22"
+                            Style="{StaticResource MaterialDesignDatePicker}" />
+                    </StackPanel>
 
                     <StackPanel
                         Grid.Column="2"
                         Margin="0"
                         Orientation="Horizontal">
 
-                        <TextBlock>
-                            <TextBlock.Resources>
-                                <Style BasedOn="{StaticResource MaterialDesignHeadline6TextBlock}" TargetType="{x:Type TextBlock}">
-                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="FontWeight" Value="Thin" />
-
-                                </Style>
-                            </TextBlock.Resources>
-                            <StackPanel>
-                                <TextBlock x:Name="TestCountTextBlock" />
-                                <TextBlock Text="Displayed tests" />
-                            </StackPanel>
+                        <TextBlock
+                            x:Name="TestCountTextBlock"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontWeight="Thin"
+                            Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
 
 
 
-                        </TextBlock>
-
-
-                        <materialDesign:PopupBox
-                            Margin="20,2,8,2"
-                            PlacementMode="BottomAndAlignRightEdges"
-                            PopupMode="Click"
-                            StaysOpen="False">
-                            <materialDesign:PopupBox.Resources>
-                                <Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
-                                    <Setter Property="FontSize" Value="18" />
-                                    <Setter Property="Margin" Value="8" />
-                                    <Setter Property="Width" Value="Auto" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-
-                                </Style>
-                            </materialDesign:PopupBox.Resources>
-                            <StackPanel>
-                                <CheckBox
-                                    x:Name="IncludeExportedCheckBox"
-                                    CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                                    Content="Include Exported" />
-                                <CheckBox
-                                    x:Name="IncludeArchivedCheckBox"
-                                    CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                                    Content="Include Archived" />
-                            </StackPanel>
-                        </materialDesign:PopupBox>
                     </StackPanel>
 
+                    <materialDesign:PopupBox
+                        Grid.Column="3"
+                        Margin="20,2,8,2"
+                        PlacementMode="BottomAndAlignRightEdges"
+                        PopupMode="Click"
+                        StaysOpen="False">
+                        <materialDesign:PopupBox.Resources>
+                            <Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
+                                <Setter Property="FontSize" Value="18" />
+                                <Setter Property="Margin" Value="8" />
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
 
+                            </Style>
+                        </materialDesign:PopupBox.Resources>
+                        <StackPanel>
+                            <CheckBox
+                                x:Name="IncludeExportedCheckBox"
+                                CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                Content="Include Exported" />
+                            <CheckBox
+                                x:Name="IncludeArchivedCheckBox"
+                                CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                                Content="Include Archived" />
+                        </StackPanel>
+                    </materialDesign:PopupBox>
                 </Grid>
 
 

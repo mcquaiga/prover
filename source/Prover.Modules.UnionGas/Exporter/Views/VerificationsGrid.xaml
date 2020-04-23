@@ -203,7 +203,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <!--MouseDoubleClick="VerificationsDataGrid_OnMouseDoubleClick"-->
+        <!--  MouseDoubleClick="VerificationsDataGrid_OnMouseDoubleClick"  -->
         <DataGrid
             x:Name="VerificationsDataGrid"
             HorizontalAlignment="Stretch"
@@ -215,7 +215,6 @@
             EnableRowVirtualization="True"
             IsReadOnly="True"
             ItemsSource="{Binding}"
-            
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectedItem="{Binding ToolbarViewModel.Selected, ElementName=VerificationsGridControl, Mode=TwoWay}"
             SelectionMode="Single">

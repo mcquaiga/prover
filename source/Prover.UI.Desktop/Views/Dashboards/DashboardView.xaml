@@ -89,26 +89,9 @@
                     Style="{StaticResource MaterialDesignHeadline4TextBlock}">
                     EVC Prover
                 </TextBlock>
-                <!--<TextBlock
-                    x:Name="DashboardHeader"
-                    Height="Auto"
-                    Margin="0,0,15,0"
-                    Padding="8"
-                    VerticalAlignment="Top"
-                    FontSize="36"
-                    FontWeight="Light"
-                    Style="{StaticResource MaterialDesignHeadline5TextBlock}">
-                    Dashboard
-                </TextBlock>-->
+
             </StackPanel>
-            <!--<controls:DateFilterControl
-                x:Name="DateFiltersMenuStrip"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                ApplyFilterCommand="{Binding ApplyDateFilter}"
-                DateFilters="{Binding DateFilters}"
-                DefaultDate="7d" />-->
+
             <ListBox
                 x:Name="DateFiltersControl"
                 Grid.Column="1"

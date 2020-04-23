@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
@@ -14,6 +8,12 @@ using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Application.FileLoader
 {
@@ -70,9 +70,9 @@ namespace Prover.Application.FileLoader
 
             return new ItemAndTestFile
             {
-                    Device = deviceInstance,
-                    PressureTests = pressures,
-                    TemperatureTests = temps
+                Device = deviceInstance,
+                PressureTests = pressures,
+                TemperatureTests = temps
             };
         }
 
@@ -82,7 +82,7 @@ namespace Prover.Application.FileLoader
             var serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            
+
             //serializer.Converters.Add(_jsonConverter);
 
             using (var streamer = File.OpenText(filePath))
@@ -126,13 +126,13 @@ namespace Prover.Application.FileLoader
         private EvcVerificationFactory(DeviceInstance device)
         {
             _instance = new EvcVerificationTest(device);
-               
+
         }
 
         public static EvcVerificationFactory Create(DeviceInstance device)
         {
             return new EvcVerificationFactory(device);
-          
+
             //ProverDefaults.TestDefinitions.ForEach(td =>
             //{
             //    var testPoint = new VerificationTestPoint(td.Level, new List<VerificationEntity>(), decimal.Zero);
@@ -183,7 +183,7 @@ namespace Prover.Application.FileLoader
 
             return this;
         }
-    
+
     }
 
     public class ItemAndTestFile

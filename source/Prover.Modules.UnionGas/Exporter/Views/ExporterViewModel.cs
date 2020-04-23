@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
@@ -19,6 +13,13 @@ using Prover.Modules.UnionGas.Verifications;
 using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -36,12 +37,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             TestsByJobNumberViewModel = testsByJobNumberViewModel;
             HostScreen = screenManager;
             DeviceTypes = deviceRepository.GetAll().OrderBy(d => d.Name).ToList();
-            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType {Id = Guid.Empty, Name = "All"}).ToList();
+            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" }).ToList();
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
             FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
             FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
 
-            var visibleItems = verificationCache.Updates.Connect()
+            var visibleItems = verificationCache.Items.Connect()
                                                 .Filter(FilterByTypeCommand)
                                                 .Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
                                                 .Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)));
@@ -53,20 +54,19 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                         .Subscribe()
                         .DisposeWith(Cleanup);
 
-            verificationCache.Data().Connect()
-                             .Filter(x => !string.IsNullOrEmpty(x.JobId))
-                             .DistinctValues(x => x.JobId)
-                             .Bind(out var jobIds).Subscribe()
-                             .DisposeWith(Cleanup);
-            JobIdsList = jobIds;
+            //verificationCache.Data().Connect()
+            //                 .Filter(x => !string.IsNullOrEmpty(x.JobId))
+            //                 .DistinctValues(x => x.JobId)
+            //                 .Bind(out var jobIds).Subscribe()
+            //                 .DisposeWith(Cleanup);
+            //JobIdsList = jobIds;
 
             ToolbarViewModel = exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
             //AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
-        
         }
 
         public ExportToolbarViewModel ToolbarViewModel { get; set; }
-        public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
+        //public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
 
         public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
         public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeExported { get; protected set; }
@@ -81,10 +81,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public string UrlPathSegment => "/Exporter";
         public IScreen HostScreen { get; }
 
+        [Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
+        [Reactive] public DateTime ToDateTime { get; set; } = DateTime.Now;
+
         private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType) => t => t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
-
         private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include) => test => include || test.ArchivedDateTime == null;
-
         private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include) => test => include || test.ExportedDateTime == null;
 
         #region Nested type: AllDeviceType

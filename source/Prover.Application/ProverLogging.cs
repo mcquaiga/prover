@@ -1,21 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Prover.Application
 {
     public class ProverLogging
     {
         private static ILoggerFactory _Factory = null;
-        
+
         public static ILoggerFactory LogFactory
         {
             get
             {
                 if (_Factory == null)
                 {
-                    _Factory =  CreateDefaultFactory();
-                   
+                    _Factory = CreateDefaultFactory();
+
                 }
                 return _Factory;
             }
@@ -24,8 +23,11 @@ namespace Prover.Application
 
         private static ILoggerFactory CreateDefaultFactory()
         {
-            return NullLoggerFactory.Instance;
-
+            return LoggerFactory.Create(builder =>
+            {
+                builder.AddDebug();
+                builder.AddConsole();
+            });
             //LoggerFactory.Create(builder => { 
             //builder
             //    .AddFilter("Microsoft", LogLevel.Warning)
@@ -39,5 +41,6 @@ namespace Prover.Application
 
         public static ILogger CreateLogger(string categoryName) => LogFactory.CreateLogger(categoryName);
         public static ILogger CreateLogger(Type type) => LogFactory.CreateLogger(type);
+        public static ILogger<T> CreateLogger<T>() => LogFactory.CreateLogger<T>();
     }
 }

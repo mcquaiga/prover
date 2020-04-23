@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
-using DeepEqual.Syntax;
+﻿using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.Interfaces;
+using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels.Factories;
 using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
+using System.Threading.Tasks;
 using Tests.Shared;
 
 namespace Prover.Application.Services.Tests
@@ -17,7 +18,7 @@ namespace Prover.Application.Services.Tests
     [TestClass()]
     public class VerificationViewModelServiceTests
     {
-        
+
     }
 }
 
@@ -47,7 +48,7 @@ namespace Tests.Application.Services
             var model = _service.CreateModel(newTest);
             Assert.AreEqual(newTest.Id, model.Id);
 
-            var viewModel = await _service.GetViewModel(model);
+            var viewModel = model.ToViewModel();
             //newTest.WithDeepEqual(viewModel)
             //    .IgnoreSourceProperty(t => t.Device.DeviceType)
             //    .Assert();
@@ -81,7 +82,7 @@ namespace Tests.Application.Services
             Assert.IsNotNull(newTest);
         }
 
-      
+
 
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)

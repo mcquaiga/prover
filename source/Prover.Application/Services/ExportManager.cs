@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Prover.Application.Interfaces;
-using Prover.Application.Models.EvcVerifications;
 
 namespace Prover.Application.Services
 {
@@ -18,7 +18,7 @@ namespace Prover.Application.Services
         public async Task<bool> Export(EvcVerificationTest verificationTest)
         {
             verificationTest.ExportedDateTime = DateTime.Now;
-            await _testRunService.AddOrUpdate(verificationTest);
+            await _testRunService.Upsert(verificationTest);
             return true;
         }
 
@@ -27,7 +27,7 @@ namespace Prover.Application.Services
             foreach (var test in verificationTests)
             {
                 test.ExportedDateTime = DateTime.Now;
-                await _testRunService.AddOrUpdate(test);
+                await _testRunService.Upsert(test);
             }
             return true;
         }

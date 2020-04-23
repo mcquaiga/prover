@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using DynamicData;
+﻿using Devices.Core.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Prover.Application.Interfaces
 {
     public interface IVerificationTestService
     {
-        Task<EvcVerificationViewModel> AddOrUpdate(EvcVerificationViewModel viewModel);
-        Task<EvcVerificationTest> AddOrUpdate(EvcVerificationTest evcVerificationTest);
+        Task<EvcVerificationViewModel> Save(EvcVerificationViewModel viewModel);
+        Task<EvcVerificationTest> Upsert(EvcVerificationTest evcVerificationTest);
+
+        Task<EvcVerificationTest> SubmitVerification(EvcVerificationViewModel viewModel);
+        Task<EvcVerificationTest> Archive(EvcVerificationTest model);
 
         EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel);
 
-        IObservableCache<EvcVerificationTest, Guid> FetchTests();
-
-        Task<EvcVerificationViewModel> GetViewModel(
-            EvcVerificationTest verificationTest);
-
-        Task<ICollection<EvcVerificationViewModel>> GetViewModel(
-            IEnumerable<EvcVerificationTest> verificationTests);
-
         EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null);
-        EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null);
-        Task AddOrUpdateBatch(IEnumerable<EvcVerificationTest> evcVerificationTest);
+        /*
+                EvcVerificationTest NewVerificationModel(DeviceInstance device, VerificationTestOptions options = null);
+        */
+        Task UpsertBatch(IEnumerable<EvcVerificationTest> evcVerificationTest);
 
     }
 }

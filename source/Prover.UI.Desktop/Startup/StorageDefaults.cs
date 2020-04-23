@@ -127,6 +127,15 @@ namespace Prover.UI.Desktop.Startup
 
     public class DatabaseSeeder
     {
+
+        private readonly IServiceProvider _provider;
+
+        public DatabaseSeeder(IServiceProvider provider)
+        {
+            _provider = provider;
+        }
+
+
         public Task SeedDatabase(IRepository<EvcVerificationTest> repository, int records = 1)
         {  
             Debug.WriteLine($"Seeding data...");
@@ -134,19 +143,19 @@ namespace Prover.UI.Desktop.Startup
             
             var results = CreateTests(records);
        
-            _ = Task.Run(() => results.ForEach(t => repository.Update(t)));
+            //_ = Task.Run(() => results.ForEach(t => repository.Update(t)));
 
             watch.Stop();
             Debug.WriteLine($"Seeding completed in {watch.ElapsedMilliseconds} ms");
             return Task.CompletedTask;
         }
 
-        public IEnumerable<EvcVerificationTest> CreateTests(int records = 1)
+        public async Task<IEnumerable<EvcVerificationTest>> CreateTests(int records = 1)
         {
            
             var results = new List<EvcVerificationTest>();
             var random = new Random(DateTime.Now.Millisecond);
-            
+           
 
             var deviceType = DeviceRepository.Instance.GetByName("Mini-Max");
           
@@ -158,8 +167,8 @@ namespace Prover.UI.Desktop.Startup
                 var device = deviceType.CreateInstance(SampleItemFiles.MiniMaxItemFile);
                 device.SetItemValue(serialNumberItem, random.Next(10000, 999999).ToString());
                 device.SetItemValue(201, random.Next(10000, 999999).ToString());
-                
-                var testVm = testService.NewVerification(device);
+
+                var testVm = VerificationViewModelFactory.Create(device);
                 testVm.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(4, 30)));
                 testVm.SubmittedDateTime = testVm.TestDateTime.AddSeconds(random.Next(180, 720));
 
@@ -168,20 +177,15 @@ namespace Prover.UI.Desktop.Startup
                 testVm.SetItems<TemperatureItems>(device, 0, SampleItemFiles.TempLowItems);
                 testVm.SetItems<TemperatureItems>(device, 1, SampleItemFiles.TempMidItems);
                 testVm.SetItems<TemperatureItems>(device, 2, SampleItemFiles.TempHighItems);
-                
+
                 testVm.SetItems<PressureItems>(device, 0, SampleItemFiles.PressureTest(0));
                 testVm.SetItems<PressureItems>(device, 1, SampleItemFiles.PressureTest(1));
                 testVm.SetItems<PressureItems>(device, 2, SampleItemFiles.PressureTest(2));
 
-                results.Add(testService.CreateModel(testVm));
+                results.Add(testVm.ToModel());
 
-                //await testService.AddOrUpdate(testVm);
-
-                Debug.WriteLine($"Created verification test {i} of {records}.");
-
-            await testService.AddOrUpdateBatch(results);
-            //results.ForEach(r => testService.AddOrUpdate((EvcVerificationTest) r));
-
+            }
+            Debug.WriteLine($"Created {records} verification tests.");
             return results;
         }
 

@@ -45,6 +45,11 @@ namespace Devices.Core.Repository
         Task<DeviceRepository> UpdateCachedTypes(IEnumerable<IDeviceTypeDataSource<DeviceType>> sources);
     }
 
+    public static class DeviceRepositoryEx
+    {
+        
+    }
+
     public class DeviceRepository : IDisposable, IDeviceRepository
     {
         private readonly IDeviceTypeCacheSource<DeviceType> _cacheSource;
@@ -68,6 +73,11 @@ namespace Devices.Core.Repository
             _logger = logger ?? NullLogger<DeviceRepository>.Instance;
             
             _cacheSource = cacheRepository;
+        }
+
+        public static DeviceType MiniMax()
+        {
+            return Instance.GetByName("Mini-Max");
         }
 
         private DeviceRepository()

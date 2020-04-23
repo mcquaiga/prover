@@ -1,8 +1,7 @@
-﻿using System;
-using System.Reactive.Disposables;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using System;
+using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels
 {
@@ -12,12 +11,12 @@ namespace Prover.Application.ViewModels
 
         protected readonly ILogger<ViewModelBase> Logger;
 
-        protected ViewModelBase(ILogger<ViewModelBase> logger = null) => Logger = logger ?? NullLogger<ViewModelBase>.Instance;
-        
+        protected ViewModelBase(ILogger<ViewModelBase> logger = null) => Logger = logger ?? ProverLogging.CreateLogger<ViewModelBase>();
+
         public void Dispose()
         {
             Dispose(true);
-            
+
             GC.SuppressFinalize(this);
         }
 

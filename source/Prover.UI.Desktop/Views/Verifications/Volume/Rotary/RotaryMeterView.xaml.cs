@@ -13,8 +13,8 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume.Rotary
             InitializeComponent();
             this.WhenActivated(d =>
             {
-                this.OneWayBind(ViewModel, vm => vm.PercentError, v => v.RotaryPercentErrorControl.DisplayValue).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Verified, v => v.RotaryPercentErrorControl.Passed).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.PercentError, v => v.RotaryPercentErrorControl.DisplayValue).DisposeWith(d);
+                //this.OneWayBind(ViewModel, vm => vm.Verified, v => v.RotaryPercentErrorControl.Passed).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.RotaryEvcMeterDisplacementControl.Value).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.RotaryExpectedMeterDisplacementControl.Value).DisposeWith(d);

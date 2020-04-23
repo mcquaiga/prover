@@ -11,6 +11,7 @@ namespace Prover.UI.Desktop.Views.Dashboards
     /// <summary>
     /// Interaction logic for DashboardView.xaml
     /// </summary>
+    [SingleInstanceView]
     public partial class DashboardView
     {
         public ICollection<IDashboardItem> Grouping { get; set; }
@@ -29,13 +30,13 @@ namespace Prover.UI.Desktop.Views.Dashboards
                 //this.OneWayBind(ViewModel, vm => vm.GroupedItems, v => v.GroupDashboardItems.ItemsSource).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.DateFilters, v => v.DateFiltersControl.ItemsSource).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.DefaultSelectedDate, v => v.DateFiltersControl.SelectedItem).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.DefaultSelectedDate, v => v.DateFiltersControl.SelectedItem).DisposeWith(d);
 
                 //this.BindCommand(ViewModel,
                 //vm => vm.ApplyDateFilter,
                 //v => v.DateFiltersMenuStrip.ApplyFilterCommand).DisposeWith(d);
 
-                this.BindCommand(ViewModel, vm => vm.LoadCaches, v => v.RefreshDataButton).DisposeWith(d);
+                //this.BindCommand(ViewModel, vm => vm.LoadCaches, v => v.RefreshDataButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.RefreshData, v => v.RefreshDataButton).DisposeWith(d);
 
                 this.WhenAnyValue(x => x.ViewModel.ApplyDateFilter)
@@ -43,9 +44,8 @@ namespace Prover.UI.Desktop.Views.Dashboards
                     .SubscribeOnDispatcher()
                     .DelaySubscription(TimeSpan.FromSeconds(1))
                     .Subscribe();
-
-          
             });
+
         }
     }
 }

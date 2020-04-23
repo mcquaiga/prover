@@ -1,12 +1,11 @@
-using System;
 using Devices.Core.Interfaces;
 using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using System;
 
 namespace Prover.Application.Models.EvcVerifications
 {
- 
 
     /// <summary>
     ///     Defines the <see cref="EvcVerificationTest" />
@@ -20,13 +19,17 @@ namespace Prover.Application.Models.EvcVerifications
         public EvcVerificationTest(DeviceInstance device)
         {
             Device = device;
-            TestDateTime = DateTime.UtcNow;
+
+            TestDateTime = DateTime.Now;
+
             DriveType = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
         }
 
         public DateTime? ArchivedDateTime { get; set; } = null;
 
         public DateTime TestDateTime { get; set; }
+
+        //public DateTime TestDateTimeUtc { get; set; }
 
         public DateTime? SubmittedDateTime { get; set; }
 
@@ -38,8 +41,10 @@ namespace Prover.Application.Models.EvcVerifications
 
         public bool Verified { get; set; }
 
-        public string JobId { get; set; } 
+        public string JobId { get; set; }
 
         public string EmployeeId { get; set; }
     }
+
+
 }

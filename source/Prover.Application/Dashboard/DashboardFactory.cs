@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
-using Devices.Core.Repository;
+﻿using Devices.Core.Repository;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Subjects;
 
 namespace Prover.Application.Dashboard
 {
@@ -37,7 +37,7 @@ namespace Prover.Application.Dashboard
             var items = new List<IDashboardItem>();
 
             items.AddRange(CreateDeviceViews(_parentFilterObservable));
-            items.Add(CreateSummaryItem(_parentFilterObservable ));
+            items.Add(CreateSummaryItem(_parentFilterObservable));
 
             //_parentFilterObservable.Subscribe();
             return items;
@@ -51,15 +51,15 @@ namespace Prover.Application.Dashboard
                                     .Select(d => new VerifiedCountsDashboardViewModel(
                                             _entityCache,
                                             d.Name,
-                                            "By Device Type", 
+                                            "By Device Type",
                                             parentFilter,
                                             v => v.Device.DeviceType.Id == d.Id));
         }
 
-        public void BuildGlobalFilter(string dateTimeKey)
-        {
-            _parentFilterObservable.OnNext(test => DateFilters[dateTimeKey].Invoke(test.TestDateTime));
-        }
+        //public void BuildGlobalFilter(string dateTimeKey)
+        //{
+        //    _parentFilterObservable.OnNext(test => DateFilters[dateTimeKey].Invoke(test.TestDateTime));
+        //}
 
         private IEnumerable<IDashboardItem> CreateVerifiedViews(IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {

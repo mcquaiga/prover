@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
-using DeepEqual.Syntax;
+﻿using DeepEqual.Syntax;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
@@ -16,8 +9,14 @@ using Newtonsoft.Json;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Tests.Shared;
 
 namespace Tests.Application.Services
@@ -34,16 +33,16 @@ namespace Tests.Application.Services
         private static IAsyncRepository<EvcVerificationTest> _testRepo;
         private static IVerificationTestService _viewModelService;
         private static IEntityDataCache<EvcVerificationTest> _entityCache;
-      
+
 
         [TestMethod]
         public async Task AddOrUpdateVerificationTestTest()
         {
             var newTest = _viewModelService.NewVerification(_device);
-            await _viewModelService.AddOrUpdate(newTest);
+            await _viewModelService.Save(newTest);
 
             var model = _viewModelService.CreateModel(newTest);
-            await _viewModelService.AddOrUpdate(model);
+            await _viewModelService.Upsert(model);
 
             var model2 = await _testRepo.GetAsync(model.Id);
             Assert.IsNotNull(model2);
@@ -73,7 +72,7 @@ namespace Tests.Application.Services
         public async Task CreateAndSaveToDatabaseTest()
         {
             var newTest = await StorageTestsInitialize.CreateAndSaveNewTest(_device);
-          
+
             var dbTest = await _testRepo.GetAsync(newTest.Id);
             Assert.IsNotNull(dbTest);
         }
@@ -83,11 +82,11 @@ namespace Tests.Application.Services
         {
             var scheduler = new TestScheduler();
             scheduler.StartStopwatch();
-            
-            var results = _entityCache.Updates.Connect(t => t.ExportedDateTime == null)
+
+            var results = _entityCache.Items.Connect(t => t.ExportedDateTime == null)
                                       .Bind(out var data, 25)
                                       .Subscribe();
-            
+
             scheduler.Start();
             Assert.IsNotNull(data);
             await Task.CompletedTask;
@@ -104,9 +103,9 @@ namespace Tests.Application.Services
 
             StorageTestsInitialize.DropCollection();
 
-            testService.Load().Connect()
-                .Bind(out var tests)
-                .Subscribe(x => updatesCount++);
+            _entityCache.Items.Connect()
+                        .Bind(out var tests)
+                        .Subscribe(x => updatesCount++);
 
             scheduler.Start();
 
@@ -117,10 +116,10 @@ namespace Tests.Application.Services
             Assert.IsTrue(tests.Count >= initNumber + 1);
 
             newTest.JobId = "123456";
-            await testService.AddOrUpdate(newTest);
+            await testService.Save(newTest);
             Assert.IsTrue(tests.Any(t => t.JobId == newTest.JobId));
             Assert.IsTrue(tests.Count >= initNumber + 1);
-            
+
             Assert.IsTrue(updatesCount >= 4);
         }
 
@@ -131,7 +130,7 @@ namespace Tests.Application.Services
 
             for (int i = 0; i < 5; i++)
             {
-                
+
                 tasks.Add(Task.Run(async () =>
                 {
                     var device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
@@ -149,7 +148,7 @@ namespace Tests.Application.Services
         {
             var newTest = await StorageTestsInitialize.CreateAndSaveNewTest(_device);
             var model = _viewModelService.CreateModel(newTest);
-            
+
             var dbObject = await _testRepo.GetAsync(model.Id);
 
             var tests = dbObject.Tests.OfType<VerificationTestPoint>().ToList();
@@ -164,11 +163,11 @@ namespace Tests.Application.Services
             Assert.IsTrue(tests.Count() == newTest.VerificationTests.OfType<VerificationTestPointViewModel>().Count());
 
             var childCount = tests.SelectMany(t => t.Tests).Count();
-            var modelChildCount = 
+            var modelChildCount =
                 model.Tests.OfType<VerificationTestPoint>().SelectMany(t => t.Tests).Count();
-            
+
             Assert.IsTrue(childCount == modelChildCount);
- 
+
         }
 
         [TestInitialize]
@@ -192,9 +191,9 @@ namespace Tests.Application.Services
             _repo = StorageTestsInitialize.DeviceRepo;
             _deviceType = _repo.GetByName("Mini-Max");
 
-            _testRepo = StorageTestsInitialize.TestRepo; 
+            _testRepo = StorageTestsInitialize.TestRepo;
             _viewModelService = StorageTestsInitialize.ViewModelService;
-            _entityCache = StorageTestsInitialize.ViewModelService;
+            _entityCache = StorageTestsInitialize.VerificationCache;
             await Task.CompletedTask;
         }
 

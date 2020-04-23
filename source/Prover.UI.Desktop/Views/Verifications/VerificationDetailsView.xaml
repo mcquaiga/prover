@@ -20,19 +20,31 @@
             <Setter Property="ValueFontSize" Value="20" />
         </Style>
     </UserControl.Resources>
-    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+
+        </Grid.ColumnDefinitions>
 
         <Viewbox
+            Grid.Column="1"
             MinWidth="200"
             MaxWidth="600"
+            HorizontalAlignment="Stretch"
             DockPanel.Dock="Right">
-            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="8" />
+            <reactiveUi:ViewModelViewHost
+                x:Name="SiteInfoContent"
+                Margin="8"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center" />
             <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
         </Viewbox>
 
 
         <Viewbox
             Grid.Row="0"
+            Grid.Column="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Stretch="Uniform">
@@ -80,7 +92,7 @@
                             <ContentControl
                                 x:Name="VolumeTestContent"
                                 Margin="5"
-                                HorizontalAlignment="Center"
+                                HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
@@ -98,5 +110,5 @@
             </Grid>
         </Viewbox>
 
-    </DockPanel>
+    </Grid>
 </reactiveUi:ReactiveUserControl>

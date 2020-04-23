@@ -130,6 +130,7 @@
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Externals.MccDaq\Prover.Externals.MccDaq.csproj" />
     <ProjectReference Include="..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
+    <ProjectReference Include="..\Prover.Storage.MongoDb\Prover.Storage.MongoDb.csproj" />
   </ItemGroup>
 
 
@@ -228,6 +229,7 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
+    <Folder Include="ViewModels\Dashboard\" />
   </ItemGroup>
 
   <ItemGroup>

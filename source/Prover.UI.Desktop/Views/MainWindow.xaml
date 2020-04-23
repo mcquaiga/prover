@@ -34,7 +34,8 @@
                         <Button
                             x:Name="GoBackButton"
                             Content="{materialDesign:PackIcon NavigateBefore}"
-                            Style="{StaticResource MainToolbarButtonStyle}" />
+                            Style="{StaticResource MainToolbarButtonStyle}"
+                            Visibility="Collapsed" />
                     </StackPanel>
 
                     <ItemsControl x:Name="ToolbarActionItemsControl">

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using MaterialDesignThemes.Wpf;
-using Prover.Application.Interactions;
+﻿using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Modules.UnionGas.Models;
 using Prover.Modules.UnionGas.Verifications;
@@ -16,6 +9,13 @@ using Prover.UI.Desktop.Reports;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -31,7 +31,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             _loginService = loginService;
 
             SetCanExecutes(this.WhenAnyValue(x => x.Selected).Where(s => s != null));
-            
+
             this.WhenAnyValue(x => x.Selected)
                 .Where(s => s != null)
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -42,11 +42,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 return Observable.FromAsync(async () =>
                 {
                     test.EmployeeId = _loginService.User?.UserId;
-                    return await verificationTestService.AddOrUpdate(test);
+                    return await verificationTestService.Upsert(test);
                 });
             }, CanAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
 
-           
+
 
             AddJobId = ReactiveCommand.CreateFromObservable<EvcVerificationTest, EvcVerificationTest>(test =>
             {
@@ -57,7 +57,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     if (meterDto != null)
                     {
                         test.JobId = meterDto.JobNumber.ToString();
-                        test = await verificationTestService.AddOrUpdate(test);
+                        test = await verificationTestService.Upsert(test);
                     }
 
                     return test;
@@ -83,7 +83,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))
                     {
                         test.ArchivedDateTime = DateTime.Now;
-                        await verificationTestService.AddOrUpdate(test);
+                        await verificationTestService.Upsert(test);
                     }
 
                     return test;
@@ -99,7 +99,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
             {
                 if (test == null) return;
-                var viewModel = await verificationTestService.GetViewModel(test);
+                var viewModel = test.ToViewModel();
                 var reportViewModel = await screenManager.ChangeView<ReportViewModel>();
                 reportViewModel.ContentViewModel = viewModel;
             }).DisposeWith(Cleanup);

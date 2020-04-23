@@ -1,8 +1,4 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
 using Prover.Application.Interactions;
@@ -13,6 +9,10 @@ using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -46,7 +46,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     if (loginService.User != null)
                     {
                         Test.EmployeeId = loginService.User?.UserId;
-                        await verificationTestService.AddOrUpdate(Test);
+                        await verificationTestService.Upsert(Test);
                     }
 
                     return loginService.User?.UserId;
@@ -65,7 +65,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                         if (!string.IsNullOrEmpty(jobId))
                         {
                             Test.JobId = jobId;
-                            await verificationTestService.AddOrUpdate(Test);
+                            await verificationTestService.Upsert(Test);
                         }
 
                         return jobId;
@@ -77,37 +77,37 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     .DisposeWith(Cleanup);
 
 
-                var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId,
-                    (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
-                ExportVerification = ReactiveCommand.CreateFromTask(async () =>
-                    {
-                        var success = await exporter.Export(Test);
+                //var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId,
+                //    (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
+                //ExportVerification = ReactiveCommand.CreateFromTask(async () =>
+                //    {
+                //        var success = await exporter.Export(Test);
 
-                        return Test.ExportedDateTime;
-                    }, canExport)
-                    .DisposeWith(Cleanup);
+                //        return Test.ExportedDateTime;
+                //    }, canExport)
+                //    .DisposeWith(Cleanup);
 
-                ExportVerification
-                    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, true)
-                    .DisposeWith(Cleanup);
+                //ExportVerification
+                //    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, true)
+                //    .DisposeWith(Cleanup);
 
 
-                ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    if (
-                        await MessageInteractions.ShowYesNo.Handle(
-                            "Are you sure you want to archive this test?"))
-                    {
-                        Test.ArchivedDateTime = DateTime.Now;
-                        var updated = await verificationTestService.AddOrUpdate(Test);
-                    }
+                //ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
+                //{
+                //    if (
+                //        await MessageInteractions.ShowYesNo.Handle(
+                //            "Are you sure you want to archive this test?"))
+                //    {
+                //        Test.ArchivedDateTime = DateTime.Now;
+                //        var updated = await verificationTestService.Upsert(Test);
+                //    }
 
-                    return Test.ArchivedDateTime;
-                }).DisposeWith(Cleanup);
+                //    return Test.ArchivedDateTime;
+                //}).DisposeWith(Cleanup);
 
-                ArchiveVerification
-                    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, true)
-                    .DisposeWith(Cleanup);
+                //ArchiveVerification
+                //    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, true)
+                //    .DisposeWith(Cleanup);
             }
         }
 

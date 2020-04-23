@@ -4,30 +4,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    x:Name="RotaryMeterViewControl"
     x:TypeArguments="rotary:RotaryMeterTestViewModel"
     mc:Ignorable="d">
-    <Grid>
-        <StackPanel Orientation="Vertical">
+    <Grid HorizontalAlignment="Stretch" DataContext="{Binding Path=ViewModel, ElementName=RotaryMeterViewControl}">
+        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
             <TextBlock Style="{StaticResource SectionHeaderTextBlockStyle}" Text="Rotary Meter" />
-            <controls:PercentageControlNew
+            <!--<controls:PercentageControlNew
                 x:Name="RotaryPercentErrorControl"
                 Margin="5"
-                HorizontalAlignment="Center" />
-            <StackPanel Margin="5">
+                HorizontalAlignment="Center" />-->
+            <StackPanel
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <materialDesign:PackIcon Style="{StaticResource PassFailIcon}" />
                 <TextBlock
                     x:Name="RotaryMeterTypeText"
                     HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
-                <StackPanel Orientation="Horizontal">
-                    <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
-                    <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />
-                </StackPanel>
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                    Text="RM 2000" />
 
+                <materialDesign:PopupBox Visibility="{Binding Path=Verified, Converter={StaticResource TrueToHiddenConverter}}">
+                    <materialDesign:PopupBox.ToggleContent>
+                        <materialDesign:PackIcon HorizontalAlignment="Right" Kind="InformationCircle" />
+                    </materialDesign:PopupBox.ToggleContent>
+                    <StackPanel Orientation="Horizontal">
+                        <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
+                        <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
             </StackPanel>
         </StackPanel>
 

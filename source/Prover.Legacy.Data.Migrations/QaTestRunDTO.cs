@@ -1,20 +1,17 @@
-﻿using System;
+﻿using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Devices.Core.Repository;
+using Newtonsoft.Json;
+using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Builders;
+using Prover.Calculations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
-using Newtonsoft.Json;
-using Prover.Application.Extensions;
-using Prover.Application.Interfaces;
-using Prover.Application.Models.EvcVerifications;
-using Prover.Application.Models.EvcVerifications.Builders;
-using Prover.Application.ViewModels;
-using Prover.Calculations;
-using Prover.Shared;
 
 namespace Prover.Legacy.Data.Migrations
 {
@@ -94,16 +91,16 @@ namespace Prover.Legacy.Data.Migrations
                                                       return result;
                                                   });
                                               });
-                                            
+
                                         var model = builder.Build();
                                         var random = new Random(DateTime.Now.Millisecond);
 
                                         var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 60)));
-                                        model.TestDateTime =  testDate.AddHours(random.Next(-12, 18));
+                                        model.TestDateTime = testDate.AddHours(random.Next(-12, 18));
 
                                         model.SubmittedDateTime = model.TestDateTime.AddSeconds(random.Next(180, 660));
                                         model.Verified = qaTest.IsPassed;
-                                        await testService.AddOrUpdate(model);
+                                        await testService.Upsert(model);
                                         recordCount++;
                                     }
                                     catch (AggregateException aggregateException)
@@ -114,7 +111,7 @@ namespace Prover.Legacy.Data.Migrations
                                     {
                                         Debug.WriteLine(ex.Message);
                                     }
-                                        
+
                                 }
                             }
                         }
@@ -126,7 +123,7 @@ namespace Prover.Legacy.Data.Migrations
                     Console.WriteLine(ex);
                 }
 
-            
+
             Debug.WriteLine($"Imported {recordCount} records.");
         }
     }
@@ -157,7 +154,7 @@ namespace Prover.Legacy.Data.Migrations
 
     public class QaTestRunDTO
     {
-        public QaTestRunDTO(Guid deviceTypeId, Dictionary<string, string> values) => Device = new DeviceDTO {DeviceTypeId = deviceTypeId, Items = values};
+        public QaTestRunDTO(Guid deviceTypeId, Dictionary<string, string> values) => Device = new DeviceDTO { DeviceTypeId = deviceTypeId, Items = values };
 
         public DeviceDTO Device { get; set; }
 
@@ -187,7 +184,7 @@ namespace Prover.Legacy.Data.Migrations
 
         public void AddTest(Dictionary<string, string> itemValues)
         {
-            Tests.Add(new TestDTO {Values = itemValues});
+            Tests.Add(new TestDTO { Values = itemValues });
         }
     }
 

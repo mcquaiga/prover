@@ -1,16 +1,16 @@
-﻿using System;
+﻿using DynamicData;
+using Microsoft.Extensions.DependencyInjection;
+using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicData;
-using Microsoft.Extensions.DependencyInjection;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Prover.UI.Desktop.ViewModels
 {
@@ -55,15 +55,15 @@ namespace Prover.UI.Desktop.ViewModels
             }
 
             await Router.Navigate.Execute(viewModel);
-            
+
             return viewModel;
         }
 
         public async Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel
         {
-            var model = 
-                parameters.IsNullOrEmpty() 
-                    ? _services.GetService<TViewModel>() 
+            var model =
+                parameters.IsNullOrEmpty()
+                    ? _services.GetService<TViewModel>()
                     : (TViewModel)ActivatorUtilities.CreateInstance(_services, typeof(TViewModel), parameters);
 
             return await ChangeView(model);
@@ -81,12 +81,12 @@ namespace Prover.UI.Desktop.ViewModels
 
         public async Task GoBack()
         {
-            var current = _currentViewModel;
-           
-            await Router.NavigateBack.Execute();
+            //var current = _currentViewModel;
 
-            _toolbarRemover.Disposable = Disposable.Empty;
-            (current as IDisposable)?.Dispose();
+            //await Router.NavigateBack.Execute();
+
+            //_toolbarRemover.Disposable = Disposable.Empty;
+            //(current as IDisposable)?.Dispose();
         }
 
         //public void SetHome(IRoutableViewModel viewModel)
@@ -97,11 +97,17 @@ namespace Prover.UI.Desktop.ViewModels
         public async Task GoHome(IRoutableViewModel home = null)
         {
             if (_homeViewModel == null)
+            {
                 _homeViewModel = home;
+                Router.Navigate.Execute(_homeViewModel).Subscribe();
+            }
 
             _toolbarRemover.Disposable = Disposable.Empty;
-            Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
-            await Router.NavigateAndReset.Execute(_homeViewModel);
+            //Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
+            Router.NavigationStack.Reverse().Skip(1).ForEach(v =>
+            {
+                Router.NavigateBack.Execute().Subscribe();
+            });
         }
 
         private readonly IServiceProvider _services;

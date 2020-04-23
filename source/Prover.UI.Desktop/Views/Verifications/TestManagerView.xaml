@@ -33,8 +33,9 @@
         <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
             <StackPanel>
                 <Button
-                    Width="150"
+                    Width="75"
                     Height="Auto"
+                    Margin="15,5"
                     Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
                     Content="{materialDesign:PackIcon Kind=PlayArrow,
                                                       Size=35}"

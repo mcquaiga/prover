@@ -1,7 +1,3 @@
-using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
@@ -9,16 +5,20 @@ using Prover.Application.Interfaces;
 using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 using ReactiveUI;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
     public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems, IQaTestRunManager
     {
-        protected TestManagerBase(){}
+        protected TestManagerBase() { }
 
         protected TestManagerBase(ILogger<TestManagerBase> logger, IScreenManager screenManager)
         {
-           
+
         }
 
         protected void Initialize(ILogger<TestManagerBase> logger,
@@ -33,7 +33,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             {
                 logger.LogDebug("Saving test...");
 
-                var updated = await verificationService.AddOrUpdate(TestViewModel);
+                var updated = await verificationService.Save(TestViewModel);
                 if (updated != null)
                 {
                     logger.LogDebug("Saved test successfully");
@@ -45,17 +45,18 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             }).DisposeWith(Cleanup);
             SaveCommand.ThrownExceptions.Subscribe();
 
+            //SaveCommand.Do(x => VerificationEvents.OnSave.Publish(TestViewModel.ToModel()))
+            //           .Subscribe().DisposeWith(Cleanup);
+
             var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable).ObserveOn(RxApp.MainThreadScheduler);
             SubmitTest = ReactiveCommand.CreateFromTask(async () =>
             {
                 if (true)
                 {
-                    TestViewModel.SubmittedDateTime = DateTime.Now;
-                    await SaveCommand.Execute();
-
                     await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+                    await verificationService.SubmitVerification(TestViewModel);
 
-                    (TestViewModel as IDisposable)?.Dispose();
+                    //(TestViewModel as IDisposable)?.Dispose();
                     await screenManager.GoHome();
                 }
             }, canSubmit).DisposeWith(Cleanup);

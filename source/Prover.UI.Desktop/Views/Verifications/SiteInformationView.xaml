@@ -129,7 +129,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border
-        HorizontalAlignment="Center"
+        HorizontalAlignment="Right"
         BorderThickness="1,0,0,0"
         Style="{StaticResource TestSectionOuterBorder}">
         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">

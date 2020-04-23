@@ -1,79 +1,105 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using DynamicData;
+﻿using DynamicData;
 using DynamicData.Aggregation;
+using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+// ReSharper disable PossibleInvalidOperationException
 
 namespace Prover.Application.Dashboard
 {
-    public static class DashboardFilters
-    {
-        public static Func<EvcVerificationTest, bool> IsVerified { get; } = test => test.Verified;
-        public static Func<EvcVerificationTest, bool> IsNotVerified { get; } = test => !test.Verified;
-        public static Func<EvcVerificationTest, bool> IsNotExported { get; } = test => test.ExportedDateTime == null;
-    }
-
     public class SummaryDashboardViewModel : DashboardItemViewModel, IDashboardItem, IDisposable
     {
         protected string SummaryTitle = "Summary";
-
+        private readonly IScheduler _scheduler;
         /// <inheritdoc />
-        public SummaryDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter = null)
-            : base(groupName: "Summary", sortOrder: 0)
+        public SummaryDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter = null, IScheduler mainScheduler = null) : base(groupName: "Summary", sortOrder: 0)
         {
-            var cacheStream = GenerateCacheStream(entityCache, parentFilter);
-            var listStream = GenerateListStream(entityCache, parentFilter);
-            var countChanged = listStream.CountChanged;
+            if (entityCache == null) throw new NullReferenceException(nameof(IEntityDataCache<EvcVerificationTest>));
 
-            CountChangedObservable = countChanged;
-            Data = listStream;
-            //var passed = cacheStream.Filter(DashboardFilters.IsVerified).AsObservableList();
-            //var failed = cacheStream.Filter(DashboardFilters.IsNotVerified).AsObservableList();
-            //var notExported = cacheStream.Filter(DashboardFilters.IsNotExported)
-            //                             .AsObservableList();
-            //this.WhenAnyObservable(x => x.TestStream.CountChanged());
-                
-            countChanged.Select(_ => listStream.Items.Count(DashboardFilters.IsVerified))
-                        .ToPropertyEx(this, x => x.TotalPassed).DisposeWith(Cleanup);
+            _scheduler = mainScheduler ?? RxApp.MainThreadScheduler;
 
-            countChanged.Select(_ => listStream.Items.Count(DashboardFilters.IsNotVerified))
-                        .ToPropertyEx(this, x => x.TotalFailed).DisposeWith(Cleanup);
+            var shared = entityCache.Items.Connect()
+                    .ObserveOn(_scheduler);
 
-            countChanged.Select(_ => listStream.Items.Count(DashboardFilters.IsNotExported))
-                        .ToPropertyEx(this, x => x.TotalNotExported).DisposeWith(Cleanup);
+            shared.QueryWhenChanged(query => CreateSummaryTotals(query.Items.ToList()))
+                    .ToPropertyEx(this, x => x.Totals, scheduler: _scheduler, initialValue: new SummaryTotals())
+                    .DisposeWith(Cleanup);
 
-            //listStream.CountChanged.ToPropertyEx(this, x => x.TotalTests).DisposeWith(Cleanup);
+            shared.Filter(t => t.SubmittedDateTime.HasValue)
+                  //.SelectMany(x => x.Items.Where(t => t.SubmittedDateTime.HasValue))
+                  .Avg(x => x.SubmittedDateTime.Value.Subtract(x.TestDateTime).TotalSeconds)
+                  .Select<double, TimeSpan?>(seconds => TimeSpan.FromSeconds(seconds))
+                  .LogDebug(x => $"totals changed {x}")
+                  .ToPropertyEx(this, x => x.AverageDuration, scheduler: _scheduler)
+                  .DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.TotalPassed, x => x.TotalFailed, (p, f) => p + f)
-                .ToPropertyEx(this, x => x.TotalTests).DisposeWith(Cleanup); 
-            
-            this.WhenAnyValue(x => x.TotalTests)
-                .Where(c => c > 0)
-                .Select(total => (TotalPassed / total.ToDecimal() * 100m).ToInt32())
-                .ToPropertyEx(this, x => x.PassPercentage).DisposeWith(Cleanup);
+            this.WhenAnyValue(x => x.Totals)
+                .Where(c => c?.TotalTests > 0)
+                .Select(summary => (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32())
+                .ToPropertyEx(this, x => x.PassPercentage, scheduler: _scheduler)
+                .DisposeWith(Cleanup);
 
-            cacheStream.Filter(t => t.SubmittedDateTime.HasValue)
-                       .Avg(x => x.SubmittedDateTime?.Subtract(x.TestDateTime).TotalSeconds)
-                       .Select<double, TimeSpan?>(d => TimeSpan.FromSeconds(d))
-                       .ToPropertyEx(this, x => x.AverageDuration)
-                       .DisposeWith(Cleanup);
+
+
         }
 
-        public IObservableList<EvcVerificationTest> Data { get; set; }
-        public IObservable<int> CountChangedObservable { get; }
+        private SummaryTotals CreateSummaryTotals(ICollection<EvcVerificationTest> itemCollection) => new SummaryTotals { TotalTests = itemCollection.Count, TotalPassed = itemCollection.Count(VerificationFilters.IsVerified), TotalFailed = itemCollection.Count(VerificationFilters.IsNotVerified), TotalNotExported = itemCollection.Where(VerificationFilters.IsVerified).Count(VerificationFilters.IsNotExported) };
 
-        public extern int TotalTests { [ObservableAsProperty] get; }
-        public extern int TotalPassed { [ObservableAsProperty] get; }
-        public extern int TotalFailed { [ObservableAsProperty] get; }
 
+
+        //[Reactive] public SummaryTotals Totals { get; set; }
+        public extern SummaryTotals Totals { [ObservableAsProperty] get; }
         public extern int PassPercentage { [ObservableAsProperty] get; }
-        public extern int TotalNotExported { [ObservableAsProperty] get; }
         public extern TimeSpan? AverageDuration { [ObservableAsProperty] get; }
-        
+
+        #region Nested type: SummaryTotals
+
+        public class SummaryTotals
+        {
+            [Reactive] public int TotalTests { get; set; }
+            [Reactive] public int TotalPassed { get; set; }
+            [Reactive] public int TotalFailed { get; set; }
+            [Reactive] public int TotalNotExported { get; set; }
+        }
+
+        #endregion
     }
 }
+
+/*
+       //_cacheStream.CountChanged()
+       //           .Select(_ => Items.Count(DashboardFilters.IsNotVerified))
+       //           .ToPropertyEx(this, x => x.TotalFailed, scheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+
+       //_cacheStream.CountChanged()
+       //           .Select(_ => Items.Count(DashboardFilters.IsNotExported))
+       //           .ToPropertyEx(this, x => x.TotalNotExported, scheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+
+
+       //this.WhenAnyValue(x => x.TotalPassed, x => x.TotalFailed, (p, f) => p + f)
+       //    .ToPropertyEx(this, x => x.TotalTests, scheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup); 
+
+
+
+       //_cacheStream.Bind(out _items)
+       //            .ObserveOn(RxApp.MainThreadScheduler)
+       //            .Subscribe();
+
+       //Items.ToObservable()
+       //     .Count()
+       //     .LogDebug(x => $"Count changed = {x}")
+       //     .SubscribeOn(RxApp.MainThreadScheduler)
+       //     .Subscribe();
+
+       //Cleanup.Add(shared.Subscribe());
+       //Cleanup.Add(_cacheStream.Subscribe());
+       ////Cleanup.Add(verifiedCount.Subscribe());
+       //Cleanup.Add(binder);*/

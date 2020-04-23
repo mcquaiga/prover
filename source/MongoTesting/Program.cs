@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Devices.Core.Items;
 using Devices.Core.Repository;
 using MongoDB.Driver;
-using Prover.Application.FileLoader;
-using Prover.Domain.EvcVerifications;
-using Prover.Infrastructure;
+using Prover.Application.Models.EvcVerifications;
 
 namespace MongoTesting
 {

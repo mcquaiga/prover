@@ -37,6 +37,11 @@
                 FalseValue="Hidden"
                 TrueValue="Visible" />
 
+            <converters:BoolToVisibilityConverter
+                x:Key="TrueToHiddenConverter"
+                FalseValue="Visible"
+                TrueValue="Hidden" />
+
             <converters:BooleanToPassConverter
                 x:Key="BoolToPassFailConverter"
                 FalseValue="Fail"

@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Devices.Core.Repository;
+﻿using Devices.Core.Repository;
 using LiteDB;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Factories;
 using Prover.Legacy.Data.Migrations;
 using Prover.Storage.LiteDb;
+using System.Threading.Tasks;
 
 namespace Tests.Application
 {
@@ -19,7 +19,7 @@ namespace Tests.Application
             //var db = new LiteDatabase("C:\\Users\\mcqua\\AppData\\Local\\EvcProver\\prover_data.db");
             var repo = new VerificationsLiteDbRepository(db, DeviceRepository.Instance);
 
-            var testService = new VerificationTestService(null, repo, new VerificationViewModelFactory(), null);
+            var testService = new VerificationService(null, repo, null, new VerificationViewModelFactory(), null);
             await DataTransfer.ImportTests(testService, $"C:\\Users\\mcqua\\source\\repos\\EvcProver_legacy\\src\\DataMigrator\\bin\\Debug\\ExportedTests");
         }
     }
