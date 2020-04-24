@@ -39,6 +39,7 @@ namespace Prover.Application.Dashboard
             items.AddRange(CreateDeviceViews(_parentFilterObservable));
             items.Add(CreateSummaryItem(_parentFilterObservable));
 
+            _entityCache.Update();
             //_parentFilterObservable.Subscribe();
             return items;
         }

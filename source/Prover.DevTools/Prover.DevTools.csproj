@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\build\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SampleData\MiniMax.json" />
+    <None Remove="SampleData\TemperatureTests.json" />
+  </ItemGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+  <ItemGroup>
+    <Content Include="SampleData\MiniMax.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\TemperatureTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
+    <PackageReference Include="ReactiveUI" Version="11.3.7" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Modules.UnionGas\Prover.Modules.UnionGas.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
+    <ProjectReference Include="..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
+    <ProjectReference Include="..\Prover.Storage.MongoDb\Prover.Storage.MongoDb.csproj" />
+    <ProjectReference Include="..\Prover.UI.Desktop\Prover.UI.Desktop.csproj" />
+  </ItemGroup>
+
+</Project>

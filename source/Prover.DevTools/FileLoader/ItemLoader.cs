@@ -14,7 +14,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace Prover.Application.FileLoader
+namespace Prover.DevTools.FileLoader
 {
     public class ItemLoader
     {
@@ -34,11 +34,12 @@ namespace Prover.Application.FileLoader
 
         //private static JsonSerializerOptions _serializerOptions = new JsonSerialierOptions() { PropertyNameCaseInsensitive = true};
 
-        public static async Task<string> GetFileInput() => await Interactions.Messages.OpenFileDialog.Handle("Open file");
+        public static async Task<string> GetFileInput() => await Application.Interactions.Messages.OpenFileDialog.Handle("Open file");
 
         public static async Task<ItemAndTestFile> LoadFromFile(IDeviceRepository devices, string filePath)
         {
-            if (!File.Exists(filePath)) return null;
+            if (!File.Exists(filePath))
+                return null;
             var json = File.ReadAllText(filePath);
             var itemFile = JsonConvert.DeserializeObject<JsonItemAndTestFile>(json);
             var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
@@ -77,7 +78,8 @@ namespace Prover.Application.FileLoader
 
         public async Task<EvcVerificationTest> LoadTemplate(string filePath)
         {
-            if (!File.Exists(filePath)) return null;
+            if (!File.Exists(filePath))
+                return null;
             var serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

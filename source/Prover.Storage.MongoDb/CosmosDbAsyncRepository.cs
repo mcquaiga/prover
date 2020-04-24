@@ -50,17 +50,19 @@ namespace Prover.Storage.MongoDb
             T result = default;
             try
             {
-                var response = await container.ReadItemAsync<T>(entity.Id.ToString(), partitionKey);
+                var response = await container.UpsertItemAsync<T>(entity, partitionKey);
 
-                response = await container.ReplaceItemAsync<T>(entity, entity.Id.ToString());
+                //var response = await container.ReadItemAsync<T>(entity.Id.ToString(), partitionKey);
 
-                _logger.LogDebug("Updated item with id: {0}", response.Resource.Id);
+                //response = await container.ReplaceItemAsync<T>(entity, entity.Id.ToString());
+
+                _logger.LogDebug("Upserted item with id: {0}", response.Resource.Id);
 
                 result = response.Resource;
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                var response = await container.CreateItemAsync<T>(entity, partitionKey);
+                var response = await container.UpsertItemAsync<T>(entity, partitionKey);
                 _logger.LogDebug("Created item with id: {0}", response.Resource.Id);
 
                 result = response.Resource;

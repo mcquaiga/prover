@@ -1,16 +1,11 @@
 ﻿using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
 using DynamicData;
-using DynamicData.Kernel;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Verifications;
 using Prover.Shared.Extensions;
-using Prover.Shared.SampleData;
 using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
 using System;
@@ -105,54 +100,22 @@ namespace Prover.Application.Caching
 			{
 				var disposer = new CompositeDisposable();
 
-				//var activeFilter = initialFilter ?? _defaultPredicate;
-				//DateTime? lastItemTestDate = null;
-
 				VerificationEvents.OnSave.Subscribe(context =>
 				{
 					cache.AddOrUpdate(context.Input);
-					//cache.Refresh(context.Input);
 				});
 
 				//var refresher = RxApp.TaskpoolScheduler.ScheduleRecurringAction(TimeSpan.FromSeconds(10), )
 
-				IObservable<EvcVerificationTest> LoadFromRepository(Expression<Func<EvcVerificationTest, bool>> predicate)
-				{
-					return Observable.Create<EvcVerificationTest>(async obs =>
-					{
-						var query = await _verificationRepository.Query();
-
-						var filtered = query.Where(predicate.Compile())
-											//.Where(t => lastItemTestDate == null || t.TestDateTime > lastItemTestDate)
-											.OrderBy(x => x.TestDateTime);
-
-						filtered.ToObservable().Subscribe(obs.OnNext, obs.OnCompleted);
-						//lastItemTestDate = filtered.LastOrDefault()?.TestDateTime;
-
-						//obs.OnCompleted();
-
-						return new CompositeDisposable();
-					});
-				}
-
-				var random = new Random(DateTime.Now.Millisecond * DateTime.Now.Second);
-
-				var generator = _mainScheduler.ScheduleRecurringAction(TimeSpan.FromSeconds(5), async () =>
-				{
-					var device = DeviceRepository.MiniMax().CreateInstance(SampleItemFiles.MiniMaxItemFile);
-					var test = device.NewVerification();
-					await _verificationRepository.UpsertAsync(test);
-					await VerificationEvents.OnSave.Publish(test);
-				}).DisposeWith(disposer);
-
-				//var watcher = LoadFromRepository(_defaultPredicate).Publish();
 
 				void Load()
 				{
 					cache.Clear();
 					cache.Edit(updater =>
 					{
-						using (LoadFromRepository(_defaultPredicate).Subscribe(updater.AddOrUpdate, () => updater.Refresh()))
+						using (
+						LoadFromRepository(_defaultPredicate)
+											.Subscribe(updater.AddOrUpdate, () => updater.Refresh()))
 						{ }
 
 					});
@@ -161,7 +124,7 @@ namespace Prover.Application.Caching
 				_signalUpdate.Do(_ => _mainScheduler.Schedule(Load))
 							 .Subscribe();
 
-				_mainScheduler.Schedule(Load);
+				//_mainScheduler.Schedule(Load);
 
 				//watcher.Connect().DisposeWith(disposer);
 
@@ -183,9 +146,26 @@ namespace Prover.Application.Caching
 			return Data.Connect().LogDebug(x => $"Total Adds = {x.Adds}").Subscribe();
 		}
 
-		/*
-				private bool Predicate(EvcVerificationTest t) => _currentDateFilter.Invoke(t.TestDateTime);
-		*/
+		private IObservable<EvcVerificationTest> LoadFromRepository(Expression<Func<EvcVerificationTest, bool>> predicate)
+		{
+			return Observable.Create<EvcVerificationTest>(async obs =>
+			{
+				var query = await _verificationRepository.Query();
+
+				var filtered = query.Where(predicate.Compile())
+									//.Where(t => lastItemTestDate == null || t.TestDateTime > lastItemTestDate)
+									.OrderBy(x => x.TestDateTime);
+
+				filtered.ToObservable().Subscribe(obs.OnNext, obs.OnCompleted);
+				//lastItemTestDate = filtered.LastOrDefault()?.TestDateTime;
+
+				//obs.OnCompleted();
+
+				return new CompositeDisposable();
+			});
+		}
+
+
 	}
 }
 

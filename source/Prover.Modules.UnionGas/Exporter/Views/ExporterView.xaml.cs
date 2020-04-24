@@ -1,8 +1,6 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Prover.UI.Desktop.Extensions;
+﻿using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
+using System.Reactive.Disposables;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -30,8 +28,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeExported, v => v.IncludeExportedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeArchived, v => v.IncludeArchivedCheckBox).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.TestDateFilter, v => v.SearchByDateButton).DisposeWith(d);
 
-             
+
 
                 this.CleanUpDefaults().DisposeWith(d);
 

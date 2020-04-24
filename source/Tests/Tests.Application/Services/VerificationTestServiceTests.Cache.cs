@@ -8,7 +8,7 @@ using Prover.Application.Extensions;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Verifications;
-using Prover.Shared.SampleData;
+using Prover.DevTools.SampleData;
 using Prover.Shared.Storage.Interfaces;
 using System;
 using System.Collections.Generic;

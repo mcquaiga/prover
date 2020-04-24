@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
@@ -36,14 +37,22 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             ScreenManager = screenManager;
             TestsByJobNumberViewModel = testsByJobNumberViewModel;
             HostScreen = screenManager;
-            DeviceTypes = deviceRepository.GetAll().OrderBy(d => d.Name).ToList();
-            DeviceTypes = DeviceTypes.Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" }).ToList();
+
+            DeviceTypes = deviceRepository.GetAll()
+                .OrderBy(d => d.Name).Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" })
+                                        .ToList();
+
+
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
+
+            TestDateFilter = ReactiveCommand.Create(DateTimeFilter).DisposeWith(Cleanup);
+
             FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
             FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
 
             var visibleItems = verificationCache.Items.Connect()
                                                 .Filter(FilterByTypeCommand)
+                                                .Filter(TestDateFilter.StartWith(DateTimeFilter()))
                                                 .Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
                                                 .Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)));
 
@@ -69,6 +78,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         //public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
 
         public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
+        public ReactiveCommand<Unit, Func<EvcVerificationTest, bool>> TestDateFilter { get; private set; }
         public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeExported { get; protected set; }
         public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeArchived { get; protected set; }
 
@@ -84,21 +94,49 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         [Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
         [Reactive] public DateTime ToDateTime { get; set; } = DateTime.Now;
 
-        private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType) => t => t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
-        private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include) => test => include || test.ArchivedDateTime == null;
-        private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include) => test => include || test.ExportedDateTime == null;
+        private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType)
+        {
+            return t => t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
+        }
+
+        private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include)
+        {
+            return test => include || test.ArchivedDateTime == null;
+        }
+
+        private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include)
+        {
+            return test => include || test.ExportedDateTime == null;
+        }
+
+        private Func<EvcVerificationTest, bool> DateTimeFilter()
+        {
+            return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
+        }
 
         #region Nested type: AllDeviceType
 
         private class AllDeviceType : DeviceType
         {
-            public override Type GetBaseItemGroupClass(Type itemGroupType) => throw new NotImplementedException();
+            public override Type GetBaseItemGroupClass(Type itemGroupType)
+            {
+                throw new NotImplementedException();
+            }
 
-            public override TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues) => throw new NotImplementedException();
+            public override TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues)
+            {
+                throw new NotImplementedException();
+            }
 
-            public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType) => throw new NotImplementedException();
+            public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
+            {
+                throw new NotImplementedException();
+            }
 
-            public override IEnumerable<ItemMetadata> GetItemMetadata<T>() => throw new NotImplementedException();
+            public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion

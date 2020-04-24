@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
-namespace Prover.Application.FileLoader
+namespace Prover.DevTools.FileLoader
 {
     public static class ItemFiles
     {
-        public static Dictionary<string, string> MiniMaxItemFile 
+        public static Dictionary<string, string> MiniMaxItemFile
             => _lazy.Value.Items;
 
         private static readonly Lazy<ItemAndTestFile> _lazy = new Lazy<ItemAndTestFile>(
@@ -36,7 +36,7 @@ namespace Prover.Application.FileLoader
             public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
         }
 
-    
+
 
         //internal class ItemFileConverter : JsonConverter
         //{

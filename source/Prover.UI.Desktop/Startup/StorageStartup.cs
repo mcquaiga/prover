@@ -21,9 +21,9 @@ namespace Prover.UI.Desktop.Startup
     {
         private const string KeyValueStoreConnectionString = "LiteDb";
         private readonly IServiceProvider _provider;
-        private readonly DatabaseSeeder _seeder;
 
-        public StorageStartup(IServiceProvider provider, DatabaseSeeder seeder = null)
+
+        public StorageStartup(IServiceProvider provider)
         {
             _provider = provider;
             //_seeder = seeder ?? new DatabaseSeeder(provider);
