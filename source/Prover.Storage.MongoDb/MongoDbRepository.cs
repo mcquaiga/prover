@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace Prover.Storage.MongoDb
 {
 
+
     public class MongoDbInitializer
     {
         public static void Configure()

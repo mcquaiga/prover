@@ -1,6 +1,3 @@
-using System;
-using System.Reactive;
-using System.Reactive.Disposables;
 using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -9,12 +6,15 @@ using Prover.Application.Interfaces;
 using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 using ReactiveUI;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
     public sealed class TestManager : TestManagerBase, IDeviceQaTestManager, IRoutableViewModel
     {
-        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
+
         private readonly IScreenManager _screenManager;
         public IDeviceSessionManager DeviceManager { get; }
         private readonly IVerificationTestService _verificationService;
@@ -24,14 +24,12 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
                 ILogger<TestManager> logger,
                 IScreenManager screenManager,
                 IDeviceSessionManager deviceSessionManager,
-                IVerificationTestService verificationService) 
+                IVerificationTestService verificationService)
         {
             _logger = logger ?? NullLogger<TestManager>.Instance;
             _screenManager = screenManager;
             DeviceManager = deviceSessionManager;
             _verificationService = verificationService;
-
-            
         }
 
         public IVolumeTestManager VolumeTestManager { get; set; }
@@ -39,33 +37,35 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 
         public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }
         public ReactiveCommand<Unit, Unit> RunVolumeVerifications { get; set; }
-        
+
         public void Setup(EvcVerificationViewModel verificationViewModel, IVolumeTestManager volumeTestManager, ICorrectionTestsManager correctionVerificationRunner)
         {
             base.Initialize(_logger, _screenManager, _verificationService, verificationViewModel);
-            
+
             VolumeTestManager = volumeTestManager;
             CorrectionVerifications = correctionVerificationRunner;
 
             RunCorrectionVerifications =
-                    ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests);
+                    ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests).DisposeWith(Cleanup);
             RunCorrectionVerifications.ThrownExceptions.LogErrors("Error downloading items from instrument.")
-                                      .Subscribe().DisposeWith(_cleanup);
+                                      .Subscribe().DisposeWith(Cleanup);
 
-            RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.RunStartActions);
+            RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.RunStartActions).DisposeWith(Cleanup);
         }
 
         public void StartTest(DeviceType deviceType)
         {
 
         }
-        //public ReactiveCommand<Unit, Unit> ExecuteStartActions { get; }
 
         protected override void Dispose(bool isDisposing)
         {
-            _logger.LogDebug("Disposing instance.");
-            DeviceManager.EndSession();
-            _cleanup?.Dispose();
+            if (isDisposing)
+            {
+                DeviceManager.EndSession();
+                TestViewModel?.Dispose();
+            }
+
         }
 
         /// <inheritdoc />

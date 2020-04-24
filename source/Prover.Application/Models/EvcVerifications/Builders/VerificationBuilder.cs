@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
+using System;
+using System.Collections.Generic;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {
@@ -18,10 +18,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
             _volumeBuilder = VolumeInputBuilderFactory.GetBuilder(device);
             //_testPointBuilder = TestPointBuilder.Create(_device, _volumeBuilder);
 
-            _instance = new EvcVerificationTest(device)
-            {
-                    DriveType = _volumeBuilder.BuildVolumeType()
-            };
+            _instance = new EvcVerificationTest(device);
         }
 
         #region Public Methods
@@ -48,7 +45,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         }
 
         #endregion
-        
+
     }
 
 

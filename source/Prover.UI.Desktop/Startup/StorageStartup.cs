@@ -2,13 +2,11 @@
 using Devices.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Prover.Application.Caching;
 using Prover.Application.Dashboard;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
-using Prover.Application.Verifications;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
 using Prover.Storage.MongoDb;
@@ -34,23 +32,20 @@ namespace Prover.UI.Desktop.Startup
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var devices = DeviceRepository.Instance;
+            _ = DeviceRepository.Instance;
+            var cache = _provider.GetRequiredService<IEntityDataCache<EvcVerificationTest>>();
+            //var task = Task.Run(() => _provider.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>().Initialize());
+            //var cache = _provider.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>();
+            cache.Update();
 
-            //_ = _seeder.SeedDatabase(250);
-
-            //_provider.GetServices<ICacheManager>()
-            //         .ToObservable()
-            //         .ObserveOn(ThreadPoolScheduler.Instance)
-            //         .ForEachAsync(c => c.LoadAsync(), cancellationToken);
-
-            //RxApp.TaskpoolScheduler.Schedule(() => _seeder.SeedDatabase(200));
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            _provider.GetRequiredService<IEntityDataCache<EvcVerificationTest>>().Dispose();
+            await Task.CompletedTask;
         }
 
     }
@@ -68,17 +63,11 @@ namespace Prover.UI.Desktop.Startup
             //
             AddMongoDb(services, host);
 
-            //services.AddSingleton<EvcVerificationTestService>();
             services.AddSingleton<IVerificationTestService, VerificationService>();
-            //services.AddSingleton<IVerificationTestService>(c => c.GetRequiredService<VerificationService>());
             services.AddSingleton<IEntityDataCache<EvcVerificationTest>, VerificationCache>();
-            //services.AddSingleton<IEntityDataCache<EvcVerificationTest>>(c => c.GetRequiredService<VerificationCache>());
-            //services.AddSingleton<ICacheManager>(c => c.GetRequiredService<VerificationTestService>());
 
             AddDashboard(services, host);
         }
-
-
 
         private static void AddDashboard(IServiceCollection services, HostBuilderContext host)
         {
@@ -86,42 +75,36 @@ namespace Prover.UI.Desktop.Startup
 
             services.AddSingleton<DashboardFactory>();
             services.AddSingleton<DashboardViewModel>();
-            //services.AddValueDashboardItem("Verified Today", 
-            //        v => v.TestDateTime.IsToday() && v.Verified);
-
-            //services.AddValueDashboardItem("Failed Today",  
-            //        v => v.TestDateTime.IsToday() && !v.Verified);
-
-            //services.AddValueDashboardItem("Verified This Week", 
-            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && v.Verified);
-
-            //services.AddValueDashboardItem("Failed This Week",  
-            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && !v.Verified);
 
         }
 
         private static void AddMongoDb(IServiceCollection services, HostBuilderContext host)
         {
-            var mongo = new MongoDbAsyncRepository<EvcVerificationTest>();
-            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(mongo);
-            services.AddSingleton<IEventsSubscriber>(c =>
-            {
-                var logger = c.GetService<ILogger<MongoDbAsyncRepository<EvcVerificationTest>>>();
-                VerificationEvents.OnSave.Subscribe(async (context) =>
-                {
-                    try
-                    {
-                        logger.LogDebug($"Saving to Azure MongoDb - Id: {context.Input.Id}");
+            var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
 
-                        await mongo.UpsertAsync(context.Input);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, $"Error saving to Azure MongoDb");
-                    }
-                });
-                return mongo;
-            });
+            Task.Run(() => cosmo.Initialize());
+
+            services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
+
+            //services.AddSingleton<IEventsSubscriber>(c =>
+            //{
+            //    var cosmo = cosmoTask.Result;
+            //    var logger = c.GetService<ILogger<CosmosDbAsyncRepository<EvcVerificationTest>>>();
+            //    VerificationEvents.OnSave.Subscribe(async (context) =>
+            //    {
+            //        try
+            //        {
+            //            logger.LogDebug($"Saving to Azure CosmoDb - Id: {context.Input.Id}");
+            //            await cosmo.UpsertAsync(context.Input);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            logger.LogError(ex, $"Error saving to Azure MongoDb");
+            //        }
+            //    });
+            //    return cosmo;
+            //});
 
 
         }
@@ -139,8 +122,8 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-                    new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
+            //        new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

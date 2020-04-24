@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,6 +8,9 @@ using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Prover.UI.Desktop
 {
@@ -71,7 +71,7 @@ namespace Prover.UI.Desktop
                         host.ConfigureModules(services);
                     })
                     .Build();
-        
+
         private void InitializeLogging()
         {
             var logFactory = AppHost.Services.GetService<ILoggerFactory>();

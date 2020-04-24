@@ -51,7 +51,8 @@ namespace Prover.UI.Desktop.ViewModels
 
                 var disposables = barItems.ToolbarActionItems.Select(AddToolbarItem).ToList();
 
-                _toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList());
+                _toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList()
+                                .Prepend(viewModel as IDisposable));
             }
 
             await Router.Navigate.Execute(viewModel);
@@ -89,11 +90,6 @@ namespace Prover.UI.Desktop.ViewModels
             //(current as IDisposable)?.Dispose();
         }
 
-        //public void SetHome(IRoutableViewModel viewModel)
-        //{
-        //    _homeViewModel = viewModel;
-        //}
-
         public async Task GoHome(IRoutableViewModel home = null)
         {
             if (_homeViewModel == null)
@@ -103,11 +99,15 @@ namespace Prover.UI.Desktop.ViewModels
             }
 
             _toolbarRemover.Disposable = Disposable.Empty;
+
             //Router.NavigationStack.Reverse().ForEach(v => (v as IDisposable)?.Dispose());
-            Router.NavigationStack.Reverse().Skip(1).ForEach(v =>
-            {
-                Router.NavigateBack.Execute().Subscribe();
-            });
+
+            await Router.NavigateAndReset.Execute(_homeViewModel);
+            //Router.NavigationStack.Reverse().Skip(1).ForEach(v =>
+            //{
+            //    (v as IDisposable)?.Dispose();
+            //    Router.NavigateBack.Execute().Subscribe();
+            //});
         }
 
         private readonly IServiceProvider _services;

@@ -1,8 +1,8 @@
-using System;
 using Devices.Core.Items.ItemGroups;
 using Prover.Calculations;
 using Prover.Shared.Domain;
 using Prover.Shared.Extensions;
+using System;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
@@ -24,7 +24,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         {
         }
 
-        protected VerificationEntity(TValue expectedValue, TValue actualValue,  decimal percentError) : base()
+        protected VerificationEntity(TValue expectedValue, TValue actualValue, decimal percentError) : base()
         {
             ExpectedValue = expectedValue;
             ActualValue = actualValue;
@@ -37,7 +37,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         public TValue ActualValue { get; protected set; }
         public decimal PercentError { get; protected set; }
 
-     
+
         #endregion
 
         //public bool Verified { get; set; }
@@ -54,7 +54,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         {
         }
 
-      
+
         protected virtual void Update(decimal passTolerance)
         {
             PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
@@ -70,10 +70,10 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
     public abstract class VerificationTestEntity<T> : VerificationTestEntity
         where T : ItemGroup
     {
-        protected VerificationTestEntity() {}
+        protected VerificationTestEntity() { }
         #region Public Properties
 
-        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError) 
+        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError)
             : base(expectedValue, actualValue, percentError)
         {
             Items = items;
@@ -81,7 +81,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
         public T Items { get; protected set; }
 
-      
+
         #endregion
     }
 
@@ -113,7 +113,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         }
 
         #region Public Properties
-        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false) 
+        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false)
             : base(expectedValue, actualValue, percentError)
         {
             StartValues = startValues;

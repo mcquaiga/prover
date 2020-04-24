@@ -16,11 +16,6 @@ namespace Prover.Application.Dashboard
                 DashboardFactory dashboardFactory,
                 IEntityDataCache<EvcVerificationTest> cache)
         {
-            RefreshData = ReactiveCommand.CreateFromObservable(() =>
-            {
-                cache.Update();
-                return Observable.Return(Unit.Default);
-            });
 
             ApplyDateFilter = ReactiveCommand.Create<string>(cache.ApplyDateFilter, outputScheduler: RxApp.MainThreadScheduler);
 
@@ -32,6 +27,15 @@ namespace Prover.Application.Dashboard
                                    .ToList();
 
             DateFilters = dashboardFactory.DateFilters.Keys;
+
+            RefreshData = ReactiveCommand.Create(() =>
+            {
+                cache.Update();
+            });
+
+            //RefreshData
+            //    .Select(_ => DefaultSelectedDate)
+            //    .InvokeCommand(this, x => x.ApplyDateFilter);
 
             //RefreshData = ReactiveCommand.CreateFromObservable(() =>
             //{

@@ -1,4 +1,5 @@
 using Devices.Core.Interfaces;
+using Newtonsoft.Json;
 using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
@@ -16,6 +17,7 @@ namespace Prover.Application.Models.EvcVerifications
         {
         }
 
+        [JsonConstructor]
         public EvcVerificationTest(DeviceInstance device)
         {
             Device = device;
@@ -37,7 +39,8 @@ namespace Prover.Application.Models.EvcVerifications
 
         public DeviceInstance Device { get; protected set; }
 
-        public IVolumeInputType DriveType { get; set; }
+        [JsonIgnore]
+        public IVolumeInputType DriveType { get; }
 
         public bool Verified { get; set; }
 

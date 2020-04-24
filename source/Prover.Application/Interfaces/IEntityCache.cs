@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Prover.Application.Interfaces
 {
-    public interface IEntityDataCache<TEntity>
+    public interface IEntityDataCache<TEntity> : IDisposable
             where TEntity : AggregateRoot
     {
         IObservableCache<TEntity, Guid> Items { get; }

@@ -17,16 +17,13 @@ namespace Prover.Application.ViewModels
         {
             Dispose(true);
 
+            if (!Cleanup.IsDisposed) Cleanup.Dispose();
+
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool isDisposing)
         {
-            if (isDisposing)
-            {
-                Logger.LogTrace($"Disposing - {this}");
-                Cleanup.Dispose();
-            }
         }
     }
 
