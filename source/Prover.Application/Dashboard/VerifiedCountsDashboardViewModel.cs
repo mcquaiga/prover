@@ -1,5 +1,4 @@
 ﻿using DynamicData;
-using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -13,13 +12,12 @@ namespace Prover.Application.Dashboard
     public class VerifiedCountsDashboardViewModel : DashboardItemViewModel
     {
         /// <inheritdoc />
-        public VerifiedCountsDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, string title, string groupName,
-                IObservable<Func<EvcVerificationTest, bool>> parentFilter, Func<EvcVerificationTest, bool> filter = null)
+        public VerifiedCountsDashboardViewModel(string title, string groupName, IObservableCache<EvcVerificationTest, Guid> itemsCache, Func<EvcVerificationTest, bool> filter = null)
             : base(title, groupName)
         {
             filter = filter ?? (t => true);
 
-            var shared = entityCache.Items.Connect(filter).QueryWhenChanged();
+            var shared = itemsCache.Connect(filter).QueryWhenChanged();
 
             shared.Select(x => x.Items.Count(test => test.Verified))
                   .ToPropertyEx(this, model => model.Passed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)

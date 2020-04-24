@@ -1,6 +1,5 @@
 ﻿using DynamicData;
 using DynamicData.Aggregation;
-using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
@@ -20,14 +19,15 @@ namespace Prover.Application.Dashboard
         protected string SummaryTitle = "Summary";
         private readonly IScheduler _scheduler;
         /// <inheritdoc />
-        public SummaryDashboardViewModel(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter = null, IScheduler mainScheduler = null) : base(groupName: "Summary", sortOrder: 0)
+        public SummaryDashboardViewModel(IObservableCache<EvcVerificationTest, Guid> itemsCache, IScheduler mainScheduler = null) : base(groupName: "Summary", sortOrder: 0)
         {
-            if (entityCache == null) throw new NullReferenceException(nameof(IEntityDataCache<EvcVerificationTest>));
+            if (itemsCache == null)
+                throw new NullReferenceException(nameof(IEntityDataCache<EvcVerificationTest>));
 
             _scheduler = mainScheduler ?? RxApp.MainThreadScheduler;
 
-            var shared = entityCache.Items.Connect()
-                    .ObserveOn(_scheduler);
+            var shared = itemsCache.Connect()
+                                   .ObserveOn(_scheduler);
 
             shared.QueryWhenChanged(query => CreateSummaryTotals(query.Items.ToList()))
                     .ToPropertyEx(this, x => x.Totals, scheduler: _scheduler, initialValue: new SummaryTotals())
@@ -36,14 +36,15 @@ namespace Prover.Application.Dashboard
             shared.Filter(t => t.SubmittedDateTime.HasValue) //.SelectMany(x => x.Items.Where(t => t.SubmittedDateTime.HasValue))
                   .Avg(x => x.SubmittedDateTime.Value.Subtract(x.TestDateTime).TotalSeconds)
                   .Select<double, TimeSpan?>(seconds => TimeSpan.FromSeconds(seconds))
-                  .LogDebug(x => $"totals changed {x}")
+                  //.LogDebug(x => $"totals changed {x}")
                   .ToPropertyEx(this, x => x.AverageDuration, scheduler: _scheduler)
                   .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Totals)
                 .Select(summary =>
                 {
-                    if (summary.TotalTests == 0) return 0;
+                    if (summary.TotalTests == 0)
+                        return 0;
 
                     return (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32();
                 })

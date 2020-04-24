@@ -13,11 +13,11 @@ namespace Prover.Application.Dashboard
     public class DashboardViewModel : ReactiveObject
     {
         public DashboardViewModel(
-                DashboardFactory dashboardFactory,
+                DashboardService dashboardFactory,
                 IEntityDataCache<EvcVerificationTest> cache)
         {
 
-            ApplyDateFilter = ReactiveCommand.Create<string>(cache.ApplyDateFilter, outputScheduler: RxApp.MainThreadScheduler);
+            ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.ApplyFilter, outputScheduler: RxApp.MainThreadScheduler);
 
             DashboardItems = dashboardFactory.CreateDashboard()
                                              .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
@@ -26,21 +26,13 @@ namespace Prover.Application.Dashboard
                                    .GroupBy(i => i.GroupName, i => i, (group, items) => new DashboardGroup() { GroupName = group, Items = items.ToList() })
                                    .ToList();
 
-            DateFilters = dashboardFactory.DateFilters.Keys;
+            DateFilters = dashboardFactory.Filters.Keys;
 
             RefreshData = ReactiveCommand.Create(() =>
             {
                 cache.Update();
             });
 
-            //RefreshData
-            //    .Select(_ => DefaultSelectedDate)
-            //    .InvokeCommand(this, x => x.ApplyDateFilter);
-
-            //RefreshData = ReactiveCommand.CreateFromObservable(() =>
-            //{
-            //    return Observable.Return(caches.ToObservable().ForEachAsync(c => c.LoadAsync()));
-            //});
             DefaultSelectedDate = "7d";
         }
 

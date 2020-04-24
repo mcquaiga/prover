@@ -50,10 +50,8 @@ namespace Prover.Application.Caching
 			_mainScheduler = mainScheduler ?? RxApp.TaskpoolScheduler;
 			_logger = logger ?? ProverLogging.CreateLogger<VerificationCache>();
 
-			_loader = LoadVerificationsAndMaintainCache()
-							.Filter(_parentFilterObservable.StartWith(BuildFilter("30d")))
-							.ObserveOn(_mainScheduler)
-							.Publish();
+			_loader = LoadVerificationsAndMaintainCache().ObserveOn(_mainScheduler)
+														 .Publish();
 
 			//ApplyDateFilter("30d");
 
@@ -65,6 +63,11 @@ namespace Prover.Application.Caching
 
 			//LogChanges().DisposeWith(_cleanup);
 			//LogListChanges().DisposeWith(_cleanup);
+		}
+
+		public IObservableCache<EvcVerificationTest, Guid> GetVerifications(IObservable<Func<EvcVerificationTest, bool>> filter)
+		{
+			return LoadVerificationsAndMaintainCache(filterObservable: filter);
 		}
 
 		public IObservableCache<EvcVerificationTest, Guid> Items { get; set; }
@@ -94,7 +97,7 @@ namespace Prover.Application.Caching
 			return test => DateFilters[dateTimeKey].Invoke(test.TestDateTime);
 		}
 
-		private IObservable<IChangeSet<EvcVerificationTest, Guid>> LoadVerificationsAndMaintainCache(Func<EvcVerificationTest, bool> initialFilter = null)
+		private IObservable<IChangeSet<EvcVerificationTest, Guid>> LoadVerificationsAndMaintainCache(Func<EvcVerificationTest, bool> initialFilter = null, IObservable<Func<EvcVerificationTest, bool>> filterObservable = null)
 		{
 			return ObservableChangeSet.Create<EvcVerificationTest, Guid>(cache =>
 			{
@@ -105,28 +108,22 @@ namespace Prover.Application.Caching
 					cache.AddOrUpdate(context.Input);
 				});
 
-				//var refresher = RxApp.TaskpoolScheduler.ScheduleRecurringAction(TimeSpan.FromSeconds(10), )
-
-
 				void Load()
 				{
 					cache.Clear();
 					cache.Edit(updater =>
 					{
-						using (
-						LoadFromRepository(_defaultPredicate)
+						using (LoadFromRepository(_defaultPredicate)
 											.Subscribe(updater.AddOrUpdate, () => updater.Refresh()))
 						{ }
 
 					});
 				}
 
-				_signalUpdate.Do(_ => _mainScheduler.Schedule(Load))
+				_signalUpdate.Do(_ => cache.Refresh())
 							 .Subscribe();
 
-				//_mainScheduler.Schedule(Load);
-
-				//watcher.Connect().DisposeWith(disposer);
+				_mainScheduler.Schedule(Load);
 
 				return disposer;
 			}, test => test.Id);

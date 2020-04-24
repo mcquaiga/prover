@@ -73,7 +73,7 @@ namespace Prover.UI.Desktop.Startup
         {
             var oneWeekAgo = DateTime.Now.Subtract(TimeSpan.FromDays(7));
 
-            services.AddSingleton<DashboardFactory>();
+            services.AddSingleton<DashboardService>();
             services.AddSingleton<DashboardViewModel>();
 
         }
