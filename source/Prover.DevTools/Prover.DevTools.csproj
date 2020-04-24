@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,6 +27,8 @@
   <ItemGroup>
     <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
     <PackageReference Include="ReactiveUI" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.3.7" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
 

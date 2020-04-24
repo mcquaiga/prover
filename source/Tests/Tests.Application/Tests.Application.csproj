@@ -51,7 +51,6 @@
     <ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
     <ProjectReference Include="..\..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
-    <ProjectReference Include="..\..\MongoTesting\MongoTesting.csproj" />
     <ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\..\Prover.DevTools\Prover.DevTools.csproj" />
     <ProjectReference Include="..\..\Prover.Legacy.Data.Migrations\Prover.Legacy.Data.Migrations.csproj" />
