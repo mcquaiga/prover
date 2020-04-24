@@ -230,7 +230,7 @@
                 <DataGridTemplateColumn
                     Width="80"
                     CanUserResize="False"
-                    Header="-"
+                    Header=""
                     HeaderStyle="{StaticResource DataGridColumnHeadersStyle}"
                     SortMemberPath="Verified">
                     <DataGridTemplateColumn.CellTemplate>

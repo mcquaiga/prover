@@ -24,6 +24,8 @@
         <ResourceDictionary>
             <converters:PackIconConverter x:Key="PackIconConverter" />
 
+            <SolidColorBrush x:Key="PassColour" Color="Green" />
+            <SolidColorBrush x:Key="FailColour" Color="DarkRed" />
 
             <converters:BoolToVisibilityConverter
                 x:Key="BoolToHiddenConverter"
@@ -41,11 +43,17 @@
                 x:Key="TrueToHiddenConverter"
                 FalseValue="Visible"
                 TrueValue="Hidden" />
-
+            <converters:BoolToVisibilityConverter
+                x:Key="TrueToCollapsedConverter"
+                FalseValue="Visible"
+                TrueValue="Collapsed" />
             <converters:BooleanToPassConverter
                 x:Key="BoolToPassFailConverter"
                 FalseValue="Fail"
                 TrueValue="Pass" />
+
+            <converters:VerifiedToColorConverter x:Key="VerifiedToColorConverter" />
+
             <converters:BooleanToPassConverter
                 x:Key="BoolToYesNoConverter"
                 FalseValue="No"
@@ -75,8 +83,6 @@
                 Opacity=".85"
                 Color="DarkSlateGray" />
 
-            <SolidColorBrush x:Key="PassColour" Color="Green" />
-            <SolidColorBrush x:Key="FailColour" Color="DarkRed" />
 
             <Style TargetType="{x:Type Window}">
                 <Setter Property="FontSize" Value="16" />

@@ -15,12 +15,19 @@ namespace Prover.Storage.LiteDb
             where T : AggregateRoot
     {
         protected readonly ILiteDatabase Context;
+        private ILiteCollection<T> _collection;
 
-        public LiteDbAsyncRepository(ILiteDatabase context) => Context = context;
+        public LiteDbAsyncRepository(ILiteDatabase context)
+        {
+            Context = context;
+            _collection = Context.GetCollection<T>();
+
+
+        }
 
         public async Task<T> UpsertAsync(T entity)
         {
-            var success = Context.GetCollection<T>().Upsert(entity);
+            var success = _collection.Upsert(entity);
 
             return success ? entity : null;
         }
@@ -30,7 +37,8 @@ namespace Prover.Storage.LiteDb
         /// <inheritdoc />
         public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null)
         {
-            var results = predicate != null ? Context.GetCollection<T>().Find(predicate) : Context.GetCollection<T>().FindAll();
+            predicate = null;
+            var results = predicate != null ? _collection.Find(predicate) : Context.GetCollection<T>().FindAll();
             return await Task.FromResult(results);
         }
 
@@ -41,13 +49,14 @@ namespace Prover.Storage.LiteDb
         public async Task<T> GetAsync(Guid id)
         {
             await Task.CompletedTask;
-            return Context.GetCollection<T>().FindById(id);
+
+            return _collection.FindById(id);
         }
 
         public async Task<IReadOnlyList<T>> ListAsync()
         {
             await Task.CompletedTask;
-            return Context.GetCollection<T>().FindAll().ToList();
+            return _collection.FindAll().ToList();
         }
 
         //public IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null) => predicate != null
@@ -60,7 +69,7 @@ namespace Prover.Storage.LiteDb
             {
                 await Observable.StartAsync(async () =>
                 {
-                    Context.GetCollection<T>().Upsert(entity);
+                    _collection.Upsert(entity);
                     await Task.CompletedTask;
                 });
             }

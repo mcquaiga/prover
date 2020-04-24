@@ -3,7 +3,6 @@ using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using Newtonsoft.Json;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Verifications;
@@ -35,7 +34,7 @@ namespace Prover.Application.FileLoader
 
         //private static JsonSerializerOptions _serializerOptions = new JsonSerialierOptions() { PropertyNameCaseInsensitive = true};
 
-        public static async Task<string> GetFileInput() => await MessageInteractions.OpenFileDialog.Handle("Open file");
+        public static async Task<string> GetFileInput() => await Interactions.Messages.OpenFileDialog.Handle("Open file");
 
         public static async Task<ItemAndTestFile> LoadFromFile(IDeviceRepository devices, string filePath)
         {

@@ -61,7 +61,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     (ex, a) => ex == null && a == null);
                 AddJobId = ReactiveCommand.CreateFromTask(async () =>
                     {
-                        var jobId = await MessageInteractions.GetInputString.Handle("Enter Job #");
+                        var jobId = await Messages.GetInputString.Handle("Enter Job #");
                         if (!string.IsNullOrEmpty(jobId))
                         {
                             Test.JobId = jobId;

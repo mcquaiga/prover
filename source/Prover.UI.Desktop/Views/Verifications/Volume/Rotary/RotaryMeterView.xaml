@@ -11,35 +11,45 @@
     x:Name="RotaryMeterViewControl"
     x:TypeArguments="rotary:RotaryMeterTestViewModel"
     mc:Ignorable="d">
-    <Grid HorizontalAlignment="Stretch" DataContext="{Binding Path=ViewModel, ElementName=RotaryMeterViewControl}">
-        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
-            <TextBlock Style="{StaticResource SectionHeaderTextBlockStyle}" Text="Rotary Meter" />
-            <!--<controls:PercentageControlNew
-                x:Name="RotaryPercentErrorControl"
-                Margin="5"
-                HorizontalAlignment="Center" />-->
-            <StackPanel
-                Margin="5"
-                HorizontalAlignment="Stretch"
-                Orientation="Horizontal">
+    <Grid DataContext="{Binding Path=ViewModel, ElementName=RotaryMeterViewControl}">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Margin="5" Orientation="Horizontal">
                 <materialDesign:PackIcon Style="{StaticResource PassFailIcon}" />
+
                 <TextBlock
                     x:Name="RotaryMeterTypeText"
-                    HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                    Text="RM 2000" />
+                    Style="{StaticResource ValueTextBlockStyle}" />
 
-                <materialDesign:PopupBox Visibility="{Binding Path=Verified, Converter={StaticResource TrueToHiddenConverter}}">
+                <!--<materialDesign:PopupBox  Visibility="{Binding Path=Verified, Converter={StaticResource TrueToHiddenConverter}}">-->
+                <materialDesign:PopupBox
+                    x:Name="InformationPopupBox"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center">
                     <materialDesign:PopupBox.ToggleContent>
-                        <materialDesign:PackIcon HorizontalAlignment="Right" Kind="InformationCircle" />
+                        <materialDesign:PackIcon
+                            x:Name="MeterTypeInformationIcon"
+                            HorizontalAlignment="Center"
+                            Foreground="{Binding Verified, Converter={StaticResource VerifiedToColorConverter}}"
+                            Kind="InformationCircle"
+                            Visibility="{Binding Verified, Converter={StaticResource TrueToCollapsedConverter}}" />
                     </materialDesign:PopupBox.ToggleContent>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
-                        <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />
+
+                    <StackPanel Orientation="Vertical">
+                        <controls:PercentageControlNew
+                            x:Name="RotaryPercentErrorControl"
+                            Margin="5"
+                            HorizontalAlignment="Center" />
+                        <StackPanel Orientation="Horizontal">
+
+                            <controls:ValueDescriptionControl x:Name="RotaryExpectedMeterDisplacementControl" Label="Expected" />
+                            <controls:ValueDescriptionControl x:Name="RotaryEvcMeterDisplacementControl" Label="EVC Value" />
+                        </StackPanel>
                     </StackPanel>
+
                 </materialDesign:PopupBox>
             </StackPanel>
+            <!--<TextBlock Style="{StaticResource LabelFontStyle}" Text="Rotary Meter" />-->
         </StackPanel>
 
     </Grid>

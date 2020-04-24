@@ -91,11 +91,13 @@ namespace Prover.Application.Services
 
             viewModel.SubmittedDateTime = DateTime.Now;
 
-            var model = viewModel.ToModel();
+            _logger.LogDebug($"Submitting verification Id: {viewModel.Id} at {viewModel.SubmittedDateTime:g}");
+
+            var model = await Upsert(viewModel.ToModel());
 
             await VerificationEvents.OnSubmit.Publish(model);
 
-            model = await Upsert(model);
+
 
             return model;
         }

@@ -57,19 +57,22 @@ namespace Prover.Modules.UnionGas.Verifications
 
             if (!_loginService.IsSignedOn)
             {
-                await _loginService.Login();
+                if (!string.IsNullOrEmpty(AutoSignOnUsername))
+                    await _loginService.Login(AutoSignOnUsername);
+                else
+                    await _loginService.Login();
             }
 
-            _disposer.Disposable =
-                _loginService
-                    .LoggedIn
-                    .Subscribe(x => verification.EmployeeId = _loginService.User?.UserId);
+            _disposer.Disposable = _loginService.LoggedIn
+                                                .Subscribe(x => verification.EmployeeId = _loginService.User?.UserId);
 
             var meterDto = await _companyNumberValidator.ValidateInventoryNumber(verification, updateDeviceItemValue: true);
 
             verification.JobId = meterDto?.JobNumber.ToString();
             verification.EmployeeId = _loginService.User?.UserId;
         }
+
+        public string AutoSignOnUsername { get; set; } = "123";
 
         public async Task OnSubmit(EvcVerificationViewModel verification)
         {

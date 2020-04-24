@@ -31,16 +31,15 @@
         </DataTemplate>
 
         <DataTemplate x:Key="RotaryVolumeContentControlTemplate">
-            <StackPanel>
-                <Button
-                    Width="75"
-                    Height="Auto"
-                    Margin="15,5"
-                    Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
-                    Content="{materialDesign:PackIcon Kind=PlayArrow,
-                                                      Size=35}"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}" />
-            </StackPanel>
+            <Button
+                Width="120"
+                Height="28"
+                Margin="4 0"
+                Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
+                Content="{materialDesign:PackIcon Kind=PlayArrow,
+                                                      Size=20}"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+
         </DataTemplate>
 
         <DataTemplate x:Key="ToolbarControl">
@@ -95,9 +94,29 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <materialDesign:Snackbar
-            x:Name="ActionSnackbar"
+     
+        <!--<ContentControl
+            x:Name="TestToolBarContent"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
             HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"
+            ContentTemplate="{StaticResource ToolbarControl}"
+            DataContext="{Binding}" />-->
+        <reactiveUi:ViewModelViewHost
+            x:Name="TestViewContent"
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center">
+            <reactiveUi:ViewModelViewHost.Resources />
+        </reactiveUi:ViewModelViewHost>
+
+   <materialDesign:Snackbar
+            x:Name="ActionSnackbar"
+            HorizontalAlignment="Right"
             VerticalAlignment="Center"
             d:LayoutOverrides="All">
             <materialDesign:Snackbar.Resources>
@@ -157,24 +176,7 @@
                 ActionContent="SUBMIT" />
 
         </materialDesign:Snackbar>
-        <!--<ContentControl
-            x:Name="TestToolBarContent"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"
-            ContentTemplate="{StaticResource ToolbarControl}"
-            DataContext="{Binding}" />-->
-        <reactiveUi:ViewModelViewHost
-            x:Name="TestViewContent"
-            Grid.Row="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center">
-            <reactiveUi:ViewModelViewHost.Resources />
-        </reactiveUi:ViewModelViewHost>
+
     </Grid>
 
 

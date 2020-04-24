@@ -1,13 +1,12 @@
-﻿using System.Reactive;
-using Prover.Application.Interfaces;
+﻿using Prover.Application.Interfaces;
 using ReactiveUI;
+using System.Reactive;
 
 namespace Prover.Application.Interactions
 {
-    public static class MessageInteractions
+    public static class Messages
     {
-        public static Interaction<IDialogViewModel, Unit> ShowDialog { get; } 
-            = new Interaction<IDialogViewModel, Unit>();
+        public static Interaction<IDialogViewModel, Unit> ShowDialog { get; } = new Interaction<IDialogViewModel, Unit>();
 
         public static Interaction<string, Unit> ShowMessage { get; } = new Interaction<string, Unit>();
 
@@ -25,19 +24,20 @@ namespace Prover.Application.Interactions
 
         public static Interaction<string, int> GetInputInteger { get; } = new Interaction<string, int>();
 
-        //public static Interaction<string, decimal> GetInputDecimal { get; } = new Interaction<string, decimal>();
-
         public static Interaction<string, string> OpenFileDialog { get; } = new Interaction<string, string>();
-
-        //public static Interaction<string, T> GetInput<T>() => new Interaction<string, T>();
-
     }
 
-    public static class NotificationInteractions
+    public static class Exceptions
+    {
+        public static Interaction<string, Unit> Error { get; } = Messages.ShowError;
+        public static Interaction<string, Unit> Warning { get; } = Messages.ShowError;
+        public static Interaction<string, Unit> Critical { get; } = Messages.ShowError;
+    }
+
+    public static class Notifications
     {
         public static Interaction<string, Unit> SnackBarMessage { get; } = new Interaction<string, Unit>();
-        
-        public static Interaction<string, Unit> ActionMessage { get; } = new Interaction<string, Unit>();
 
+        public static Interaction<string, Unit> ActionMessage { get; } = new Interaction<string, Unit>();
     }
 }

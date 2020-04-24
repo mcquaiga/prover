@@ -7,68 +7,76 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:rotary="clr-namespace:Prover.Application.ViewModels.Volume.Rotary;assembly=Prover.Application"
+    xmlns:volume="clr-namespace:Prover.UI.Desktop.Views.Verifications.Volume"
     d:DesignHeight="450"
     x:TypeArguments="rotary:RotaryVolumeViewModel"
     mc:Ignorable="d">
-    <StackPanel Orientation="Vertical">
-        <TextBlock
-            Margin="4,8"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            RenderTransformOrigin=".5,.5"
-            Style="{StaticResource PrimaryTestHeaderStyle}"
-            Text="Volume">
-            <!--<TextBlock.LayoutTransform>
-                    <RotateTransform Angle="-90" />
-                </TextBlock.LayoutTransform>-->
-        </TextBlock>
-
-        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
-            <reactiveUi:ViewModelViewHost x:Name="PulseOutputsContent" />
-            <!--<StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
-
-                <controls:ValueDescriptionControl
-                    x:Name="AppliedInputControl"
-                    VerticalAlignment="Bottom"
-                    VerticalContentAlignment="Bottom"
-                    IsReadOnly="False"
-                    Label="Applied Input"
-                    TabIndex="0" />
-
-                <controls:ValueDescriptionControl
-                    x:Name="UncorrectedPulseCountControl"
-                    IsReadOnly="False"
-                    Label="Uncor Pulses"
-                    TabIndex="1" />
-
-                <controls:ValueDescriptionControl
-                    x:Name="CorrectedPulseCountControl"
-                    IsReadOnly="False"
-                    Label="Cor Pulses"
-                    TabIndex="2" />
-
-            </StackPanel>-->
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-
-            <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" />
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-            <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" />
-
-            <Border
-                Margin="2,16"
-                BorderThickness="1,0,0,0"
-                Style="{StaticResource SubSectionDividerBorder}" />
-
-            <reactiveUi:ViewModelViewHost x:Name="RotaryMeterTestContent" />
+    <DockPanel HorizontalAlignment="Stretch">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock
+                Margin="8,2"
+                VerticalAlignment="Top"
+                Style="{StaticResource PrimaryTestHeaderStyle}"
+                Text="Volume" />
 
         </StackPanel>
-    </StackPanel>
+
+        <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0"
+                Margin="4,0,12,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Orientation="Vertical">
+
+                <reactiveUi:ViewModelViewHost
+                    x:Name="RotaryMeterTestContent"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center" />
+                <volume:PulseOutputsView
+                    x:Name="PulseOutputsContent"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    ViewModel="{Binding}" />
+
+
+            </StackPanel>
+
+
+            <Grid Grid.Column="1" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal">
+                    <!--<ItemsControl x:Name="PulseOutputsContentControl" DisplayMemberPath="PulseOutputsView" />-->
+
+
+                    <Border
+                        Margin="12,24"
+                        BorderThickness="1,0,0,0"
+                        Style="{StaticResource SubSectionDividerBorder}" />
+
+                    <reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" Margin="8,0" />
+
+                    <Border
+                        Margin="12,24"
+                        BorderThickness="1,0,0,0"
+                        Style="{StaticResource SubSectionDividerBorder}" />
+
+                    <reactiveUi:ViewModelViewHost x:Name="CorrectedVolumeContent" Margin="8,0" />
+
+                    <!--<Border
+                Margin="2,16"
+                BorderThickness="1,0,0,0"
+                Style="{StaticResource SubSectionDividerBorder}" />-->
+
+
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+    </DockPanel>
 </reactiveUi:ReactiveUserControl>

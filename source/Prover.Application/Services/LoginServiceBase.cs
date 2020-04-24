@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Prover.Application.ViewModels;
+using Prover.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Prover.Application.Interactions;
-using Prover.Application.ViewModels;
-using Prover.Shared.Interfaces;
-using ReactiveUI;
 
 namespace Prover.Application.Services
 {
@@ -20,7 +18,7 @@ namespace Prover.Application.Services
         protected LoginServiceBase()
         {
             LoggedIn = LoggedInSubject;
-            
+
             LoggedIn.Subscribe(x => IsSignedOn = x).DisposeWith(_cleanup);
 
             LoggedInSubject.OnNext(false);
@@ -52,7 +50,7 @@ namespace Prover.Application.Services
         /// <inheritdoc />
         public abstract Task<string> GetDisplayName<TId>(TId id);
 
-        public virtual async Task<string> GetLoginDetails() => await MessageInteractions.GetInputString.Handle("Username:");
+        public virtual async Task<string> GetLoginDetails() => await Interactions.Messages.GetInputString.Handle("Username:");
 
         /// <inheritdoc />
         /// <inheritdoc />

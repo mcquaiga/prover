@@ -35,7 +35,7 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreenManager, ScreenManager>();
             services.AddSingleton<IScreen>(c => c.GetRequiredService<IScreenManager>());
-       
+
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();

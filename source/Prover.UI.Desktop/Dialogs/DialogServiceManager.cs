@@ -1,83 +1,18 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application.Interfaces;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Prover.UI.Desktop.Dialogs
 {
-    public partial class DialogServiceManager
-    {
-        public void RegisterInteractions(IDialogServiceManager dialogManager)
-        {
-            MessageInteractions.ShowMessage.RegisterHandler(async i =>
-            {
-                await dialogManager.ShowMessage(i.Input, "Message");
-                i.SetOutput(Unit.Default);
-            });
-
-            MessageInteractions.ShowYesNo.RegisterHandler(async i =>
-            {
-                var answer = await dialogManager.ShowQuestion(i.Input);
-                i.SetOutput(answer);
-            });
-
-            MessageInteractions.ShowError.RegisterHandler(async i =>
-            {
-                await dialogManager.ShowMessage(i.Input, "Error");
-                i.SetOutput(Unit.Default);
-            });
-
-            MessageInteractions.ShowDialog.RegisterHandler(async viewModel =>
-            {
-                await ShowViewModel(viewModel.Input);
-                viewModel.SetOutput(Unit.Default);
-            });
-
-            MessageInteractions.GetInputString.RegisterHandler(async i =>
-            {
-                var answer = await dialogManager.ShowInputDialog<string>(i.Input);
-                i.SetOutput(answer);
-            });
-
-            MessageInteractions.GetInput.RegisterHandler(async i =>
-            {
-                var answer = await dialogManager.ShowInputDialog<object>(i.Input);
-                i.SetOutput(answer);
-            });
-
-            MessageInteractions.GetInputNumber.RegisterHandler(async i =>
-            {
-              await Observable.StartAsync(async () =>
-               {
-                   var answer = await dialogManager.ShowInputDialog<decimal>(i.Input);
-                   i.SetOutput(answer);
-               }, RxApp.MainThreadScheduler);
-            });
-
-            MessageInteractions.OpenFileDialog.RegisterHandler(async i =>
-            {
-                var fileOpen = new OpenFileDialog();
-                if (fileOpen.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    i.SetOutput(fileOpen.FileName);
-                }
-
-                return;
-            });
-        }
-
-        
-    }
 
     public partial class DialogServiceManager : ReactiveObject, IDialogServiceManager
     {
@@ -88,9 +23,9 @@ namespace Prover.UI.Desktop.Dialogs
         private Action _onClosed;
 
         public DialogServiceManager(
-                IServiceProvider services, 
+                IServiceProvider services,
                 ILogger<DialogServiceManager> logger,
-                IViewLocator viewLocator = null, 
+                IViewLocator viewLocator = null,
                 Action<IDialogServiceManager> interactionsRegistery = null)
         //: this()
         {
@@ -128,11 +63,12 @@ namespace Prover.UI.Desktop.Dialogs
                         return view;
                     }, RxApp.MainThreadScheduler);
                 }, outputScheduler: RxApp.MainThreadScheduler);
-                   
+
 
             ShowDialogViewModel.InvokeCommand(ShowDialogView);
 
-            CloseDialog = ReactiveCommand.CreateFromObservable(() => {
+            CloseDialog = ReactiveCommand.CreateFromObservable(() =>
+            {
                 DialogSession?.Close();
                 //_disposer.Disposable = Disposable.Empty;
                 return Observable.Return((IViewFor)null);
@@ -177,10 +113,10 @@ namespace Prover.UI.Desktop.Dialogs
         public async Task<TResult> ShowInputDialog<TResult>(string message, string title = null)
         {
             var inputDialog = new InputDialogViewModel(message, title);
-            
+
             await ShowViewModel(inputDialog);
 
-            return (TResult) (object) inputDialog.InputValue;
+            return (TResult)(object)inputDialog.InputValue;
         }
 
         public async Task ShowMessage(string message, string title)
@@ -195,7 +131,7 @@ namespace Prover.UI.Desktop.Dialogs
             var view = new QuestionDialogView
             {
                 ViewModel = viewModel,
-                MessageText = {Text = question}
+                MessageText = { Text = question }
             };
 
             await ShowDialogView.Execute(view);
@@ -226,5 +162,5 @@ namespace Prover.UI.Desktop.Dialogs
         //}
     }
 
- 
+
 }

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Prover.Application.Interactions;
+using Prover.UI.Desktop.Extensions;
+using ReactiveUI;
+using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Prover.Application.Interactions;
-using Prover.UI.Desktop.Extensions;
-using ReactiveUI;
 
 namespace Prover.UI.Desktop.Views.Verifications
 {
@@ -36,12 +36,12 @@ namespace Prover.UI.Desktop.Views.Verifications
                 this.CleanUpDefaults().DisposeWith(d);
             });
 
-            
+
         }
-        
+
         private void RegisterInteractionHandlers()
         {
-            NotificationInteractions.ActionMessage.RegisterHandler(context =>
+            Notifications.ActionMessage.RegisterHandler(context =>
             {
                 ActionSnackbar.Message.Content = context.Input;
                 ActionSnackbar.IsActive = true;

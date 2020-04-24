@@ -80,7 +80,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             {
                 return Observable.FromAsync(async () =>
                 {
-                    if (await MessageInteractions.ShowYesNo.Handle("Are you sure you want to archive this test?"))
+                    if (await Messages.ShowYesNo.Handle("Are you sure you want to archive this test?"))
                     {
                         test.ArchivedDateTime = DateTime.Now;
                         await verificationTestService.Upsert(test);

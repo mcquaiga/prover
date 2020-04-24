@@ -19,8 +19,11 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume.Rotary
                     this.OneWayBind(ViewModel, vm => vm.Uncorrected, v => v.UncorrectedVolumeContent.ViewModel).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.Corrected, v => v.CorrectedVolumeContent.ViewModel).DisposeWith(d);
                     this.OneWayBind(ViewModel, vm => vm.RotaryMeterTest, v => v.RotaryMeterTestContent.ViewModel).DisposeWith(d);
+                    //this.OneWayBind(ViewModel, vm => vm, v => v.PulseOutputsContent.ViewModel).DisposeWith(d);
 
-                    this.OneWayBind(ViewModel, vm => vm, v => v.PulseOutputsContent.ViewModel).DisposeWith(d);
+                    PulseOutputsContent.ViewModel = ViewModel;
+
+                    //this.OneWayBind(ViewModel, vm => vm, v => v.PulseOutputsContent.ViewModel).DisposeWith(d);
 
 
                     //this.Bind(ViewModel, vm => vm.Uncorrected.AppliedInput, v => v.AppliedInputControl.Value).DisposeWith(d);

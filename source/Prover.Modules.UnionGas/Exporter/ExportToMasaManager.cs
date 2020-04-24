@@ -63,14 +63,14 @@ namespace Prover.Modules.UnionGas.Exporter
 
             if (!isSuccess)
             {
-                await NotificationInteractions.SnackBarMessage.Handle("EXPORT FAILED");
+                await Notifications.SnackBarMessage.Handle("EXPORT FAILED");
                 return false;
                 throw new Exception(
                     "An error occured sending test results to web service. Please see log for details.");
 
             }
 
-            await NotificationInteractions.SnackBarMessage.Handle("EXPORT SUCCESSFUL");
+            await Notifications.SnackBarMessage.Handle("EXPORT SUCCESSFUL");
 
             foreach (var instr in forExport)
             {

@@ -114,20 +114,15 @@ namespace Prover.Application.Caching
                 {
                     return Observable.Create<EvcVerificationTest>(async obs =>
                     {
-                        var query = await _verificationRepository.Query(predicate);
-                        var filtered = query
-                                            //.Where(predicate)
+                        var query = await _verificationRepository.Query();
+                        var filtered = query.Where(predicate.Compile())
                                             .Where(t => lastItemTestDate == null || t.TestDateTime > lastItemTestDate)
-                                            .Take(4)
-                                            .OrderBy(x => x.TestDateTime).ToList();
-
-                        foreach (var test in filtered)
-                            obs.OnNext(test);
+                                            .OrderBy(x => x.TestDateTime)
+                                            .ForEach(obs.OnNext);
 
                         lastItemTestDate = filtered.LastOrDefault()?.TestDateTime;
 
                         obs.OnCompleted();
-
 
                         return new CompositeDisposable();
                     });

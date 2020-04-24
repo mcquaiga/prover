@@ -1,12 +1,12 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using Prover.Application.Interactions;
+﻿using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -22,11 +22,11 @@ namespace Prover.Modules.UnionGas.Login
             });
             LogIn.ThrownExceptions
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(async ex => await MessageInteractions.ShowError.Handle($"An error occured signing on. {Environment.NewLine} {ex.Message}"))
+                .Do(async ex => await Exceptions.Error.Handle($"An error occured signing on. {Environment.NewLine} {ex.Message}"))
                 .Subscribe();
 
             LogIn.Where(x => !x)
-                .Do(_ => NotificationInteractions.SnackBarMessage.Handle("Employee not found"))
+                .Do(async _ => await Notifications.SnackBarMessage.Handle("Employee not found"))
                 .Subscribe();
 
             LogOut = ReactiveCommand.CreateFromTask(loginService.Logout);

@@ -33,8 +33,7 @@ namespace Prover.Application.Dashboard
                     .ToPropertyEx(this, x => x.Totals, scheduler: _scheduler, initialValue: new SummaryTotals())
                     .DisposeWith(Cleanup);
 
-            shared.Filter(t => t.SubmittedDateTime.HasValue)
-                  //.SelectMany(x => x.Items.Where(t => t.SubmittedDateTime.HasValue))
+            shared.Filter(t => t.SubmittedDateTime.HasValue) //.SelectMany(x => x.Items.Where(t => t.SubmittedDateTime.HasValue))
                   .Avg(x => x.SubmittedDateTime.Value.Subtract(x.TestDateTime).TotalSeconds)
                   .Select<double, TimeSpan?>(seconds => TimeSpan.FromSeconds(seconds))
                   .LogDebug(x => $"totals changed {x}")
@@ -42,8 +41,12 @@ namespace Prover.Application.Dashboard
                   .DisposeWith(Cleanup);
 
             this.WhenAnyValue(x => x.Totals)
-                .Where(c => c?.TotalTests > 0)
-                .Select(summary => (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32())
+                .Select(summary =>
+                {
+                    if (summary.TotalTests == 0) return 0;
+
+                    return (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32();
+                })
                 .ToPropertyEx(this, x => x.PassPercentage, scheduler: _scheduler)
                 .DisposeWith(Cleanup);
 

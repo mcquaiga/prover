@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -11,6 +6,11 @@ using Prover.Application.Services;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Storage.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -59,7 +59,7 @@ namespace Prover.Modules.UnionGas.Login
         }
 
         public override async Task<string> GetLoginDetails() =>
-            await MessageInteractions.GetInputString.Handle("Employee number:");
+            await Messages.GetInputString.Handle("Employee number:");
 
         /// <inheritdoc />
         public override async Task<Employee> GetUserDetails<TId>(TId id)
@@ -85,6 +85,8 @@ namespace Prover.Modules.UnionGas.Login
 
         public override async Task<bool> Login(string username, string password = null)
         {
+            if (string.IsNullOrEmpty(username)) await Login();
+
             var employeeDto = await _webService.GetUser(username);
 
             if (employeeDto != null)
@@ -104,6 +106,6 @@ namespace Prover.Modules.UnionGas.Login
             return !User?.UserId.IsNullOrEmpty() ?? false;
         }
 
-        
+
     }
 }

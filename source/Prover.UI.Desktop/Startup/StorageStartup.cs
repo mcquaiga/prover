@@ -103,7 +103,7 @@ namespace Prover.UI.Desktop.Startup
         private static void AddMongoDb(IServiceCollection services, HostBuilderContext host)
         {
             var mongo = new MongoDbAsyncRepository<EvcVerificationTest>();
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(mongo);
+            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(mongo);
             services.AddSingleton<IEventsSubscriber>(c =>
             {
                 var logger = c.GetService<ILogger<MongoDbAsyncRepository<EvcVerificationTest>>>();
@@ -139,8 +139,8 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 
-            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-            //        new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
+                    new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }
