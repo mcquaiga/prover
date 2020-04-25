@@ -65,10 +65,10 @@ namespace Prover.Application.Caching
 			//LogListChanges().DisposeWith(_cleanup);
 		}
 
-		public IObservableCache<EvcVerificationTest, Guid> GetVerifications(IObservable<Func<EvcVerificationTest, bool>> filter)
-		{
-			return LoadVerificationsAndMaintainCache(filterObservable: filter);
-		}
+		//public IObservableCache<EvcVerificationTest, Guid> GetVerifications(IObservable<Func<EvcVerificationTest, bool>> filter)
+		//{
+		//	return LoadVerificationsAndMaintainCache(filterObservable: filter);
+		//}
 
 		public IObservableCache<EvcVerificationTest, Guid> Items { get; set; }
 		public IObservableList<EvcVerificationTest> Data { get; set; }

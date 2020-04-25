@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Builders;
+using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
 using Prover.DevTools.Hardware;
 using Prover.DevTools.SampleData;
@@ -138,7 +139,7 @@ namespace Prover.DevTools
 
 				test.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 60)));
 				await _repository.UpsertAsync(test);
-
+				VerificationEvents.OnSave.Publish(test);
 			});
 		}
 	}
