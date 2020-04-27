@@ -1,10 +1,10 @@
-﻿using System.Reactive.Disposables;
-using Devices.Core.Items.DriveTypes;
+﻿using Devices.Core.Items.DriveTypes;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Calculations;
 using Prover.Shared;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels.Volume.Mechanical
 {
@@ -17,7 +17,7 @@ namespace Prover.Application.ViewModels.Volume.Mechanical
             EndValues = endValues;
             Units = startValues.EnergyUnitType;
 
-            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, (start, end) =>EnergyCalculator.TotalEnergy(start.EnergyReading, end.EnergyReading))
+            this.WhenAnyValue(x => x.StartValues, x => x.EndValues, (start, end) => EnergyCalculator.TotalEnergy(start.EnergyReading, end.EnergyReading))
                 .ToPropertyEx(this,
                 x => x.ActualValue).DisposeWith(Cleanup);
 
@@ -25,7 +25,7 @@ namespace Prover.Application.ViewModels.Volume.Mechanical
             //    .Subscribe(v => EndReading = v.CorrectedReading);
         }
 
-        public EnergyUnitType Units { get; set; }
+        [Reactive] public EnergyUnitType Units { get; set; }
 
         /// <inheritdoc />
         [Reactive]

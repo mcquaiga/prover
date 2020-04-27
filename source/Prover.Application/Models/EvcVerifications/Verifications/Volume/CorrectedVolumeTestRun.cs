@@ -1,5 +1,4 @@
 ﻿using Devices.Core.Items.ItemGroups;
-using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Calculations;
 
@@ -17,15 +16,12 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
         }
 
         public CorrectedVolumeTestRun
-                (VolumeItems startValues, VolumeItems endValues, decimal actualValue, decimal totalCorrectionFactor, decimal uncorrectedInputVolume) : base(startValues,
-                endValues,
-                0m,
-                actualValue,
-                100m,
-                false)
+                (VolumeItems startValues, VolumeItems endValues, decimal uncorrectedInputVolume, decimal? tempFactor, decimal? pressureFactor, decimal? superFactorSquared)
+                : base(startValues, endValues, 0m, 0m, 100m, false)
         {
-            TotalCorrectionFactor = totalCorrectionFactor;
+            SetTotalCorrectionFactor(tempFactor, pressureFactor, superFactorSquared);
             UncorrectedInputVolume = uncorrectedInputVolume;
+            Calculate();
         }
 
         public CorrectedVolumeTestRun()

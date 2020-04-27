@@ -17,11 +17,11 @@ namespace Prover.Application.Services
 
         protected LoginServiceBase()
         {
-            LoggedIn = LoggedInSubject;
+            LoggedIn = LoggedInSubject.StartWith(false);
 
             LoggedIn.Subscribe(x => IsSignedOn = x).DisposeWith(_cleanup);
 
-            LoggedInSubject.OnNext(false);
+            //LoggedInSubject.OnNext(false);
         }
 
         public TUser User { get; protected set; }

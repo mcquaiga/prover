@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -50,7 +51,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
             FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
 
-            var visibleItems = verificationCache.Items.Connect()
+            var visibleItems = verificationCache.Items
+                                                .Connect()
                                                 .Filter(FilterByTypeCommand)
                                                 .Filter(TestDateFilter.StartWith(DateTimeFilter()))
                                                 .Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
@@ -110,6 +112,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         }
 
         private Func<EvcVerificationTest, bool> DateTimeFilter()
+        {
+            return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
+        }
+
+        private Expression<Func<EvcVerificationTest, bool>> DateTimePredicate()
         {
             return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
         }

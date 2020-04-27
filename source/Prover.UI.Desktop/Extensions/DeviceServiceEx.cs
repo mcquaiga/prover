@@ -55,29 +55,31 @@ namespace Prover.UI.Desktop.Extensions
 
         public static void AddVerificationManagers(this IServiceCollection services)
         {
-            services.AddSingleton<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
+
+
+            services.AddTransient<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
             {
                 var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
                 return volumeFactory.CreateVolumeManager(evcTest);
             });
 
-            services.AddSingleton<Func<EvcVerificationViewModel, IDeviceQaTestManager>>(c =>
+            services.AddTransient<Func<EvcVerificationViewModel, IQaTestRunManager>>(c =>
             {
                 return test =>
                 {
                     var volumeManager = c.GetService<IVolumeTestManagerFactory>()
                                          .CreateVolumeManager(test);
 
-                    var testManager = ActivatorUtilities.CreateInstance<TestManager>(c);
-
-                    testManager.Setup(test, volumeManager, c.GetService<ICorrectionTestsManager>());
+                    var testManager = ActivatorUtilities.CreateInstance<TestManager>(c, test, volumeManager, c.GetService<ICorrectionTestsManager>());
 
                     return testManager;
                 };
             });
-            services.AddSingleton<ICorrectionTestsManager, LiveReadStabilizeCorrectionTestManager>();
+            services.AddTransient<ICorrectionTestsManager, LiveReadStabilizeCorrectionTestManager>();
             services.AddTransient<IVerificationManagerFactory, VerificationManagerFactory>();
-            services.AddSingleton<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
+            services.AddTransient<IVolumeTestManagerFactory, VolumeTestManagerFactory>();
+            //services.AddTransient<EvcVerificationViewModel>();
+            //services.AddTransient<IVolumeTestManager, RotaryVolumeTestRunner>();
         }
 
         public static void AddTachometer(this IServiceCollection services)

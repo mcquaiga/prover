@@ -13,5 +13,6 @@ namespace Prover.Application.Interfaces
         //IObservableList<TEntity> Data { get; }
         void Update(Expression<Func<EvcVerificationTest, bool>> filter = null);
         void ApplyDateFilter(string dateTimeKey);
+        IObservableCache<EvcVerificationTest, Guid> LoadCache(Expression<Func<EvcVerificationTest, bool>> filter);
     }
 }

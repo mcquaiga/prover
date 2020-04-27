@@ -115,6 +115,24 @@
 				</Style.Resources>
 			</Style>
 
+			<Style x:Key="MainToolbarPopupBoxStyle" TargetType="materialDesign:PopupBox">
+				<Setter Property="PlacementMode" Value="TopAndAlignLeftEdges" />
+				<Setter Property="Padding" Value="2" />
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+
+			</Style>
+
+			<Style x:Key="MainToobarPackIconStyle" TargetType="materialDesign:PackIcon">
+				<Setter Property="Width" Value="48" />
+				<Setter Property="Height" Value="48" />
+				<Setter Property="Margin" Value="2,4,2,12" />
+				<Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="HorizontalContentAlignment" Value="Center" />
+			</Style>
+
+
 			<Style
 				x:Key="MainToolbarButtonStyle"
 				BasedOn="{StaticResource MaterialDesignFlatButton}"
@@ -124,15 +142,10 @@
 				<Setter Property="Padding" Value="2,8" />
 				<Setter Property="Width" Value="75" />
 				<Setter Property="Height" Value="Auto" />
-				<Setter Property="HorizontalAlignment" Value="Stretch" />
+				<Setter Property="HorizontalAlignment" Value="Center" />
 				<Setter Property="HorizontalContentAlignment" Value="Center" />
 				<Style.Resources>
-					<Style TargetType="materialDesign:PackIcon">
-						<Setter Property="Width" Value="48" />
-						<Setter Property="Height" Value="48" />
-						<!--<Setter Property="FontSize" Value="112" />-->
-						<Setter Property="HorizontalAlignment" Value="Center" />
-					</Style>
+					<Style BasedOn="{StaticResource MainToobarPackIconStyle}" TargetType="materialDesign:PackIcon" />
 				</Style.Resources>
 
 			</Style>

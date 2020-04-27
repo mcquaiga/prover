@@ -82,12 +82,11 @@ namespace Prover.UI.Desktop.ViewModels
 
         public async Task GoBack()
         {
-            //var current = _currentViewModel;
+            var current = _currentViewModel;
 
-            //await Router.NavigateBack.Execute();
+            await Router.NavigateBack.Execute();
 
-            //_toolbarRemover.Disposable = Disposable.Empty;
-            //(current as IDisposable)?.Dispose();
+            _toolbarRemover.Disposable = Disposable.Empty;
         }
 
         public async Task GoHome(IRoutableViewModel home = null)

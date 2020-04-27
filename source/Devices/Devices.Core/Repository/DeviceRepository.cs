@@ -1,3 +1,7 @@
+using Devices.Core.Interfaces;
+using DynamicData;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,20 +12,18 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using DynamicData;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Devices.Core.Repository
 {
     public class AsyncLazy<T> : Lazy<Task<T>>
     {
         public AsyncLazy(Func<T> valueFactory) :
-                base(() => Task.Factory.StartNew(valueFactory)) { }
+                base(() => Task.Factory.StartNew(valueFactory))
+        { }
 
         public AsyncLazy(Func<Task<T>> taskFactory) :
-                base(() => Task.Factory.StartNew(() => taskFactory()).Unwrap()) { }
+                base(() => Task.Factory.StartNew(() => taskFactory()).Unwrap())
+        { }
 
         public TaskAwaiter<T> GetAwaiter() { return Value.GetAwaiter(); }
     }
@@ -47,7 +49,7 @@ namespace Devices.Core.Repository
 
     public static class DeviceRepositoryEx
     {
-        
+
     }
 
     public class DeviceRepository : IDisposable, IDeviceRepository
@@ -61,24 +63,23 @@ namespace Devices.Core.Repository
         private readonly ILogger<DeviceRepository> _logger;
 
         private static DeviceRepository _instance;
-        
+
         //private static AsyncLazy<IDeviceRepository> _lazy = new AsyncLazy<IDeviceRepository>(CreateRepository);
         private static Lazy<Task<IDeviceRepository>> _lazy = new Lazy<Task<IDeviceRepository>>(async () => await CreateRepository());
         //private static Lazy<Task<IDeviceRepository>> _lazy = new Lazy<Task<IDeviceRepository>>(async () => await Observable.StartAsync(CreateRepository));
-                                                                                                   
+
         //IEnumerable<IDeviceTypeDataSource<DeviceType>> deviceRepositories,
         public DeviceRepository(ILogger<DeviceRepository> logger = null,
             IDeviceTypeCacheSource<DeviceType> cacheRepository = null) : this()
         {
             _logger = logger ?? NullLogger<DeviceRepository>.Instance;
-            
+
             _cacheSource = cacheRepository;
         }
 
-        public static DeviceType MiniMax()
-        {
-            return Instance.GetByName("Mini-Max");
-        }
+        public static DeviceType MiniMax => Instance.GetByName("Mini-Max");
+        public static DeviceType MiniAt => Instance.GetByName("Mini-AT");
+        public static DeviceType Adem => Instance.GetByName("Adem");
 
         private DeviceRepository()
         {
@@ -206,7 +207,7 @@ namespace Devices.Core.Repository
                         .SelectMany(a
                                 => a.DefinedTypes.Where(x
                                         => x.ImplementedInterfaces.Contains(typeof(IDeviceDataSourceInstance))))
-                        .Select(t => (IDeviceTypeDataSource<DeviceType>) Activator.CreateInstance(t))
+                        .Select(t => (IDeviceTypeDataSource<DeviceType>)Activator.CreateInstance(t))
                         .ToObservable()
                         .ForEachAsync(async ds => await UpdateCachedTypes(ds));
         }

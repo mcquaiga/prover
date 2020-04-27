@@ -7,7 +7,10 @@ namespace Prover.Application.Interfaces
     public interface IQaTestRunManager : IReactiveObject
     {
         EvcVerificationViewModel TestViewModel { get; }
+
+
     }
+
 
     public interface IDeviceQaTestManager : IQaTestRunManager
     {

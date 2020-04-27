@@ -96,12 +96,14 @@
 									<ContentPresenter
 										MaxHeight="60"
 										HorizontalAlignment="Center"
-										VerticalAlignment="Top"
+										VerticalAlignment="Center"
 										Content="{TemplateBinding Content}"
 										ContentStringFormat="{TemplateBinding ContentStringFormat}"
-										ContentTemplate="{TemplateBinding ContentTemplate}"
-										ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
-									<!--  Needed by the template, wont use it though  -->
+										ContentTemplate="{TemplateBinding ContentTemplate}" />
+									<!--
+										Needed by the template, wont use it though
+										ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+									-->
 									<Button
 										x:Name="PART_ActionButton"
 										VerticalAlignment="Bottom"
@@ -114,7 +116,7 @@
 					<Setter Property="Background" Value="White" />
 				</Style>
 			</materialDesign:Snackbar.Resources>
-			<materialDesign:SnackbarMessage HorizontalAlignment="Stretch" />
+			<materialDesign:SnackbarMessage />
 		</materialDesign:Snackbar>
 	</Grid>
 

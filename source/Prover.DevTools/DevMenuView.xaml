@@ -21,7 +21,11 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Grid>
-		<materialDesign:PopupBox>
+		<materialDesign:PopupBox PopupMode="Click" Style="{StaticResource MainToolbarPopupBoxStyle}">
+			<materialDesign:PopupBox.ToggleContent>
+				<materialDesign:PackIcon Kind="BuildOutline" Style="{StaticResource MainToobarPackIconStyle}" />
+
+			</materialDesign:PopupBox.ToggleContent>
 			<materialDesign:PopupBox.PopupContentTemplate>
 				<DataTemplate>
 					<ItemsControl

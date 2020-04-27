@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
+﻿using Devices.Core.Interfaces;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using System;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {
@@ -16,11 +14,15 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 
         #endregion
 
-    
+
         public override IVolumeInputType BuildVolumeType() => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public override VolumeInputTestBuilder AddDefaults(VerificationTestPoint current, bool withPulseOutputs = true) => throw new NotImplementedException();
+        protected override void SpecificDefaults()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <inheritdoc />
         //public ICollection<VerificationEntity> CreateVolumeTests() => throw new NotImplementedException();

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
@@ -25,15 +23,12 @@ namespace Prover.Application.Models.EvcVerifications.Builders
             return _inputType;
         }
 
-        public override VolumeInputTestBuilder AddDefaults(VerificationTestPoint current, bool withPulseOutputs = true)
+        /// <inheritdoc />
+        protected override void SpecificDefaults()
         {
-            AddUncorrected(withPulseOutputs);
-            AddCorrected(withPulseOutputs);
-
             var rotaryTest = new RotaryMeterTest(Device.ItemGroup<RotaryMeterItems>());
             Tests.Add(rotaryTest);
-            
-            return this;
+
         }
     }
 }

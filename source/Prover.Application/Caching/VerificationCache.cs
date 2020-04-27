@@ -10,6 +10,7 @@ using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive;
@@ -17,12 +18,20 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 
 namespace Prover.Application.Caching
 {
 	public class VerificationCache : IEntityDataCache<EvcVerificationTest>, IDisposable
 	{
+		private readonly IConnectableObservable<IChangeSet<EvcVerificationTest, Guid>> _loader;
+
+		private readonly object _lock = new AsyncLock();
+		private readonly ILogger<VerificationCache> _logger;
+		private readonly IScheduler _mainScheduler;
+		private readonly Subject<Func<EvcVerificationTest, bool>> _parentFilterObservable = new Subject<Func<EvcVerificationTest, bool>>();
+		private readonly Subject<Unit> _signalUpdate = new Subject<Unit>();
+		private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+
 		public readonly Dictionary<string, Func<DateTime, bool>> DateFilters = new Dictionary<string, Func<DateTime, bool>>
 		{
 				{"1h", time => time.IsLessThanTimeAgo(TimeSpan.FromHours(1))},
@@ -32,51 +41,31 @@ namespace Prover.Application.Caching
 				{"30d", time => time.IsLessThanTimeAgo(TimeSpan.FromDays(30))}
 		};
 
-		private readonly Expression<Func<EvcVerificationTest, bool>> _defaultPredicate = test => test.TestDateTime.IsLessThanTimeAgo(TimeSpan.FromDays(30));
-		private readonly object _lock = new AsyncLock();
-		private readonly ILogger<VerificationCache> _logger;
-		private readonly IConnectableObservable<IChangeSet<EvcVerificationTest, Guid>> _loader;
-		private readonly Subject<Func<EvcVerificationTest, bool>> _parentFilterObservable = new Subject<Func<EvcVerificationTest, bool>>();
-		private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
-		private readonly IScheduler _mainScheduler;
-		private CompositeDisposable _cleanup = new CompositeDisposable();
+		private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 		private Func<DateTime, bool> _currentDateFilter;
 		private object _locker = new object();
-		private readonly Subject<Unit> _signalUpdate = new Subject<Unit>();
 
-		public VerificationCache(IAsyncRepository<EvcVerificationTest> repository, ILogger<VerificationCache> logger = null, IScheduler mainScheduler = null)
+		public VerificationCache(IAsyncRepository<EvcVerificationTest> repository, ILogger<VerificationCache> logger, IScheduler mainScheduler = null)
 		{
 			_verificationRepository = repository;
 			_mainScheduler = mainScheduler ?? RxApp.TaskpoolScheduler;
 			_logger = logger ?? ProverLogging.CreateLogger<VerificationCache>();
+			_loader = LoadVerificationsAndMaintainCache(BuildFilter("30d")).ObserveOn(_mainScheduler).Publish();
 
-			_loader = LoadVerificationsAndMaintainCache().ObserveOn(_mainScheduler)
-														 .Publish();
 
-			//ApplyDateFilter("30d");
-
-			Items = _loader.AsObservableCache()
-						  .DisposeWith(_cleanup);
-
-			_loader.Connect()
-				  .DisposeWith(_cleanup);
-
+			Items = _loader.AsObservableCache().DisposeWith(_cleanup);
+			_loader.Connect().DisposeWith(_cleanup);
 			//LogChanges().DisposeWith(_cleanup);
-			//LogListChanges().DisposeWith(_cleanup);
 		}
 
-		//public IObservableCache<EvcVerificationTest, Guid> GetVerifications(IObservable<Func<EvcVerificationTest, bool>> filter)
-		//{
-		//	return LoadVerificationsAndMaintainCache(filterObservable: filter);
-		//}
+
 
 		public IObservableCache<EvcVerificationTest, Guid> Items { get; set; }
-		public IObservableList<EvcVerificationTest> Data { get; set; }
 
 		public void ApplyDateFilter(string dateTimeKey)
 		{
 			_currentDateFilter = DateFilters[dateTimeKey];
-			_parentFilterObservable.OnNext(BuildFilter(dateTimeKey));
+			_parentFilterObservable.OnNext(BuildFilter(dateTimeKey).Compile());
 		}
 
 		public void Dispose()
@@ -84,49 +73,79 @@ namespace Prover.Application.Caching
 			_cleanup?.Dispose();
 		}
 
-		/// <inheritdoc />
-		public Task LoadAsync() => Task.CompletedTask;
+		public IObservableCache<EvcVerificationTest, Guid> LoadCache(Expression<Func<EvcVerificationTest, bool>> filter) => LoadVerificationsAndMaintainCache(filter)
+																															//.ToObservableChangeSet(k => k.Id, limitSizeTo: 2000)
+																															.ObserveOn(_mainScheduler).Publish().AsObservableCache();
 
 		public void Update(Expression<Func<EvcVerificationTest, bool>> filter = null)
 		{
 			_signalUpdate.OnNext(Unit.Default);
 		}
 
-		private Func<EvcVerificationTest, bool> BuildFilter(string dateTimeKey)
-		{
-			return test => DateFilters[dateTimeKey].Invoke(test.TestDateTime);
-		}
-
-		private IObservable<IChangeSet<EvcVerificationTest, Guid>> LoadVerificationsAndMaintainCache(Func<EvcVerificationTest, bool> initialFilter = null, IObservable<Func<EvcVerificationTest, bool>> filterObservable = null)
+		protected IObservable<IChangeSet<EvcVerificationTest, Guid>> LoadVerificationsAndMaintainCache(Expression<Func<EvcVerificationTest, bool>> filter)
 		{
 			return ObservableChangeSet.Create<EvcVerificationTest, Guid>(cache =>
 			{
 				var disposer = new CompositeDisposable();
-
-				VerificationEvents.OnSave.Subscribe(context =>
-				{
-					cache.AddOrUpdate(context.Input);
-				});
+				VerificationEvents.OnSave.Subscribe(context => { cache.AddOrUpdate(context.Input); });
 
 				void Load()
 				{
 					cache.Clear();
-					cache.Edit(updater =>
-					{
-						using (LoadFromRepository(_defaultPredicate)
-											.Subscribe(updater.AddOrUpdate, () => updater.Refresh()))
-						{ }
 
-					});
+					//cache.Edit(updater =>
+					//{
+					//	using (LoadFromRepository(filter)
+					//			.Subscribe(updater.AddOrUpdate, updater.Refresh))
+					//	{
+					//	}
+					//});
+
+					LoadFromRepository(filter)
+							.Subscribe(cache.AddOrUpdate, cache.Refresh);
 				}
 
-				_signalUpdate.Do(_ => cache.Refresh())
-							 .Subscribe();
-
+				_signalUpdate.Do(_ => Load()).Subscribe();
 				_mainScheduler.Schedule(Load);
-
 				return disposer;
 			}, test => test.Id);
+		}
+
+		private Expression<Func<EvcVerificationTest, bool>> BuildFilter(string dateTimeKey)
+		{
+			return test => DateFilters[dateTimeKey].Invoke(test.TestDateTime);
+		}
+
+
+		private IObservable<EvcVerificationTest> LoadFromRepository(Expression<Func<EvcVerificationTest, bool>> predicate)
+		{
+			return Observable.Create<EvcVerificationTest>(async obs =>
+			{
+				_logger.LogDebug("Loading verifications from database...");
+
+				var stopWatch = Stopwatch.StartNew();
+
+				var query = await _verificationRepository.Query();
+
+				foreach (var test in query.Where(predicate.Compile())
+											  .OrderBy(x => x.TestDateTime))
+				{
+					obs.OnNext(test);
+				}
+
+				obs.OnCompleted();
+
+				//var filtered = query.Where(predicate.Compile())
+				//					.OrderBy(x => x.TestDateTime)
+				//					.ToObservable()
+				//					//.LogDebug(x => $"	Id: {x.Id}", _logger)
+				//					.Subscribe(obs.OnNext, obs.OnCompleted);
+
+				stopWatch.Stop();
+				_logger.LogDebug($"Finished loading database in {stopWatch.ElapsedMilliseconds} ms.");
+
+				return new CompositeDisposable();
+			});
 		}
 
 		private IDisposable LogChanges()
@@ -134,35 +153,9 @@ namespace Prover.Application.Caching
 			const string messageTemplate = "{0} {1} {2} ({3}). Verified = {4}";
 
 			return Items.Connect().Skip(1).WhereReasonsAre(ChangeReason.Add, ChangeReason.Update)
-					  .Cast(test => string.Format(messageTemplate, test.Id, test.TestDateTime, test.Device.DeviceType, test.Device.CompositionShort(), test.Verified))
-					  .ForEachChange(change => _logger.LogDebug(change.Current)).Subscribe();
+						.Cast(test => string.Format(messageTemplate, test.Id, test.TestDateTime, test.Device.DeviceType, test.Device.CompositionShort(), test.Verified))
+						.ForEachChange(change => _logger.LogDebug(change.Current)).Subscribe();
 		}
-
-		private IDisposable LogListChanges()
-		{
-			return Data.Connect().LogDebug(x => $"Total Adds = {x.Adds}").Subscribe();
-		}
-
-		private IObservable<EvcVerificationTest> LoadFromRepository(Expression<Func<EvcVerificationTest, bool>> predicate)
-		{
-			return Observable.Create<EvcVerificationTest>(async obs =>
-			{
-				var query = await _verificationRepository.Query();
-
-				var filtered = query.Where(predicate.Compile())
-									//.Where(t => lastItemTestDate == null || t.TestDateTime > lastItemTestDate)
-									.OrderBy(x => x.TestDateTime);
-
-				filtered.ToObservable().Subscribe(obs.OnNext, obs.OnCompleted);
-				//lastItemTestDate = filtered.LastOrDefault()?.TestDateTime;
-
-				//obs.OnCompleted();
-
-				return new CompositeDisposable();
-			});
-		}
-
-
 	}
 }
 

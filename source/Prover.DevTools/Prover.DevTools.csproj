@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SampleData\Devices\Adem.json" />
+    <None Remove="SampleData\Devices\MiniAt.json" />
+    <None Remove="SampleData\Devices\MiniMax.json" />
     <None Remove="SampleData\MiniMax.json" />
     <None Remove="SampleData\TemperatureTests.json" />
   </ItemGroup>
@@ -18,6 +21,15 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	</PropertyGroup>
   <ItemGroup>
+    <Content Include="SampleData\Devices\Adem.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\Devices\MiniAt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\Devices\MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SampleData\MiniMax.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

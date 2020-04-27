@@ -12,77 +12,81 @@ using System.Reactive.Linq;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
-    public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems, IQaTestRunManager
-    {
-        protected TestManagerBase() { }
+	public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems, IQaTestRunManager
+	{
+		protected ILogger<ManualTestManager> Logger { get; }
+		protected IScreenManager ScreenManager { get; }
+		protected IVerificationTestService VerificationService { get; }
 
-        protected TestManagerBase(ILogger<TestManagerBase> logger, IScreenManager screenManager)
-        {
 
-        }
+		protected TestManagerBase(ILogger<ManualTestManager> logger,
+									IScreenManager screenManager,
+									IVerificationTestService verificationService,
+									EvcVerificationViewModel testViewModel)
+		{
+			Logger = logger;
+			ScreenManager = screenManager;
+			VerificationService = verificationService;
 
-        protected void Initialize(ILogger<TestManagerBase> logger,
-                IScreenManager screenManager,
-                IVerificationTestService verificationService,
-                EvcVerificationViewModel testViewModel,
-                string urlSegment = null) //: base(screenManager, urlSegment ?? "VerificationManager")
-        {
-            TestViewModel = testViewModel;
+			TestViewModel = testViewModel;
 
-            SaveCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                logger.LogDebug("Saving test...");
+			SaveCommand = ReactiveCommand.CreateFromTask(async () =>
+										 {
+											 logger.LogDebug("Saving test...");
+											 var updated = await verificationService.Save(TestViewModel);
 
-                var updated = await verificationService.Save(TestViewModel);
-                if (updated != null)
-                {
-                    logger.LogDebug("Saved test successfully");
-                    await Notifications.SnackBarMessage.Handle("SAVED");
-                    return true;
-                }
+											 if (updated != null)
+											 {
+												 logger.LogDebug("Saved test successfully");
+												 await Notifications.SnackBarMessage.Handle("SAVED");
+												 return true;
+											 }
 
-                return false;
-            }).DisposeWith(Cleanup);
-            SaveCommand.ThrownExceptions.Subscribe();
+											 return false;
+										 })
+										 .DisposeWith(Cleanup);
+			SaveCommand.ThrownExceptions.Subscribe();
 
-            //SaveCommand.Do(x => VerificationEvents.OnSave.Publish(TestViewModel.ToModel()))
-            //           .Subscribe().DisposeWith(Cleanup);
+			//SaveCommand.Do(x => VerificationEvents.OnSave.Publish(TestViewModel.ToModel()))
+			//           .Subscribe().DisposeWith(Cleanup);
+			var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable).ObserveOn(RxApp.MainThreadScheduler);
 
-            var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable).ObserveOn(RxApp.MainThreadScheduler);
-            SubmitTest = ReactiveCommand.CreateFromTask(async () =>
-            {
-                if (true)
-                {
-                    await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+			SubmitTest = ReactiveCommand.CreateFromTask(async () =>
+										{
+											if (true)
+											{
+												SuppressChangeNotifications().DisposeWith(Cleanup);
+												await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+												await verificationService.SubmitVerification(TestViewModel);
+												await screenManager.GoHome();
+											}
+										}, canSubmit)
+										.DisposeWith(Cleanup);
+			SubmitTest.ThrownExceptions.Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"));
+			PrintTestReport = ReactiveCommand.CreateFromObservable(() => Messages.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(Cleanup);
 
-                    await verificationService.SubmitVerification(TestViewModel);
-                    //(TestViewModel as IDisposable)?.Dispose();
-                    await screenManager.GoHome();
-                }
-            }, canSubmit).DisposeWith(Cleanup);
+			this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
+				.Where(v => v)
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
+				.Subscribe()
+				.DisposeWith(Cleanup);
+			AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
+			AddToolbarItem(SubmitTest, PackIconKind.Send);
+			AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
+		}
 
-            SubmitTest.ThrownExceptions
-                      .Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"));
+		public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
+		public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
+		public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
 
-            PrintTestReport = ReactiveCommand.CreateFromObservable(() => Messages.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(Cleanup);
+		/// <inheritdoc />
+		public EvcVerificationViewModel TestViewModel { get; set; }
 
-            this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
-                .Where(v => v)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
-                .Subscribe()
-                .DisposeWith(Cleanup);
+		//protected void Initialize(ILogger<TestManagerBase> logger, IScreenManager screenManager, IVerificationTestService verificationService, EvcVerificationViewModel testViewModel, string urlSegment = null
+		//) //: base(screenManager, urlSegment ?? "VerificationManager")
+		//{
 
-            AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
-            AddToolbarItem(SubmitTest, PackIconKind.Send);
-            AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
-        }
-
-        public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
-        public ReactiveCommand<Unit, Unit> PrintTestReport { get; protected set; }
-        public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
-
-        /// <inheritdoc />
-        public EvcVerificationViewModel TestViewModel { get; set; }
-    }
+		//}
+	}
 }

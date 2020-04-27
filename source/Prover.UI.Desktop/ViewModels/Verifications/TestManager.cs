@@ -1,4 +1,3 @@
-using Devices.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
@@ -12,35 +11,52 @@ using System.Reactive.Disposables;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
-    public sealed class TestManager : TestManagerBase, IDeviceQaTestManager, IRoutableViewModel
+    public class ManualTestManager : TestManagerBase, IRoutableViewModel
     {
-
         private readonly IScreenManager _screenManager;
-        public IDeviceSessionManager DeviceManager { get; }
-        private readonly IVerificationTestService _verificationService;
-        private readonly ILogger<TestManager> _logger;
 
-        public TestManager(
-                ILogger<TestManager> logger,
+        private readonly IVerificationTestService _verificationService;
+        private readonly ILogger<ManualTestManager> _logger;
+
+        public ManualTestManager(
+                ILogger<ManualTestManager> logger,
                 IScreenManager screenManager,
-                IDeviceSessionManager deviceSessionManager,
-                IVerificationTestService verificationService)
+                IVerificationTestService verificationService,
+                EvcVerificationViewModel verificationViewModel = null) : base(logger, screenManager, verificationService, verificationViewModel)
         {
-            _logger = logger ?? NullLogger<TestManager>.Instance;
+            _logger = logger ?? NullLogger<ManualTestManager>.Instance;
             _screenManager = screenManager;
-            DeviceManager = deviceSessionManager;
             _verificationService = verificationService;
         }
 
+        protected override void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+            {
+                TestViewModel?.Dispose();
+            }
+
+        }
+
+        /// <inheritdoc />
+        public string UrlPathSegment { get; }
+
+        /// <inheritdoc />
+        public IScreen HostScreen => _screenManager;
+    }
+
+    public class TestManager : ManualTestManager, IDeviceQaTestManager
+    {
+
         public IVolumeTestManager VolumeTestManager { get; set; }
         public ICorrectionTestsManager CorrectionVerifications { get; set; }
-
-        public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }
-        public ReactiveCommand<Unit, Unit> RunVolumeVerifications { get; set; }
-
-        public void Setup(EvcVerificationViewModel verificationViewModel, IVolumeTestManager volumeTestManager, ICorrectionTestsManager correctionVerificationRunner)
+        /// <inheritdoc />
+        public TestManager(ILogger<TestManager> logger, IScreenManager screenManager, IDeviceSessionManager deviceManager, IVerificationTestService verificationService,
+                EvcVerificationViewModel verificationViewModel = null,
+                IVolumeTestManager volumeTestManager = null, ICorrectionTestsManager correctionVerificationRunner = null)
+                : base(logger, screenManager, verificationService, verificationViewModel)
         {
-            base.Initialize(_logger, _screenManager, _verificationService, verificationViewModel);
+            DeviceManager = deviceManager;
 
             VolumeTestManager = volumeTestManager;
             CorrectionVerifications = correctionVerificationRunner;
@@ -53,25 +69,21 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
             RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.RunStartActions).DisposeWith(Cleanup);
         }
 
-        public void StartTest(DeviceType deviceType)
-        {
-
-        }
+        public IDeviceSessionManager DeviceManager { get; }
 
         protected override void Dispose(bool isDisposing)
         {
             if (isDisposing)
             {
                 DeviceManager.EndSession();
-                TestViewModel?.Dispose();
+                base.Dispose(true);
             }
 
         }
 
-        /// <inheritdoc />
-        public string UrlPathSegment { get; }
 
-        /// <inheritdoc />
-        public IScreen HostScreen => _screenManager;
+
+        public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }
+        public ReactiveCommand<Unit, Unit> RunVolumeVerifications { get; set; }
     }
 }

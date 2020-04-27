@@ -39,12 +39,13 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 				SetLastUsedSettings();
 				return Observable.StartAsync(async () => await verificationManagerFactory.StartNew(SelectedDeviceType));
 			}).DisposeWith(_cleanup);
-			StartTestCommand.Merge(LoadFromFile).InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
+			StartTestCommand
+					.InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
 		}
 
 		public LocalSettings Selected => ApplicationSettings.Local;
-		public ReactiveCommand<Unit, IDeviceQaTestManager> LoadFromFile { get; protected set; }
-		public ReactiveCommand<Unit, IDeviceQaTestManager> StartTestCommand { get; set; }
+		public ReactiveCommand<Unit, IQaTestRunManager> LoadFromFile { get; protected set; }
+		public ReactiveCommand<Unit, IQaTestRunManager> StartTestCommand { get; set; }
 		public ReadOnlyObservableCollection<DeviceType> DeviceTypes { get; set; }
 		public ReadOnlyObservableCollection<int> BaudRates { get; set; }
 		public ReadOnlyObservableCollection<string> CommPorts { get; set; }

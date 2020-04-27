@@ -1,7 +1,4 @@
-﻿using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Repository;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +8,11 @@ namespace Prover.DevTools.SampleData
 {
     public static class DeviceSamples
     {
-        public static DeviceInstance MiniMax => DeviceRepository.MiniMax().CreateInstance(SampleItemFiles.MiniMaxItemFile);
+        //public static DeviceInstance MiniMax => SampleItemFiles.MiniMaxDevice;
+        //public static DeviceInstance MiniAt => SampleItemFiles.MiniAtDevice;
+        //public static DeviceInstance Adem => SampleItemFiles.AdemDevice;
+
+        //public static List<DeviceInstance> All = new List<DeviceInstance>() { MiniMax, MiniAt, Adem };
 
     }
 
@@ -20,14 +21,24 @@ namespace Prover.DevTools.SampleData
 
     }
 
+
     public static class SampleItemFiles
     {
-        public static Dictionary<string, string> MiniMaxItemFile
-            => _lazy.Value.Items;
+        static SampleItemFiles()
+        {
+            //MiniAtDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\MiniAt.json"));
+            //AdemDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\Adem.json"));
+            //MiniMaxDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\MiniMax.json"));
+        }
 
-        private static readonly Lazy<ItemAndTestFile> _lazy = new Lazy<ItemAndTestFile>(
-            () => DeserializeItemFile(File.ReadAllText("SampleData\\MiniMax.json"))
-        );
+        //public static DeviceInstance MiniMaxDevice { get; }
+        //public static DeviceInstance AdemDevice { get; }
+        //public static DeviceInstance MiniAtDevice { get; }
+
+
+        public static Dictionary<string, string> MiniMaxItemFile => _lazy.Value.Items;
+        private static readonly Lazy<ItemAndTestFile> _lazy = new Lazy<ItemAndTestFile>(() => DeserializeItemFile(File.ReadAllText("SampleData\\MiniMax.json")));
+
         public static Dictionary<string, string> PressureTest(int testNumber) => _lazy.Value.PressureTests.ElementAt(testNumber);
 
 

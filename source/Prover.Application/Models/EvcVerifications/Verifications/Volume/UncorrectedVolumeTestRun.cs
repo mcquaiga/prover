@@ -1,20 +1,30 @@
 ﻿using Devices.Core.Items.ItemGroups;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Calculations;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 {
-    public class UncorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>, IPulseOutputVerification
-    {
-        private UncorrectedVolumeTestRun()
-        {
-        }
+	public class UncorrectedVolumeTestRun : VerificationTestEntity<VolumeItems, VolumeItems>, IPulseOutputVerification
+	{
+		private UncorrectedVolumeTestRun()
+		{
+		}
 
-        public UncorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, decimal expectedValue,
-            decimal actualValue, decimal percentError, bool verified, decimal appliedInput)
-            : base(startValues, endValues, expectedValue, actualValue, percentError, verified) =>
-            AppliedInput = appliedInput;
+		public UncorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, IVolumeInputType driveType, decimal appliedInput) : base(startValues, endValues, 0, 0, 100m, false)
+		{
+			AppliedInput = appliedInput;
 
-        public decimal AppliedInput { get; set; }
+			Calculate(driveType);
+		}
 
-        public PulseOutputVerification PulseOutputTest { get; set; }
-    }
+		public decimal AppliedInput { get; set; }
+
+		public PulseOutputVerification PulseOutputTest { get; set; }
+
+		public void Calculate(IVolumeInputType driveType)
+		{
+			ActualValue = VolumeCalculator.TotalVolume(StartValues.UncorrectedReading, EndValues.UncorrectedReading, StartValues.UncorrectedMultiplier);
+			ExpectedValue = driveType.UnCorrectedInputVolume(AppliedInput);
+		}
+	}
 }

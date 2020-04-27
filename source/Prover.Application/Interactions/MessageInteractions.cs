@@ -1,5 +1,6 @@
 ﻿using Prover.Application.Interfaces;
 using ReactiveUI;
+using System;
 using System.Reactive;
 
 namespace Prover.Application.Interactions
@@ -36,7 +37,9 @@ namespace Prover.Application.Interactions
 
     public static class Notifications
     {
+
         public static Interaction<string, Unit> SnackBarMessage { get; } = new Interaction<string, Unit>();
+        public static Interaction<IObservable<string>, Unit> SnackBarUpdates { get; } = new Interaction<IObservable<string>, Unit>();
 
         public static Interaction<string, Unit> ActionMessage { get; } = new Interaction<string, Unit>();
     }
