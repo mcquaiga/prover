@@ -16,7 +16,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Tests.Application.ExternalDevices.DInOutBoards;
 using Tests.Application.Services;
 using Tests.Shared;
 
@@ -80,30 +79,30 @@ namespace Prover.Application.Services.Tests
 
             // scheduler.TaskPool.Start();
 
-            while (true)
-            {
-                scheduler.TaskPool.AdvanceBySeconds(5);
-                scheduler.Dispatcher.AdvanceByMilliSeconds(2);
-            }
+            //while (true)
+            //{
+            //    scheduler.TaskPool.AdvanceBySeconds(5);
+            //    scheduler.Dispatcher.AdvanceByMilliSeconds(2);
+            //}
         }
 
-        [TestMethod()]
-        public void DisposeTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void DisposeTest()
+        //{
+        //    Assert.Fail();
+        //}
 
-        [TestMethod()]
-        public void LoadAsyncTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void LoadAsyncTest()
+        //{
+        //    Assert.Fail();
+        //}
 
-        [TestMethod()]
-        public void UpdateTest()
-        {
-            Assert.Fail();
-        }
+        //[TestMethod()]
+        //public void UpdateTest()
+        //{
+        //    Assert.Fail();
+        //}
 
         [ClassInitialize]
         public static async Task ClassInitialize(TestContext context)
