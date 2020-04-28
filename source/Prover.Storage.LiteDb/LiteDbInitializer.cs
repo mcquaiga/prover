@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using LiteDB;
 using Newtonsoft.Json;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Storage.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Prover.Storage.LiteDb
 {
@@ -56,9 +56,10 @@ namespace Prover.Storage.LiteDb
 
             if (db.CollectionExists("EvcVerificationTest"))
             {
-                //db.GetCollection<EvcVerificationTest>()..Exists(t => t.ExportedDateTime)
-                db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.TestDateTime);
-                //db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ArchivedDateTime);
+                var col = db.GetCollection<EvcVerificationTest>();
+                col.EnsureIndex(test => test.TestDateTime);
+                col.EnsureIndex(test => test.ExportedDateTime);
+                col.EnsureIndex(test => test.ArchivedDateTime);
             }
 
             mapper.Entity<DeviceType>().Ignore(d => d.Factory);
@@ -79,8 +80,8 @@ namespace Prover.Storage.LiteDb
 
         }
 
-        
-        
+
+
         #region Nested type: Device
 
         private class Device

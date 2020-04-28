@@ -1,5 +1,5 @@
-﻿using System.Reactive.Disposables;
-using ReactiveUI;
+﻿using ReactiveUI;
+using System.Reactive.Disposables;
 
 namespace Prover.UI.Desktop.Views.Verifications.Volume.Rotary
 {
@@ -15,10 +15,11 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume.Rotary
             {
                 this.OneWayBind(ViewModel, vm => vm.PercentError, v => v.RotaryPercentErrorControl.DisplayValue).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Verified, v => v.RotaryPercentErrorControl.Passed).DisposeWith(d);
-
                 this.OneWayBind(ViewModel, vm => vm.ActualValue, v => v.RotaryEvcMeterDisplacementControl.Value).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.ExpectedValue, v => v.RotaryExpectedMeterDisplacementControl.Value).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.Items.MeterType, v => v.RotaryMeterTypeText.Text).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.Items.MeterType, v => v.RotaryMeterTypeText.Text, value => value.Description).DisposeWith(d);
+
+                // this.OneWayBind(ViewModel, vm => vm.Verified, v => v.MeterTypeInformationIcon.Foreground).DisposeWith(d);
             });
         }
     }

@@ -1,14 +1,11 @@
-﻿using System;
+﻿using Devices.Core.Items;
+using DynamicData;
+using Prover.Application.ViewModels.Corrections;
+using Prover.Application.ViewModels.Volume;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
-using DynamicData;
-using Prover.Application.Extensions;
-using Prover.Application.ViewModels.Corrections;
-using Prover.Application.ViewModels.Volume;
 
 namespace Prover.Application.ViewModels
 {
@@ -59,11 +56,11 @@ namespace Prover.Application.ViewModels
 
         //        itemType?.SetValue(correction, deviceType.GetGroupValues(itemValues, itemType.PropertyType));
         //    }
-            
+
         //    _items.Edit(update => update.AddOrUpdate(itemValues));
         //}
 
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();

@@ -8,13 +8,20 @@ using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Prover.Shared;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Devices.Core.Interfaces
 {
+    //public class DeviceInstanceSerializer : JsonSerializer
+    //{
+    //    override
+    //}
+
+
     public class DeviceInstanceJsonConverter : JsonConverter<DeviceInstance>
     {
-        private IDeviceRepository _deviceRepository;
+        protected readonly IDeviceRepository DeviceRepository;
 
         private readonly JsonSerializerOptions _options = new JsonSerializerOptions
         {
@@ -29,19 +36,19 @@ namespace Devices.Core.Interfaces
 
         public DeviceInstanceJsonConverter()
         {
-            if (DeviceRepository.Instance == null) 
+            if (Repository.DeviceRepository.Instance == null) 
                 throw new NullReferenceException("Device repository has not been initialized");
-            _deviceRepository = DeviceRepository.Instance;
+            DeviceRepository = Repository.DeviceRepository.Instance;
         }
 
-        public DeviceInstanceJsonConverter(IDeviceRepository deviceRepository) => _deviceRepository = deviceRepository;
+        public DeviceInstanceJsonConverter(IDeviceRepository deviceRepository) => DeviceRepository = deviceRepository;
 
         /// <inheritdoc />
         public DeviceInstance Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var json = reader.GetString();
-            var device = System.Text.Json.JsonSerializer.Deserialize<Device>(json, _options);
-            var deviceType = _deviceRepository.GetById(device.DeviceTypeId);
+            var device = System.Text.Json.JsonSerializer.Deserialize<DeviceSerialized>(json, _options);
+            var deviceType = DeviceRepository.GetById(device.DeviceTypeId);
             return deviceType.CreateInstance(device.Values);
         }
 
@@ -50,62 +57,72 @@ namespace Devices.Core.Interfaces
         {
             var jObject = JToken.Load(reader);
             
-            var tempDevice =jObject.ToObject<Device>();
+            var tempDevice = jObject.ToObject<DeviceSerialized>();
        
-            var deviceType = _deviceRepository.GetById(tempDevice.DeviceTypeId);
+            var deviceType = DeviceRepository.GetById(tempDevice.DeviceTypeId);
             return deviceType.CreateInstance(tempDevice.Values);
         }
 
         /// <inheritdoc />
         public void Write(Utf8JsonWriter writer, DeviceInstance value, JsonSerializerOptions options)
         {
-            var device = Device.Create(value);
+            var device = DeviceSerialized.Create(value);
             writer.WriteStringValue(System.Text.Json.JsonSerializer.Serialize(device, _options));
         }
 
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, DeviceInstance value, JsonSerializer serializer)
         {
-            var device = Device.Create(value);
+            var device = DeviceSerialized.Create(value);
             
             serializer.Serialize(writer, device);
         }
 
         #region Nested type: Device
 
-        private class Device
+        protected class DeviceSerialized
         {
-            public Device()
+            private static IDeviceRepository _deviceRepo;
+
+            static DeviceSerialized()
+            {
+                _deviceRepo = Repository.DeviceRepository.Instance;
+            }
+
+            public DeviceSerialized()
             {
             }
 
             [JsonConstructor]
-            public Device(Guid deviceTypeId, Dictionary<string, string> values)
+            public DeviceSerialized(Guid deviceTypeId, Dictionary<string, string> values)
             {
                 DeviceTypeId = deviceTypeId;
                 Values = values;
             }
 
-            private Device(DeviceInstance value)
+            private DeviceSerialized(DeviceInstance value)
             {
                 DeviceTypeId = value.DeviceType.Id;
                 Values = value.Values.ToItemValuesDictionary();
             }
 
+            //[JsonIgnore]
+            public DeviceType GetDeviceType() => _deviceRepo.GetById(DeviceTypeId);
+
             public Guid DeviceTypeId { get; }
             public Dictionary<string, string> Values { get; }
 
-            internal static Device Create(DeviceInstance instance) => new Device(instance);
+            public static DeviceSerialized Create(DeviceInstance instance) => new DeviceSerialized(instance);
 
-            internal static Device Create(string deviceTypeId, string values)
+            public static DeviceSerialized Create(string deviceTypeId, string values)
             {
                 if (!Guid.TryParse(deviceTypeId, out var id))
                     throw new ArgumentException(nameof(deviceTypeId));
                 var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(values);
-                return new Device(id, dict);
+                return new DeviceSerialized(id, dict);
             }
 
-            internal static Device Create(Guid deviceTypeId, Dictionary<string, string> values) => new Device(deviceTypeId, values);
+            public static DeviceSerialized Create(Guid deviceTypeId, Dictionary<string, string> values) => new DeviceSerialized(deviceTypeId, values);
         }
 
         #endregion
@@ -132,6 +149,8 @@ namespace Devices.Core.Interfaces
         public DeviceType DeviceType { get; }
 
         public DeviceItems Items { get; }
+
+        public VolumeInputType DriveType => Items.Volume.VolumeInputType;
 
         public ICollection<ItemValue> Values => ItemValues.ToList();
 

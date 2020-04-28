@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Devices.Core.Repository;
+using LiteDB;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Shared.Storage.Interfaces;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
-using Devices.Core.Repository;
-using LiteDB;
-using Prover.Application.Models.EvcVerifications;
-using Prover.Shared.Interfaces;
-using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Storage.LiteDb
 {
@@ -21,9 +20,9 @@ namespace Prover.Storage.LiteDb
 
         public IQbservable<EvcVerificationTest> QueryObservable(Expression<Func<EvcVerificationTest, bool>> predicate = null)
         {
-            var results = Query(predicate);
+            return Observable.StartAsync(() => Query(predicate)).SelectMany(t => t).AsQbservable();
 
-            return results.AsQueryable().ToQbservable();
+
         }
     }
 }

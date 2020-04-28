@@ -1,10 +1,11 @@
-﻿using System;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
+using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared;
+using System;
 
 namespace Prover.Application.ViewModels.Factories.Volume
 {
@@ -20,9 +21,9 @@ namespace Prover.Application.ViewModels.Factories.Volume
         {
             _startVolumeItems = device.CreateItemGroup<VolumeItems>();
             _endVolumeItems = device.CreateItemGroup<VolumeItems>();
-            
+
             _sharedCalculator = GetSharedCalculator();
-            
+
 
             CalculationsViewModel GetSharedCalculator()
             {
@@ -45,7 +46,7 @@ namespace Prover.Application.ViewModels.Factories.Volume
             VerificationTestPointViewModel testPoint)
         {
             var factory = new VolumeViewModelFactory(device, viewModel, testPoint);
-
+            viewModel.DriveType = VolumeInputBuilderFactory.GetBuilder(device).BuildVolumeType();
             switch (viewModel.DriveType.InputType)
             {
                 case VolumeInputType.Rotary:

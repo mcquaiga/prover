@@ -1,17 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
-using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume;
-using Prover.Calculations;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Prover.Application.Models.EvcVerifications
 {
-  
-
 
     public static class EvcVerificationExtensions
     {
@@ -25,6 +21,10 @@ namespace Prover.Application.Models.EvcVerifications
                                   .Select(v => v.Tests.OfType<VerificationTestEntity<T>>()
                                                 .FirstOrDefault());
         }
+
+        public static PressureCorrectionTest GetPressure(this VerificationTestPoint vtp) => vtp.GetTest<PressureCorrectionTest>();
+        public static TemperatureCorrectionTest GetTemperature(this VerificationTestPoint vtp) => vtp.GetTest<TemperatureCorrectionTest>();
+        public static SuperCorrectionTest GetSuper(this VerificationTestPoint vtp) => vtp.GetTest<SuperCorrectionTest>();
 
         public static Dictionary<int, VerificationTestEntity<T>> GetCorrectionTests<T>
                 (this ICollection<VerificationEntity> testPoints) where T : ItemGroup, ICorrectionFactor
@@ -41,14 +41,13 @@ namespace Prover.Application.Models.EvcVerifications
                                   .SelectMany(v => v.Tests.OfType<VerificationTestEntity<ItemGroup>>());
         }
 
-        public static T GetVerificationTest<T>(this VerificationTestPoint vtp)
-                where T : VerificationEntity => vtp.GetTest<T>();
+        public static T GetVerificationTest<T>(this VerificationTestPoint vtp) where T : VerificationEntity => vtp.GetTest<T>();
 
         public static VerificationTestPoint GetVolumeTest(this EvcVerificationTest evcVerification)
         {
             return evcVerification.Tests
                                   .Where(t => t.GetType() == typeof(VerificationTestPoint))
-                                  .Select(t => (VerificationTestPoint) t)
+                                  .Select(t => (VerificationTestPoint)t)
                                   .FirstOrDefault(ct => ct.GetTest<CorrectedVolumeTestRun>() != null);
         }
 

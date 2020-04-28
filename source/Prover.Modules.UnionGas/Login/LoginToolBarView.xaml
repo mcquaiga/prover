@@ -1,96 +1,88 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Prover.Modules.UnionGas.Login.LoginToolBarView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:loginToolbar="clr-namespace:Prover.Modules.UnionGas.Login"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:reactiveUi="http://reactiveui.net"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    x:TypeArguments="loginToolbar:LoginToolbarViewModel"
-    mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
-                <ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid
-        Margin="2"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
+	x:Class="Prover.Modules.UnionGas.Login.LoginToolBarView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:loginToolbar="clr-namespace:Prover.Modules.UnionGas.Login"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:reactiveUi="http://reactiveui.net"
+	x:Name="LoginToolbarViewControl"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:TypeArguments="loginToolbar:LoginToolbarViewModel"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+				<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.textblock.xaml" />
+				<ResourceDictionary Source="/Prover.UI.Desktop;component/Styles/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid
+		Margin="2"
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
 
-        <StackPanel
-            x:Name="ExecutingContent"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Center"
-            Visibility="Collapsed"
-            ZIndex="1">
-            <ProgressBar IsIndeterminate="True" />
-            <TextBlock
-                x:Name="WaitingForLoginMessage"
-                HorizontalAlignment="left"
-                VerticalAlignment="Center"
-                Style="{StaticResource MaterialDesignBody1TextBlock}"
-                Text="Signing in..."
-                Visibility="Collapsed" />
-        </StackPanel>
+		<StackPanel
+			x:Name="ExecutingContent"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
+			Visibility="Collapsed"
+			ZIndex="1">
+			<ProgressBar IsIndeterminate="True" Style="{StaticResource MaterialDesignCircularProgressBar}" />
 
-        <StackPanel
-            x:Name="NotLoggedInContent"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <Button
-                x:Name="LoginButton"
-                Content="{materialDesign:PackIcon UserOff}"
-                Style="{StaticResource MainToolbarButtonStyle}" />
-        </StackPanel>
+		</StackPanel>
 
-        <StackPanel
-            x:Name="LoggedInContent"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Orientation="Vertical"
-            Visibility="Collapsed">
+		<StackPanel
+			x:Name="NotLoggedInContent"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center">
+			<Button
+				x:Name="LoginButton"
+				Content="{materialDesign:PackIcon UserOff}"
+				Style="{StaticResource MainToolbarButtonStyle}" />
+		</StackPanel>
 
-            <!--<materialDesign:PopupBox
-                Margin="2,15"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                StaysOpen="True" />-->
-            <materialDesign:PopupBox
-                Padding="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                <materialDesign:PopupBox.ToggleContentTemplate>
-                    <DataTemplate>
-                        <Button materialDesign:ButtonAssist.CornerRadius="0" Style="{StaticResource MainToolbarButtonStyle}">
-                            <materialDesign:PackIcon Kind="Account" />
-                        </Button>
-                    </DataTemplate>
-                </materialDesign:PopupBox.ToggleContentTemplate>
-                <materialDesign:PopupBox.Content>
-                    <StackPanel>
-                        <Button
-                            x:Name="LogoutButton"
-                            Content="Sign Out"
-                            Style="{StaticResource MainToolbarButtonStyle}" />
+		<StackPanel
+			x:Name="LoggedInContent"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Orientation="Vertical"
+			Visibility="Collapsed">
+
+			<materialDesign:PopupBox Style="{StaticResource MainToolbarPopupBoxStyle}">
+				<materialDesign:PopupBox.ToggleContent>
+					<materialDesign:PackIcon Kind="Account" Style="{StaticResource MainToobarPackIconStyle}" />
+
+				</materialDesign:PopupBox.ToggleContent>
+
+				<StackPanel>
+					<TextBlock
+						x:Name="SignOnMessageTextBlock"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						Style="{StaticResource MaterialDesignBody1TextBlock}"
+						Text="{Binding ViewModel.DisplayName, ElementName=LoginToolbarViewControl}" />
+
+					<Button
+						x:Name="LogoutButton"
+						Command="{Binding ViewModel.LogOut, ElementName=LoginToolbarViewControl}"
+						Content="Sign Out"
+						Style="{StaticResource MainToolbarButtonStyle}" />
 
 
-                    </StackPanel>
-                </materialDesign:PopupBox.Content>
+				</StackPanel>
 
 
-            </materialDesign:PopupBox>
+
+			</materialDesign:PopupBox>
 
 
-        </StackPanel>
+		</StackPanel>
 
 
-    </Grid>
+	</Grid>
 </reactiveUi:ReactiveUserControl>

@@ -55,50 +55,6 @@ namespace Devices.Core.Items.ItemGroups.Builders
                 select new Tuple<PropertyInfo, ItemValue>(prop, value);
         }
 
-        //protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, string valueString)
-        //{
-        //    if (property.PropertyType.IsEnum)
-        //    {
-        //        var e = Enum.Parse(property.PropertyType, valueString);
-        //        property.SetValue(itemGroup, e);
-        //    }
-        //    else if (property.PropertyType == typeof(decimal))
-        //    {
-        //        if (decimal.TryParse(valueString, out var d))
-        //            property.SetValue(itemGroup, d);
-        //    }
-        //    else if (property.PropertyType == typeof(int))
-        //    {
-        //        if (!int.TryParse(valueString, out var i))
-        //        {
-        //            if (decimal.TryParse(valueString, out var d))
-        //                i = decimal.ToInt32(d);
-        //            else
-        //                throw new ArgumentException(
-        //                    $"Value for property {property.Name} with type {property.PropertyType} is the wrong data type.");
-        //        }
-
-        //        property.SetValue(itemGroup, i);
-        //    }
-        //    else if (property.PropertyType == typeof(string))
-        //    {
-        //        property.SetValue(itemGroup, valueString);
-        //    }
-        //    else
-        //    {
-        //        throw new NotImplementedException($"{property.PropertyType} is not yet supported.");
-        //    }
-
-        //    return property;
-        //}
-
-        //protected virtual PropertyInfo SetPropertyValue(TGroup itemGroup, PropertyInfo property, ItemValue value)
-        //{
-        //    itemGroup.SetValue(property, value);
-
-        //    return property;
-        //}
-
         protected virtual TGroup SetValues(TGroup itemGroup, IEnumerable<ItemValue> itemValues)
         {
             MatchItemValuesWithPropertyInfo(itemGroup.GetType(), itemValues).ToList()

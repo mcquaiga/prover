@@ -1,18 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.Application.Models.EvcVerifications.Builders;
-using System;
-using System.Collections.Generic;
-using System.Reactive.Disposables;
-using System.Text;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
-using Prover.Shared.SampleData;
-using Prover.Storage.LiteDb;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prover.DevTools.SampleData;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Tests.Application.Services;
-using Tests.Shared;
 
 namespace Prover.Application.Models.EvcVerifications.Builders.Tests
 {
@@ -45,13 +38,13 @@ namespace Prover.Application.Models.EvcVerifications.Builders.Tests
         [TestMethod()]
         public void EvcVerificationBuilderTest()
         {
-           
+
         }
 
         [TestMethod()]
         public void CreateNewTest()
         {
-            
+
 
             var tempTest = VerificationBuilder.CreateNew(_device)
                                               .AddTestPoint(tp => tp.WithTemperature(32m, SampleItemFiles.TempLowItems)
@@ -77,19 +70,19 @@ namespace Prover.Application.Models.EvcVerifications.Builders.Tests
         [TestMethod()]
         public void GetEvcVerificationTest()
         {
-           
+
         }
 
         [TestMethod()]
         public void SetTestDateTimeTest()
         {
-           
+
         }
 
         [TestMethod()]
         public void TestPointFactoryTest()
         {
-           
+
         }
     }
 }

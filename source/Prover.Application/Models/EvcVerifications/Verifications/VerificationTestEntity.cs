@@ -1,8 +1,8 @@
-using System;
 using Devices.Core.Items.ItemGroups;
 using Prover.Calculations;
 using Prover.Shared.Domain;
 using Prover.Shared.Extensions;
+using System;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
@@ -10,7 +10,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
     {
         TValue ExpectedValue { get; }
         TValue ActualValue { get; }
-        TValue PercentError { get; }
+        decimal PercentError { get; }
     }
 
     public class VerificationEntity : BaseEntity, IVerification
@@ -24,8 +24,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         {
         }
 
-        protected VerificationEntity(TValue expectedValue, TValue actualValue,
-            TValue percentError) : base()
+        protected VerificationEntity(TValue expectedValue, TValue actualValue, decimal percentError) : base()
         {
             ExpectedValue = expectedValue;
             ActualValue = actualValue;
@@ -36,7 +35,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
         public TValue ExpectedValue { get; protected set; }
         public TValue ActualValue { get; protected set; }
-        public TValue PercentError { get; protected set; }
+        public decimal PercentError { get; protected set; }
+
 
         #endregion
 
@@ -54,25 +54,33 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         {
         }
 
+
+        protected virtual void Update(decimal passTolerance)
+        {
+            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+            Verified = PercentError.IsBetween(passTolerance);
+        }
+
         #region Public Properties
 
         #endregion
     }
 
 
-    public abstract class VerificationTestEntity<T> : VerificationEntity<decimal>
+    public abstract class VerificationTestEntity<T> : VerificationTestEntity
         where T : ItemGroup
     {
-        protected VerificationTestEntity() {}
+        protected VerificationTestEntity() { }
         #region Public Properties
 
-        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError) 
+        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError)
             : base(expectedValue, actualValue, percentError)
         {
             Items = items;
         }
 
         public T Items { get; protected set; }
+
 
         #endregion
     }
@@ -85,13 +93,12 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
         protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
 
-        protected void Update(decimal passTolerance)
+        protected override void Update(decimal passTolerance)
         {
             ExpectedValue = CalculatorFactory.Invoke()
                                              .CalculateFactor();
 
-            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
-            Verified = PercentError.IsBetween(Tolerances.TEMP_ERROR_TOLERANCE);
+            base.Update(passTolerance);
         }
     }
 
@@ -106,11 +113,12 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         }
 
         #region Public Properties
-        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false) 
+        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false)
             : base(expectedValue, actualValue, percentError)
         {
             StartValues = startValues;
             EndValues = endValues;
+
         }
 
         public TStart StartValues { get; protected set; }

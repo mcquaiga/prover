@@ -5,7 +5,7 @@ namespace Prover.Application.Interactions
 {
     public interface IToolbarItem
     {
-        
+        int SortOrder { get; }
     }
 
     public interface IToolbarActionItem

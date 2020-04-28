@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Prover.Shared.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Prover.Shared.Domain;
 
 namespace Prover.Shared.Storage.Interfaces
 {
@@ -23,7 +23,7 @@ namespace Prover.Shared.Storage.Interfaces
     {
         Task<int> CountAsync(ISpecification<T> spec);
 
-        IEnumerable<T> Query(Expression<Func<T, bool>> predicate = null);
+        Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null);
 
         Task<IReadOnlyList<T>> ListAsync();
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
@@ -11,6 +6,11 @@ using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
 using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Modules.UnionGas.Exporter
 {
@@ -63,19 +63,19 @@ namespace Prover.Modules.UnionGas.Exporter
 
             if (!isSuccess)
             {
-                await NotificationInteractions.SnackBarMessage.Handle("EXPORT FAILED");
+                await Notifications.SnackBarMessage.Handle("EXPORT FAILED");
                 return false;
                 throw new Exception(
                     "An error occured sending test results to web service. Please see log for details.");
 
             }
 
-            await NotificationInteractions.SnackBarMessage.Handle("EXPORT SUCCESSFUL");
+            await Notifications.SnackBarMessage.Handle("EXPORT SUCCESSFUL");
 
             foreach (var instr in forExport)
             {
                 instr.ExportedDateTime = DateTime.Now;
-                await _testRunService.AddOrUpdate(instr);
+                await _testRunService.Upsert(instr);
             }
 
             return true;
@@ -83,7 +83,7 @@ namespace Prover.Modules.UnionGas.Exporter
 
         public Task<bool> Export(EvcVerificationTest verificationTest)
         {
-            var instrumentList = new List<EvcVerificationTest> {verificationTest};
+            var instrumentList = new List<EvcVerificationTest> { verificationTest };
             return Export(instrumentList);
         }
 
@@ -95,7 +95,7 @@ namespace Prover.Modules.UnionGas.Exporter
                 throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
 
             var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User?.UserId);
-            return await _exportService.SubmitQaTestRunResults(new[] {failedTest});
+            return await _exportService.SubmitQaTestRunResults(new[] { failedTest });
         }
     }
 }

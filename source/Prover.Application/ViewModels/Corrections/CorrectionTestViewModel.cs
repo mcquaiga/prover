@@ -1,4 +1,7 @@
-﻿using Prover.Shared.Extensions;
+﻿using DynamicData;
+using Prover.Application.Extensions;
+using Prover.Calculations;
+using Prover.Shared.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
@@ -7,15 +10,12 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Devices.Core.Items.ItemGroups;
-using DynamicData;
-using Prover.Calculations;
 
 namespace Prover.Application.ViewModels.Corrections
 {
     public abstract class VerifyViewModel : ViewModelWithIdBase
     {
-      
+
     }
 
 
@@ -49,10 +49,13 @@ namespace Prover.Application.ViewModels.Corrections
             if (verifications == null || !verifications.Any()) return;
 
             VerifiedObservable = verifications.AsObservableChangeSet()
-                .AutoRefresh(model => model.Verified, changeSetBuffer: TimeSpan.FromMilliseconds(50))
+                .AutoRefresh(model => model.Verified)
                 .ToCollection()
                 .Select(x => x.Any() && x.All(y => y != null && y.Verified))
-                .ObserveOn(RxApp.TaskpoolScheduler);
+                .LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
+                .LogErrors(Logger)
+                .LoggedCatch(this, VerifiedObservable)
+                .ObserveOn(RxApp.MainThreadScheduler);
         }
     }
 
@@ -83,7 +86,7 @@ namespace Prover.Application.ViewModels.Corrections
 
             VerifiedObservable = this.WhenAnyValue(x => x.PercentError)
                 .Select(p => p.IsBetween(PassTolerance));
-                
+
 
             this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)
                 .ToPropertyEx(this, x => x.PercentError, 100m, true)
@@ -166,5 +169,5 @@ namespace Prover.Application.ViewModels.Corrections
 
         //public IItemGroup TestItems { get; set; }
     }
-    
+
 }

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using Prover.Application.Interactions;
+﻿using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.Exporter.MeterDTODialog;
 using Prover.Modules.UnionGas.MasaWebService;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber
 {
@@ -23,7 +23,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber
 
         public TestsByJobNumberViewModel(IMeterService<MeterDTO> meterService)
         {
-          
+
             GetOpenJobNumbersCommand = ReactiveCommand.CreateFromObservable(() =>
             {
                 return Observable.Return(new List<string>());
@@ -36,7 +36,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber
 
             GetOpenJobNumbersCommand
                 .ToPropertyEx(this, x => x.JobNumbers, new List<string>());
-         
+
             var canExecuteFetchTestsByJobNumber =
                 this.WhenAnyValue(x => x.SelectedJobNumber, jobNumber => !string.IsNullOrEmpty(jobNumber));
             FetchTestsByJobNumberCommand = ReactiveCommand.CreateFromTask<string>(async (jobNumber) =>
@@ -48,14 +48,14 @@ namespace Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber
                     if (meterList.Any())
                     {
                         var mdViewModel = new MeterDtoListDialogViewModel(meterList);
-                        await MessageInteractions.ShowDialog.Handle(mdViewModel);
+                        await Messages.ShowDialog.Handle(mdViewModel);
                     }
                 }
 
             }, canExecuteFetchTestsByJobNumber);
 
             FetchTestsByJobNumberCommand.ThrownExceptions
-                .Subscribe(async ex => await MessageInteractions.ShowMessage.Handle(ex.Message));
+                .Subscribe(async ex => await Messages.ShowMessage.Handle(ex.Message));
         }
 
 

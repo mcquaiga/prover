@@ -1,18 +1,16 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using DynamicData;
+﻿using DynamicData;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
-using ReactiveUI;
+using System;
+using System.Reactive.Linq;
 
 namespace Prover.Application.Dashboard
 {
     public abstract class DashboardItemViewModel : ViewModelBase, IDashboardItem, IDisposable
     {
 
-        protected DashboardItemViewModel(){}
+        protected DashboardItemViewModel() { }
 
         protected DashboardItemViewModel(string title = null, string groupName = null, int sortOrder = 99)
         {
@@ -28,40 +26,24 @@ namespace Prover.Application.Dashboard
 
         public int SortOrder { get; set; }
 
-        protected IObservableList<EvcVerificationTest> ListStreamInstance;
+        protected IObservableList<EvcVerificationTest> ListStream;
 
         protected IObservableList<EvcVerificationTest> GenerateListStream(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {
-            //filter = filter ?? (v => true);
-            if (ListStreamInstance != null)
-            {
-                return ListStreamInstance;
-            }
 
             parentFilter = parentFilter ?? Observable.Return<Func<EvcVerificationTest, bool>>(test => true);
+            ListStream = GenerateCacheStream(entityCache, parentFilter).Connect().RemoveKey().AsObservableList();
 
-            return entityCache?.Data()
-                                            .Connect()
-                                            .ObserveOn(RxApp.MainThreadScheduler)
-                                            .Throttle(TimeSpan.FromMilliseconds(50))
-                                            .Filter(parentFilter)
-                                            //.DelaySubscription(TimeSpan.FromSeconds(2))
-                                            .AsObservableList()
-                                            .DisposeWith(Cleanup);
-
+            return ListStream;
         }
-        
-        protected IObservable<IChangeSet<EvcVerificationTest>> GenerateCacheStream(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter)
+
+        protected IObservableCache<EvcVerificationTest, Guid> GenerateCacheStream(IEntityDataCache<EvcVerificationTest> entityCache, IObservable<Func<EvcVerificationTest, bool>> parentFilter)
         {
             //filter = filter ?? (v => true);
             parentFilter = parentFilter ?? Observable.Empty<Func<EvcVerificationTest, bool>>(test => true);
 
-            return entityCache?.Data().Connect()
-                              .Filter(parentFilter)
-                              .Throttle(TimeSpan.FromMilliseconds(50))
-                              .ObserveOn(RxApp.MainThreadScheduler)
-                              .DisposeMany();
-                   //;
+            return entityCache?.Items.Connect().Filter(parentFilter).Throttle(TimeSpan.FromMilliseconds(50)).AsObservableCache();
+            //;
         }
     }
 }

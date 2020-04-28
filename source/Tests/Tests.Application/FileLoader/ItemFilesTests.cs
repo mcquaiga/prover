@@ -1,80 +1,64 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Newtonsoft.Json;
-using Prover.Application.FileLoader;
-using Prover.Application.Interfaces;
-using Prover.Application.Services.LiveReadCorrections;
-using Tests.Application.Services;
-using JsonSerializer = System.Text.Json.JsonSerializer;
-
 namespace Tests.Application.FileLoader
 {
-    [TestClass()]
-    public class ItemFilesTests
-    {
-        private string _filePath = ".\\MiniMax.json";
-        private string _templatefilePath = ".\\Template.json";
-        private ItemAndTestFile _itemFile;
-        private Mock<IDeviceSessionManager> _deviceManagerMock = new Mock<IDeviceSessionManager>();
-        private Mock<LiveReadCoordinator> _liveReadMock = new Mock<LiveReadCoordinator>();
+    //[TestClass()]
+    //public class ItemFilesTests
+    //{
+    //    private string _filePath = ".\\MiniMax.json";
+    //    private string _templatefilePath = ".\\Template.json";
+    //    private ItemAndTestFile _itemFile;
+    //    private Mock<IDeviceSessionManager> _deviceManagerMock = new Mock<IDeviceSessionManager>();
+    //    private Mock<LiveReadCoordinator> _liveReadMock = new Mock<LiveReadCoordinator>();
 
-        [TestInitialize]
-        public async Task Init()
-        {
-            _itemFile = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, _filePath);
-        }
+    //    [TestInitialize]
+    //    public async Task Init()
+    //    {
+    //        _itemFile = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, _filePath);
+    //    }
 
-        [TestMethod()]
-        public async Task LoadFromFileTest()
-        {
-            var items = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, _filePath);
-            
-            Assert.IsTrue(items != null);
-        }  
+    //    [TestMethod()]
+    //    public async Task LoadFromFileTest()
+    //    {
+    //        var items = await ItemLoader.LoadFromFile(StorageTestsInitialize.DeviceRepo, _filePath);
 
-        [TestMethod()]
-        public async Task LoadFromTemplate()
-        {
-            var loader = new ItemLoader(StorageTestsInitialize.DeviceRepo, StorageTestsInitialize.ViewModelService);
-            
-            var test = await loader.LoadTemplate(_templatefilePath);
-            
-            Assert.IsTrue(test != null);
-        }  
-        
-        [TestMethod()]
-        public async Task FileCommunicationClientInstanceTest()
-        {
-            var client = new FileDeviceClient(_itemFile);
-           // var manager = new Device
-            //VerificationEvents.CorrectionTests.OnLiveReadStart.Publish(new LiveReadCoordinator(_deviceManagerMock.Ob));
-            var tests = await StorageTestsInitialize.TestRepo.ListAsync();
+    //        Assert.IsTrue(items != null);
+    //    }  
 
-            //var test = tests.Last().VerificationTestMixins.GetTests<VerificationTestPoint>().Select(p => p.GetTests<TemperatureCorrectionTest>()).ToList();
-            var test = tests.First();
+    //    [TestMethod()]
+    //    public async Task LoadFromTemplate()
+    //    {
+    //        var loader = new ItemLoader(StorageTestsInitialize.DeviceRepo, StorageTestsInitialize.ViewModelService);
 
-            var deviceRepo = StorageTestsInitialize.DeviceRepo;
-            var serializeOptions = new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
-            
+    //        var test = await loader.LoadTemplate(_templatefilePath);
 
-            var json = JsonConvert.SerializeObject(test.Device, serializeOptions);
+    //        Assert.IsTrue(test != null);
+    //    }  
 
-            //var instance = JsonConvert.DeserializeObject<DeviceInstance>(json);
+    //    [TestMethod()]
+    //    public async Task FileCommunicationClientInstanceTest()
+    //    {
+    //        var client = new FileDeviceClient(_itemFile);
+    //       // var manager = new Device
+    //        //VerificationEvents.CorrectionTests.OnLiveReadStart.Publish(new LiveReadCoordinator(_deviceManagerMock.Ob));
+    //        var tests = await StorageTestsInitialize.TestRepo.ListAsync();
+
+    //        //var test = tests.Last().VerificationTestMixins.GetTests<VerificationTestPoint>().Select(p => p.GetTests<TemperatureCorrectionTest>()).ToList();
+    //        var test = tests.First();
+
+    //        var deviceRepo = StorageTestsInitialize.DeviceRepo;
+    //        var serializeOptions = new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
 
 
-            //Assert.IsTrue(instance != null);
-            
-            Assert.IsTrue(json != null);
-        }
+    //        var json = JsonConvert.SerializeObject(test.Device, serializeOptions);
 
-    }
+    //        //var instance = JsonConvert.DeserializeObject<DeviceInstance>(json);
+
+
+    //        //Assert.IsTrue(instance != null);
+
+    //        Assert.IsTrue(json != null);
+    //    }
+
+    //}
 }
 
 //var json = JsonConvert.SerializeObject(test).Tests.Tests.GetCorrectionTests<PressureItems>();

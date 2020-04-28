@@ -33,8 +33,9 @@
             <controls:ValueDescriptionControl
                 x:Name="UncorrectedPulseCountControl"
                 IsReadOnly="False"
+                IsTabStop="True"
                 Label="EVC Pulses"
-                TabIndex="1" />
+                TabIndex="0" />
 
             <!--<controls:ValueDescriptionControl x:Name="PulsesVerifiedControl" Label="Pulses Ver'd" />-->
 

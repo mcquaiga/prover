@@ -94,12 +94,7 @@ namespace Devices.Core.Items
 
     
       
-
-        /// <inheritdoc />
-        //public bool Equals(object x, object y) => Equals(x, y);
-
-        /// <inheritdoc />
-        //public int GetHashCode(object obj) => throw new NotImplementedException();
+    
     }
 
 

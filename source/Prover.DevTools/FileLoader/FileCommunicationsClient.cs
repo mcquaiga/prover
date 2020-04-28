@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Communications.Status;
 using Devices.Core.Items;
@@ -12,8 +5,15 @@ using Devices.Core.Repository;
 using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications;
 using Prover.Shared.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
-namespace Prover.Application.FileLoader
+namespace Prover.DevTools.FileLoader
 {
     public class LiveReadSimulator
     {
@@ -73,9 +73,7 @@ namespace Prover.Application.FileLoader
             VerificationEvents.CorrectionTests.BeforeDownload.Subscribe(context =>
             {
                 _queuedValues.Clear();
-                _queuedValues.AddRange(_itemFile.PressureTests[context.Input.TestNumber]
-                                                .Union(
-                                                        _itemFile.TemperatureTests[context.Input.TestNumber]));
+                _queuedValues.AddRange(Enumerable.Union<ItemValue>(_itemFile.PressureTests[context.Input.TestNumber], _itemFile.TemperatureTests[context.Input.TestNumber]));
             });
         }
 
@@ -95,14 +93,14 @@ namespace Prover.Application.FileLoader
 
         public static FileDeviceClient Create(IDeviceRepository deviceRepository, string filePath)
         {
-            var itemFile = Observable.StartAsync(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath))
+            var itemFile = Observable.StartAsync<ItemAndTestFile>(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath))
                                      .Wait();
             return new FileDeviceClient(itemFile);
         }
 
         public static async Task<FileDeviceClient> CreateAsync(IDeviceRepository deviceRepository, string filePath)
         {
-            var itemFile = await Observable.StartAsync(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath)).FirstAsync();
+            var itemFile = await Observable.StartAsync<ItemAndTestFile>(async () => await ItemLoader.LoadFromFile(deviceRepository, filePath)).FirstAsync();
             return new FileDeviceClient(itemFile);
         }
 
@@ -121,17 +119,17 @@ namespace Prover.Application.FileLoader
         {
             await Task.CompletedTask;
 
-            if (_queuedValues.Any())
+            if (Enumerable.Any<ItemValue>(_queuedValues))
             {
-                var values = _queuedValues.Where(qv => itemNumbers.Contains(qv.Metadata)).ToList();
+                var values = Enumerable.Where<ItemValue>(_queuedValues, qv => Enumerable.Contains<ItemMetadata>(itemNumbers, qv.Metadata)).ToList();
                 _queuedValues.Clear();
                 return values;
             }
 
             if (itemNumbers == null)
                 return _itemFile.Device.Values;
-            
-            return _itemFile.Device.Values.Where(i => itemNumbers.Contains(i.Metadata));
+
+            return _itemFile.Device.Values.Where(i => Enumerable.Contains<ItemMetadata>(itemNumbers, i.Metadata));
         }
 
         public async Task<ItemValue> LiveReadItemValue(ItemMetadata itemNumber)
@@ -144,7 +142,7 @@ namespace Prover.Application.FileLoader
         public async Task<bool> SetItemValue(int itemNumber, string value)
         {
             var newValue = ItemValue.Create(_itemFile.Device.Values.GetItem(itemNumber).Metadata, value);
-            _itemFile.Device.SetItemValues(new[] {newValue});
+            _itemFile.Device.SetItemValues(new[] { newValue });
             return await Task.FromResult(true);
         }
     }

@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
+using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels
 {
     public class EvcVerificationViewModel : VerificationViewModel
     {
-        public EvcVerificationViewModel()
+        private EvcVerificationViewModel()
         {
         }
 
@@ -51,14 +52,14 @@ namespace Prover.Application.ViewModels
         public void Initialize(ICollection<VerificationViewModel> verificationTests, ILoginService loginService = null)
         {
             DeviceInfo = new SiteInformationViewModel(Device, this, loginService);
-
+            DriveType = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
             VerificationTests.Clear();
             VerificationTests.AddRange(verificationTests.ToArray());
 
             RegisterVerificationsForVerified(VerificationTests);
         }
 
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
             VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
             VerificationTests.Clear();

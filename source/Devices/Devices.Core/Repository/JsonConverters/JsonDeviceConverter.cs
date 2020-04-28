@@ -33,7 +33,7 @@ namespace Devices.Core.Repository.JsonConverters
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(WriteJson));
         }
 
         protected abstract override T Create(Type objectType, JObject jObject);

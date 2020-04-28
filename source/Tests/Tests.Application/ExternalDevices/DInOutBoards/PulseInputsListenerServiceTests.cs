@@ -1,14 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reactive.Linq;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Application.Hardware;
 using Prover.Application.Services;
+using Prover.DevTools.Hardware;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
+using System;
+using System.Diagnostics;
+using System.Reactive.Linq;
 using Tests.Shared;
 
 namespace Tests.Application.ExternalDevices.DInOutBoards
@@ -28,7 +28,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
         public void ConstantIntervalSimulatorInputChannelTest()
         {
             var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, null, _schedulers.TaskPool);
-            
+
             var changes = 0;
             var pulses = 0;
 
@@ -136,7 +136,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
             Assert.IsTrue(pulses == 0); // 61.5 ms  Off
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(61.5);
-            Assert.IsTrue(pulses== 1); // 123 ms  On
+            Assert.IsTrue(pulses == 1); // 123 ms  On
 
             _schedulers.TaskPool.AdvanceByMilliSeconds(3);
             Assert.IsTrue(pulses == 1); // 126 ms Off
@@ -197,7 +197,7 @@ namespace Tests.Application.ExternalDevices.DInOutBoards
         public void RandomIntervalSimulatorInputChannelTest()
         {
             var simulator = new SimulatedInputChannel(PulseOutputChannel.Channel_A, null, null, _schedulers.TaskPool);
-            
+
             var changes = 0;
             var pulses = 0;
 

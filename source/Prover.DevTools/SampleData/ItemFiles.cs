@@ -1,21 +1,46 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
-namespace Prover.Shared.SampleData
+namespace Prover.DevTools.SampleData
 {
+    public static class DeviceSamples
+    {
+        //public static DeviceInstance MiniMax => SampleItemFiles.MiniMaxDevice;
+        //public static DeviceInstance MiniAt => SampleItemFiles.MiniAtDevice;
+        //public static DeviceInstance Adem => SampleItemFiles.AdemDevice;
+
+        //public static List<DeviceInstance> All = new List<DeviceInstance>() { MiniMax, MiniAt, Adem };
+
+    }
+
+    public static class VerificationSamples
+    {
+
+    }
+
+
     public static class SampleItemFiles
     {
-        public static Dictionary<string, string> MiniMaxItemFile 
-            => _lazy.Value.Items;
+        static SampleItemFiles()
+        {
+            //MiniAtDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\MiniAt.json"));
+            //AdemDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\Adem.json"));
+            //MiniMaxDevice = JsonConvert.DeserializeObject<DeviceInstance>(File.ReadAllText(".\\SampleData\\MiniMax.json"));
+        }
 
-        private static readonly Lazy<ItemAndTestFile> _lazy = new Lazy<ItemAndTestFile>(
-            () => DeserializeItemFile(File.ReadAllText("SampleData\\MiniMax.json"))
-        );
+        //public static DeviceInstance MiniMaxDevice { get; }
+        //public static DeviceInstance AdemDevice { get; }
+        //public static DeviceInstance MiniAtDevice { get; }
+
+
+        public static Dictionary<string, string> MiniMaxItemFile => _lazy.Value.Items;
+        private static readonly Lazy<ItemAndTestFile> _lazy = new Lazy<ItemAndTestFile>(() => DeserializeItemFile(File.ReadAllText("SampleData\\MiniMax.json")));
 
         public static Dictionary<string, string> PressureTest(int testNumber) => _lazy.Value.PressureTests.ElementAt(testNumber);
+
 
         public static Dictionary<string, string> TempLowItems => _lazy.Value.TemperatureTests.ElementAt(0);
         public static Dictionary<string, string> TempMidItems => _lazy.Value.TemperatureTests.ElementAt(1);

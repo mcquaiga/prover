@@ -1,0 +1,45 @@
+﻿<reactiveUi:ReactiveUserControl
+	x:Class="Prover.UI.Desktop.Views.Verifications.Volume.Mechanical.EnergyVolumeTestView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:mechanical="clr-namespace:Prover.Application.ViewModels.Volume.Mechanical;assembly=Prover.Application"
+	xmlns:reactiveUi="http://reactiveui.net"
+	d:DataContext="{d:DesignInstance mechanical:EnergyVolumeTestViewModel,
+	                                 IsDesignTimeCreatable=False}"
+	x:TypeArguments="mechanical:EnergyVolumeTestViewModel"
+	mc:Ignorable="d">
+	<Grid>
+		<StackPanel VerticalAlignment="Bottom">
+			<TextBlock Style="{StaticResource SecondaryTestHeaderStyle}" Text="Energy" />
+			<controls:PercentageControlNew
+				x:Name="PercentageControl"
+				Margin="5"
+				HorizontalAlignment="Center"
+		 />
+			<StackPanel>
+				<controls:ValueDescriptionControl
+					x:Name="UnitsControl"
+					HorizontalAlignment="Center"
+					Label="Units"
+					 />
+				<UniformGrid
+					HorizontalAlignment="Center"
+					VerticalAlignment="Bottom"
+
+					Columns="2">
+
+					<controls:ValueDescriptionControl Label="True"
+					                                  x:Name="TrueValueControl"/>
+					<controls:ValueDescriptionControl Label="EVC"
+					                                  x:Name="EvcValueControl"/>
+				</UniformGrid>
+
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+
+
+</reactiveUi:ReactiveUserControl>

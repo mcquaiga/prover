@@ -1,10 +1,9 @@
-﻿using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Application.Verifications.Events
 {
@@ -22,9 +21,9 @@ namespace Prover.Application.Verifications.Events
         {
             var device = verification.Device;
             var itemValue = GetDeviceValue(device);
-            
+
             var isValid = await CheckIfValid(device, itemValue);
-            
+
             while (!isValid)
             {
                 var newValue = await GetUpdatedValue();
@@ -43,7 +42,7 @@ namespace Prover.Application.Verifications.Events
             return true;
         }
 
-        protected virtual async Task<TValue> GetUpdatedValue() => (TValue) await MessageInteractions.GetInput.Handle(InputMessage);
+        protected virtual async Task<TValue> GetUpdatedValue() => (TValue)await Interactions.Messages.GetInput.Handle(InputMessage);
 
         protected abstract string InputMessage { get; }
 
@@ -57,7 +56,7 @@ namespace Prover.Application.Verifications.Events
             var item = GetDeviceValue(device).Metadata;
 
             var itemValue = await deviceManager.WriteItemValue(item, updateValue.ToString());
-            if (itemValue != null) device.SetItemValues(new []{itemValue});
+            if (itemValue != null) device.SetItemValues(new[] { itemValue });
 
             return itemValue != null;
         }

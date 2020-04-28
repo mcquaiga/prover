@@ -117,7 +117,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         }
 
         public TestPointBuilder WithVolume
-                (VolumeItems startValues = null, VolumeItems endValues = null, Func<VolumeInputTestBuilder, VolumeInputTestBuilder> testDecorator = null,
+                (ICollection<ItemValue> startValues = null, ICollection<ItemValue> endValues = null, Func<VolumeInputTestBuilder, VolumeInputTestBuilder> testDecorator = null,
                 int appliedInput = 0, int corPulses = 0, int uncorPulses = 0)
         {
             _volumeBuilder.SetItemValues(startValues, endValues, appliedInput, corPulses, uncorPulses);

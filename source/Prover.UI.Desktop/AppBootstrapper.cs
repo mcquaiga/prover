@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,6 +8,9 @@ using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Prover.UI.Desktop
 {
@@ -71,27 +71,6 @@ namespace Prover.UI.Desktop
                         host.ConfigureModules(services);
                     })
                     .Build();
-
-        private async Task ExecuteStartUpTasks()
-        {
-            //var startTasks = AppHost.Services.GetServices<IStartupTask>()
-            //                        .Select(t =>
-            //                                t.ExecuteAsync(CancellationTokenSource.Token))
-            //                        .ForEach(t => t.Start())
-            //                        .ToArray();
-
-            ////startTasks.ForEach(t => t.Start());
-            //await Task.WhenAll(startTasks);
-
-            ////if (startTasks.Any(t => t.IsFaulted))
-            //    foreach (var ex in startTasks.Where(t => t.IsFaulted))
-            //    {
-            //        ex.Exception.InnerExceptions.ForEach(x =>
-            //                _logger.LogError(x, "An error occured on start up."));
-            //    }
-
-                await Task.CompletedTask;
-        }
 
         private void InitializeLogging()
         {

@@ -47,7 +47,7 @@ namespace Prover.Application.ViewModels.Volume
 
         public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
         
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
         }
     }

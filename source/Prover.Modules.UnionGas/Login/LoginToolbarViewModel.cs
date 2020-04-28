@@ -1,12 +1,13 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Linq;
-using Prover.Application.Interactions;
+﻿using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.Models;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -19,15 +20,18 @@ namespace Prover.Modules.UnionGas.Login
             {
                 var username = await loginService.GetLoginDetails();
                 return await loginService.Login(username);
-            });
+            },
+            canExecute: LoginService.LoggedIn.Select(x => !x),
+            outputScheduler: RxApp.MainThreadScheduler);
+
             LogIn.ThrownExceptions
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Do(async ex => await MessageInteractions.ShowError.Handle($"An error occured signing on. {Environment.NewLine} {ex.Message}"))
-                .Subscribe();
+                .Do(async ex => await Exceptions.Error.Handle($"An error occured signing on. {Environment.NewLine} {ex.Message}"))
+                .Subscribe().DisposeWith(Cleanup);
 
             LogIn.Where(x => !x)
-                .Do(_ => NotificationInteractions.SnackBarMessage.Handle("Employee not found"))
-                .Subscribe();
+                .Do(async _ => await Notifications.SnackBarMessage.Handle("Employee not found"))
+                .Subscribe().DisposeWith(Cleanup);
 
             LogOut = ReactiveCommand.CreateFromTask(loginService.Logout);
 
@@ -44,5 +48,8 @@ namespace Prover.Modules.UnionGas.Login
         public ReactiveCommand<Unit, bool> LogIn { get; }
 
         public ReactiveCommand<Unit, Unit> LogOut { get; }
+
+        /// <inheritdoc />
+        public int SortOrder { get; } = 99;
     }
 }

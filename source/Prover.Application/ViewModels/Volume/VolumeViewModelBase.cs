@@ -35,7 +35,7 @@ namespace Prover.Application.ViewModels.Volume
 
         public virtual ICollection<VerificationViewModel> AllTests() => _allTests;
 
-        protected override void Disposing()
+        protected override void Dispose(bool isDisposing)
         {
             AllTests().ForEach(t => t.DisposeWith(Cleanup));
         }

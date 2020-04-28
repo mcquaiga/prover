@@ -13,6 +13,12 @@ using Splat;
 
 namespace Prover.UI.Desktop.Startup
 {
+    public class ProverViewLocator : IViewLocator
+    {
+        /// <inheritdoc />
+        public IViewFor ResolveView<T>(T viewModel, string contract = null) where T : class => throw new System.NotImplementedException();
+    }
+
     public class UserInterface
     {
         public static void AddServices(IServiceCollection services, HostBuilderContext host)
@@ -29,7 +35,7 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<IScreenManager, ScreenManager>();
             services.AddSingleton<IScreen>(c => c.GetRequiredService<IScreenManager>());
-       
+
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();

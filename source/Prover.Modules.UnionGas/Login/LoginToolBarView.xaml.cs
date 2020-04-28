@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -19,7 +19,7 @@ namespace Prover.Modules.UnionGas.Login
             {
 
                 this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
+                // this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
 
                 ViewModel.LogIn.IsExecuting
                     .Merge(ViewModel.LoginService.LoggedIn.Select(x => false))

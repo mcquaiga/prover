@@ -7,10 +7,10 @@ namespace Prover.Calculations
     public class EnergyCalculator
     {
 
-        public decimal EnergyValueCalculated()
+        public static decimal TotalEnergy(decimal startEnergyValue, decimal endEnergyValue)
         {
-            return 0m; //EndEnergyItems.EnergyGasValue - StartEnergyItems.EnergyGasValue;
-        }
+            return endEnergyValue - startEnergyValue;
+        }   
 
         public static decimal Calculated(EnergyUnitType energyUnits, decimal totalCorrectedVolume, decimal totalEnergyValue)
         {

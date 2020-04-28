@@ -1,12 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Repository;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Tests.Application.Services;
 
 namespace Prover.Application.Services.Tests
@@ -28,8 +27,8 @@ namespace Prover.Application.Services.Tests
             _repo = StorageTestsInitialize.DeviceRepo;
             _deviceType = _repo.GetByName("Mini-Max");
 
-            _testRepo = StorageTestsInitialize.TestRepo; 
-            _cache  =StorageTestsInitialize.ViewModelService;
+            _testRepo = StorageTestsInitialize.TestRepo;
+            _cache = StorageTestsInitialize.VerificationCache;
             await Task.CompletedTask;
         }
 

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
 
 namespace Prover.UI.Desktop.ViewModels
 {
@@ -21,17 +20,15 @@ namespace Prover.UI.Desktop.ViewModels
         {
             _config = config;
             ScreenManager = screenManager;
-            ToolbarItems = toolbarItems;
-
+            ToolbarItems = toolbarItems.OrderBy(t => t.SortOrder);
 
             NavigateForward = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(ScreenManager.ChangeView);
             NavigateBack = ReactiveCommand.CreateFromTask(ScreenManager.GoBack, ScreenManager.Router.NavigateBack.CanExecute);
             NavigateHome = ReactiveCommand.CreateFromTask(async () =>
             {
-                await NotificationInteractions.SnackBarMessage.Handle("WELCOME HOME!");
                 await ScreenManager.GoHome();
             });
-         
+
         }
 
         [Reactive] public SnackbarMessageQueue MessageQueue { get; set; } = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));

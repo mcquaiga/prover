@@ -1,21 +1,20 @@
-﻿using System;
+﻿using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
+using Devices.Core.Repository;
+using Newtonsoft.Json;
+using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
-using Devices.Core.Repository;
-using Newtonsoft.Json;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-using Prover.Application.Models.EvcVerifications;
-using Prover.Application.Models.EvcVerifications.Verifications;
-using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 
-namespace Prover.Application.FileLoader
+namespace Prover.DevTools.FileLoader
 {
     public class ItemLoader
     {
@@ -35,11 +34,12 @@ namespace Prover.Application.FileLoader
 
         //private static JsonSerializerOptions _serializerOptions = new JsonSerialierOptions() { PropertyNameCaseInsensitive = true};
 
-        public static async Task<string> GetFileInput() => await MessageInteractions.OpenFileDialog.Handle("Open file");
+        public static async Task<string> GetFileInput() => await Application.Interactions.Messages.OpenFileDialog.Handle("Open file");
 
         public static async Task<ItemAndTestFile> LoadFromFile(IDeviceRepository devices, string filePath)
         {
-            if (!File.Exists(filePath)) return null;
+            if (!File.Exists(filePath))
+                return null;
             var json = File.ReadAllText(filePath);
             var itemFile = JsonConvert.DeserializeObject<JsonItemAndTestFile>(json);
             var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
@@ -70,19 +70,20 @@ namespace Prover.Application.FileLoader
 
             return new ItemAndTestFile
             {
-                    Device = deviceInstance,
-                    PressureTests = pressures,
-                    TemperatureTests = temps
+                Device = deviceInstance,
+                PressureTests = pressures,
+                TemperatureTests = temps
             };
         }
 
         public async Task<EvcVerificationTest> LoadTemplate(string filePath)
         {
-            if (!File.Exists(filePath)) return null;
+            if (!File.Exists(filePath))
+                return null;
             var serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            
+
             //serializer.Converters.Add(_jsonConverter);
 
             using (var streamer = File.OpenText(filePath))
@@ -126,13 +127,13 @@ namespace Prover.Application.FileLoader
         private EvcVerificationFactory(DeviceInstance device)
         {
             _instance = new EvcVerificationTest(device);
-               
+
         }
 
         public static EvcVerificationFactory Create(DeviceInstance device)
         {
             return new EvcVerificationFactory(device);
-          
+
             //ProverDefaults.TestDefinitions.ForEach(td =>
             //{
             //    var testPoint = new VerificationTestPoint(td.Level, new List<VerificationEntity>(), decimal.Zero);
@@ -183,7 +184,7 @@ namespace Prover.Application.FileLoader
 
             return this;
         }
-    
+
     }
 
     public class ItemAndTestFile

@@ -1,97 +1,114 @@
 ﻿<reactiveUi:ReactiveUserControl
-    x:Class="Prover.UI.Desktop.Views.Verifications.VerificationDetailsView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:reactiveUi="http://reactiveui.net"
-    xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
-    x:Name="TestDetailsUserControl"
-    d:DataContext="{d:DesignInstance viewModels:EvcVerificationViewModel,
-                                     IsDesignTimeCreatable=False}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    x:TypeArguments="viewModels:EvcVerificationViewModel"
-    mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style TargetType="controls:ValueDescriptionControl">
-            <Setter Property="LabelFontSize" Value="16" />
-            <Setter Property="ValueFontSize" Value="20" />
-        </Style>
-    </UserControl.Resources>
-    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+	x:Class="Prover.UI.Desktop.Views.Verifications.VerificationDetailsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:Prover.UI.Desktop.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:reactiveUi="http://reactiveui.net"
+	xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
+	x:Name="TestDetailsUserControl"
+	d:DataContext="{d:DesignInstance viewModels:EvcVerificationViewModel,
+	                                 IsDesignTimeCreatable=False}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:TypeArguments="viewModels:EvcVerificationViewModel"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<Style TargetType="controls:ValueDescriptionControl">
+			<Setter Property="LabelFontSize" Value="16" />
+			<Setter Property="ValueFontSize" Value="20" />
+		</Style>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
 
-        <Viewbox
-            MinWidth="200"
-            MaxWidth="400"
-            DockPanel.Dock="Left">
-            <reactiveUi:ViewModelViewHost x:Name="SiteInfoContent" Margin="0" />
-            <!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
-        </Viewbox>
+		</Grid.ColumnDefinitions>
 
-
-        <Viewbox
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"
-            Stretch="Uniform">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Viewbox HorizontalAlignment="Left" Stretch="Uniform">
-                    <ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid HorizontalAlignment="Stretch" Rows="1" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    x:Name="TestPointDataTemplate"
-                                    Padding="4"
-                                    BorderThickness="0"
-                                    Style="{StaticResource SubSectionDividerBorder}">
-                                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <ContentControl
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
-                                            ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-                                        <reactiveUi:ViewModelViewHost
-                                            x:Name="CorrectionsTestManagerViewHost"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            ViewModel="{Binding}" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Viewbox>
-                <Viewbox Grid.Row="1">
-                    <Border Padding="0" Style="{StaticResource SubSectionDividerBorder}">
-                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
-
-                            <ContentControl
-                                x:Name="VolumeTestContent"
-                                Margin="5"
-                                HorizontalAlignment="Center"
-                                ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-
-                            <reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+		<Viewbox
+			Grid.Column="1"
+			MinWidth="200"
+			MaxWidth="600"
+			HorizontalAlignment="Stretch"
+			DockPanel.Dock="Right">
+			<reactiveUi:ViewModelViewHost
+				x:Name="SiteInfoContent"
+				Margin="8"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center" />
+			<!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
+		</Viewbox>
 
 
-                        </StackPanel>
-                    </Border>
-                </Viewbox>
+		<Viewbox
+			Grid.Row="0"
+			Grid.Column="0"
+			Stretch="Uniform">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
 
-            </Grid>
-        </Viewbox>
+				<Viewbox HorizontalAlignment="Stretch" Stretch="Uniform">
+					<ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<UniformGrid HorizontalAlignment="Stretch" Rows="1" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border
+									x:Name="TestPointDataTemplate"
+									Padding="4"
+									BorderThickness="0"
+									Style="{StaticResource SubSectionDividerBorder}">
+									<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+										<ContentControl
+											HorizontalAlignment="Left"
+											VerticalAlignment="Top"
+											ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+										<reactiveUi:ViewModelViewHost
+											x:Name="CorrectionsTestManagerViewHost"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch"
+											HorizontalContentAlignment="Stretch"
+											ViewModel="{Binding}" />
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</Viewbox>
 
-    </DockPanel>
+				<Grid Grid.Row="1" Margin="2,4,2,0">
+
+					<ContentControl
+						x:Name="VolumeTestContent"
+						Margin="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Top"
+						ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
+					<reactiveUi:ViewModelViewHost x:Name="VolumeContentHost" />
+
+
+				</Grid>
+
+				<!--<Viewbox
+                    Grid.Row="1"
+                    Margin="2,4,2,0"
+                    HorizontalAlignment="Left"
+                    Stretch="Uniform">
+
+
+                </Viewbox>-->
+
+			</Grid>
+		</Viewbox>
+
+	</Grid>
 </reactiveUi:ReactiveUserControl>

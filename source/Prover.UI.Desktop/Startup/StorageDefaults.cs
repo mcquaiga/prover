@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using LiteDB;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Prover.Application.Extensions;
-using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Shared.Interfaces;
-using Prover.Shared.SampleData;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
+using System;
+using System.Collections.Generic;
 
 // ReSharper disable RedundantTypeArgumentsOfMethod
 
@@ -92,8 +84,8 @@ namespace Prover.UI.Desktop.Startup
 
         }
 
-        
-        
+
+
         #region Nested type: Device
 
         private class Device
@@ -120,63 +112,5 @@ namespace Prover.UI.Desktop.Startup
         }
 
         #endregion
-    }
-
-    public class DatabaseSeeder
-    {
-        private readonly IServiceProvider _provider;
-
-        public DatabaseSeeder(IServiceProvider provider)
-        {
-            _provider = provider;
-        }
-
-        
-
-        public async Task SeedDatabase( int records = 1)
-        {
-            Debug.WriteLine($"Seeding data...");
-            var results = new List<EvcVerificationTest>();
-            var random = new Random(10000);
-            var watch = Stopwatch.StartNew();
-
-            var deviceType = _provider.GetService<IDeviceRepository>().GetByName("Mini-Max");
-            var testService = _provider.GetService<IVerificationTestService>();
-            
-            var serialNumberItem = deviceType.GetItemMetadata(62);
-
-            for (int i = 0; i < records; i++)
-            {
-                var device = deviceType.CreateInstance(SampleItemFiles.MiniMaxItemFile);
-                device.SetItemValue(serialNumberItem, random.Next(10000, 999999).ToString());
-                device.SetItemValue(201, random.Next(10000, 999999).ToString());
-                
-                var testVm = testService.NewVerification(device);
-                testVm.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(4, 30)));
-                testVm.SubmittedDateTime = testVm.TestDateTime.AddSeconds(random.Next(180, 720));
-
-                testVm.SubmittedDateTime = testVm.TestDateTime.AddSeconds(random.Next(180, 720));
-
-                testVm.SetItems<TemperatureItems>(device, 0, SampleItemFiles.TempLowItems);
-                testVm.SetItems<TemperatureItems>(device, 1, SampleItemFiles.TempMidItems);
-                testVm.SetItems<TemperatureItems>(device, 2, SampleItemFiles.TempHighItems);
-                
-                testVm.SetItems<PressureItems>(device, 0, SampleItemFiles.PressureTest(0));
-                testVm.SetItems<PressureItems>(device, 1, SampleItemFiles.PressureTest(1));
-                testVm.SetItems<PressureItems>(device, 2, SampleItemFiles.PressureTest(2));
-
-                results.Add(testService.CreateModel(testVm));
-
-                //await testService.AddOrUpdate(testVm);
-
-                Debug.WriteLine($"Created verification test {i} of {records}.");
-            }
-
-            await testService.AddOrUpdateBatch(results);
-            results.ForEach(r => testService.AddOrUpdate((EvcVerificationTest) r));
-
-            watch.Stop();
-            Debug.WriteLine($"Seeding completed in {watch.ElapsedMilliseconds} ms");
-        }
     }
 }

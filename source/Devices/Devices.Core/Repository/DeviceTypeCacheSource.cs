@@ -26,7 +26,7 @@ namespace Devices.Core.Repository
 
         public IObservable<ItemMetadata> GetItems()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(GetItems));
         }
 
         public void Save(IEnumerable<DeviceType> deviceTypes)

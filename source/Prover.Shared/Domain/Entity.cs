@@ -1,5 +1,6 @@
 #region
 
+using Newtonsoft.Json;
 using System;
 
 #endregion
@@ -17,6 +18,7 @@ namespace Prover.Shared.Domain
         /// <summary>
         ///     Gets or sets the id.
         /// </summary>
+        [JsonProperty(PropertyName = "id")]
         public TId Id { get; protected set; }
 
         #endregion

@@ -189,3 +189,5 @@ src/.vs/EvcProver/v15/sqlite3/storage.ide
 /src/Prover.GUI/connections.config
 /# .NET Desktop.yml
 **/.vs/**
+/source/.idea/**/**
+/tools/SampleData/ExportedTests/**.json

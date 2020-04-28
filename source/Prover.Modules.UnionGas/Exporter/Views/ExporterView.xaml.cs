@@ -1,7 +1,6 @@
-﻿using System;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
+﻿using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
+using System.Reactive.Disposables;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -16,34 +15,25 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             this.WhenActivated(d =>
             {
-                //this.OneWayBind(ViewModel, vm => vm.TestsByJobNumberViewModel,
-                //    view => view.TestsByJobNumberContentControl.ViewModel).DisposeWith(d);
-
-                //this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.VerificationsGrid.ToolbarViewModel).DisposeWith(d);
-
-                this.OneWayBind(ViewModel, vm => vm.SelectedItems.Count, v => v.SelectedCountTextBlock.Text)
-                    .DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.ToolbarViewModel, v => v.VerificationsGrid.ToolbarViewModel).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Data.Count, v => v.TestCountTextBlock.Text,
                     value => value == 1 ? $"{value} test" : $"{value} tests").DisposeWith(d);
-                
-                
                 this.OneWayBind(ViewModel, vm => vm.Data, v => v.VerificationsGrid.DataContext).DisposeWith(d);
-                
-             
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
-                //this.OneWayBind(ViewModel, vm => vm.JobIdsList, v => v.JobIdsComboBox.ItemsSource).DisposeWith(d);
+
+                this.Bind(ViewModel, vm => vm.FromDateTime, v => v.FromDateDisplay.SelectedDate);
+                this.Bind(ViewModel, vm => vm.ToDateTime, v => v.ToDateDisplay.SelectedDate);
+
+
 
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeExported, v => v.IncludeExportedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeArchived, v => v.IncludeArchivedCheckBox).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.TestDateFilter, v => v.SearchByDateButton).DisposeWith(d);
 
-                this.WhenAnyValue(x => x.ViewModel.FilterIncludeExported)
-                    .SelectMany(x => x.Execute(false))
-                    .Subscribe();
 
-                this.WhenAnyValue(x => x.ViewModel.FilterIncludeArchived)
-                    .SelectMany(x => x.Execute(false))
-                    .Subscribe();
-                
+
+                this.CleanUpDefaults().DisposeWith(d);
+
             });
         }
     }

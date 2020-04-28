@@ -1,22 +1,22 @@
-﻿using System;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
 
 namespace Prover.Application.ViewModels
 {
     public class SiteInformationViewModel : DeviceInfoViewModel
     {
         private readonly ILoginService _loginService;
-        private readonly DateTime _startTestDate;
+
         public ReactiveCommand<string, string> GetUser;
 
         public SiteInformationViewModel(DeviceInstance device, EvcVerificationViewModel verificationViewModel,
                 ILoginService loginService = null) : base(device)
         {
             _loginService = loginService;
-            _startTestDate = DateTime.Now;
+
 
             Test = verificationViewModel;
 

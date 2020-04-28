@@ -26,12 +26,12 @@ namespace Prover.Shared.Hardware
 
         public void SignalStart()
         {
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException(nameof(SignalStart));
         }
 
         public void SignalStop()
         {
-            throw new System.NotImplementedException();
+            throw new System.NotImplementedException(nameof(SignalStop));
         }
     }
 

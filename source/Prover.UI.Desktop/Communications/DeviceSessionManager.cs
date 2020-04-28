@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Devices.Communications.Interfaces;
 using Devices.Core.Interfaces;
 using Devices.Core.Items;
@@ -10,6 +5,11 @@ using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.UI.Desktop.Communications
 {
@@ -110,7 +110,7 @@ namespace Prover.UI.Desktop.Communications
         {
             if (SessionInProgress)
             {
-                var response = await MessageInteractions.ShowYesNo.Handle(
+                var response = await Messages.ShowYesNo.Handle(
                     "Device session already in progress. Start new session?");
 
                 if (response) await EndSession();

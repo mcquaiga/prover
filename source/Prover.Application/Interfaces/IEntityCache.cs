@@ -1,21 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
-using DynamicData;
+﻿using DynamicData;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Domain;
+using System;
+using System.Linq.Expressions;
 
 namespace Prover.Application.Interfaces
 {
-    public interface ICacheManager
-    {
-        Task LoadAsync();
-        void Update();
-    }
-
-    public interface IEntityDataCache<TEntity>
+    public interface IEntityDataCache<TEntity> : IDisposable
             where TEntity : AggregateRoot
     {
-        IObservableCache<TEntity, Guid> Updates { get; }
-        IObservableList<TEntity> Data(Func<EvcVerificationTest, bool> filter = null);
+        IObservableCache<TEntity, Guid> Items { get; }
+        //IObservableList<TEntity> Data { get; }
+        void Update(Expression<Func<EvcVerificationTest, bool>> filter = null);
+        void ApplyDateFilter(string dateTimeKey);
+        IObservableCache<EvcVerificationTest, Guid> LoadCache(Expression<Func<EvcVerificationTest, bool>> filter);
     }
 }

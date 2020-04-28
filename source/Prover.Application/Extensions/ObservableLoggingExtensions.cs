@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reactive.Linq;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace Prover.Application.Extensions
 {
     public static class ObservableLoggingExtensions
     {
         //private static ILogger _logger = ProverLogging.CreateLogger("ObservableLogging");
-        private static readonly ILogger _logger = new DebugLoggerProvider().CreateLogger("ObservableLogging");
+        private static readonly ILogger _logger = ProverLogging.CreateLogger("ObservableLogging");
 
         public static IObservable<Exception> LogErrors(this IObservable<Exception> source, string message = null, ILogger logger = null)
         {
@@ -37,13 +37,21 @@ namespace Prover.Application.Extensions
             return source.LogDebug(x => message, logger, includeTime);
         }
 
-        public static IObservable<T> LogDebug<T>(this IObservable<T> source, Func<T, string> message, ILogger logger = null, bool includeTime = false)
+        public static IObservable<T> LogDebug<T>(this IObservable<T> source, Func<T, string> message, ILogger logger, bool includeTime = false)
         {
             logger = logger ?? _logger;
-            
+
             var dateTime = includeTime ? $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}: " : string.Empty;
 
             return source.Do(x => logger.LogDebug($"{dateTime}{source.GetType().Name} - {message.Invoke(x)}"));
+        }
+
+        public static IObservable<T> LogDebug<T>(this IObservable<T> source, Func<T, string> message)
+        {
+
+            var dateTime = $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}: ";
+
+            return source.Do(x => Debug.WriteLine($"{dateTime}{source.GetType().Name} - {message.Invoke(x)}"));
         }
     }
 }

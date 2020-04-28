@@ -243,7 +243,7 @@ namespace Prover.UI.Desktop.Extensions
         public virtual IDisposable ServiceRegistrationCallback(Type serviceType, string contract, Action<IDisposable> callback)
         {
             // this method is not used by RxUI
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(ServiceRegistrationCallback));
         }
 
         /// <inheritdoc/>

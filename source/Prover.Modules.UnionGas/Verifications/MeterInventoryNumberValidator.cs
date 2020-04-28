@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -10,6 +6,10 @@ using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.DcrWebService;
 using Prover.Modules.UnionGas.MasaWebService;
+using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Prover.Modules.UnionGas.Verifications
 {
@@ -41,7 +41,7 @@ namespace Prover.Modules.UnionGas.Verifications
                 if (updateDeviceItemValue)
                     meterDto = await Update(device);
                 else
-                    await MessageInteractions.ShowMessage.Handle(
+                    await Messages.ShowMessage.Handle(
                         $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}");
             }
 
@@ -58,7 +58,7 @@ namespace Prover.Modules.UnionGas.Verifications
         }
 
         private async Task<string> GetInventoryNumberFromUser(string inventoryNumber) =>
-            await MessageInteractions.GetInputString.Handle(
+            await Messages.GetInputString.Handle(
                 $"{string.Format(NotFoundMessage, inventoryNumber, Environment.NewLine)}" +
                 "Enter new inventory number or cancel to continue with");
 
@@ -72,7 +72,7 @@ namespace Prover.Modules.UnionGas.Verifications
             //var deviceValue = await deviceManager.GetItemValues(new[] {companyNumberItem});
 
             //if (updatedItem.)
-            device.SetItemValues(new[] {updatedItem});
+            device.SetItemValues(new[] { updatedItem });
         }
 
         private async Task<MeterDTO> UpdateInventoryNumber(DeviceInstance device, string inventoryNumber,

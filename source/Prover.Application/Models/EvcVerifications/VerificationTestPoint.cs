@@ -1,7 +1,7 @@
+using Prover.Application.Models.EvcVerifications.Verifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prover.Application.Models.EvcVerifications.Verifications;
 
 namespace Prover.Application.Models.EvcVerifications
 {
@@ -19,10 +19,8 @@ namespace Prover.Application.Models.EvcVerifications
             : this(testNumber)
         {
             AddTests(tests);
-            AppliedInput = appliedInput;
         }
 
-        public decimal? AppliedInput { get; set; }
         public int TestNumber { get; set; }
 
         public override bool Verified => Tests.All(t => t.Verified);

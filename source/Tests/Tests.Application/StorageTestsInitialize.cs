@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prover.Application.Interfaces;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Factories;
 using Prover.Storage.LiteDb;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Tests.Application.Services
 {
     [TestClass]
     public class StorageTestsInitialize
     {
-        public static VerificationTestService ViewModelService { get; private set; }
+        public static VerificationService ViewModelService { get; private set; }
+        public static IEntityDataCache<EvcVerificationTest> VerificationCache { get; private set; }
 
         public static VerificationsLiteDbRepository TestRepo { get; private set; }
 
@@ -26,7 +28,8 @@ namespace Tests.Application.Services
 
         public static ILogger Logger { get; } = new DebugLoggerProvider().CreateLogger("StorageTests");
         public static ILoggerProvider LoggerProvider { get; } = new DebugLoggerProvider();
-        public static ILoggerFactory LoggerFactory { get; } = new LoggerFactory(new []{new DebugLoggerProvider()});
+        public static ILoggerFactory LoggerFactory { get; } = new LoggerFactory();
+
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
@@ -37,9 +40,6 @@ namespace Tests.Application.Services
         [AssemblyInitialize]
         public static async Task AssemblyInitialize(TestContext context)
         {
-            //DeviceRepo = new DeviceRepository();
-            //await DeviceRepo.UpdateCachedTypes(MiJsonDeviceTypeDataSource.Instance);
-            //await DeviceRepo.UpdateCachedTypes(RometJsonDeviceTypeDataSource.Instance);
             DeviceRepo = DeviceRepository.Instance;
 
             LiteDbStorageDefaults.CreateLiteDb();
@@ -54,7 +54,7 @@ namespace Tests.Application.Services
             testService ??= ViewModelService;
             var newTest = testService.NewVerification(device);
 
-            await testService.AddOrUpdate(newTest);
+            await testService.Save(newTest);
             return newTest;
         }
 
@@ -76,8 +76,8 @@ namespace Tests.Application.Services
             return records;
         }
 
-        public static VerificationTestService CreateVerificationTestService() =>
-            new VerificationTestService(LoggerFactory.CreateLogger<VerificationTestService>(), TestRepo, new VerificationViewModelFactory(null), null);
+        public static VerificationService CreateVerificationTestService() =>
+            new VerificationService(LoggerFactory.CreateLogger<VerificationService>(), TestRepo, null, new VerificationViewModelFactory(null), null);
 
         public static void DropCollection()
         {

@@ -61,7 +61,7 @@ namespace Prover.Modules.UnionGas.MasaWebService
         public async Task<IList<MeterDTO>> GetOutstandingMeterTestsByJobNumber(int jobNumber)
         {
             await Task.CompletedTask;
-            throw new NotImplementedException();
+            return new List<MeterDTO>();
         }
 
         public async Task<bool> SubmitQaTestRunResults(IEnumerable<QARunEvcTestResult> evcQaRuns)

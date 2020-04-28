@@ -1,22 +1,19 @@
-﻿using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prover.Application.Caching;
 using Prover.Application.Dashboard;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
-using Prover.Shared.Domain;
-using Prover.Storage;
-using Prover.Storage.LiteDb;
-using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
+using Prover.Storage.LiteDb;
+using Prover.Storage.MongoDb;
 using Prover.UI.Desktop.Extensions;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Prover.UI.Desktop.Startup
 {
@@ -24,34 +21,31 @@ namespace Prover.UI.Desktop.Startup
     {
         private const string KeyValueStoreConnectionString = "LiteDb";
         private readonly IServiceProvider _provider;
-        private readonly DatabaseSeeder _seeder;
 
-        public StorageStartup(IServiceProvider provider, DatabaseSeeder seeder = null)
+
+        public StorageStartup(IServiceProvider provider)
         {
             _provider = provider;
-            _seeder = seeder ?? new DatabaseSeeder(provider);
+            //_seeder = seeder ?? new DatabaseSeeder(provider);
         }
-        
+
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var devices = DeviceRepository.Instance;
+            _ = DeviceRepository.Instance;
+            //var cache = _provider.GetRequiredService<IEntityDataCache<EvcVerificationTest>>();
+            //var task = Task.Run(() => _provider.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>().Initialize());
+            //var cache = _provider.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>();
+            //cache.Update();
 
-            //_ = _seeder.SeedDatabase(250);
-            
-            _provider.GetServices<ICacheManager>()
-                     .ToObservable()
-                     .ObserveOn(ThreadPoolScheduler.Instance)
-                     .ForEachAsync(c => c.LoadAsync(), cancellationToken);
-
-            //RxApp.TaskpoolScheduler.Schedule(() => _seeder.SeedDatabase(200));
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            _provider.GetRequiredService<IEntityDataCache<EvcVerificationTest>>().Dispose();
+            await Task.CompletedTask;
         }
 
     }
@@ -66,12 +60,11 @@ namespace Prover.UI.Desktop.Startup
 
             if (config.IsLiteDb())
                 AddLiteDb(services, host);
+            //
+            AddMongoDb(services, host);
 
-            //services.AddSingleton<EvcVerificationTestService>();
-            services.AddSingleton<VerificationTestService>();
-            services.AddSingleton<IVerificationTestService>(c => c.GetRequiredService<VerificationTestService>());
-            services.AddSingleton<IEntityDataCache<EvcVerificationTest>>(c => c.GetRequiredService<VerificationTestService>());
-            services.AddSingleton<ICacheManager>(c => c.GetRequiredService<VerificationTestService>());
+            services.AddSingleton<IVerificationTestService, VerificationService>();
+            services.AddSingleton<IEntityDataCache<EvcVerificationTest>, VerificationCache>();
 
             AddDashboard(services, host);
         }
@@ -80,20 +73,40 @@ namespace Prover.UI.Desktop.Startup
         {
             var oneWeekAgo = DateTime.Now.Subtract(TimeSpan.FromDays(7));
 
-            services.AddSingleton<DashboardFactory>();
+            services.AddSingleton<DashboardService>();
             services.AddSingleton<DashboardViewModel>();
-            //services.AddValueDashboardItem("Verified Today", 
-            //        v => v.TestDateTime.IsToday() && v.Verified);
 
-            //services.AddValueDashboardItem("Failed Today",  
-            //        v => v.TestDateTime.IsToday() && !v.Verified);
+        }
 
-            //services.AddValueDashboardItem("Verified This Week", 
-            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && v.Verified);
+        private static void AddMongoDb(IServiceCollection services, HostBuilderContext host)
+        {
+            var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
 
-            //services.AddValueDashboardItem("Failed This Week",  
-            //        v => v.TestDateTime.BetweenThenAndNow(oneWeekAgo) && !v.Verified);
-       
+            Task.Run(() => cosmo.Initialize());
+
+            services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
+
+            //services.AddSingleton<IEventsSubscriber>(c =>
+            //{
+            //    var cosmo = cosmoTask.Result;
+            //    var logger = c.GetService<ILogger<CosmosDbAsyncRepository<EvcVerificationTest>>>();
+            //    VerificationEvents.OnSave.Subscribe(async (context) =>
+            //    {
+            //        try
+            //        {
+            //            logger.LogDebug($"Saving to Azure CosmoDb - Id: {context.Input.Id}");
+            //            await cosmo.UpsertAsync(context.Input);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            logger.LogError(ex, $"Error saving to Azure MongoDb");
+            //        }
+            //    });
+            //    return cosmo;
+            //});
+
+
         }
 
         private static void AddLiteDb(IServiceCollection services, HostBuilderContext host)
@@ -102,15 +115,15 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton(c => db);
 
             var deviceRepo = DeviceRepository.Instance;
-            services.AddSingleton<IDeviceRepository>(deviceRepo);
+            services.AddSingleton<IDeviceRepository>(DeviceRepository.Instance);
 
             //services.AddSingleton(typeof(IRepository<>), typeof(IRepository<AggregateRoot>));
 
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-                    new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
+            //        new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }
@@ -123,7 +136,7 @@ namespace Prover.UI.Desktop.Startup
         public static Func<EvcVerificationTest, bool> Today => (v => v.TestDateTime.IsToday());
         public static Func<EvcVerificationTest, bool> Verified => (v => v.Verified);
 
-      
+
 
         public static void AddValueDashboardItem(this IServiceCollection services, string title, Func<EvcVerificationTest, bool> predicate)
         {

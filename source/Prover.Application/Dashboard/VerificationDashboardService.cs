@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using DynamicData;
+﻿using DynamicData;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
+using System;
+using System.Collections.ObjectModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.Application.Dashboard
 {
@@ -20,7 +20,7 @@ namespace Prover.Application.Dashboard
 
         public VerificationDashboardService(IEntityDataCache<EvcVerificationTest> verificationCache)
         {
-            _cache = verificationCache.Updates.Connect();
+            _cache = verificationCache.Items.Connect();
 
             SetVerifiedTests();
 
@@ -30,7 +30,7 @@ namespace Prover.Application.Dashboard
                   .Subscribe()
                   .DisposeWith(_cleanup);
         }
-        
+
         public ReadOnlyObservableCollection<EvcVerificationTest> Verified => _verified;
         public ReadOnlyObservableCollection<EvcVerificationTest> Today => _today;
 
@@ -46,7 +46,7 @@ namespace Prover.Application.Dashboard
             //(fromDateTime.HasValue && toDateTime.HasValue && v.TestDateTime.Between(fromDateTime.Value, toDateTime.Value)))
         }
 
-        
+
 
         /// <inheritdoc />
         public void Dispose()
