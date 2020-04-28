@@ -109,7 +109,7 @@ namespace Prover.DevTools.Importer
 					var model = GetVerificationModel(device, qaTest);
 					await testService.UpsertAsync(model);
 					record++;
-					updates.OnNext(new ImportStatusUpdate() { Count = record, Total = totalRecords, Test = model });
+					updates?.OnNext(new ImportStatusUpdate() { Count = record, Total = totalRecords, Test = model });
 				}
 				catch (AggregateException aggregateException)
 				{
@@ -122,7 +122,7 @@ namespace Prover.DevTools.Importer
 				}
 			}
 
-			updates.OnCompleted();
+			updates?.OnCompleted();
 
 			_logger.LogDebug($"Import complete!");
 		}
@@ -130,7 +130,7 @@ namespace Prover.DevTools.Importer
 		private static void GenerateTestData(EvcVerificationTest model, QaTestRunDTO qaTest)
 		{
 			var random = new Random(DateTime.Now.Millisecond);
-			var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 60)));
+			var testDate = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 30)));
 			model.TestDateTime = testDate.AddHours(random.Next(-12, 18));
 			model.SubmittedDateTime = model.TestDateTime.AddSeconds(random.Next(180, 660));
 			model.Verified = qaTest.IsPassed;

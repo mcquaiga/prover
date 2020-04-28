@@ -17,8 +17,7 @@ namespace Prover.DevTools.Console
 			var repo = new CosmosDbAsyncRepository<EvcVerificationTest>();
 			await repo.Initialize();
 
-
-			await DataImporter.ImportTests(repo, "C:\\Users\\mcqua\\Source\\repos\\EvcProver\\tools\\SampleData\\ExportedTests");
+			await DataImporter.ImportTests(repo, "C:\\Users\\mcqua\\Source\\repos\\EvcProver\\tools\\SampleData\\ExportedTests2");
 
 
 			System.Console.WriteLine("Press any key to exit...");

@@ -59,7 +59,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 
 		public virtual VolumeInputTestBuilder AddUncorrected(bool withPulseOutputs = true)
 		{
-			Uncorrected = new UncorrectedVolumeTestRun(_startItems, _endItems, 0m, 0m, 100m, false, _appliedInput);
+			Uncorrected = new UncorrectedVolumeTestRun(BuildVolumeType(), _startItems, _endItems, _appliedInput);
 
 			if (withPulseOutputs)
 				Uncorrected.PulseOutputTest = WithPulseOutput(PulseOutputType.UncVol, _uncorPulses);

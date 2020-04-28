@@ -47,7 +47,6 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 
     public class TestManager : ManualTestManager, IDeviceQaTestManager
     {
-
         public IVolumeTestManager VolumeTestManager { get; set; }
         public ICorrectionTestsManager CorrectionVerifications { get; set; }
         /// <inheritdoc />

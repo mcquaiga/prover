@@ -9,6 +9,7 @@ using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
+using Prover.Storage.MongoDb;
 using Prover.UI.Desktop.Extensions;
 using System;
 using System.Threading;
@@ -79,12 +80,12 @@ namespace Prover.UI.Desktop.Startup
 
         private static void AddMongoDb(IServiceCollection services, HostBuilderContext host)
         {
-            //var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
+            var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
 
-            //Task.Run(() => cosmo.Initialize());
+            Task.Run(() => cosmo.Initialize());
 
-            //services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
-            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
+            services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
+            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
 
             //services.AddSingleton<IEventsSubscriber>(c =>
             //{
@@ -121,8 +122,8 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-                    new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
+            //        new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
 
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
         }

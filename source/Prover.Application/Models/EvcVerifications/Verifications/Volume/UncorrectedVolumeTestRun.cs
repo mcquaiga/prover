@@ -10,7 +10,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 		{
 		}
 
-		public UncorrectedVolumeTestRun(VolumeItems startValues, VolumeItems endValues, IVolumeInputType driveType, decimal appliedInput) : base(startValues, endValues, 0, 0, 100m, false)
+		public UncorrectedVolumeTestRun(IVolumeInputType driveType, VolumeItems startValues, VolumeItems endValues, decimal appliedInput) : base(startValues, endValues, 0, 0, 100m, false)
 		{
 			AppliedInput = appliedInput;
 

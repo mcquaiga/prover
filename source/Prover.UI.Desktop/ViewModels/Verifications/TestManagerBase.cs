@@ -65,12 +65,12 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			SubmitTest.ThrownExceptions.Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"));
 			PrintTestReport = ReactiveCommand.CreateFromObservable(() => Messages.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(Cleanup);
 
-			this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
-				.Where(v => v)
-				.ObserveOn(RxApp.MainThreadScheduler)
-				.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
-				.Subscribe()
-				.DisposeWith(Cleanup);
+			//this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
+			//	.Where(v => v)
+			//	.ObserveOn(RxApp.MainThreadScheduler)
+			//	.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
+			//	.Subscribe()
+			//	.DisposeWith(Cleanup);
 			AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
 			AddToolbarItem(SubmitTest, PackIconKind.Send);
 			AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
