@@ -35,16 +35,19 @@
     <Compile Remove="Modules\**" />
     <Compile Remove="Screens\**" />
     <Compile Remove="ViewModels\Certificates\**" />
+    <Compile Remove="ViewModels\Dashboard\**" />
     <Compile Remove="Views\Certificates\**" />
     <Compile Remove="Views\Verifications\Managers\**" />
     <EmbeddedResource Remove="Modules\**" />
     <EmbeddedResource Remove="Screens\**" />
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
+    <EmbeddedResource Remove="ViewModels\Dashboard\**" />
     <EmbeddedResource Remove="Views\Certificates\**" />
     <EmbeddedResource Remove="Views\Verifications\Managers\**" />
     <None Remove="Modules\**" />
     <None Remove="Screens\**" />
     <None Remove="ViewModels\Certificates\**" />
+    <None Remove="ViewModels\Dashboard\**" />
     <None Remove="Views\Certificates\**" />
     <None Remove="Views\Verifications\Managers\**" />
     <Resource Include="Resources\clipboard-check-blue.ico">
@@ -55,6 +58,7 @@
     <Page Remove="Modules\**" />
     <Page Remove="Screens\**" />
     <Page Remove="ViewModels\Certificates\**" />
+    <Page Remove="ViewModels\Dashboard\**" />
     <Page Remove="Views\Certificates\**" />
     <Page Remove="Views\Verifications\Managers\**" />
   </ItemGroup>
@@ -230,7 +234,6 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
-    <Folder Include="ViewModels\Dashboard\" />
   </ItemGroup>
 
   <ItemGroup>
