@@ -52,7 +52,7 @@ namespace Prover.Application.Services.Tests
 
             _tests.Add(_device.NewVerification());
 
-            _cache = new VerificationCache(_verificationRepository.Object, mainScheduler: scheduler.TaskPool);
+            _cache = new VerificationCache(_verificationRepository.Object, null, mainScheduler: scheduler.TaskPool);
 
             //scheduler.TaskPool.Schedule(() => _verificationRepository.Object.UpsertAsync(_device.NewVerification()));
 
