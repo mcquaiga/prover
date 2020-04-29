@@ -26,7 +26,7 @@ namespace Prover.Calculations
             return Round.Factor(_zCalc.SuperFactor);
         }
 
-        
+
 
         #endregion
     }

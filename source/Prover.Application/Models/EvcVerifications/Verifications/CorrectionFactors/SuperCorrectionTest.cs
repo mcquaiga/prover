@@ -38,8 +38,6 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
 
             PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
             Verified = PercentError.IsBetween(Tolerances.SUPER_FACTOR_TOLERANCE);
-            //Update(Tolerances.SUPER_FACTOR_TOLERANCE);
-            //SquaredFactor = Calculators.SquaredFactor(ExpectedValue);
         }
 
         #region Public Properties
@@ -57,4 +55,6 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         //protected override Func<ICorrectionCalculator> CalculatorFactory => () =>
         //        new SuperFactorCalculator(Items.Co2, Items.N2, Items.SpecGr, GaugePressure, GaugeTemp);
     }
+
+
 }

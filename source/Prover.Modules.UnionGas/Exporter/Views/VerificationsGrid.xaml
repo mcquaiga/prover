@@ -158,6 +158,20 @@
 							</StackPanel>
 
 						</Button>
+
+						<Button
+							x:Name="DumpTestToJsonButton"
+							Command="{Binding DumpTestToJson}"
+							CommandParameter="{Binding Path=Item, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+							Style="{StaticResource FloatingActionButtonStyle}"
+							ToolTip="Dump test to JSON">
+							<StackPanel>
+								<materialDesign:PackIcon Kind="DumpTruck" Style="{StaticResource FloatingActionButtonPackIconStyle}" />
+								<TextBlock>To Json</TextBlock>
+							</StackPanel>
+
+						</Button>
+
 					</StackPanel>
 
 				</materialDesign:PopupBox>
