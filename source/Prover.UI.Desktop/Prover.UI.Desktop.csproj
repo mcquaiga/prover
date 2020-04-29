@@ -146,9 +146,6 @@
     <Compile Update="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Controls\PercentageControl.xaml.cs">
-      <DependentUpon>PercentageControl.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Controls\PercentageControlNew.xaml.cs">
       <DependentUpon>PercentageControlNew.xaml</DependentUpon>
     </Compile>
@@ -189,9 +186,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\MainMenuButton.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Controls\PercentageControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Controls\PercentageControlNew.xaml">
