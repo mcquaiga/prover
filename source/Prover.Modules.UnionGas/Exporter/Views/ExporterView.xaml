@@ -135,7 +135,7 @@
 						Margin="25,12,0,0"
 						PlacementMode="BottomAndAlignLeftEdges"
 						PopupMode="Click"
-						StaysOpen="False">
+						StaysOpen="True">
 						<materialDesign:PopupBox.Resources>
 							<Style BasedOn="{StaticResource MaterialDesignDarkCheckBox}" TargetType="{x:Type CheckBox}">
 								<Setter Property="FontSize" Value="18" />

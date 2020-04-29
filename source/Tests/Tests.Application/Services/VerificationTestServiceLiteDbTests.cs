@@ -3,9 +3,11 @@ using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using DynamicData;
+using Microsoft.Extensions.Logging;
 using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Prover.Application.Caching;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels;
@@ -80,16 +82,16 @@ namespace Tests.Application.Services
         [TestMethod]
         public async Task CreateObservableStream()
         {
-            var scheduler = new TestScheduler();
-            scheduler.StartStopwatch();
+            //var scheduler = new TestScheduler();
+            //scheduler.StartStopwatch();
 
-            var results = _entityCache.Items.Connect(t => t.ExportedDateTime == null)
-                                      .Bind(out var data, 25)
-                                      .Subscribe();
+            //var results = _entityCache.Items.Connect(t => t.ExportedDateTime == null)
+            //                          .Bind(out var data, 25)
+            //                          .Subscribe();
 
-            scheduler.Start();
-            Assert.IsNotNull(data);
-            await Task.CompletedTask;
+            //scheduler.Start();
+            //Assert.IsNotNull(data);
+            //await Task.CompletedTask;
         }
 
         [TestMethod]
@@ -100,6 +102,8 @@ namespace Tests.Application.Services
             var initNumber = 2;
             var testService = StorageTestsInitialize.CreateVerificationTestService();
             var updatesCount = 0;
+
+
 
             StorageTestsInitialize.DropCollection();
 
@@ -175,6 +179,10 @@ namespace Tests.Application.Services
         {
             _cleanup = new CompositeDisposable();
             _device = _deviceType.CreateInstance(ItemFiles.MiniMaxItemFile);
+
+            _entityCache = new VerificationCache(StorageTestsInitialize.TestRepo,
+            StorageTestsInitialize.LoggerFactory.CreateLogger<VerificationCache>()
+           );
 
             await Task.CompletedTask;
         }

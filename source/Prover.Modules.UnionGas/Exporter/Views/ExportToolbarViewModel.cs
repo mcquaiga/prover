@@ -16,7 +16,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Windows.Input;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -99,15 +98,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
             PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
             {
-                Mouse.OverrideCursor = Cursors.Wait;
                 if (test == null)
                     return;
-                var viewModel = test.ToViewModel();
 
-                //var report = new ReportViewModel(screenManager, viewModel);
-                await screenManager.ChangeView<ReportViewModel>(viewModel);
-                //reportViewModel.ContentViewModel = viewModel;
-                Mouse.OverrideCursor = Cursors.Arrow;
+                await screenManager.ChangeView<ReportViewModel>(test.ToViewModel());
+
+
             }).DisposeWith(Cleanup);
 
             //AddToolbarItem(ExportVerification, PackIconKind.Export);

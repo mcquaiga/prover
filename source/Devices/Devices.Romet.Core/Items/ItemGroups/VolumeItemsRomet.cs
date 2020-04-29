@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Honeywell.Core.Items.ItemGroups;
 using Prover.Shared;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Devices.Romet.Core.Items.ItemGroups
 {
@@ -21,13 +21,15 @@ namespace Devices.Romet.Core.Items.ItemGroups
         {
             var items = itemValues.ToList();
 
-            base.SetValues(deviceType,  items);
+            base.SetValues(deviceType, items);
 
             var volume = this;
 
             this.VolumeInputType = !string.IsNullOrEmpty(items.GetItem(MeterSizeItemNumber).GetValue().ToString())
                 ? VolumeInputType.Rotary
                 : VolumeInputType.Mechanical;
+
+            DriveRateDescription = this.VolumeInputType == VolumeInputType.Rotary ? "Rotary" : DriveRateDescription;
 
             this.CorrectedReading =
                 JoinLowResHighResReading(

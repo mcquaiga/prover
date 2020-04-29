@@ -33,8 +33,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public ExporterViewModel
         (IScreenManager screenManager, IVerificationTestService verificationTestService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
                 IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
-                Func<ExportToolbarViewModel> exporterToolbarFactory = null
-        )
+                ExportToolbarViewModel exportToolbar)
+        //, Func<ExportToolbarViewModel> exporterToolbarFactory = null)
         {
             ScreenManager = screenManager;
             TestsByJobNumberViewModel = testsByJobNumberViewModel;
@@ -80,7 +80,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             //                 .DisposeWith(Cleanup);
             //JobIdsList = jobIds;
 
-            ToolbarViewModel = exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
+            ToolbarViewModel = exportToolbar; //; exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
             //AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
         }
 

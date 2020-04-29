@@ -4,6 +4,7 @@ using Devices.Core.Items.ItemGroups;
 using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 using System;
 using System.Collections.Generic;
+using Prover.Application.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {

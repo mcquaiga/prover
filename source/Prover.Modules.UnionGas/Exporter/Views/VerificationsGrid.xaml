@@ -288,7 +288,14 @@
 					Binding="{Binding TestDateTime, Mode=OneTime}"
 					Header="Date Tested" />
 
-
+				<materialDesign:DataGridTextColumn
+					x:Name="DriveTypeColumn"
+					Binding="{Binding Device.Items.Volume.DriveRateDescription, Mode=OneTime}"
+					Header="Drive Rate" />
+				<materialDesign:DataGridTextColumn
+					x:Name="MeterTypeColumn"
+					Binding="{Binding Device.Items.RotaryMeter.MeterType.Description, Mode=OneTime}"
+					Header="Meter Type" />
 				<materialDesign:DataGridTextColumn
 					x:Name="JobIdColumn"
 					Binding="{Binding JobId, Mode=OneTime}"

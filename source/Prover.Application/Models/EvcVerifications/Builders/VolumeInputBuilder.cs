@@ -8,6 +8,7 @@ using Prover.Shared;
 using Prover.Shared.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Prover.Application.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {

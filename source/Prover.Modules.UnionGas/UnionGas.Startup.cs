@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reactive;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -22,6 +20,8 @@ using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
+using System;
+using System.Reactive;
 
 namespace Prover.Modules.UnionGas
 {
@@ -48,10 +48,12 @@ namespace Prover.Modules.UnionGas
         public void Configure(HostBuilderContext builder, IServiceCollection services)
         {
             services.AddSingleton<IMainMenuItem, ExporterMainMenu>();
+            services.AddTransient<ExportToolbarViewModel>();
+
             services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 
             services.AddViewsAndViewModels();
-         
+
             services.AddSingleton<Func<EvcVerificationTest, ExporterViewModel, VerificationGridViewModel>>(c =>
                 (evcTest, exporter)
                     => new VerificationGridViewModel(
@@ -63,7 +65,7 @@ namespace Prover.Modules.UnionGas
                         exporter
                     ));
 
-           
+
             services.AddSingleton<MasaLoginService>();
             services.AddSingleton<ILoginService<Employee>>(c => c.GetRequiredService<MasaLoginService>());
             services.AddSingleton<ILoginService>(c => c.GetRequiredService<MasaLoginService>());
@@ -72,7 +74,7 @@ namespace Prover.Modules.UnionGas
             services.AddSingleton<IExportVerificationTest, ExportToMasaManager>();
             services.AddTransient<TestsByJobNumberViewModel>();
             services.AddSingleton<IRepository<Employee>, LiteDbRepository<Employee>>();
-            
+
             AddVerificationActions(services);
 
             if (builder.HostingEnvironment.IsDevelopment())

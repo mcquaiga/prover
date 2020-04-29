@@ -163,31 +163,7 @@
             DockPanel.Dock="Bottom"
             Orientation="Vertical">
 
-            <StackPanel Orientation="Vertical">
-                <materialDesign:PopupBox HorizontalAlignment="Right" DockPanel.Dock="Right">
-
-                    <StackPanel>
-
-                        <Button
-                            x:Name="LoadFromFileButton"
-                            Margin="15"
-                            Content="Load From File..."
-                            Style="{StaticResource MaterialDesignFlatLightBgButton}" />
-                        <Button
-                            Margin="15"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Command="{Binding StartRotarySmokeTestCommand}"
-                            Content="Run Rotary Smoke Test"
-                            FontSize="14"
-                            Style="{StaticResource MaterialDesignFlatButton}" />
-                    </StackPanel>
-                </materialDesign:PopupBox>
-                <TextBlock
-                    x:Name="FilePathTextBlock"
-                    Height="Auto"
-                    Style="{StaticResource MaterialDesignBody1TextBlock}" />
-            </StackPanel>
+          
 
             <Grid HorizontalAlignment="Stretch">
                 <Button

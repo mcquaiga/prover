@@ -1,6 +1,7 @@
 using Devices.Core.Items.ItemGroups;
 using Newtonsoft.Json;
 using Prover.Calculations;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors
 {
@@ -26,10 +27,17 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         public SuperCorrectionTest(SuperFactorItems items, TemperatureCorrectionTest temperatureCorrectionTest, PressureCorrectionTest pressureCorrectionTest)
         {
             Items = items;
+
             ActualValue = pressureCorrectionTest.Items.UnsqrFactor;
             GaugePressure = pressureCorrectionTest.GetTotalGauge();
             GaugeTemp = temperatureCorrectionTest.Gauge;
 
+            _calc = new SuperFactorCalculator(Items.Co2, Items.N2, Items.SpecGr, GaugePressure, GaugeTemp);
+            ExpectedValue = _calc.CalculateFactor();
+            SquaredFactor = _calc.SquaredFactor();
+
+            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+            Verified = PercentError.IsBetween(Tolerances.SUPER_FACTOR_TOLERANCE);
             //Update(Tolerances.SUPER_FACTOR_TOLERANCE);
             //SquaredFactor = Calculators.SquaredFactor(ExpectedValue);
         }
@@ -41,6 +49,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         public decimal GaugeTemp { get; set; }
 
         public decimal SquaredFactor { get; set; }
+        private SuperFactorCalculator _calc;
 
         #endregion
 

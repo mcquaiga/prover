@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using ReactiveUI;
+using System.Linq;
 using System.Reactive.Disposables;
-using ReactiveUI;
 
 namespace Prover.UI.Desktop.Views.Verifications.Dialogs
 {
@@ -18,14 +18,14 @@ namespace Prover.UI.Desktop.Views.Verifications.Dialogs
                 this.BindCommand(ViewModel, vm => vm.StartTestCommand, v => v.StartTestButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.CloseCommand, v => v.CancelButton).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.CloseCommand, v => v.ExitButton).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.LoadFromFile, v => v.LoadFromFileButton).DisposeWith(d);
+
 
 
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.CommPorts.ItemsSource).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.BaudRates, v => v.BaudRates.ItemsSource, value => value.Select(x => x.ToString())).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.CommPorts, v => v.TachCommPorts.ItemsSource).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.TestDefinitionFilePath, v => v.FilePathTextBlock.Text).DisposeWith(d);
+
 
 
                 this.Bind(ViewModel, vm => vm.SelectedDeviceType, v => v.DeviceTypes.SelectedItem).DisposeWith(d);

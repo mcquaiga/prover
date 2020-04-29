@@ -52,3 +52,29 @@ namespace Prover.DevTools
 		public int SortOrder { get; } = 1;
 	}
 }
+
+/*
+ *   <StackPanel Orientation="Vertical">
+                <materialDesign:PopupBox HorizontalAlignment="Right" DockPanel.Dock="Right">
+
+                    <StackPanel>
+
+                  
+                        <Button
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Command="{Binding StartRotarySmokeTestCommand}"
+                            Content="Run Rotary Smoke Test"
+                            FontSize="14"
+                            Style="{StaticResource MaterialDesignFlatButton}" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
+                <TextBlock
+                    x:Name="FilePathTextBlock"
+                    Height="Auto"
+                    Style="{StaticResource MaterialDesignBody1TextBlock}" />
+            </StackPanel>
+ * 
+ * 
+ * */

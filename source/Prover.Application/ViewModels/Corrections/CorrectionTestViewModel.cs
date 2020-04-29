@@ -150,7 +150,7 @@ namespace Prover.Application.ViewModels.Corrections
     public abstract class CorrectionTestViewModel<T> : ItemVarianceTestViewModel<T>
         where T : class
     {
-        protected ReactiveCommand<Unit, decimal> UpdateFactor;
+        protected readonly ReactiveCommand<Unit, decimal> UpdateFactor;
 
         protected CorrectionTestViewModel()
         {
@@ -160,7 +160,8 @@ namespace Prover.Application.ViewModels.Corrections
         {
             UpdateFactor = ReactiveCommand.Create<Unit, decimal>(_ => CalculatorFactory.Invoke().CalculateFactor());
 
-            UpdateFactor.ToPropertyEx(this, x => x.ExpectedValue)
+            UpdateFactor
+                    .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
 
             UpdateFactor.DisposeWith(Cleanup);

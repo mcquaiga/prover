@@ -1,12 +1,13 @@
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Prover.Application.Models.EvcVerifications
+namespace Prover.Application.Extensions
 {
 	public static class EvcVerificationExtensions
 	{

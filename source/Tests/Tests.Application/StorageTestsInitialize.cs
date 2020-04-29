@@ -4,6 +4,7 @@ using Devices.Core.Repository;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Prover.Application.Caching;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services;
@@ -46,6 +47,8 @@ namespace Tests.Application.Services
             TestRepo = new VerificationsLiteDbRepository(LiteDbStorageDefaults.Database, DeviceRepo);
             ViewModelService = CreateVerificationTestService();
             Console.WriteLine("AssemblyInitialize");
+            VerificationCache = new VerificationCache(TestRepo, LoggerFactory.CreateLogger<VerificationCache>());
+
         }
 
         public static async Task<EvcVerificationViewModel> CreateAndSaveNewTest(DeviceInstance device,

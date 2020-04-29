@@ -21,16 +21,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                 this.OneWayBind(ViewModel, vm => vm.Data, v => v.VerificationsGrid.DataContext).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.DeviceTypes, v => v.DeviceTypes.ItemsSource).DisposeWith(d);
 
-                this.Bind(ViewModel, vm => vm.FromDateTime, v => v.FromDateDisplay.SelectedDate);
-                this.Bind(ViewModel, vm => vm.ToDateTime, v => v.ToDateDisplay.SelectedDate);
-
-
+                this.Bind(ViewModel, vm => vm.FromDateTime, v => v.FromDateDisplay.SelectedDate).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.ToDateTime, v => v.ToDateDisplay.SelectedDate).DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeExported, v => v.IncludeExportedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.FilterIncludeArchived, v => v.IncludeArchivedCheckBox).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.TestDateFilter, v => v.SearchByDateButton).DisposeWith(d);
-
-
 
                 this.CleanUpDefaults().DisposeWith(d);
 
