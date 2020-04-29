@@ -8,13 +8,73 @@ using Prover.Shared.Domain;
 using Prover.Shared.Storage.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Subjects;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Prover.Storage.MongoDb
 {
+
+    public class CosmosJsonNetSerializer : CosmosSerializer
+    {
+        private static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
+        private readonly JsonSerializer Serializer;
+        private readonly JsonSerializerSettings serializerSettings;
+
+        public CosmosJsonNetSerializer()
+                : this(new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
+        {
+        }
+
+        public CosmosJsonNetSerializer(
+                JsonSerializerSettings serializerSettings
+        )
+        {
+            this.serializerSettings = serializerSettings;
+            this.Serializer = JsonSerializer.Create(this.serializerSettings);
+        }
+
+        public override T FromStream<T>(Stream stream)
+        {
+            using (stream)
+            {
+                if (typeof(Stream).IsAssignableFrom(typeof(T)))
+                {
+                    return (T)(object)(stream);
+                }
+
+                using (StreamReader sr = new StreamReader(stream))
+                {
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
+                    {
+                        return Serializer.Deserialize<T>(jsonTextReader);
+                    }
+                }
+            }
+        }
+
+        public override Stream ToStream<T>(T input)
+        {
+            MemoryStream streamPayload = new MemoryStream();
+            using (StreamWriter streamWriter = new StreamWriter(streamPayload, encoding: DefaultEncoding, bufferSize: 1024, leaveOpen: true))
+            {
+                using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                {
+                    writer.Formatting = Newtonsoft.Json.Formatting.None;
+                    Serializer.Serialize(writer, input);
+                    writer.Flush();
+                    streamWriter.Flush();
+                }
+            }
+
+            streamPayload.Position = 0;
+            return streamPayload;
+        }
+    }
+
     public class CosmosDbAsyncRepository<T> : IAsyncRepository<T>, IEventsSubscriber
     where T : AggregateRoot
     {
@@ -23,7 +83,6 @@ namespace Prover.Storage.MongoDb
 
         private static readonly string databaseId = "EvcProver";
         private static readonly string containerId = typeof(T).Name;
-        private static readonly JsonSerializer Serializer = new JsonSerializer();
 
         //Reusable instance of ItemClient which represents the connection to a Cosmos endpoint          
         private Database database = null;
@@ -36,8 +95,16 @@ namespace Prover.Storage.MongoDb
 
         public CosmosDbAsyncRepository()
         {
-            client = new CosmosClient(EndPointUrl, AuthKey);
+            CosmosClientOptions clientOptions = new CosmosClientOptions()
+            {
+
+                Serializer = new CosmosJsonNetSerializer()
+            };
+
+
+            client = new CosmosClient(EndPointUrl, AuthKey, clientOptions);
             _isInitialized.OnNext(false);
+
             // _warmupTask = Task.Run(() => Initialize());
         }
 
@@ -106,6 +173,10 @@ namespace Prover.Storage.MongoDb
 
         public Task Initialize()
         {
+
+
+
+
             _warmupTask = Task.Run(async () =>
             {
                 database = await client.CreateDatabaseIfNotExistsAsync(databaseId);

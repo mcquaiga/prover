@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using Devices.Core.Items.DriveTypes;
+using Newtonsoft.Json;
 using Prover.Calculations;
 using Prover.Shared.Extensions;
+using System.Collections.Generic;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes.Rotary
 {
@@ -11,9 +12,10 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume.InputT
         {
         }
 
-        public RotaryMeterTest(RotaryMeterItems rotaryItems)
+        [JsonConstructor]
+        public RotaryMeterTest(RotaryMeterItems items)
         {
-            Items = rotaryItems;
+            Items = items;
 
             if (Items.MeterType == null)
                 throw new KeyNotFoundException(

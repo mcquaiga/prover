@@ -46,13 +46,16 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Stretch="Uniform">
-			<Grid>
+			<Grid
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 
-				<Viewbox HorizontalAlignment="Stretch" Stretch="Uniform">
+				<Viewbox HorizontalAlignment="Left" Stretch="Uniform">
 					<ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>

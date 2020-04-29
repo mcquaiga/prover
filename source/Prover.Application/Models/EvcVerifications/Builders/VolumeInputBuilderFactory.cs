@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Prover.Shared;
+using System;
+using System.Collections.Generic;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {

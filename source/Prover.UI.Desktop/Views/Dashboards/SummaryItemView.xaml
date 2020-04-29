@@ -26,7 +26,7 @@
             materialDesign:ShadowAssist.Darken="True"
             materialDesign:ShadowAssist.ShadowDepth="Depth0"
             Background="{StaticResource MaterialDesignPaper}"
-            Style="{DynamicResource DashboardCardStyle}">
+            Style="{StaticResource DashboardCardStyle}">
             <!--    -->
             <UniformGrid
                 HorizontalAlignment="Stretch"

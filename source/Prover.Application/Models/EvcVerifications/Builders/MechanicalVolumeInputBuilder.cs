@@ -1,11 +1,11 @@
 ﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
-using Devices.Core.Items.ItemGroups;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume;
-using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Calculations;
+using Prover.Shared;
+using Prover.Shared.Extensions;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {
@@ -19,7 +19,25 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 		}
 
 		/// <inheritdoc />
-		public override IVolumeInputType BuildVolumeType() => new MechanicalVolumeInputType(Device.ItemGroup<VolumeItems>());
+		//public override IVolumeInputType BuildVolumeType() => new MechanicalVolumeInputType(Device.ItemGroup<VolumeItems>());
+
+		/// <inheritdoc />
+		protected override UncorrectedVolumeTestRun GetDriveSpecificUncorrectedTest()
+		{
+			var expected = VolumeCalculator.TrueUncorrected(Device.Items.Volume.DriveRate, AppliedInput);
+			var actual = VolumeCalculator.TotalVolume(StartItems.UncorrectedReading, EndItems.UncorrectedReading, StartItems.UncorrectedMultiplier);
+			var error = Calculators.PercentDeviation(expected, actual);
+
+			return new UncorrectedVolumeTestRun(VolumeInputType.Mechanical,
+						StartItems,
+						EndItems,
+						expectedValue: expected,
+						actualValue: actual,
+						percentError: error,
+						verified: error.IsBetween(Tolerances.UNCOR_ERROR_THRESHOLD),
+						appliedInput: AppliedInput,
+			driveRate: Device.Items.Volume.DriveRate);
+		}
 
 		/// <inheritdoc />
 		public override void SetItemValues(ICollection<ItemValue> startValues, ICollection<ItemValue> endValues, int? appliedInput = null, int? corPulses = null, int? uncorPulses = null)
@@ -35,7 +53,11 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 		/// <inheritdoc />
 		protected override void SpecificDefaults()
 		{
-			var energyTest = new EnergyTest(_startEnergyItems, _endEnergyItems, Tests.OfType<CorrectedVolumeTestRun>().First().ActualValue);
+			var actual = EnergyCalculator.TotalEnergy(_startEnergyItems.EnergyReading, _endEnergyItems.EnergyReading);
+			var expected = EnergyCalculator.Calculated(_startEnergyItems.EnergyUnitType, Corrected.ExpectedValue, _endEnergyItems.EnergyGasValue);
+			var error = Calculators.PercentDeviation(expected, actual);
+
+			var energyTest = new EnergyTest(_startEnergyItems, _endEnergyItems, expected, actual, error, error.IsBetween(Tolerances.ENERGY_PASS_TOLERANCE));
 			Tests.Add(energyTest);
 		}
 	}

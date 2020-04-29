@@ -1,8 +1,6 @@
 ﻿using Devices.Core.Interfaces;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Extensions;
-using Prover.Application.Models.EvcVerifications.Builders;
-using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared;
 using System;
@@ -46,8 +44,8 @@ namespace Prover.Application.ViewModels.Factories.Volume
             VerificationTestPointViewModel testPoint)
         {
             var factory = new VolumeViewModelFactory(device, viewModel, testPoint);
-            viewModel.DriveType = VolumeInputBuilderFactory.GetBuilder(device).BuildVolumeType();
-            switch (viewModel.DriveType.InputType)
+
+            switch (viewModel.Device.DriveType)
             {
                 case VolumeInputType.Rotary:
                     factory.CreateRotaryVolume(device, viewModel, testPoint);
@@ -61,7 +59,7 @@ namespace Prover.Application.ViewModels.Factories.Volume
             }
         }
 
-        private CorrectedVolumeTestViewModel CreateCorrectedVolumeTest(IVolumeInputType volumeInputType, UncorrectedVolumeTestViewModel uncorrectedTest)
+        private CorrectedVolumeTestViewModel CreateCorrectedVolumeTest(IUncorrectedVolumeTestViewModel uncorrectedTest)
         {
             return new CorrectedVolumeTestViewModel(uncorrectedTest,
                 _sharedCalculator,
@@ -82,24 +80,24 @@ namespace Prover.Application.ViewModels.Factories.Volume
                 corModel);
         }
 
-        private UncorrectedVolumeTestViewModel CreateUncorrectedVolumeTest(IVolumeInputType volumeInputType) =>
+        private UncorrectedVolumeTestViewModel CreateUncorrectedVolumeTest(VolumeInputType volumeInputType) =>
             new UncorrectedVolumeTestViewModel(volumeInputType, _startVolumeItems, _endVolumeItems);
 
-        //private static CalculationsViewModel GetSharedCalculator(DeviceInstance device,
-        //    VerificationTestPointViewModel testPoint)
-        //{
-        //    switch (device.ItemGroup<SiteInformationItems>().CompositionType)
-        //    {
-        //        case CompositionType.T:
-        //            return new CalculationsViewModel(testPoint.GetTemperatureTest());
-        //        case CompositionType.P:
-        //            return new CalculationsViewModel(testPoint.GetPressureTest());
-        //        case CompositionType.PTZ:
-        //            return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
-        //                testPoint.GetSuperFactorTest());
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
+        private static CalculationsViewModel GetSharedCalculator(DeviceInstance device,
+            VerificationTestPointViewModel testPoint)
+        {
+            switch (device.ItemGroup<SiteInformationItems>().CompositionType)
+            {
+                case CompositionType.T:
+                    return new CalculationsViewModel(testPoint.GetTemperatureTest());
+                case CompositionType.P:
+                    return new CalculationsViewModel(testPoint.GetPressureTest());
+                case CompositionType.PTZ:
+                    return new CalculationsViewModel(testPoint.GetPressureTest(), testPoint.GetTemperatureTest(),
+                        testPoint.GetSuperFactorTest());
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

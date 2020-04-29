@@ -1,5 +1,5 @@
 ﻿using Devices.Core.Interfaces;
-using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Application.Models.EvcVerifications.Verifications.Volume;
 using System;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
@@ -14,8 +14,8 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 
         #endregion
 
-
-        public override IVolumeInputType BuildVolumeType() => throw new NotImplementedException();
+        /// <inheritdoc />
+        protected override UncorrectedVolumeTestRun GetDriveSpecificUncorrectedTest() => throw new NotImplementedException();
 
         /// <inheritdoc />
         protected override void SpecificDefaults()

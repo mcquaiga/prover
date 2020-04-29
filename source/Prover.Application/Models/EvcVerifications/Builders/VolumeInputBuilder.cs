@@ -3,29 +3,32 @@ using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume;
-using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
+using Prover.Calculations;
 using Prover.Shared;
+using Prover.Shared.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Prover.Application.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Builders
 {
 	public abstract class VolumeInputTestBuilder
 	{
-		private int _appliedInput;
-		private int _corPulses;
-		private VolumeItems _endItems;
-		private VolumeItems _startItems;
-		private int _uncorPulses;
+		protected int AppliedInput;
+		protected int CorPulses;
+		protected VolumeItems EndItems;
+		protected VolumeItems StartItems;
+		protected int UncorPulses;
 
 		protected UncorrectedVolumeTestRun Uncorrected;
-		protected VerificationTestPoint VerificationTestPoint;
+		protected CorrectedVolumeTestRun Corrected;
+		public VerificationTestPoint VerificationTestPoint { get; set; }
 
 		protected VolumeInputTestBuilder(DeviceInstance device)
 		{
 			Device = device;
-			_startItems = Device.CreateItemGroup<VolumeItems>();
-			_endItems = Device.CreateItemGroup<VolumeItems>();
+			StartItems = Device.CreateItemGroup<VolumeItems>();
+			EndItems = Device.CreateItemGroup<VolumeItems>();
 		}
 
 		protected DeviceInstance Device { get; }
@@ -34,20 +37,18 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 
 		public virtual VolumeInputTestBuilder AddCorrected(UncorrectedVolumeTestRun uncorrected, bool withPulseOutputs = true)
 		{
-			var corrected = new CorrectedVolumeTestRun(_startItems, _endItems,
-			uncorrected.ExpectedValue,
+			Corrected = new CorrectedVolumeTestRun(StartItems, EndItems, uncorrected.ExpectedValue,
 			VerificationTestPoint.GetTemperature()?.ExpectedValue,
 			VerificationTestPoint.GetPressure()?.ExpectedValue, VerificationTestPoint.GetSuper()?.ExpectedValue);
 
 			if (withPulseOutputs)
-				corrected.PulseOutputTest = WithPulseOutput(PulseOutputType.CorVol, _corPulses);
-			Tests.Add(corrected);
+				Corrected.PulseOutputTest = WithPulseOutput(PulseOutputType.CorVol, CorPulses, Corrected.ExpectedValue, Device.Items.Volume.CorrectedMultiplier);
+			Tests.Add(Corrected);
 			return this;
 		}
 
-		public VolumeInputTestBuilder AddDefaults(VerificationTestPoint testPoint, bool withPulseOutputs = true)
+		public VolumeInputTestBuilder AddDefaults(bool withPulseOutputs = true)
 		{
-			VerificationTestPoint = testPoint;
 			AddUncorrected(withPulseOutputs);
 			AddCorrected(Uncorrected);
 
@@ -57,39 +58,42 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 		}
 
 
-		public virtual VolumeInputTestBuilder AddUncorrected(bool withPulseOutputs = true)
+		public VolumeInputTestBuilder AddUncorrected(bool withPulseOutputs = true)
 		{
-			Uncorrected = new UncorrectedVolumeTestRun(BuildVolumeType(), _startItems, _endItems, _appliedInput);
+			//Uncorrected = new UncorrectedVolumeTestRun(BuildVolumeType(), _startItems, _endItems, _appliedInput);
+			Uncorrected = GetDriveSpecificUncorrectedTest();
 
 			if (withPulseOutputs)
-				Uncorrected.PulseOutputTest = WithPulseOutput(PulseOutputType.UncVol, _uncorPulses);
+				Uncorrected.PulseOutputTest = WithPulseOutput(PulseOutputType.UncVol, UncorPulses, Uncorrected.ExpectedValue, Device.Items.Volume.UncorrectedMultiplier);
 			Tests.Add(Uncorrected);
 			return this;
 		}
 
+		protected abstract UncorrectedVolumeTestRun GetDriveSpecificUncorrectedTest();
+
 		public ICollection<VerificationEntity> Build() => Tests;
-
-		/// <inheritdoc />
-		public abstract IVolumeInputType BuildVolumeType();
-
 
 		public virtual void SetItemValues(ICollection<ItemValue> startValues, ICollection<ItemValue> endValues, int? appliedInput = null, int? corPulses = null, int? uncorPulses = null)
 		{
-			_startItems = Device.CreateItemGroup<VolumeItems>(startValues) ?? _startItems;
-			_endItems = Device.CreateItemGroup<VolumeItems>(endValues) ?? _endItems;
-			_appliedInput = appliedInput ?? 0;
-			_uncorPulses = uncorPulses ?? 0;
-			_corPulses = corPulses ?? 0;
+			StartItems = Device.CreateItemGroup<VolumeItems>(startValues) ?? StartItems;
+			EndItems = Device.CreateItemGroup<VolumeItems>(endValues) ?? EndItems;
+			AppliedInput = appliedInput ?? 0;
+			UncorPulses = uncorPulses ?? 0;
+			CorPulses = corPulses ?? 0;
 		}
 
 		protected abstract void SpecificDefaults();
 
 
 
-		protected virtual PulseOutputVerification WithPulseOutput(PulseOutputType pulseType, int pulseCount)
+		protected virtual PulseOutputVerification WithPulseOutput(PulseOutputType pulseType, int pulseCount, decimal expectedVolume, decimal? multiplier)
 		{
 			var items = Device.ItemGroup<PulseOutputItems>().Channels.FirstOrDefault(c => c.ChannelType == pulseType);
-			return items != null ? new PulseOutputVerification(items, 0m, pulseCount, 100m) : default;
+
+			var expected = VolumeCalculator.PulseCount(expectedVolume, (items as IVolumeUnits)?.Units.Multiplier ?? multiplier);
+			var error = Calculators.PercentDeviation(expected, pulseCount);
+
+			return items != null ? new PulseOutputVerification(items, pulseCount, expected, error, error.IsBetween(Tolerances.PULSE_VARIANCE_THRESHOLD)) : default;
 		}
 	}
 }

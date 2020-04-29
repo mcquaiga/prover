@@ -46,13 +46,14 @@ namespace Prover.Application.ViewModels.Corrections
 
         protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
         {
-            if (verifications == null || !verifications.Any()) return;
+            if (verifications == null || !verifications.Any())
+                return;
 
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified)
                 .ToCollection()
                 .Select(x => x.Any() && x.All(y => y != null && y.Verified))
-                .LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
+                //.LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
                 .LogErrors(Logger)
                 .LoggedCatch(this, VerifiedObservable)
                 .ObserveOn(RxApp.MainThreadScheduler);
@@ -149,7 +150,7 @@ namespace Prover.Application.ViewModels.Corrections
     public abstract class CorrectionTestViewModel<T> : ItemVarianceTestViewModel<T>
         where T : class
     {
-        protected ReactiveCommand<Unit, decimal> UpdateFactor;
+        protected readonly ReactiveCommand<Unit, decimal> UpdateFactor;
 
         protected CorrectionTestViewModel()
         {
@@ -159,7 +160,8 @@ namespace Prover.Application.ViewModels.Corrections
         {
             UpdateFactor = ReactiveCommand.Create<Unit, decimal>(_ => CalculatorFactory.Invoke().CalculateFactor());
 
-            UpdateFactor.ToPropertyEx(this, x => x.ExpectedValue)
+            UpdateFactor
+                    .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
 
             UpdateFactor.DisposeWith(Cleanup);

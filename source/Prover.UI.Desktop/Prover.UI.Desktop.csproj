@@ -35,16 +35,19 @@
     <Compile Remove="Modules\**" />
     <Compile Remove="Screens\**" />
     <Compile Remove="ViewModels\Certificates\**" />
+    <Compile Remove="ViewModels\Dashboard\**" />
     <Compile Remove="Views\Certificates\**" />
     <Compile Remove="Views\Verifications\Managers\**" />
     <EmbeddedResource Remove="Modules\**" />
     <EmbeddedResource Remove="Screens\**" />
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
+    <EmbeddedResource Remove="ViewModels\Dashboard\**" />
     <EmbeddedResource Remove="Views\Certificates\**" />
     <EmbeddedResource Remove="Views\Verifications\Managers\**" />
     <None Remove="Modules\**" />
     <None Remove="Screens\**" />
     <None Remove="ViewModels\Certificates\**" />
+    <None Remove="ViewModels\Dashboard\**" />
     <None Remove="Views\Certificates\**" />
     <None Remove="Views\Verifications\Managers\**" />
     <Resource Include="Resources\clipboard-check-blue.ico">
@@ -55,6 +58,7 @@
     <Page Remove="Modules\**" />
     <Page Remove="Screens\**" />
     <Page Remove="ViewModels\Certificates\**" />
+    <Page Remove="ViewModels\Dashboard\**" />
     <Page Remove="Views\Certificates\**" />
     <Page Remove="Views\Verifications\Managers\**" />
   </ItemGroup>
@@ -142,9 +146,6 @@
     <Compile Update="Controls\MainMenuButton.xaml.cs">
       <DependentUpon>MainMenuButton.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Controls\PercentageControl.xaml.cs">
-      <DependentUpon>PercentageControl.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Controls\PercentageControlNew.xaml.cs">
       <DependentUpon>PercentageControlNew.xaml</DependentUpon>
     </Compile>
@@ -187,9 +188,6 @@
     <Page Update="Controls\MainMenuButton.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Controls\PercentageControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Controls\PercentageControlNew.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -230,7 +228,6 @@
 
   <ItemGroup>
     <Folder Include="Installer\" />
-    <Folder Include="ViewModels\Dashboard\" />
   </ItemGroup>
 
   <ItemGroup>

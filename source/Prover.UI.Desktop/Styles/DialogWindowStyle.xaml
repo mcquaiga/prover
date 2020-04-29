@@ -58,9 +58,9 @@
 			</Setter.Value>
 		</Setter>
 		<!--  Replaced the default brushes with the ones from MDIX. This allows the theming to propagate properly.  -->
-		<!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>-->
-		<!--<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />-->
-		<Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}" />
-		<Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+		<!--<Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.WindowTextBrushKey}}"/>-->
+		<!--<Setter Property="Background" Value="{StaticResource {x:Static SystemColors.WindowBrushKey}}" />-->
+		<Setter Property="TextElement.Foreground" Value="{StaticResource MaterialDesignBody}" />
+		<Setter Property="Background" Value="{StaticResource MaterialDesignPaper}" />
 	</Style>
 </ResourceDictionary>

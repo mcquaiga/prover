@@ -1,11 +1,11 @@
-﻿using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -16,10 +16,7 @@ namespace Prover.Application.ViewModels.Corrections
 
         public SuperFactorViewModel(SuperFactorItems items) : base(items, Tolerance)
         {
-            this.WhenAnyValue(x => x.ExpectedValue)
-                .Select(Calculators.SquaredFactor)
-                .ToPropertyEx(this, x => x.SquaredFactor)
-                .DisposeWith(Cleanup);
+
         }
 
         public SuperFactorViewModel(SuperFactorItems items, TemperatureFactorViewModel temperature, PressureFactorViewModel pressure)
@@ -49,10 +46,15 @@ namespace Prover.Application.ViewModels.Corrections
                 .Select(i => i.UnsqrFactor)
                 .ToPropertyEx(this, x => x.ActualValue, Pressure.Items.UnsqrFactor)
                 .DisposeWith(Cleanup);
-            
+
             this.WhenAnyValue(x => x.Temperature.Gauge, x => x.Pressure.Gauge, x => x.Pressure.AtmosphericGauge)
                 .Select(_ => Unit.Default)
                 .InvokeCommand(UpdateFactor)
+                .DisposeWith(Cleanup);
+
+            this.WhenAnyValue(x => x.ExpectedValue)
+                .Select(Calculators.SquaredFactor)
+                .ToPropertyEx(this, x => x.SquaredFactor)
                 .DisposeWith(Cleanup);
         }
     }

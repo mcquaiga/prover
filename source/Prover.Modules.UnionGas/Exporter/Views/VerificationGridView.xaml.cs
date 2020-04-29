@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
-using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -32,7 +32,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
                     .Do(PopulateFromViewModel)
                     .Subscribe()
                     .DisposeWith(d);
-                
+
                 this.OneWayBind(ViewModel, vm => vm.EmployeeId, v => v.EmployeeIdControl.Content)
                     .DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.EmployeeId, v => v.AddUserToTestButton.Visibility,
@@ -79,7 +79,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
             TestDateTimeTextBlock.Text = $"{viewModel.Test.TestDateTime:g}";
             DeviceTypeTextBlock.Text = viewModel.Test.Device.DeviceType.Name;
             CompositionTypeTextBlock.Text = viewModel.CompositionType;
-            DriveTypeTextBlock.Text = viewModel.Test.DriveType.InputType.ToString();
+            DriveTypeTextBlock.Text = viewModel.Test.Device.DriveType.ToString();
             Site2NumberControl.Content = viewModel.DeviceInfo.SiteInfo.SiteId2;
             SerialNumberControl.Content = viewModel.DeviceInfo.SiteInfo.SerialNumber;
         }

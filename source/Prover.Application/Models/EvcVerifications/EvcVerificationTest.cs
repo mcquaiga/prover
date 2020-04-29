@@ -1,8 +1,6 @@
 using Devices.Core.Interfaces;
 using Newtonsoft.Json;
-using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Models.EvcVerifications.Verifications;
-using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes;
 using System;
 
 namespace Prover.Application.Models.EvcVerifications
@@ -21,7 +19,7 @@ namespace Prover.Application.Models.EvcVerifications
 		{
 			Device = device;
 			TestDateTime = DateTime.Now;
-			DriveType = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
+			// = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
 		}
 
 		public DateTime? ArchivedDateTime { get; set; } = null;
@@ -36,7 +34,7 @@ namespace Prover.Application.Models.EvcVerifications
 
 		public DeviceInstance Device { get; protected set; }
 
-		[JsonIgnore] public IVolumeInputType DriveType { get; }
+		//[JsonIgnore] public IVolumeInputType DriveType { get; }
 
 		public bool Verified { get; set; }
 

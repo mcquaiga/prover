@@ -1,10 +1,10 @@
-﻿using System;
-using System.Reactive.Disposables;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Prover.Application.Interfaces;
 using Prover.Calculations;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using System;
+using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels.Volume
 {
@@ -12,13 +12,13 @@ namespace Prover.Application.ViewModels.Volume
     {
         private const decimal Tolerance = Tolerances.COR_ERROR_THRESHOLD;
 
-        public CorrectedVolumeTestViewModel(UncorrectedVolumeTestViewModel uncorrected,
+        public CorrectedVolumeTestViewModel(IUncorrectedVolumeTestViewModel uncorrected,
             ICalculateTrueCorrectedFactor trueCorrectedFactor, VolumeItems startValues, VolumeItems endValues)
             : base(Tolerance, startValues, endValues)
         {
             Uncorrected = uncorrected;
 
-            this.WhenAnyValue(x => x.StartReading, x => x.EndReading, 
+            this.WhenAnyValue(x => x.StartReading, x => x.EndReading,
                     (start, end) => VolumeCalculator.TotalVolume(start, end, startValues.CorrectedMultiplier))
                 .ToPropertyEx(this, x => x.ActualValue)
                 .DisposeWith(Cleanup);
@@ -27,7 +27,7 @@ namespace Prover.Application.ViewModels.Volume
                 .ToPropertyEx(this, x => x.TotalCorrectionFactor, trueCorrectedFactor.TotalCorrectionFactor, true)
                 .DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume, x => x.TotalCorrectionFactor, 
+            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume, x => x.TotalCorrectionFactor,
                     (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
                 .ToPropertyEx(this, x => x.ExpectedValue)
                 .DisposeWith(Cleanup);
@@ -40,14 +40,14 @@ namespace Prover.Application.ViewModels.Volume
 
             this.WhenAnyValue(x => x.StartReading)
                 .Subscribe(startReading => StartValues.CorrectedReading = startReading);
-            
+
             this.WhenAnyValue(x => x.EndReading)
                 .Subscribe(endReading => EndValues.CorrectedReading = endReading);
 
             Multiplier = startValues.CorrectedMultiplier;
         }
 
-        [Reactive] public UncorrectedVolumeTestViewModel Uncorrected { get; protected set; }
+        [Reactive] public IUncorrectedVolumeTestViewModel Uncorrected { get; protected set; }
 
         public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
     }

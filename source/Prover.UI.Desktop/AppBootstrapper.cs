@@ -8,9 +8,9 @@ using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Prover.UI.Desktop
 {
@@ -29,8 +29,7 @@ namespace Prover.UI.Desktop
         {
             AppHost = ConfigureBuilder(this, args);
 
-            await AppHost.StartAsync(ApplicationStarted);
-            //await ExecuteStartUpTasks();
+            await AppHost.StartAsync(CancellationTokenSource.Token);
 
             InitializeLogging();
 
@@ -39,7 +38,7 @@ namespace Prover.UI.Desktop
 
         public void StopApplication()
         {
-            Debug.WriteLine("Stopping Application.");
+            _logger.LogDebug("Stopping Application.");
             AppHost.StopAsync(ApplicationStopped);
         }
 
@@ -59,11 +58,19 @@ namespace Prover.UI.Desktop
                 Host.CreateDefaultBuilder()
                     .ConfigureLogging((host, log) =>
                     {
+                        //Log.Logger = new LoggerConfiguration()
+                        //  .MinimumLevel.Debug()
+                        //  .WriteTo();
+
+                        //log.AddConfiguration()
+                        log.ClearProviders();
+
                         log.Services.AddSplatLogging();
 
-                        if (host.HostingEnvironment.IsProduction()) log.AddEventLog();
-
-                        if (host.HostingEnvironment.IsProduction() == false) log.AddDebug();
+                        if (host.HostingEnvironment.IsProduction())
+                            log.AddEventLog();
+                        else
+                            log.AddDebug();
                     })
                     .ConfigureServices((host, services) =>
                     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Interfaces;
+using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.UI.Desktop.Controls;
 using Prover.UI.Desktop.Dialogs;
 using Prover.UI.Desktop.Extensions;
@@ -8,16 +9,17 @@ using Prover.UI.Desktop.Reports;
 using Prover.UI.Desktop.ViewModels;
 using Prover.UI.Desktop.ViewModels.Verifications;
 using Prover.UI.Desktop.Views;
+using Prover.UI.Desktop.Views.Verifications.Volume;
 using ReactiveUI;
 using Splat;
 
 namespace Prover.UI.Desktop.Startup
 {
-    public class ProverViewLocator : IViewLocator
-    {
-        /// <inheritdoc />
-        public IViewFor ResolveView<T>(T viewModel, string contract = null) where T : class => throw new System.NotImplementedException();
-    }
+    //public class ProverViewLocator : IViewLocator
+    //{
+    //    /// <inheritdoc />
+    //    public IViewFor ResolveView<T>(T viewModel, string contract = null) where T : class => throw new System.NotImplementedException();
+    //}
 
     public class UserInterface
     {
@@ -36,6 +38,8 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<IScreenManager, ScreenManager>();
             services.AddSingleton<IScreen>(c => c.GetRequiredService<IScreenManager>());
 
+            services.AddScoped<IViewFor<RotaryUncorrectedVolumeTestViewModel>, RotaryUncorrectedVolumeView>();
+            //c => (IViewFor<RotaryUncorrectedVolumeTestViewModel>)c.GetService<IViewFor<RotaryUncorrectedVolumeTestViewModel>>());
 
             services.AddMainMenuItems();
             services.AddViewsAndViewModels();

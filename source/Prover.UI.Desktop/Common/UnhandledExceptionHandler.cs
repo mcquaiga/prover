@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Windows.Threading;
-using Microsoft.Extensions.Logging;
 
 namespace Prover.UI.Desktop.Common
 {
@@ -19,13 +19,13 @@ namespace Prover.UI.Desktop.Common
         private void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = (Exception)e.ExceptionObject;
-            _logger.LogError(ex, ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
 
         private void CurrentDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             var ex = e.Exception;
-            _logger.LogError(ex, ex.Message);
+            _logger?.LogError(ex, ex.Message);
             e.Handled = true;
         }
 

@@ -1,19 +1,35 @@
-﻿using System;
+﻿using Prover.Application.Extensions;
+using ReactiveUI;
+using System;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
     /// <summary>
     /// Interaction logic for VerificationsGrid.xaml
     /// </summary>
-    public partial class VerificationsGrid : IDisposable
+    public partial class VerificationsGrid : IDisposable, IActivatableView
     {
         public VerificationsGrid()
         {
             InitializeComponent();
+
+            this.WhenActivated(d =>
+            {
+                //ToolbarViewModel.PrintReport
+                //                .IsExecuting
+                //                .Subscribe(x =>
+                //                {
+                //                    if (x == true)
+                //                        Mouse.OverrideCursor = Cursors.Wait;
+
+                //                    if (x == false)
+                //                        Mouse.OverrideCursor = Cursors.Arrow;
+                //                }).DisposeWith(d);
+            });
+
         }
 
         public static readonly DependencyProperty PrintDataTemplateProperty = DependencyProperty.Register(
@@ -21,7 +37,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public DataTemplate PrintDataTemplate
         {
-            get => (DataTemplate) GetValue(PrintDataTemplateProperty);
+            get => (DataTemplate)GetValue(PrintDataTemplateProperty);
             set => SetValue(PrintDataTemplateProperty, value);
         }
 
@@ -29,7 +45,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ExportToolbarViewModel ToolbarViewModel
         {
-            get { return (ExportToolbarViewModel) GetValue(ToolbarViewModelProperty); }
+            get { return (ExportToolbarViewModel)GetValue(ToolbarViewModelProperty); }
             set { SetValue(ToolbarViewModelProperty, value); }
         }
 
@@ -43,6 +59,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             ToolbarViewModel.PrintReport
                             .Execute(ToolbarViewModel.Selected)
+                            .LogErrors()
                             .Subscribe();
         }
     }

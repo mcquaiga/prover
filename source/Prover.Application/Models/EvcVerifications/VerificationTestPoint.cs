@@ -5,7 +5,15 @@ using System.Linq;
 
 namespace Prover.Application.Models.EvcVerifications
 {
-    public class VerificationTestPoint : VerificationEntity
+    public interface IVerificationTestPoint
+    {
+        int TestNumber { get; set; }
+        ICollection<VerificationEntity> Tests { get; }
+        void AddTest(VerificationEntity test);
+        T GetTest<T>() where T : class;
+    }
+
+    public class VerificationTestPoint : VerificationEntity, IVerificationTestPoint
     {
         private ICollection<VerificationEntity> _tests = new List<VerificationEntity>();
 
@@ -15,7 +23,7 @@ namespace Prover.Application.Models.EvcVerifications
 
         protected internal VerificationTestPoint(int testNumber) => TestNumber = testNumber;
 
-        public VerificationTestPoint(int testNumber, IEnumerable<VerificationEntity> tests, decimal? appliedInput = null)
+        public VerificationTestPoint(int testNumber, IEnumerable<VerificationEntity> tests)
             : this(testNumber)
         {
             AddTests(tests);
@@ -23,27 +31,27 @@ namespace Prover.Application.Models.EvcVerifications
 
         public int TestNumber { get; set; }
 
-        public override bool Verified => Tests.All(t => t.Verified);
-
         public ICollection<VerificationEntity> Tests
         {
             get => _tests.ToList();
             private set => _tests = value;
         }
 
-        public void AddTests(VerificationEntity test)
+        public void AddTest(VerificationEntity test)
         {
             if (test == null)
                 return;
 
             if (!_tests.Contains(test))
                 _tests.Add(test);
+
+            Verified = Tests.All(t => t.Verified);
         }
 
         public void AddTests(IEnumerable<VerificationEntity> verificationTests)
         {
             foreach (var vt in verificationTests)
-                AddTests(vt);
+                AddTest(vt);
         }
 
 
