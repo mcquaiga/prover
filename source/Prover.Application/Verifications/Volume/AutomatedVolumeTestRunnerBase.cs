@@ -1,11 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
@@ -15,6 +8,13 @@ using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
+using System;
+using System.Linq;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Prover.Application.Verifications.Volume
 {
@@ -70,7 +70,6 @@ namespace Prover.Application.Verifications.Volume
             FinishTest.DisposeWith(Cleanup);
             InitiateTestCompletion.DisposeWith(Cleanup);
 
-            TargetUncorrectedPulses = VolumeTest.DriveType.MaxUncorrectedPulses();
         }
 
         public ReactiveCommand<Unit, Unit> StartTest { get; protected set; }
@@ -81,8 +80,8 @@ namespace Prover.Application.Verifications.Volume
         public VolumeViewModelBase VolumeTest { get; }
         public ReactiveCommand<Unit, Unit> InitiateTestCompletion { get; protected set; }
 
-        public virtual int TargetUncorrectedPulses { get; }
-        
+        public virtual int TargetUncorrectedPulses { get; } = 10;
+
         public void Dispose()
         {
             Cleanup?.Dispose();
@@ -108,7 +107,7 @@ namespace Prover.Application.Verifications.Volume
         public virtual async Task RunStartActions()
         {
             Logger.LogInformation(
-                $"Starting {VolumeTest.DriveType.InputType} volume test for {DeviceManager.Device.DeviceType}.");
+                $"Starting {DeviceManager.Device.DriveType} volume test for {DeviceManager.Device.DeviceType}.");
 
             var startValues = await DeviceManager.GetItemValues();
             VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroup<VolumeItems>(startValues);
@@ -134,7 +133,8 @@ namespace Prover.Application.Verifications.Volume
 
                 var pulser = PulseListenerService.PulseChannels.FirstOrDefault(p => p.Channel == pulseTest.Items.Name);
 
-                if (pulser != null) pulseTest.ActualValue = pulser.PulseCount;
+                if (pulser != null)
+                    pulseTest.ActualValue = pulser.PulseCount;
             }
         }
     }

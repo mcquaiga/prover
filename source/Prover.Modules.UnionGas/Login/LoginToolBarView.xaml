@@ -53,25 +53,29 @@
 			Orientation="Vertical"
 			Visibility="Collapsed">
 
-			<materialDesign:PopupBox Style="{StaticResource MainToolbarPopupBoxStyle}">
+			<materialDesign:PopupBox
+				x:Name="SignedOnPopupBox"
+				materialDesign:HintAssist.HelperText="Sign in information"
+				Style="{StaticResource MainToolbarPopupBoxStyle}">
 				<materialDesign:PopupBox.ToggleContent>
-					<materialDesign:PackIcon Kind="Account" Style="{StaticResource MainToobarPackIconStyle}" />
+					<materialDesign:PackIcon Kind="Account" Style="{StaticResource MainToolbarPackIconStyle}" />
 
 				</materialDesign:PopupBox.ToggleContent>
 
-				<StackPanel>
+				<StackPanel Margin="12,12">
 					<TextBlock
 						x:Name="SignOnMessageTextBlock"
+						Padding="20"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Center"
-						Style="{StaticResource MaterialDesignBody1TextBlock}"
-						Text="{Binding ViewModel.DisplayName, ElementName=LoginToolbarViewControl}" />
+						Style="{StaticResource MaterialDesignBody1TextBlock}" />
 
 					<Button
 						x:Name="LogoutButton"
-						Command="{Binding ViewModel.LogOut, ElementName=LoginToolbarViewControl}"
+						Margin="4,25,4,4"
+						HorizontalAlignment="Right"
 						Content="Sign Out"
-						Style="{StaticResource MainToolbarButtonStyle}" />
+						Style="{StaticResource MaterialDesignFlatAccentBgButton}" />
 
 
 				</StackPanel>

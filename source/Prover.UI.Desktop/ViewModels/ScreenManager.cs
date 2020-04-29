@@ -51,8 +51,8 @@ namespace Prover.UI.Desktop.ViewModels
 
                 var disposables = barItems.ToolbarActionItems.Select(AddToolbarItem).ToList();
 
-                _toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList()
-                                .Prepend(viewModel as IDisposable));
+                _toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList());
+                //.Prepend(viewModel as IDisposable));
             }
 
             await Router.Navigate.Execute(viewModel);
@@ -91,11 +91,11 @@ namespace Prover.UI.Desktop.ViewModels
 
         public async Task GoHome(IRoutableViewModel home = null)
         {
+            _homeViewModel ??= home;
+
             if (_homeViewModel == null)
-            {
-                _homeViewModel = home;
-                Router.Navigate.Execute(_homeViewModel).Subscribe();
-            }
+                throw new ArgumentNullException(nameof(home), @"No viewmodel has been set for home.");
+
 
             _toolbarRemover.Disposable = Disposable.Empty;
 

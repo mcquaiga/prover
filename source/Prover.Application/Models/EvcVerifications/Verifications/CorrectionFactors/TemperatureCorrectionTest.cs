@@ -1,8 +1,5 @@
-using System;
-using Devices.Communications.Status;
 using Devices.Core.Items.ItemGroups;
-using Prover.Calculations;
-using Prover.Shared.Extensions;
+using Newtonsoft.Json;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors
 {
@@ -11,14 +8,20 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         #region Public Properties
 
         private TemperatureCorrectionTest() { }
-        //public TemperatureCorrectionTest(TemperatureItems items, decimal gaugeTemperature, decimal expectedValue, decimal actualValue, decimal percentError) 
-        //    : base(items, expectedValue, actualValue, percentError)
-        //{
-        //    Gauge = gaugeTemperature;
-        //    ActualValue = items.Factor;
 
-        //    ExpectedValue = 
-        //}
+        [JsonConstructor]
+        public TemperatureCorrectionTest(TemperatureItems items, decimal gauge, decimal expectedValue, decimal actualValue, decimal percentError, bool verified)
+
+        {
+            Items = items;
+            Gauge = gauge;
+            ActualValue = items.Factor;
+
+            ExpectedValue = expectedValue;
+            ActualValue = actualValue;
+            PercentError = percentError;
+            Verified = verified;
+        }
 
         public TemperatureCorrectionTest(TemperatureItems items, decimal gaugeTemperature)
         {
@@ -26,16 +29,16 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
             Gauge = gaugeTemperature;
             ActualValue = items.Factor;
 
-            Update(Tolerances.TEMP_ERROR_TOLERANCE);
+            //Update(Tolerances.TEMP_ERROR_TOLERANCE);
         }
 
-       
+
         public decimal Gauge { get; set; }
 
         #endregion
 
-        /// <inheritdoc />
-        protected sealed override Func<ICorrectionCalculator> CalculatorFactory
-            => () => new TemperatureCalculator(Items.Units, Items.Base, Gauge);
+        ///// <inheritdoc />
+        //protected sealed override Func<ICorrectionCalculator> CalculatorFactory
+        //    => () => new TemperatureCalculator(Items.Units, Items.Base, Gauge);
     }
 }

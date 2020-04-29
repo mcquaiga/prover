@@ -1,8 +1,5 @@
 using Devices.Core.Items.ItemGroups;
-using Prover.Calculations;
 using Prover.Shared.Domain;
-using Prover.Shared.Extensions;
-using System;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
@@ -15,7 +12,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
     public class VerificationEntity : BaseEntity, IVerification
     {
-        public virtual bool Verified { get; set; }
+        public bool Verified { get; set; }
     }
 
     public abstract class VerificationEntity<TValue> : VerificationEntity, IVerification<TValue>
@@ -24,11 +21,12 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         {
         }
 
-        protected VerificationEntity(TValue expectedValue, TValue actualValue, decimal percentError) : base()
+        protected VerificationEntity(TValue expectedValue, TValue actualValue, decimal percentError, bool verified) : base()
         {
             ExpectedValue = expectedValue;
             ActualValue = actualValue;
             PercentError = percentError;
+            Verified = verified;
         }
 
         #region Public Properties
@@ -50,16 +48,16 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         }
 
         protected VerificationTestEntity(decimal expectedValue, decimal actualValue,
-            decimal percentError) : base(expectedValue, actualValue, percentError)
+            decimal percentError, bool verified) : base(expectedValue, actualValue, percentError, verified)
         {
         }
 
 
-        protected virtual void Update(decimal passTolerance)
-        {
-            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
-            Verified = PercentError.IsBetween(passTolerance);
-        }
+        //protected virtual void Update(decimal passTolerance)
+        //{
+        //    PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+        //    Verified = PercentError.IsBetween(passTolerance);
+        //}
 
         #region Public Properties
 
@@ -73,8 +71,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         protected VerificationTestEntity() { }
         #region Public Properties
 
-        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError)
-            : base(expectedValue, actualValue, percentError)
+        protected VerificationTestEntity(T items, decimal expectedValue, decimal actualValue, decimal percentError, bool verified)
+            : base(expectedValue, actualValue, percentError, verified)
         {
             Items = items;
         }
@@ -91,15 +89,15 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         protected CorrectionVerificationTest() { }
 
 
-        protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
+        //protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
 
-        protected override void Update(decimal passTolerance)
-        {
-            ExpectedValue = CalculatorFactory.Invoke()
-                                             .CalculateFactor();
+        //protected override void Update(decimal passTolerance)
+        //{
+        //    ExpectedValue = CalculatorFactory.Invoke()
+        //                                     .CalculateFactor();
 
-            base.Update(passTolerance);
-        }
+        //    base.Update(passTolerance);
+        //}
     }
 
 
@@ -113,8 +111,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         }
 
         #region Public Properties
-        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified = false)
-            : base(expectedValue, actualValue, percentError)
+        protected VerificationTestEntity(TStart startValues, TEnd endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified)
+            : base(expectedValue, actualValue, percentError, verified)
         {
             StartValues = startValues;
             EndValues = endValues;

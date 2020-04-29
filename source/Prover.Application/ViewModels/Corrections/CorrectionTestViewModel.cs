@@ -46,13 +46,14 @@ namespace Prover.Application.ViewModels.Corrections
 
         protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
         {
-            if (verifications == null || !verifications.Any()) return;
+            if (verifications == null || !verifications.Any())
+                return;
 
             VerifiedObservable = verifications.AsObservableChangeSet()
                 .AutoRefresh(model => model.Verified)
                 .ToCollection()
                 .Select(x => x.Any() && x.All(y => y != null && y.Verified))
-                .LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
+                //.LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
                 .LogErrors(Logger)
                 .LoggedCatch(this, VerifiedObservable)
                 .ObserveOn(RxApp.MainThreadScheduler);

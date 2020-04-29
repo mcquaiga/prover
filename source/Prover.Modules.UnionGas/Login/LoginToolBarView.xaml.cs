@@ -17,9 +17,11 @@ namespace Prover.Modules.UnionGas.Login
 
             this.WhenActivated(d =>
             {
+                this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.SignOnMessageTextBlock.Text,
+                value => $"Welcome, {value}").DisposeWith(d);
 
                 this.BindCommand(ViewModel, vm => vm.LogIn, v => v.LoginButton).DisposeWith(d);
-                // this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.LogOut, v => v.LogoutButton).DisposeWith(d);
 
                 ViewModel.LogIn.IsExecuting
                     .Merge(ViewModel.LoginService.LoggedIn.Select(x => false))
@@ -28,9 +30,20 @@ namespace Prover.Modules.UnionGas.Login
 
                 ViewModel.LogIn.ThrownExceptions.Subscribe(_ => ResetState());
 
+                //ViewModel.LogIn.IsExecuting
+                //         .Where(executing => executing == true)
+                //         //.Select(x => )
+                //         .Timeout()
                 ViewModel.LoginService.LoggedIn
-                    .Select(VisibleIfTrue)
-                    .BindTo(this, view => view.LoggedInContent.Visibility).DisposeWith(d);
+                         .Where(isLoggedOn => isLoggedOn)
+                         .Do(_ => SignedOnPopupBox.IsPopupOpen = true)
+                         .Delay(TimeSpan.FromSeconds(3))
+                         .ObserveOn(RxApp.MainThreadScheduler)
+                         .Subscribe(_ => SignedOnPopupBox.IsPopupOpen = false);
+
+                ViewModel.LoginService.LoggedIn
+                         .Select(VisibleIfTrue)
+                         .BindTo(this, view => view.LoggedInContent.Visibility).DisposeWith(d);
 
                 ViewModel.LoginService.LoggedIn
                     .Merge(ViewModel.LogIn.IsExecuting.Where(x => x))

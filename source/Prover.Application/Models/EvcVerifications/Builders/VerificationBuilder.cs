@@ -15,7 +15,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
         private VerificationBuilder(DeviceInstance device)
         {
             _device = device;
-            _volumeBuilder = VolumeInputBuilderFactory.GetBuilder(device);
+
             //_testPointBuilder = TestPointBuilder.Create(_device, _volumeBuilder);
 
             _instance = new EvcVerificationTest(device);
@@ -39,7 +39,7 @@ namespace Prover.Application.Models.EvcVerifications.Builders
 
         public VerificationBuilder AddTestPoint(Func<TestPointBuilder, TestPointBuilder> testDecoratorFunc, ICollection<ItemValue> deviceValues = null)
         {
-            var correctionTests = testDecoratorFunc.Invoke(new TestPointBuilder(_device, _instance.Tests.Count, _volumeBuilder, deviceValues ?? new List<ItemValue>()));
+            var correctionTests = testDecoratorFunc.Invoke(new TestPointBuilder(_device, _instance.Tests.Count, deviceValues ?? new List<ItemValue>()));
             _instance.AddTest(correctionTests.Build());
             return this;
         }

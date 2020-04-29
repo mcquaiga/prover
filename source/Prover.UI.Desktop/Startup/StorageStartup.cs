@@ -60,8 +60,16 @@ namespace Prover.UI.Desktop.Startup
 
             if (config.IsLiteDb())
                 AddLiteDb(services, host);
-            //
-            AddMongoDb(services, host);
+
+            if (config.UseAzure())
+            {
+                AddMongoDb(services, host);
+            }
+            else
+            {
+
+            }
+
 
             services.AddSingleton<IVerificationTestService, VerificationService>();
             services.AddSingleton<IEntityDataCache<EvcVerificationTest>, VerificationCache>();
@@ -122,10 +130,10 @@ namespace Prover.UI.Desktop.Startup
             services.AddSingleton<IRepository<DeviceType>>(c =>
                     new LiteDbRepository<DeviceType>(db));
 
-            //services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c =>
-            //        new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
-
             services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
+
+            if (!host.Configuration.UseAzure())
+                services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
         }
     }
 

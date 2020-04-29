@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Prover.Application.Extensions;
+using System;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using ReactiveUI;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
@@ -21,7 +21,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public DataTemplate PrintDataTemplate
         {
-            get => (DataTemplate) GetValue(PrintDataTemplateProperty);
+            get => (DataTemplate)GetValue(PrintDataTemplateProperty);
             set => SetValue(PrintDataTemplateProperty, value);
         }
 
@@ -29,7 +29,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
         public ExportToolbarViewModel ToolbarViewModel
         {
-            get { return (ExportToolbarViewModel) GetValue(ToolbarViewModelProperty); }
+            get { return (ExportToolbarViewModel)GetValue(ToolbarViewModelProperty); }
             set { SetValue(ToolbarViewModelProperty, value); }
         }
 
@@ -43,6 +43,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             ToolbarViewModel.PrintReport
                             .Execute(ToolbarViewModel.Selected)
+                            .LogErrors()
                             .Subscribe();
         }
     }

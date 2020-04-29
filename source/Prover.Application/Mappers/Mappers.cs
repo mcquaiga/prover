@@ -7,7 +7,6 @@ using Prover.Application.Models.EvcVerifications.Verifications.Volume;
 using Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes.Rotary;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Corrections;
-using Prover.Application.ViewModels.Factories.Volume;
 using Prover.Application.ViewModels.Volume;
 using Prover.Application.ViewModels.Volume.Mechanical;
 using Prover.Application.ViewModels.Volume.Rotary;
@@ -32,7 +31,7 @@ namespace Prover.Application.Mappers
 
                 cfg.CreateMap<PressureFactorViewModel, PressureCorrectionTest>();
                 cfg.CreateMap<PressureCorrectionTest, PressureFactorViewModel>();
-                
+
                 cfg.CreateMap<SuperFactorViewModel, SuperCorrectionTest>()
                     .ForMember(dest => dest.GaugeTemp, opt => opt.MapFrom(src => src.Temperature.Gauge))
                     .ForMember(dest => dest.GaugePressure, opt => opt.MapFrom(src => src.Pressure.Gauge));
@@ -46,6 +45,9 @@ namespace Prover.Application.Mappers
 
                 cfg.CreateMap<UncorrectedVolumeTestRun, UncorrectedVolumeTestViewModel>();
                 cfg.CreateMap<UncorrectedVolumeTestViewModel, UncorrectedVolumeTestRun>();
+
+                cfg.CreateMap<RotaryUncorrectedVolumeTestViewModel, RotaryUncorrectedVolumeTestRun>();
+                cfg.CreateMap<RotaryUncorrectedVolumeTestRun, RotaryUncorrectedVolumeTestViewModel>();
 
                 cfg.CreateMap<PulseOutputTestViewModel, PulseOutputVerification>();
                 cfg.CreateMap<PulseOutputVerification, PulseOutputTestViewModel>();
@@ -62,7 +64,7 @@ namespace Prover.Application.Mappers
                     {
                         //vm.Initialize();
                     });
-                
+
                 cfg.CreateMap<EvcVerificationViewModel, EvcVerificationTest>();
                 cfg.CreateMap<EvcVerificationTest, EvcVerificationViewModel>()
                     .AfterMap((model, vm, con) =>

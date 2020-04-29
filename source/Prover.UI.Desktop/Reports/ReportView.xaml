@@ -51,7 +51,7 @@
 						Width="56"
 						Height="56"
 						Kind="NavigateBefore"
-						Style="{StaticResource MainToobarPackIconStyle}" />
+						Style="{StaticResource MainToolbarPackIconStyle}" />
 				</Button>
 
 			</Grid>

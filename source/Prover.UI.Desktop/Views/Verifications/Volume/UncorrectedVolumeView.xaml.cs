@@ -1,14 +1,13 @@
-﻿using System.Reactive.Disposables;
-using Prover.Application.ViewModels.Volume;
-using Prover.UI.Desktop.Extensions;
+﻿using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
+using System.Reactive.Disposables;
 
 namespace Prover.UI.Desktop.Views.Verifications.Volume
 {
     /// <summary>
     /// Interaction logic for UncorrectedVolumeView.xaml
     /// </summary>
-    public partial class UncorrectedVolumeView : ReactiveUserControl<UncorrectedVolumeTestViewModel>
+    public partial class UncorrectedVolumeView : IViewFor
     {
         public UncorrectedVolumeView()
         {
@@ -16,6 +15,7 @@ namespace Prover.UI.Desktop.Views.Verifications.Volume
 
             this.WhenActivated(d =>
             {
+
                 this.OneWayBind(ViewModel, vm => vm.PercentError, v => v.PercentErrorControl.DisplayValue).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Verified, v => v.PercentErrorControl.Passed).DisposeWith(d);
 

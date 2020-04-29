@@ -21,7 +21,7 @@
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Style="{StaticResource DashboardItemStyle}">
-        <materialDesign:Card Style="{DynamicResource DashboardCardStyle}">
+        <materialDesign:Card Style="{StaticResource DashboardCardStyle}">
             <!--    -->
             <StackPanel HorizontalAlignment="Right">
                 <TextBlock

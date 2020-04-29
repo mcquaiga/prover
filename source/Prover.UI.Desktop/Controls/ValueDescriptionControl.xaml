@@ -20,18 +20,18 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Border
-		Margin="5,2,0,2"
+		Margin="5,2,2,0"
 		BorderThickness="3,0,0,0"
 		DataContext="{Binding ElementName=ValueDescription}">
 		<Border.Style>
 			<Style TargetType="{x:Type Border}">
-				<Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}" />
+				<Setter Property="BorderBrush" Value="{StaticResource PrimaryHueDarkBrush}" />
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding Path=IsReadOnly}" Value="False">
-						<Setter Property="BorderBrush" Value="{DynamicResource SecondaryAccentBrush}" />
+						<Setter Property="BorderBrush" Value="{StaticResource SecondaryAccentBrush}" />
 					</DataTrigger>
 					<DataTrigger Binding="{Binding Path=IsReadOnly}" Value="True">
-						<Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}" />
+						<Setter Property="BorderBrush" Value="{StaticResource PrimaryHueDarkBrush}" />
 					</DataTrigger>
 				</Style.Triggers>
 			</Style>
@@ -57,7 +57,7 @@
 				HorizontalAlignment="Left"
 				FontSize="{Binding LabelFontSize}"
 				Foreground="{StaticResource SecondaryText}"
-				Text="{Binding Path=Label, FallbackValue='Gauge'}" />
+				Text="{Binding Path=Label}" />
 		</Grid>
 	</Border>
 

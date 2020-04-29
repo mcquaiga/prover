@@ -1,34 +1,28 @@
-using System;
 using Devices.Core.Items.ItemGroups;
+using Newtonsoft.Json;
 using Prover.Calculations;
-using Prover.Shared;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors
 {
-    public class PressureCorrectionTest : CorrectionVerificationTest<PressureItems>
+    public sealed class PressureCorrectionTest : CorrectionVerificationTest<PressureItems>
     {
-        private readonly PressureCalculator _calculator;
         private const decimal Tolerance = Tolerances.PRESSURE_ERROR_TOLERANCE;
 
-        protected PressureCorrectionTest()
+        private PressureCorrectionTest()
         {
         }
 
-        //public PressureCorrectionTest(PressureUnitType unitType, PressureTransducerType transducerType, decimal basePressure, decimal gaugePressure, decimal gaugeAtmospheric, decimal actualFactor)
-        //{
-        //    Items = new PressureItems()
-        //    {
-        //        Base = basePressure,
-        //        UnitType = unitType,
-        //        TransducerType = transducerType
-        //    };
-
-        //    ActualValue = actualFactor;
-
-        //    _calculator = new PressureCalculator(unitType, transducerType, basePressure, gaugePressure, gaugeAtmospheric);
-            
-        //    Update(gaugePressure, gaugeAtmospheric);
-        //}
+        [JsonConstructor]
+        public PressureCorrectionTest(PressureItems items, decimal gauge, decimal atmosphericGauge, decimal actualValue, decimal expectedValue, decimal percentError, bool verified)
+        {
+            Gauge = gauge;
+            AtmosphericGauge = atmosphericGauge;
+            ActualValue = actualValue;
+            ExpectedValue = expectedValue;
+            PercentError = percentError;
+            Verified = verified;
+            Items = items;
+        }
 
         #region Public Properties
 
@@ -39,7 +33,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
             AtmosphericGauge = atmGauge ?? Items.AtmosphericPressure;
             ActualValue = items.Factor;
 
-            Update(Tolerance);
+            //Update(Tolerance);
         }
 
         public decimal Gauge { get; set; }
@@ -50,19 +44,9 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         {
             return PressureCalculator.GetGasPressure(Items.TransducerType, Gauge, AtmosphericGauge);
         }
-        //public void Update(decimal? gauge = null, decimal? atmGauge = null)
-        //{
-        //    Gauge = gauge ?? Gauge;
-        //    AtmosphericGauge = atmGauge ?? AtmosphericGauge;
 
-        //    _calculator.Gauge = Gauge;
-        //    _calculator.Atmospheric = AtmosphericGauge;
-        //    ExpectedValue = _calculator.CalculateFactor();
-        //    PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
-        //}
-
-        /// <inheritdoc />
-        protected override Func<ICorrectionCalculator> CalculatorFactory =>
-            () => new PressureCalculator(Items.UnitType, Items.TransducerType, Items.Base, Gauge, AtmosphericGauge);
+        ///// <inheritdoc />
+        //protected override Func<ICorrectionCalculator> CalculatorFactory =>
+        //    () => new PressureCalculator(Items.UnitType, Items.TransducerType, Items.Base, Gauge, AtmosphericGauge);
     }
 }

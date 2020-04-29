@@ -22,7 +22,6 @@ namespace Prover.Application.ViewModels
 
         public int TestNumber { get; set; }
 
-
         public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
         public PressureFactorViewModel Pressure => VerificationTests.OfType<PressureFactorViewModel>().FirstOrDefault();

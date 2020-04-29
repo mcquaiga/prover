@@ -1,37 +1,41 @@
-using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
+using Newtonsoft.Json;
 using Prover.Calculations;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
-    public interface IPulseOutputVerification
-    {
-        PulseOutputVerification PulseOutputTest { get; set; }
-    }
+	public interface IPulseOutputVerification
+	{
+		PulseOutputVerification PulseOutputTest { get; set; }
+	}
 
-    public class PulseOutputVerification : VerificationTestEntity<PulseOutputItems.ChannelItems>
-    {
-        private decimal? _multiplier;
+	public class PulseOutputVerification : VerificationTestEntity<PulseOutputItems.ChannelItems>
+	{
+		private readonly decimal? _multiplier;
 
-        /*
-        public bool HasPassed() => Math.Abs(ExpectedValue - ActualValue).IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
+		/*
+		public bool HasPassed() => Math.Abs(ExpectedValue - ActualValue).IsBetween(Global.PULSE_VARIANCE_THRESHOLD);
 */
-        public PulseOutputVerification()
-        {
+		public PulseOutputVerification()
+		{
+		}
 
-        }
+		[JsonConstructor]
+		public PulseOutputVerification(PulseOutputItems.ChannelItems items, decimal actualValue, decimal expectedValue, decimal percentError, bool verified)
+				: base(items, expectedValue, actualValue, percentError, verified)
+		{
+			//_multiplier = (Items as IVolumeUnits)?.Units.Multiplier ?? multiplier;
+			ActualValue = actualValue;
+		}
 
-        public PulseOutputVerification(PulseOutputItems.ChannelItems items, decimal totalVolume, decimal actualValue, decimal? multiplier) : base(items, 0, 0, 100m)
-        {
-            _multiplier = (Items as IVolumeUnits)?.Units.Multiplier ?? multiplier;
-            ActualValue = actualValue;
+		public decimal TotalVolume { get; set; }
 
-        }
-
-        public void Calculate(decimal totalExpectedVolume)
-        {
-            ExpectedValue = VolumeCalculator.PulseCount(totalExpectedVolume, _multiplier);
-            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
-        }
-    }
+		public void Calculate()
+		{
+			ExpectedValue = VolumeCalculator.PulseCount(TotalVolume, _multiplier);
+			PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+			Verified = PercentError.IsBetween(Tolerances.PULSE_VARIANCE_THRESHOLD);
+		}
+	}
 }

@@ -1,24 +1,22 @@
-using Prover.Shared;
-
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes
 {
-    public interface IVolumeInputType
-    {
-        #region Public Properties
+    //public interface IVolumeInputType
+    //{
+    //    #region Public Properties
 
-        VolumeInputType InputType { get; }
+    //    VolumeInputType InputType { get; }
 
-        #endregion
+    //    #endregion
 
-        #region Public Methods
+    //    #region Public Methods
 
-        int MaxUncorrectedPulses();
+    //    int MaxUncorrectedPulses();
 
-        decimal UnCorrectedInputVolume(decimal appliedInput);
+    //    decimal UnCorrectedInputVolume(decimal appliedInput);
 
-       
-        #endregion
-    }
 
-    
+    //    #endregion
+    //}
+
+
 }

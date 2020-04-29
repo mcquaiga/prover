@@ -1,37 +1,34 @@
-using Devices.Core.Interfaces;
-using Prover.Shared;
-
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume.InputTypes
 {
-    public class PulseInputSensor : IVolumeInputType
-    {
-        private readonly DeviceInstance _device;
+    //public class PulseInputSensor : IVolumeInputType
+    //{
+    //    private readonly DeviceInstance _device;
 
-        protected PulseInputSensor(){}
+    //    protected PulseInputSensor(){}
 
-        public PulseInputSensor(DeviceInstance device)
-        {
-            _device = device;
-        }
+    //    public PulseInputSensor(DeviceInstance device)
+    //    {
+    //        _device = device;
+    //    }
 
-        #region Public Properties
+    //    #region Public Properties
 
-        public VolumeInputType InputType => VolumeInputType.PulseInput;
+    //    public VolumeInputType InputType => VolumeInputType.PulseInput;
 
-        #endregion
+    //    #endregion
 
-        #region Public Methods
+    //    #region Public Methods
 
-        public int MaxUncorrectedPulses()
-        {
-            return 10;
-        }
+    //    public int MaxUncorrectedPulses()
+    //    {
+    //        return 10;
+    //    }
 
-        public decimal UnCorrectedInputVolume(decimal appliedInput)
-        {
-            return 0m;
-        }
+    //    public decimal UnCorrectedInputVolume(decimal appliedInput)
+    //    {
+    //        return 0m;
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 }

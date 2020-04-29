@@ -24,10 +24,12 @@ namespace Prover.UI.Desktop.Views.Verifications
         {
             InitializeComponent();
 
+
+
             this.WhenActivated(d =>
             {
                 this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Kind,
-                                value => value ? PackIconKind.Check : PackIconKind.AlertCircleOutline).DisposeWith(d);
+                                value => value ? PackIconKind.CheckCircleOutline : PackIconKind.CloseCircleOutline).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.Test.Verified, v => v.VerifiedStatusIcon.Foreground,
                                 value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
 

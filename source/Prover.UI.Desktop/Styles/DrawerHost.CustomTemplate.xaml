@@ -10,10 +10,10 @@
 	<Style x:Key="MaterialDesignPushDrawerHost" TargetType="{x:Type mdix:DrawerHost}">
 		<Setter Property="mdix:ShadowAssist.ShadowDepth" Value="Depth3" />
 		<Setter Property="ClipToBounds" Value="True" />
-		<Setter Property="LeftDrawerBackground" Value="{DynamicResource MaterialDesignPaper}" />
-		<Setter Property="TopDrawerBackground" Value="{DynamicResource MaterialDesignPaper}" />
-		<Setter Property="RightDrawerBackground" Value="{DynamicResource MaterialDesignPaper}" />
-		<Setter Property="BottomDrawerBackground" Value="{DynamicResource MaterialDesignPaper}" />
+		<Setter Property="LeftDrawerBackground" Value="{StaticResource MaterialDesignPaper}" />
+		<Setter Property="TopDrawerBackground" Value="{StaticResource MaterialDesignPaper}" />
+		<Setter Property="RightDrawerBackground" Value="{StaticResource MaterialDesignPaper}" />
+		<Setter Property="BottomDrawerBackground" Value="{StaticResource MaterialDesignPaper}" />
 		<Setter Property="IsTabStop" Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>

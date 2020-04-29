@@ -1,9 +1,9 @@
 using Devices.Core.Items.DriveTypes;
-using Prover.Calculations;
+using Newtonsoft.Json;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 {
-    public sealed class EnergyTest : VerificationTestEntity
+    public sealed class EnergyTest : VerificationTestEntity<EnergyItems, EnergyItems>
     {
         //public EnergyTest(IEnergyItems startValues, IEnergyItems endValues, decimal evcCorrected, decimal energyGasValue) 
         //    : base(VerificationTestType.Energy, startValues, endValues)
@@ -13,24 +13,22 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
         //}
 
         #region Public Methods
-
-        //public EnergyTest(EnergyItems startValues, EnergyItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified) 
-        //    : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
-        //{
-        //}
-
-        public EnergyTest(EnergyItems startValues, EnergyItems endValues, decimal totalCorrectedVolume)
+        [JsonConstructor]
+        public EnergyTest(EnergyItems startValues, EnergyItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified)
+        : base(startValues, endValues, expectedValue, actualValue, percentError, verified)
         {
-            ActualValue = EnergyCalculator.TotalEnergy(startValues.EnergyReading, endValues.EnergyReading);
-
-            ExpectedValue = EnergyCalculator.Calculated(startValues.EnergyUnitType,
-            totalCorrectedVolume,
-            startValues.EnergyGasValue);
-
-            Update(Tolerances.ENERGY_PASS_TOLERANCE);
         }
 
-        public EnergyTest(){}
+        //public EnergyTest(EnergyItems startValues, EnergyItems endValues, decimal totalCorrectedVolume)
+        //{
+        //    ActualValue = EnergyCalculator.TotalEnergy(startValues.EnergyReading, endValues.EnergyReading);
+
+        //    ExpectedValue = EnergyCalculator.Calculated(startValues.EnergyUnitType, totalCorrectedVolume, startValues.EnergyGasValue);
+
+        //    //Update(Tolerances.ENERGY_PASS_TOLERANCE);
+        //}
+
+        public EnergyTest() { }
         //public static EnergyTest Create(IEnergyItems startValues, IEnergyItems endValues, decimal? evcCorrected)
         //{
         //    return new EnergyTest(startValues, endValues, evcCorrected ?? 0, endValues.EnergyGasValue);

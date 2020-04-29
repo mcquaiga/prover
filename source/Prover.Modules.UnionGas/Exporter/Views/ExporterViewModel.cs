@@ -4,6 +4,7 @@ using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
+using Prover.Application.Extensions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
@@ -45,18 +46,25 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
 
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
-
             TestDateFilter = ReactiveCommand.Create(DateTimeFilter).DisposeWith(Cleanup);
-
             FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
             FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
+
+            FilterByTypeCommand.ThrownExceptions
+                               .Merge(TestDateFilter.ThrownExceptions)
+                               .Merge(FilterIncludeArchived.ThrownExceptions)
+                               .Merge(FilterIncludeExported.ThrownExceptions)
+                               .LogErrors(Logger)
+                               .Subscribe()
+                               .DisposeWith(Cleanup);
 
             var visibleItems = verificationCache.Items
                                                 .Connect()
                                                 .Filter(FilterByTypeCommand)
                                                 .Filter(TestDateFilter.StartWith(DateTimeFilter()))
                                                 .Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
-                                                .Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)));
+                                                .Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)))
+                                                .LogErrors(Logger);
 
             visibleItems.Sort(SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime))
                         .ObserveOn(RxApp.MainThreadScheduler)
@@ -94,7 +102,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         public IScreen HostScreen { get; }
 
         [Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
-        [Reactive] public DateTime ToDateTime { get; set; } = DateTime.Now;
+        [Reactive] public DateTime ToDateTime { get; set; } = DateTime.Today.Tomorrow();
 
         private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType)
         {

@@ -21,7 +21,7 @@
         <materialDesign:Card
             VerticalAlignment="Stretch"
             MouseDoubleClick="Control_OnMouseDoubleClick"
-            Style="{DynamicResource DashboardCardStyle}">
+            Style="{StaticResource DashboardCardStyle}">
             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
 
