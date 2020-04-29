@@ -1,10 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Reactive.Disposables;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using Devices.Core.Interfaces;
+﻿using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using MaterialDesignThemes.Wpf;
@@ -12,6 +6,12 @@ using Prover.Application.ViewModels;
 using Prover.Shared;
 using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
+using System;
+using System.Globalization;
+using System.Reactive.Disposables;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Prover.UI.Desktop.Views.Verifications
 {
@@ -32,7 +32,7 @@ namespace Prover.UI.Desktop.Views.Verifications
                                 value => value ? Brushes.ForestGreen : Brushes.IndianRed).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Content).DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Visibility, value => 
+                this.OneWayBind(ViewModel, vm => vm.EmployeeName, v => v.EmployeeIdTextControl.Visibility, value =>
                         string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible).DisposeWith(d);
 
                 SetWithViewModel(ViewModel);
@@ -74,7 +74,7 @@ namespace Prover.UI.Desktop.Views.Verifications
             CompositionTypeTextBlock.Text = viewModel.Device.CompositionShort();
 
             DriveTypeTextBlock.Text = Enum.GetName(typeof(VolumeInputType),
-                                                   viewModel.Test.VolumeTest.DriveType.InputType);
+                                                   viewModel.Device.DriveType);
 
             CompanyNumberText.Content = viewModel.CompanyNumber;
             SerialNumberText.Content = viewModel.SiteInfo.SerialNumber;
