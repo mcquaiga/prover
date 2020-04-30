@@ -1,13 +1,14 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Extensions;
 using Splat;
+using Squirrel;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Prover.UI.Desktop.Startup
 {
@@ -27,7 +28,7 @@ namespace Prover.UI.Desktop.Startup
             //var splatLogger = new RxLogging(_logger);
             //var splatLog = new WrappingFullLogger(splatLogger);
             //var logManager = Locator.Current.GetService<ILogManager>((string)null);
-            
+
             //var sLog = logManager.GetLogger<UpdateManager>();
 
             //Locator.CurrentMutable.Register(() => splatLog, typeof(Splat.ILogger));
@@ -38,7 +39,8 @@ namespace Prover.UI.Desktop.Startup
             var path = host.Configuration.GetValue<string>(AppSettingsReleasesConfigKey);
             var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
 
-            if (string.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path))
+                return;
 
             services.AddHostedService(c =>
                 ActivatorUtilities.CreateInstance<UpdaterService>(c,
@@ -77,24 +79,24 @@ namespace Prover.UI.Desktop.Startup
             //}
         }
 
-        //private async Task<IUpdateManager> GetUpdateManager()
-        //{
-        //    await Task.CompletedTask;
-        //    return null;
-        //    //UpdateManager mgr;
+        private async Task<IUpdateManager> GetUpdateManager()
+        {
+            await Task.CompletedTask;
+            return null;
+            //UpdateManager mgr;
 
-        //    //if (_releasePath.Contains("github"))
-        //    //{
-        //    //    _logger.Log(LogLevel.Information, $"Checking for updates on GitHub");
-        //    //    mgr = await UpdateManager.GitHubUpdateManager(_releasePath);
-        //    //}
-        //    //else
-        //    //{
-        //    //    _logger.Log(LogLevel.Information, $"Checking for updates at {_releasePath}");
-        //    //    mgr = new UpdateManager(_releasePath);
-        //    //}
+            //if (_releasePath.Contains("github"))
+            //{
+            //    _logger.Log(LogLevel.Information, $"Checking for updates on GitHub");
+            //    mgr = await UpdateManager.GitHubUpdateManager(_releasePath);
+            //}
+            //else
+            //{
+            //    _logger.Log(LogLevel.Information, $"Checking for updates at {_releasePath}");
+            //    mgr = new UpdateManager(_releasePath);
+            //}
 
-        //    //return mgr;
-        //}
+            //return mgr;
+        }
     }
 }
