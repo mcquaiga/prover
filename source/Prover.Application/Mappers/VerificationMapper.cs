@@ -80,7 +80,6 @@ namespace Prover.Application.Mappers
                     var pointViewModel = _mapper.Map<VerificationTestPoint, VerificationTestPointViewModel>(point);
 
                     var pressure = _mapper.Map<PressureFactorViewModel>(point.GetTest<PressureCorrectionTest>());
-
                     if (pressure != null)
                         pointViewModel.VerificationTests.Add(pressure);
 

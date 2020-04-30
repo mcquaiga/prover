@@ -30,7 +30,9 @@ namespace Prover.Application.Mappers
                 cfg.CreateMap<TemperatureCorrectionTest, TemperatureFactorViewModel>();
 
                 cfg.CreateMap<PressureFactorViewModel, PressureCorrectionTest>();
-                cfg.CreateMap<PressureCorrectionTest, PressureFactorViewModel>();
+                cfg.CreateMap<PressureCorrectionTest, PressureFactorViewModel>()
+                   .ForMember(dest => dest.AbsoluteGauge, opts => opts.Ignore())
+                   .ForMember(dest => dest.ShowAbsolute, opts => opts.Ignore());
 
                 cfg.CreateMap<SuperFactorViewModel, SuperCorrectionTest>()
                     .ForMember(dest => dest.GaugeTemp, opt => opt.MapFrom(src => src.Temperature.Gauge))
