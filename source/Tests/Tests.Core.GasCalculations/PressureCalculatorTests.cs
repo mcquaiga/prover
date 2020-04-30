@@ -37,10 +37,11 @@ namespace Prover.Calculations.Tests
         public void GasPressureGaugeTransducerTest()
         {
             var gauge = 80.0m;
-            var atm = 14.73m;
-            var expected = gauge + atm;
+            var baseAtm = 14.73m;
+            var atm = 14.011m;
+            var expected = gauge + baseAtm;
 
-            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Gauge, 60.0m, gauge, atm);
+            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Gauge, 60.0m, baseAtm, gauge, atm);
             Assert.IsTrue(calc.GasPressure == expected);
         }
 
@@ -48,11 +49,12 @@ namespace Prover.Calculations.Tests
         public void GasPressureAbsoluteTransducerTest()
         {
             var gauge = 80.0m;
-            var atm = 14.73m;
+            var baseAtm = 14.73m;
+            var atm = 14.011m;
             var expected = gauge;
 
-            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Absolute, 60.0m, gauge, atm);
-       
+            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Absolute, 60.0m, baseAtm, gauge, atm);
+
             Assert.IsTrue(calc.GasPressure == expected);
         }
 
@@ -60,10 +62,11 @@ namespace Prover.Calculations.Tests
         public void CalculateFactorTest()
         {
             var gauge = 80.0m;
-            var atm = 14.73m;
-            var expected = 6.4311m;
-            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Gauge, 14.7300m, gauge, atm);
-            Assert.IsTrue(calc.CalculateFactor() == expected);
+
+            var expected = 6.4287m;
+            var calc = new PressureCalculator(PressureUnitType.PSIG, PressureTransducerType.Gauge, 14.65m, 14.1775m, gauge, 0);
+            var actual = calc.CalculateFactor();
+            Assert.IsTrue(actual == expected);
         }
 
         [TestMethod()]

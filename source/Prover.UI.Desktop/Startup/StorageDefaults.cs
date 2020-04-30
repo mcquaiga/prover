@@ -3,7 +3,6 @@ using Devices.Core.Items;
 using Devices.Core.Repository;
 using LiteDB;
 using Newtonsoft.Json;
-using Prover.Application.Models.EvcVerifications;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
 using System;
@@ -62,7 +61,7 @@ namespace Prover.UI.Desktop.Startup
             if (db.CollectionExists("EvcVerificationTest"))
             {
                 //db.GetCollection<EvcVerificationTest>()..Exists(t => t.ExportedDateTime)
-                db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.TestDateTime);
+                //db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.TestDateTime);
                 //db.GetCollection<EvcVerificationTest>().EnsureIndex(test => test.ArchivedDateTime);
             }
 
@@ -71,17 +70,9 @@ namespace Prover.UI.Desktop.Startup
 
         private static ILiteDatabase CreateDatabaseForLazy()
         {
-            try
-            {
-                var db = new LiteDatabase(ConnectionString);
-                ConfigureMappings(db);
-                return db;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
+            var db = new LiteDatabase(ConnectionString);
+            ConfigureMappings(db);
+            return db;
         }
 
 

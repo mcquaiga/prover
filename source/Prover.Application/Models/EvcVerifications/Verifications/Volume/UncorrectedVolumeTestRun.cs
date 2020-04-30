@@ -9,6 +9,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 	{
 		protected UncorrectedVolumeTestRun(VolumeInputType driveInputType) => DriveInputType = driveInputType;
 
+		public UncorrectedVolumeTestRun() { }
+
 		[JsonConstructor]
 		public UncorrectedVolumeTestRun
 		(VolumeInputType driveInputType, VolumeItems startValues, VolumeItems endValues, decimal expectedValue, decimal actualValue, decimal percentError, bool verified,
@@ -40,7 +42,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 	public class RotaryUncorrectedVolumeTestRun : UncorrectedVolumeTestRun
 	{
 		//[JsonConstructor]
-
+		public RotaryUncorrectedVolumeTestRun() : base(VolumeInputType.Rotary) { }
 		/// <inheritdoc />
 		//public RotaryUncorrectedVolumeTestRun(RotaryMeterItems rotaryItems, VolumeItems startValues, VolumeItems endValues, decimal appliedInput)
 		//		: this(startValues, endValues, appliedInput,
@@ -59,9 +61,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 		//	Calculate();
 		//}
 		/// <inheritdoc />
-		protected RotaryUncorrectedVolumeTestRun() : base(VolumeInputType.Rotary)
-		{
-		}
+
 
 		[JsonConstructor]
 		public RotaryUncorrectedVolumeTestRun
@@ -75,7 +75,7 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.Volume
 
 	public class MechanicalUncorrectedVolumeTestRun : UncorrectedVolumeTestRun
 	{
-		protected MechanicalUncorrectedVolumeTestRun() : base(VolumeInputType.Mechanical)
+		public MechanicalUncorrectedVolumeTestRun() : base(VolumeInputType.Mechanical)
 		{
 		}
 

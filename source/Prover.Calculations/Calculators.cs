@@ -1,6 +1,5 @@
-﻿using System;
-using Prover.Shared;
-using Prover.Shared.Extensions;
+﻿using Prover.Shared.Extensions;
+using System;
 
 namespace Prover.Calculations
 {
@@ -35,10 +34,10 @@ namespace Prover.Calculations
         //        atmosphericGauge ?? items.AtmosphericPressure);
         //}
 
-        public static decimal GetPressureFactor(PressureUnitType unitType, PressureTransducerType transducerType,
-            decimal basePressure, decimal gauge, decimal atmosphericGauge) =>
-            new PressureCalculator(unitType, transducerType, basePressure, gauge, atmosphericGauge)
-                .CalculateFactor();
+        //public static decimal GetPressureFactor(PressureUnitType unitType, PressureTransducerType transducerType,
+        //    decimal basePressure, decimal gauge, decimal atmosphericGauge) =>
+        //    new PressureCalculator(unitType, transducerType, basePressure, gauge, atmosphericGauge)
+        //        .CalculateFactor();
 
         public static decimal PercentDeviation(decimal expected, decimal actual) => expected == 0
             ? 100m
@@ -48,7 +47,7 @@ namespace Prover.Calculations
             ? 100m
             : Round.Percentage((actual - expected) / expected * 100);
 
-        public static decimal SquaredFactor(decimal factor) => Round.Factor((decimal) Math.Pow((double) factor, 2d));
+        public static decimal SquaredFactor(decimal factor) => Round.Factor((decimal)Math.Pow((double)factor, 2d));
 
         public static decimal TotalCorrectionFactor(decimal? tempFactor, decimal? pressureFactor,
             decimal? superFactorSquared)

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Devices.Core.Items.ItemGroups;
 using Prover.Shared;
 using Prover.Shared.Extensions;
+using System;
 
 namespace Prover.Calculations
 {
@@ -10,24 +11,38 @@ namespace Prover.Calculations
 
         private readonly PressureTransducerType _transducerType;
         private readonly PressureUnitType _unitType;
+        private decimal _atmStandard;
 
         public PressureCalculator(PressureUnitType unitType, PressureTransducerType transducerType,
-            decimal basePressure, decimal gaugePressure, decimal atmPressure)
+            decimal basePressure, decimal atmosphericStandard, decimal gaugePressure, decimal? gaugeAtmospheric)
         {
             _unitType = unitType;
             _transducerType = transducerType;
             _basePressure = basePressure;
+            _atmStandard = atmosphericStandard;
 
             Gauge = gaugePressure;
-            Atmospheric = atmPressure;
+            GaugeAtmospheric = gaugeAtmospheric ?? 0m;
         }
 
+        public PressureCalculator(PressureItems items, decimal gaugePressure, decimal? gaugeAtmospheric)
+        {
+            _unitType = items.UnitType;
+            _transducerType = items.TransducerType;
+            _basePressure = items.Base;
+            _atmStandard = items.AtmosphericPressure;
+
+            Gauge = gaugePressure;
+            GaugeAtmospheric = gaugeAtmospheric ?? 0m;
+        }
+
+
         #region Public Properties
+        public decimal GaugeAtmospheric { get; set; }
 
         public decimal Gauge { get; set; }
-        public decimal Atmospheric { get; set; }
 
-        public decimal GasPressure => GetGasPressure(_transducerType, Gauge, Atmospheric);
+        public decimal GasPressure => GetGasPressure();
 
         #endregion
 
@@ -41,10 +56,13 @@ namespace Prover.Calculations
             var psiGas = GasPressure.ConvertToPsi(_unitType);
             var psiBase = _basePressure.ConvertToPsi(_unitType);
 
+            FactorFormula = $"{psiGas} (Gas P) / {psiBase} (Base)";
+
             return Round.Factor(psiGas / psiBase);
         }
-        
 
+        public string FactorFormula { get; private set; }
+        public string GasPressureFormula { get; private set; }
         /// <summary>
         ///     Gets the GasPressure
         /// </summary>
@@ -52,16 +70,17 @@ namespace Prover.Calculations
         /// <param name="gauge"></param>
         /// <param name="atmosphericGauge"></param>
         /// <param name="items"></param>
-        public static decimal GetGasPressure(PressureTransducerType transducerType, decimal gauge,
-            decimal atmosphericGauge)
+        public decimal GetGasPressure()
         {
-            switch (transducerType)
+            switch (_transducerType)
             {
                 case PressureTransducerType.Gauge:
-                    return Round.Gauge(gauge + atmosphericGauge);
+                    GasPressureFormula = $"(Gauge) {Gauge} + (Atm Standard) {_atmStandard}";
+                    return Round.Gauge(Gauge + _atmStandard);
 
                 case PressureTransducerType.Absolute:
-                    return Round.Gauge(gauge);
+                    GasPressureFormula = $"(Gauge) {Gauge} + (Atm Gauge) {GaugeAtmospheric}";
+                    return Round.Gauge(Gauge);
 
                 default:
                     throw new ArgumentOutOfRangeException();
