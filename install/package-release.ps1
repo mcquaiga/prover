@@ -45,5 +45,5 @@ if ($LASTEXITCODE -ne 0) {
     Throw "An error occurred while restoring NuGet tools."
 }
 
-Write-Releases "install\squirrel\squirrel.exe" "$buildPath\EvcProver.$version.nupkg"
+Write-Releases "$PSScriptRoot\squirrel\squirrel.exe" "$buildPath\EvcProver.$version.nupkg"
 #Write-Host ($SquirrelOutput | Out-String)
