@@ -4,9 +4,9 @@
     <id>EvcProver</id>
     <!-- version will be replaced by MSBuild -->
     <version>$version$</version>
-    <title>Evc Prover</title>
-    <authors>Adam</authors>
-    <description>EVC Verification Software</description>
+    <title>EVC Prover</title>
+    <authors>Adam McQuaig</authors>
+    <description>Verification of electornic volume correctors</description>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright></copyright>
     <dependencies>
@@ -14,6 +14,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="$source$" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+    <file src="**\*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
   </files>
 </package>

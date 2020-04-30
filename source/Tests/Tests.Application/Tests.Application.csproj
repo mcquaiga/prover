@@ -53,7 +53,6 @@
     <ProjectReference Include="..\..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
     <ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\..\Prover.DevTools\Prover.DevTools.csproj" />
-    <ProjectReference Include="..\..\Prover.Legacy.Data.Migrations\Prover.Legacy.Data.Migrations.csproj" />
     <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
     <ProjectReference Include="..\..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
     <ProjectReference Include="..\Tests.Shared\Testing.Shared.csproj" />
