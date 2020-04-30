@@ -1,5 +1,6 @@
 using Devices.Core.Items.ItemGroups;
 using Newtonsoft.Json;
+using Prover.Calculations;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors
 {
@@ -11,7 +12,6 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
 
         [JsonConstructor]
         public TemperatureCorrectionTest(TemperatureItems items, decimal gauge, decimal expectedValue, decimal actualValue, decimal percentError, bool verified)
-
         {
             Items = items;
             Gauge = gauge;
@@ -29,7 +29,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
             Gauge = gaugeTemperature;
             ActualValue = items.Factor;
 
-            //Update(Tolerances.TEMP_ERROR_TOLERANCE);
+            ExpectedValue = Calculator.CalculateFactor();
+            Update(Tolerances.TEMP_ERROR_TOLERANCE);
         }
 
 
@@ -38,7 +39,6 @@ namespace Prover.Application.Models.EvcVerifications.Verifications.CorrectionFac
         #endregion
 
         ///// <inheritdoc />
-        //protected sealed override Func<ICorrectionCalculator> CalculatorFactory
-        //    => () => new TemperatureCalculator(Items.Units, Items.Base, Gauge);
+        private TemperatureCalculator Calculator => new TemperatureCalculator(Items.Units, Items.Base, Gauge);
     }
 }

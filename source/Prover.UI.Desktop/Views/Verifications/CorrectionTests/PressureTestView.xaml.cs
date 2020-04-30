@@ -1,9 +1,9 @@
-﻿using System.Reactive.Disposables;
-using System.Windows;
-using Prover.Application.ViewModels.Corrections;
+﻿using Prover.Application.ViewModels.Corrections;
 using Prover.Shared;
 using Prover.UI.Desktop.Extensions;
 using ReactiveUI;
+using System.Reactive.Disposables;
+using System.Windows;
 
 namespace Prover.UI.Desktop.Views.Verifications.CorrectionTests
 {
@@ -31,17 +31,7 @@ namespace Prover.UI.Desktop.Views.Verifications.CorrectionTests
                 //Absolute Transducers
                 //this.Bind(ViewModel, vm => vm.Gauge, v => v.GasGaugeControl.Value).DisposeWith(d);
                 this.Bind(ViewModel, vm => vm.AtmosphericGauge, v => v.AtmosphericControl.Value).DisposeWith(d);
-                this.Bind(ViewModel, vm => vm.Gauge, v => v.AbsoluteControl.Value).DisposeWith(d);
-
-                //this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
-                //        v => v.AtmosphericControl.Visibility,
-                //        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
-                //    .DisposeWith(d);
-
-                //this.OneWayBind(ViewModel, vm => vm.Items.TransducerType,
-                //        v => v.AbsoluteControl.Visibility,
-                //        value => value == PressureTransducerType.Absolute ? Visibility.Visible : Visibility.Collapsed)
-                //    .DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.AbsoluteGauge, v => v.AbsoluteControl.Value).DisposeWith(d);
 
 
                 this.Bind(ViewModel, vm => vm.Items.GasPressure, v => v.EvcReadingControl.Value).DisposeWith(d);

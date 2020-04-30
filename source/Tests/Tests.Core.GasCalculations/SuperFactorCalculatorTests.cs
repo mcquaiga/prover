@@ -1,7 +1,6 @@
 ﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Prover.Calculations.ZFactor;
 
 namespace Prover.Calculations.Tests
 {
@@ -26,12 +25,11 @@ namespace Prover.Calculations.Tests
         [TestMethod()]
         public void CalculateTest()
         {
-            var gaugeP = 80m;
-            var gaugeT = 32m;
-            var expected = 1.0082m;
+            var expected = 1.0037m;
+            var calc = new SuperFactorCalculator(0.4160m, 0.8840m, 0.5865m, 32m, 80m);
 
-           // var calc = Items.Object.Calculate(gaugeT, gaugeP);
-         //   Assert.AreEqual(expected, calc.CalculateFactor());
+            var actual = calc.CalculateFactor();
+            Assert.IsTrue(expected == actual);
         }
 
         [TestMethod()]
@@ -41,7 +39,7 @@ namespace Prover.Calculations.Tests
             var gaugeT = 32m;
             var expected = 1.0165m;
 
-           // var calc = Items.Object.Calculate(gaugeT, gaugeP);
+            // var calc = Items.Object.Calculate(gaugeT, gaugeP);
             //var super = calc.CalculateFactor();
             //Assert.AreEqual(expected, calc.SquaredFactor());
         }

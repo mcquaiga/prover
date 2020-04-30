@@ -1,5 +1,7 @@
 using Devices.Core.Items.ItemGroups;
+using Prover.Calculations;
 using Prover.Shared.Domain;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Models.EvcVerifications.Verifications
 {
@@ -53,11 +55,11 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
         }
 
 
-        //protected virtual void Update(decimal passTolerance)
-        //{
-        //    PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
-        //    Verified = PercentError.IsBetween(passTolerance);
-        //}
+        protected virtual void Update(decimal passTolerance)
+        {
+            PercentError = Calculators.PercentDeviation(ExpectedValue, ActualValue);
+            Verified = PercentError.IsBetween(passTolerance);
+        }
 
         #region Public Properties
 
@@ -93,8 +95,8 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 
         //protected override void Update(decimal passTolerance)
         //{
-        //    ExpectedValue = CalculatorFactory.Invoke()
-        //                                     .CalculateFactor();
+        //    //ExpectedValue = CalculatorFactory.Invoke()
+        //                              //       .CalculateFactor();
 
         //    base.Update(passTolerance);
         //}

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\Prover.Calculations.ZFactor\Prover.Calculations.ZFactor.vbproj" />
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>

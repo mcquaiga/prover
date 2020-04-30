@@ -100,7 +100,9 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 										 {
 											 if (test == null)
 												 return;
-											 await screenManager.ChangeView<ReportViewModel>(test.ToViewModel());
+											 var report = await screenManager.ChangeView<ReportViewModel>();
+
+											 report.ContentViewModel = test.ToViewModel();
 										 })
 										 .DisposeWith(Cleanup);
 
