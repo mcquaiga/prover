@@ -51,7 +51,7 @@ namespace Prover.UI.Desktop
             StorageStartup.AddServices(services, host);
             UserInterface.AddServices(services, host);
             DeviceServices.AddServices(services, host);
-            UpdaterService.AddServices(services, host);
+            // UpdaterService.AddServices(services, host);
         }
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>

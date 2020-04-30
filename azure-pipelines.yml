@@ -1,4 +1,4 @@
-name: $(Date:yy.MM)$(Rev:.r)
+name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
 - master
@@ -54,7 +54,7 @@ jobs:
       displayName: Publish Binaries Artifact
       inputs:
         PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-        ArtifactName: 'v$(Build.BuildNumber)-$(Build.SourceBranchName)'
+        ArtifactName: 'Binaries'
         publishLocation: 'Container'
 
     - task: PublishBuildArtifacts@1
