@@ -8,6 +8,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Prover.Shared;
 using Prover.UI.Desktop.Startup;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;

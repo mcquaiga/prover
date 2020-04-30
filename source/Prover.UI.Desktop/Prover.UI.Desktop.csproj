@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>Prover.UI.Desktop.Program</StartupObject>
-    <AssemblyName>Prover.UI.Desktop</AssemblyName>
+    <AssemblyName>EvcProver</AssemblyName>
     <RootNamespace>Prover.UI.Desktop</RootNamespace>
   </PropertyGroup>
 

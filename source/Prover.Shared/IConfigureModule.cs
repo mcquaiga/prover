@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Prover.UI.Desktop.Startup
+namespace Prover.Shared
 {
     public interface IConfigureModule
     {
