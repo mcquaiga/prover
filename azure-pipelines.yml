@@ -2,11 +2,6 @@ name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
 - master
-- dev
-
-pr:
-- master
-- dev
 
 resources:
 - repo: self
