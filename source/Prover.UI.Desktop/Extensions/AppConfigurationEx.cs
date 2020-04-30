@@ -24,7 +24,7 @@ namespace Prover.UI.Desktop.Extensions
             //return Path.Combine(config.AppDataPath(), (config.GetValue<string>(LiteDbKey)));
         }
 
-        public static bool IsLiteDb(this IConfiguration config) => !string.IsNullOrEmpty(config.GetValue<string>(LiteDbKey));
+        public static bool UseLiteDb(this IConfiguration config) => !string.IsNullOrEmpty(config.GetValue<string>(LiteDbKey));
         public static bool UseAzure(this IConfiguration config) => config.GetValue<bool?>(UseAzureKey) ?? false;
 
         public static string GetValueExpanded(this IConfiguration config, string key)
