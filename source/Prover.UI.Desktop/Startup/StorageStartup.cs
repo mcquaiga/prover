@@ -58,18 +58,8 @@ namespace Prover.UI.Desktop.Startup
 
             services.AddHostedService<StorageStartup>();
 
-            if (config.IsLiteDb())
-                AddLiteDb(services, host);
-
-            if (config.UseAzure())
-            {
-                AddMongoDb(services, host);
-            }
-            else
-            {
-
-            }
-
+            AddLiteDb(services, host);
+            AddMongoDb(services, host);
 
             services.AddSingleton<IVerificationTestService, VerificationService>();
             services.AddSingleton<IEntityDataCache<EvcVerificationTest>, VerificationCache>();
@@ -88,12 +78,16 @@ namespace Prover.UI.Desktop.Startup
 
         private static void AddMongoDb(IServiceCollection services, HostBuilderContext host)
         {
-            var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
+            if (host.Configuration.UseAzure())
+            {
+                var cosmo = new CosmosDbAsyncRepository<EvcVerificationTest>();
 
-            Task.Run(() => cosmo.Initialize());
+                Task.Run(() => cosmo.Initialize());
 
-            services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
-            services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
+                services.AddSingleton<CosmosDbAsyncRepository<EvcVerificationTest>>(cosmo);
+                services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => c.GetRequiredService<CosmosDbAsyncRepository<EvcVerificationTest>>());
+
+            }
 
             //services.AddSingleton<IEventsSubscriber>(c =>
             //{
@@ -119,21 +113,25 @@ namespace Prover.UI.Desktop.Startup
 
         private static void AddLiteDb(IServiceCollection services, HostBuilderContext host)
         {
-            var db = StorageDefaults.CreateLiteDb(host.Configuration.LiteDbPath());
-            services.AddSingleton(c => db);
+            if (host.Configuration.UseLiteDb())
+            {
+                var db = StorageDefaults.CreateLiteDb(host.Configuration.LiteDbPath());
+                services.AddSingleton(c => db);
 
-            var deviceRepo = DeviceRepository.Instance;
-            services.AddSingleton<IDeviceRepository>(DeviceRepository.Instance);
+                var deviceRepo = DeviceRepository.Instance;
+                services.AddSingleton<IDeviceRepository>(DeviceRepository.Instance);
 
-            //services.AddSingleton(typeof(IRepository<>), typeof(IRepository<AggregateRoot>));
+                //services.AddSingleton(typeof(IRepository<>), typeof(IRepository<AggregateRoot>));
 
-            services.AddSingleton<IRepository<DeviceType>>(c =>
-                    new LiteDbRepository<DeviceType>(db));
+                services.AddSingleton<IRepository<DeviceType>>(c =>
+                        new LiteDbRepository<DeviceType>(db));
 
-            services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
+                services.AddSingleton<IKeyValueStore, LiteDbKeyValueStore>();
 
-            if (!host.Configuration.UseAzure())
-                services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+                if (!host.Configuration.UseAzure())
+                    services.AddSingleton<IAsyncRepository<EvcVerificationTest>>(c => new VerificationsLiteDbRepository(db, c.GetRequiredService<IDeviceRepository>()));
+
+            }
         }
     }
 

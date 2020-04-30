@@ -13,7 +13,7 @@ function Write-Releases {
     )
     $squirrelExePath = (Resolve-Path $SquirrelExe).Path
     $nupkgFilePath = (Resolve-Path $NupkgFile).Path
-    $arguments= "--releasify",$nupkgFilePath, "-releaseDir", $releasesDir
+    $arguments= "--releasify",$nupkgFilePath, "-releaseDir", $releasesDir, "--no-msi"
     Start-Process -FilePath $squirrelExePath `
         -ArgumentList $arguments `
         -PassThru | Wait-Process
