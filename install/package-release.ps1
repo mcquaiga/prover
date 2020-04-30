@@ -5,10 +5,6 @@ Param(
     [string]$releasesDir = "build\Releases"  
 )
 
-Write-Host "Version = $version"
-Write-Host "Build path = $buildPath"
-Write-Host  "Output path = $releasesDir"
-
 
 function Write-Releases {
     param(
@@ -23,17 +19,23 @@ function Write-Releases {
         -PassThru | Wait-Process
 }
 
+$PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
+#Push-Location
+#Set-Location $PSScriptRoot
 
 if ($buildPath -eq "build"){
     $buildPath = "build\$configuration"
 }
+$nuspecPath = "$PSScriptRoot\EvcProver.nuspec"
 
+Write-Host "Version     = $version"
+Write-Host "Build path  = $buildPath"
+Write-Host "Output path = $releasesDir"
+Write-Host "Script root = $PSScriptRoot"
 
-$nuspecPath = "install\EvcProver.nuspec"
-$toolsDir = "tools"
 
 #-Properties  Configuration=$configuration
-$NuGetOutput = Invoke-Expression "& $toolsDir\nuget.exe pack $nuspecPath -Version $version -OutputDirectory $buildPath -BasePath $buildPath -Verbosity detailed"
+$NuGetOutput = Invoke-Expression "& nuget.exe pack $nuspecPath -Version `"$version`" -OutputDirectory $buildPath -BasePath $buildPath -Verbosity detailed"
 #Invoke-Expression "& $toolsDir\nuget.exe pack $nuspecPath -Version $version -OutputDirectory $buildPath -BasePath $buildPath -Verbosity detailed"
 
 #Write-Debug $NuGetOutput
