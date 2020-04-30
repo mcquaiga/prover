@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Prover.Application.Services.VerificationManager.AutomatedVolumeTestManagerBase">
+    <Position X="5.75" Y="1.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>QIABAACAAiIAEFAAAEIABAACAABAAAAAAgAAAEAAAAA=</HashCode>
+      <FileName>Services\VerificationManager\RotaryVolumeTestManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Prover.Application.Services.VerificationManager.RotaryVolumeManager">
+    <Position X="1.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACAAAAAIgAAEAAAAAAABAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Services\VerificationManager\RotaryVolumeTestManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

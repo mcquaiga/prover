@@ -1,65 +1,65 @@
+name: $(Date:yy.MM)$(Rev:.r)
+
+trigger:
+- master
+- dev
+
+pr:
+- master
+- dev
+
 resources:
 - repo: self
-  clean: true
+  clean: false
+  fetchDepth: 5
 
 pool:
-  vmImage: Hosted VS2017
+  vmImage: 'windows-latest'
   demands:
   - msbuild
   - visualstudio
   - vstest
 
-#Your build pipeline references an undefined variable named ‘Parameters.solution’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘Parameters.solution’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references the ‘BuildPlatform’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildPlatform’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+variables:
+  solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
+  project: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
+  buildPlatform: 'Any CPU'
+  verbosityLevel: 'minimal'
 
-steps:
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.3.0'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '$(Parameters.solution)'
+jobs:
+  - job: Windows
+    steps:
 
-- task: VSBuild@1
-  displayName: 'Build solution EvcProver.sln'
-  inputs:
-    solution: '$(Parameters.solution)'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+    
+    - task: VSTest@2
+      displayName: Tests
+      inputs:
+        testSelector: 'testAssemblies'  
+        testAssemblyVer2: |
+          **\*tests*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**   
+          !**\Tests.Shared.dll  
+        searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        rerunFailedTests: True
+        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
-- task: VSTest@2
-  displayName: 'VsTest - testAssemblies'
-  inputs:
-    testAssemblyVer2: |
-     **\$(BuildConfiguration)\*test*.dll
-     !**\obj\**
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Binaries Artifact
+      inputs:
+        PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+        ArtifactName: 'v$(Build.BuildNumber)-$(Build.SourceBranchName)'
+        publishLocation: 'Container'
 
-- task: PublishSymbols@1
-  displayName: 'Publish symbols path: '
-  inputs:
-    SearchPattern: '**\bin\**\*.pdb'
-  continueOnError: true
-
-- task: ArchiveFiles@1
-  displayName: 'Archive files '
-  inputs:
-    rootFolder: 'build\$(BuildConfiguration)'
-    includeRootFolder: false
-    archiveFile: 'EvcProver-v$(Build.BuildId)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: EvcProver'
-  inputs:
-    PathtoPublish: 'build\$(BuildConfiguration)'
-    ArtifactName: 'EvcProver-v$(Build.BuildId)'
-
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Test Artifact
+      inputs:
+        PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        ArtifactName: 'Tests'
+        publishLocation: 'Container'

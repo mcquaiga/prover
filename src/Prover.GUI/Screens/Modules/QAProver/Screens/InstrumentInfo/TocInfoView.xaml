@@ -26,7 +26,7 @@
             <controls:LabelValueControl Label="Km (865)"
                                               Value="{Binding Km}" />
             <controls:LabelValueControl Label="Ks (866)"
-                                              Value="{Binding Km}" />
+                                              Value="{Binding Ks}" />
             <controls:LabelValueControl Label="ABar (867)"
                                               Value="{Binding ABar}" />
             <controls:LabelValueControl Label="Kmo (868)"

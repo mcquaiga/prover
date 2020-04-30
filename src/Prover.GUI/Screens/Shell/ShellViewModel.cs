@@ -36,7 +36,7 @@ namespace Prover.GUI.Screens.Shell
 
             WindowWidth = _settingsService.Local.WindowWidth;
             WindowHeight = _settingsService.Local.WindowHeight;
-            WindowState = (WindowState) Enum.Parse(typeof(System.Windows.WindowState), _settingsService.Local.WindowState);
+            WindowState = (WindowState) Enum.Parse(typeof(WindowState), _settingsService.Local.WindowState);
 
             this.WhenAnyValue(x => x.ShowNotificationSnackbar);                
 

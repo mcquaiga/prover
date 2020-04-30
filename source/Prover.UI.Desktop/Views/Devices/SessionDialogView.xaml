@@ -1,0 +1,67 @@
+﻿<reactiveUi:ReactiveUserControl
+    x:Class="Prover.UI.Desktop.Views.Devices.SessionDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogs="clr-namespace:Prover.UI.Desktop.ViewModels.Devices"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="http://reactiveui.net"
+    x:Name="SessionsDialogViewControl"
+    x:TypeArguments="dialogs:DeviceSessionDialogManager"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <!--<ContentControl x:Key="SessionDetailsTemplate">
+            <StackPanel Orientation="Vertical">
+        -->
+        <!--<TextBlock
+                    x:Name="TitleText"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                    Text="{Binding ViewModel.SessionStatusUpdates.TitleText, ElementName=SessionsDialogViewControl}" />-->
+        <!--
+                <ProgressBar
+                    x:Name="StatusProgressBar"
+                    Width="56"
+                    Height="56"
+                    Margin="25"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Maximum="{Binding ViewModel.SessionStatusUpdates.ProgressTotal, ElementName=SessionsDialogViewControl}"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="{Binding ViewModel.SessionStatusUpdates.Progress, ElementName=SessionsDialogViewControl}" />
+        -->
+        <!--<TextBlock
+                    x:Name="StatusText"
+                    HorizontalAlignment="Center"
+                    Foreground="Black"
+                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                    Text="{Binding ViewModel.SessionStatusUpdates.StatusText, ElementName=SessionsDialogViewControl}" />-->
+        <!--
+            </StackPanel>
+        </ContentControl>-->
+
+    </UserControl.Resources>
+    <Grid
+        MinWidth="350"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentControl x:Name="SessionDialogContentControl" Margin="30,30,30,0" />
+
+
+        <Button
+            x:Name="CancelButton"
+            Grid.Row="1"
+            Width="100"
+            Margin="8,20"
+            VerticalAlignment="Bottom"
+            Content="Cancel"
+            Style="{StaticResource MaterialDesignFlatAccentBgButton}" />
+
+
+    </Grid>
+</reactiveUi:ReactiveUserControl>

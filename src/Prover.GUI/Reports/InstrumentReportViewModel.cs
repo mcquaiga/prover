@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Prover.Core.Models.Instruments;
 using Prover.GUI.Screens;
 using Prover.GUI.Screens.Modules.QAProver.Screens;
@@ -18,9 +17,9 @@ namespace Prover.GUI.Reports
 
         public TestRunViewModel QaTestRunViewItem { get; set; }
 
-        public async Task Initialize(Instrument instrument)
+        public void Initialize(Instrument instrument)
         {
-            await QaTestRunViewItem.InitializeViews(null, instrument);
+            QaTestRunViewItem.InitializeViews(null, instrument);
             QaTestRunViewItem.ViewContext = ReportViewContext;
         }
     }

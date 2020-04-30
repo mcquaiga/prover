@@ -166,6 +166,21 @@
         isVolume="true" />
   <item number="147" code="SUPER_TABLE" shortDescription="Super Compress. Table" description="Super Compress. Table"
         isVolume="true" />
+  <item number="182" code="INPUT_VOLUME_TYPE" shortDescription="Input Volume Type" description="Input Volume Type">
+    <value id="0" description="Normal (SW1 + 2)" />
+    <value id="1" description="TIB AdjVol (SW3)" />
+    <value id="2" description="TIB AdjVol (SW4)" />
+  </item>
   <item number="200" code="SITENUMBER1" shortDescription="Site Number 1" description="Site Number 1" />
   <item number="201" code="SITENUMBER2" shortDescription="Site Number 2" description="Site Number 2" />
+  <item number="433" code="INPUT_VOL_TYPE" shortDescription="Input Volume Type" description="Input Volume Type">
+    <value id="0" description="Instrument Drive / RSI" />
+    <value id="4" description="Bidirectional Mode CCW=Fwd (Reverse Flow Board)" />
+    <value id="20" description="Bidirectional Mode CW=Fwd (Reverse Flow Board)" />    
+  </item>
+  <item number="855" code="TURBINE_CONFIG" shortDescription="Turbine Configuration" description="Turbine Configuration">
+    <value id="0" description="Turbine Support Off" />
+    <value id="1" description="Turbo Monitor Mode" />
+    <value id="2" description="Accutest Mode" />
+  </item>
 </InstrumentItems>

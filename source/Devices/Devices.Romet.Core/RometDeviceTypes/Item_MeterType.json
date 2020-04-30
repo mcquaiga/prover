@@ -1,0 +1,406 @@
+﻿{
+  "type": "Devices.Core.Items.Descriptions.RotaryMeterTypeDescription, Devices.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "ItemDescriptions": [
+    {
+      "description": "No Meter Type",
+      "UnCorPulsesX10": "0",
+      "UnCorPulsesX100": "0",
+      "MeterDisplacement": "0.00",
+      "MountType": "LMMA",
+      "ids": [ "0" ]
+    },
+    {
+      "description": "Roots 2M",
+      "UnCorPulsesX10": "12",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0110558",
+      "MountType": "LMMA",
+      "ids": [
+        "45",
+        "81"
+      ]
+    },
+    {
+      "description": "Roots 3M",
+      "UnCorPulsesX10": "25",
+      "UnCorPulsesX100": "3",
+      "MeterDisplacement": "0.0222200",
+      "MountType": "LMMA",
+      "ids": [
+        "2",
+        "82"
+      ]
+    },
+    {
+      "description": "Roots 5M",
+      "UnCorPulsesX10": "40",
+      "UnCorPulsesX100": "4",
+      "MeterDisplacement": "0.0370400",
+      "MountType": "LMMA",
+      "ids": [
+        "3",
+        "83"
+      ]
+    },
+    {
+      "description": "Roots 7M",
+      "UnCorPulsesX10": "65",
+      "UnCorPulsesX100": "7",
+      "MeterDisplacement": "0.0625000",
+      "MountType": "LMMA",
+      "ids": [
+        "4",
+        "84"
+      ]
+    },
+    {
+      "description": "Roots 11M",
+      "UnCorPulsesX10": "103",
+      "UnCorPulsesX100": "10",
+      "MeterDisplacement": "0.1000000",
+      "MountType": "LMMA",
+      "ids": [
+        "5",
+        "85"
+      ]
+    },
+    {
+      "description": "Roots 16M",
+      "UnCorPulsesX10": "152",
+      "UnCorPulsesX100": "15",
+      "MeterDisplacement": "0.1481500",
+      "MountType": "LMMA",
+      "ids": [
+        "6",
+        "86"
+      ]
+    },
+    {
+      "description": "Roots 23M",
+      "UnCorPulsesX10": "274",
+      "UnCorPulsesX100": "27",
+      "MeterDisplacement": "0.2624500",
+      "MountType": "LMMA",
+      "ids": [
+        "7",
+        "87"
+      ]
+    },
+    {
+      "description": "Roots 38M",
+      "UnCorPulsesX10": "520",
+      "UnCorPulsesX100": "52",
+      "MeterDisplacement": "0.5140000",
+      "MountType": "LMMA",
+      "ids": [
+        "8",
+        "88"
+      ]
+    },
+    {
+      "description": "Roots 56M",
+      "UnCorPulsesX10": "900",
+      "UnCorPulsesX100": "90",
+      "MeterDisplacement": "0.8837000",
+      "MountType": "LMMA",
+      "ids": [
+        "9",
+        "89"
+      ]
+    },
+    {
+      "description": "Roots 102M",
+      "UnCorPulsesX10": "2100",
+      "UnCorPulsesX100": "210",
+      "MeterDisplacement": "2.0964000",
+      "MountType": "LMMA",
+      "ids": [
+        "10",
+        "90"
+      ]
+    },
+    {
+      "description": "RM 1000",
+      "UnCorPulsesX10": "10",
+      "UnCorPulsesX100": "1",
+      "MeterDisplacement": "0.0080246",
+      "MountType": "RM",
+      "ids": [
+        "11",
+        "140"
+      ]
+    },
+    {
+      "description": "RM 1500",
+      "UnCorPulsesX10": "12",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0111111",
+      "MountType": "RM",
+      "ids": [
+        "12",
+        "142"
+      ]
+    },
+    {
+      "description": "RM 2000",
+      "UnCorPulsesX10": "17",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0153199",
+      "MountType": "RM",
+      "ids": [
+        "13",
+        "143"
+      ]
+    },
+    {
+      "description": "RM 2000 New",
+      "UnCorPulsesX10": "17",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0",
+      "MountType": "RM",
+      "ids": [
+        "50",
+        "154"
+      ]
+    },
+    {
+      "description": "RM 56000",
+      "UnCorPulsesX10": "17",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0",
+      "MountType": "RM",
+      "ids": [ "156" ]
+    },
+    {
+      "description": "RM 3000",
+      "UnCorPulsesX10": "25",
+      "UnCorPulsesX100": "3",
+      "MeterDisplacement": "0.0222222",
+      "MountType": "RM",
+      "ids": [
+        "14",
+        "144"
+      ]
+    },
+    {
+      "description": "RM 5000",
+      "UnCorPulsesX10": "40",
+      "UnCorPulsesX100": "4",
+      "MeterDisplacement": "0.0367347",
+      "MountType": "RM",
+      "ids": [
+        "15",
+        "145"
+      ]
+    },
+    {
+      "description": "RM 7000",
+      "UnCorPulsesX10": "65",
+      "UnCorPulsesX100": "7",
+      "MeterDisplacement": "0.0612245",
+      "MountType": "RM",
+      "ids": [
+        "16",
+        "146"
+      ]
+    },
+    {
+      "description": "RM 11000",
+      "UnCorPulsesX10": "102",
+      "UnCorPulsesX100": "10",
+      "MeterDisplacement": "0.0993789",
+      "MountType": "RM",
+      "ids": [
+        "17",
+        "147"
+      ]
+    },
+    {
+      "description": "RM 16000",
+      "UnCorPulsesX10": "152",
+      "UnCorPulsesX100": "15",
+      "MeterDisplacement": "0.1408163",
+      "MountType": "RM",
+      "ids": [
+        "18",
+        "148"
+      ]
+    },
+    {
+      "description": "RM 16000 New",
+      "UnCorPulsesX10": "112",
+      "UnCorPulsesX100": "11",
+      "MeterDisplacement": "0.1085343",
+      "MountType": "RM",
+      "ids": [
+        "34",
+        "149"
+      ]
+    },
+    {
+      "description": "RM 23000",
+      "UnCorPulsesX10": "152",
+      "UnCorPulsesX100": "15",
+      "MeterDisplacement": "0.1408163",
+      "MountType": "RM",
+      "ids": [
+        "35",
+        "150"
+      ]
+    },
+    {
+      "description": "RM 38000",
+      "UnCorPulsesX10": "290",
+      "UnCorPulsesX100": "29",
+      "MeterDisplacement": "0.2840580",
+      "MountType": "RM",
+      "ids": [
+        "36",
+        "151"
+      ]
+    },
+    {
+      "description": "Roots 2M B3",
+      "UnCorPulsesX10": "12",
+      "UnCorPulsesX100": "2",
+      "MeterDisplacement": "0.0200000",
+      "MountType": "B3",
+      "ids": [
+        "22",
+        "64"
+      ]
+    },
+    {
+      "description": "Roots 3M B3",
+      "UnCorPulsesX10": "25",
+      "UnCorPulsesX100": "3",
+      "MeterDisplacement": "0.0250000",
+      "MountType": "B3",
+      "ids": [
+        "23",
+        "65"
+      ]
+    },
+    {
+      "description": "Roots 5M B3",
+      "UnCorPulsesX10": "40",
+      "UnCorPulsesX100": "4",
+      "MeterDisplacement": "0.0370370",
+      "MountType": "B3",
+      "ids": [
+        "24",
+        "66"
+      ]
+    },
+    {
+      "description": "Roots 7M B3",
+      "UnCorPulsesX10": "65",
+      "UnCorPulsesX100": "7",
+      "MeterDisplacement": "0.0625000",
+      "MountType": "B3",
+      "ids": [
+        "25",
+        "67"
+      ]
+    },
+    {
+      "description": "Roots 11M B3",
+      "UnCorPulsesX10": "103",
+      "UnCorPulsesX100": "10",
+      "MeterDisplacement": "0.1000000",
+      "MountType": "B3",
+      "ids": [
+        "26",
+        "68"
+      ]
+    },
+    {
+      "description": "Roots 16M B3",
+      "UnCorPulsesX10": "152",
+      "UnCorPulsesX100": "15",
+      "MeterDisplacement": "0.1481480",
+      "MountType": "B3",
+      "ids": [
+        "27",
+        "69"
+      ]
+    },
+    {
+      "description": "Roots 23M B3",
+      "UnCorPulsesX10": "389",
+      "UnCorPulsesX100": "37",
+      "MeterDisplacement": "0.3703700",
+      "MountType": "B3",
+      "ids": [
+        "28",
+        "71"
+      ]
+    },
+    {
+      "description": "Roots 38M B3",
+      "UnCorPulsesX10": "560",
+      "UnCorPulsesX100": "56",
+      "MeterDisplacement": "0.5555560",
+      "MountType": "B3",
+      "ids": [
+        "29",
+        "72"
+      ]
+    },
+    {
+      "description": "Roots 56M B3",
+      "ids": [
+        "30",
+        "73"
+      ],
+      "MeterDisplacement": "0.6944400",
+      "MountType": "B3",
+      "UnCorPulsesX10": "700",
+      "UnCorPulsesX100": "70"
+    },
+    {
+      "description": "Roots 8C B3",
+      "ids": [
+        "19",
+        "60"
+      ],
+      "MeterDisplacement": "0.0074070",
+      "MountType": "B3",
+      "UnCorPulsesX10": "8",
+      "UnCorPulsesX100": "2"
+    },
+    {
+      "description": "Roots 11C B3",
+      "ids": [
+        "20",
+        "61"
+      ],
+      "MeterDisplacement": "0.0083300",
+      "MountType": "B3",
+      "UnCorPulsesX10": "9",
+      "UnCorPulsesX100": "2"
+    },
+    {
+      "description": "Roots 15C B3",
+      "ids": [
+        "21",
+        "62"
+      ],
+      "MeterDisplacement": "0.0100000",
+      "MountType": "B3",
+      "UnCorPulsesX10": "10",
+      "UnCorPulsesX100": "2"
+    },
+    {
+      "description": "RM 1000 New",
+      "ids": [
+        "33",
+        "141"
+      ],
+      "MeterDisplacement": "0.0079772",
+      "MountType": "B3",
+      "UnCorPulsesX10": "10",
+      "UnCorPulsesX100": "1"
+    }
+  ]
+}

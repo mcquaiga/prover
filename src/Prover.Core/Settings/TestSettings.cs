@@ -77,17 +77,19 @@
         /// The CreateDefault
         /// </summary>
         /// <returns>The <see cref="TestSettings"/></returns>
-        public static TestSettings CreateDefault() => new TestSettings()
+        public static TestSettings CreateDefault()
         {
-            CorrectedErrorThreshold = 1.5m,
-            UncorrectedErrorThreshold = 0.1m,
-            MeterDisplacementErrorThreshold = 1.0m,
+            return new TestSettings()
+            {
+                CorrectedErrorThreshold = 1.5m,
+                UncorrectedErrorThreshold = 0.1m,
+                MeterDisplacementErrorThreshold = 1.0m,
 
-            StabilizeLiveReadings = true,
-            RunVolumeSyncTest = true,
-            MechanicalDriveVolumeTestType = VolumeTestType.Automatic,
+                StabilizeLiveReadings = true,
+                RunVolumeSyncTest = true,
+                MechanicalDriveVolumeTestType = VolumeTestType.Automatic,
 
-            MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
+                MechanicalUncorrectedTestLimits = new List<MechanicalUncorrectedTestLimit>
             {
                 new MechanicalUncorrectedTestLimit { CuFtValue = 1, UncorrectedPulses = 100 },
                 new MechanicalUncorrectedTestLimit { CuFtValue = 10, UncorrectedPulses = 10 },
@@ -95,13 +97,13 @@
                 new MechanicalUncorrectedTestLimit { CuFtValue = 1000, UncorrectedPulses = 1 }
             },
 
-            TocResetItems = new Dictionary<int, string>
+                TocResetItems = new Dictionary<int, string>
                 {
                     { 859, "0" },
                     { 860, "0" }
                 },
 
-            TestPoints = new List<TestPointSetting>
+                TestPoints = new List<TestPointSetting>
                 {
                     new TestPointSetting
                     {
@@ -125,7 +127,8 @@
                         IsVolumeTest = false
                     },
                 }
-        };
+            };
+        }
 
         #endregion
 
@@ -154,29 +157,18 @@
         /// </summary>
         public class TestPointSetting
         {
-            #region Properties
 
-            /// <summary>
-            /// Gets or sets a value indicating whether IsVolumeTest
-            /// </summary>
             public bool IsVolumeTest { get; set; } = false;
 
-            /// <summary>
-            /// Gets or sets the Level
-            /// </summary>
+
             public int Level { get; set; }
 
-            /// <summary>
-            /// Gets or sets the PressureGaugePercent
-            /// </summary>
+
             public decimal PressureGaugePercent { get; set; }
 
-            /// <summary>
-            /// Gets or sets the TemperatureGauge
-            /// </summary>
+
             public decimal TemperatureGauge { get; set; }
 
-            #endregion
         }
     }
 }

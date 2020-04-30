@@ -5,42 +5,98 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Prover.GUI.Controls"
             mc:Ignorable="d">
-    <Grid>
-        <StackPanel>
-            <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
-                       Text="Frequency" />
-            <controls:PercentageControlNew
-                HorizontalAlignment="Center"
-                DisplayValue="{Binding TestRun.PercentError}"
-                Passed="{Binding TestRun.HasPassed}" />
-            <StackPanel>
-                <controls:ValueDescriptionControl Label="KMO (AAT Sim)" 
-                                                   Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                   IsReadOnly="False"
-                                                   HorizontalAlignment="Center"/>
-                <UniformGrid Columns="2">
-                    <controls:ValueDescriptionControl Label="Main Pulses" 
-                                                       Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                       IsReadOnly="False"/>
-                        
-                    <controls:ValueDescriptionControl Label="Sense Pulses" 
-                                                       Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       IsReadOnly="False"/>
-                        
-                    <controls:ValueDescriptionControl Label="True Adj." 
-                                                       Value="{Binding AdjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="EVC Adj." 
-                                                       Value="{Binding EvcAdjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="True Unadj." 
-                                                       Value="{Binding UnadjustedVolume}" />
-                        
-                    <controls:ValueDescriptionControl Label="EVC Unadj." 
-                                                       Value="{Binding EvcUnadjustedVolume}"/>
-                </UniformGrid>
+    <StackPanel>
 
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <controls:ValueDescriptionControl Label="KMO (AAT Sim)"
+                                                   Value="{Binding MechanicalOutputFactor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   IsReadOnly="False" />
+            <controls:ValueDescriptionControl Label="Main Pulses"
+                                                       Value="{Binding MainRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       IsReadOnly="False" />
+
+            <controls:ValueDescriptionControl Label="Sense Pulses"
+                                                       Value="{Binding SenseRotorPulses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       IsReadOnly="False" />
         </StackPanel>
-    </Grid>
+        <UniformGrid Rows="1">
+
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Adjusted" />
+                <controls:PercentageControlNew
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding TestRun.AdjustedVolumePercentError}"
+                Passed="{Binding TestRun.HasPassed}" />
+                <StackPanel>
+
+                    <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.EvcAdjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.EvcAdjustedEndReading}" />
+
+                        <controls:ValueDescriptionControl Label="True Adj."
+                                                       Value="{Binding AdjustedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="EVC Adj."
+                                                       Value="{Binding EvcAdjustedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="Main equals Tib"
+                                                          Value="{Binding TestRun.DoesTibEqualMainAdjusted, Converter={StaticResource BoolToPassFailConverter}}" />
+                    </UniformGrid>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Adjusted Corrected" />
+                <controls:PercentageControlNew
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding TestRun.AdjustedCorrectedPercentError}"
+                Passed="{Binding TestRun.HasPassed}" />
+                <StackPanel>
+
+                    <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.TibAdjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.TibAdjustedEndReading}" />
+
+                        <controls:ValueDescriptionControl Label="True Adj. Corr."
+                                                       Value="{Binding TestRun.AdjustedCorrectedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="EVC Adj. Corr."
+                                                       Value="{Binding TestRun.EvcAdjustedCorrectedVolume}" />
+                    </UniformGrid>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Style="{StaticResource SecondaryTestHeaderStyle}"
+                       Text="Unadjusted" />
+                <controls:PercentageControlNew
+                HorizontalAlignment="Center"
+                DisplayValue="{Binding TestRun.UnadjustedVolumePercentError}"
+                Passed="{Binding TestRun.HasPassed}" />
+                <StackPanel>
+                    <UniformGrid Columns="2">
+                        <controls:ValueDescriptionControl Label="Start Reading"
+                                                       Value="{Binding TestRun.UnadjustedStartReading}" />
+
+                        <controls:ValueDescriptionControl Label="End Reading"
+                                                       Value="{Binding TestRun.UnadjustedEndReading}" />
+
+                        <controls:ValueDescriptionControl Label="True Unadj."
+                                                       Value="{Binding UnadjustedVolume}" />
+
+                        <controls:ValueDescriptionControl Label="EVC Unadj."
+                                                       Value="{Binding EvcUnadjustedVolume}" />
+                    </UniformGrid>
+                </StackPanel>
+            </StackPanel>
+        </UniformGrid>
+    </StackPanel>
 </UserControl>

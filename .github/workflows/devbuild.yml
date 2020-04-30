@@ -1,0 +1,33 @@
+name: Development build
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  VERSION_NUMBER: 4.${{ github.run_number }}
+
+jobs:
+ 
+  build:
+
+    runs-on: windows-latest    
+                  
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+  
+    - name: Install dependencies
+      run: dotnet restore "source\EvcProver - Windows.sln"
+       
+    - name: Build
+      run: dotnet build -p:Version=${{ env.VERSION_NUMBER }} --configuration Release --no-restore "source\EvcProver - Windows.sln"   
+       
+    - name: Upload Artificat
+      uses: actions/upload-artifact@v1
+      with:
+        name: EvcProver-v${{ env.VERSION_NUMBER }}
+        path: build\Release

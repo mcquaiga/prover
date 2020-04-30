@@ -10,47 +10,23 @@ namespace Prover.Core.Models.Instruments
 {
     public class FrequencyTest : EntityWithId, IHaveVerificationTest, IHavePercentError
     {
-        public FrequencyTest() { }
-
-        public FrequencyTest(VerificationTest verificationTest)
+        public decimal? AdjustedCorrectedPercentError
         {
-            VerificationTest = verificationTest;
-            VerificationTestId = verificationTest.Id;
-        }       
+            get
+            {
+                if (AdjustedCorrectedVolume == 0) return null;
 
-        [Required]
-        public virtual VerificationTest VerificationTest { get; set; }
-        public Guid VerificationTestId { get; set; }
-
-        public long MainRotorPulseCount { get; set; }
-        public long SenseRotorPulseCount { get; set; }
-        public long MechanicalOutputFactor { get; set; }
-
-        private string _itemsType;
-        public string ItemsType
-        {
-            get => PreTestItemValues?.GetType().AssemblyQualifiedName;
-            set => _itemsType = value;
+                var result = (EvcAdjustedCorrectedVolume - AdjustedCorrectedVolume) / AdjustedCorrectedVolume * 100;
+                return decimal.Round(result, 2);
+            }
         }
 
-        [NotMapped]
-        public IFrequencyTestItems PreTestItemValues { get; set; }
-
-        private string _preTestItemData;
-        public string PreTestItemData
+        public decimal AdjustedCorrectedVolume
         {
-            get => JsonConvert.SerializeObject(PreTestItemValues);
-            set => _preTestItemData = value;
-        }
-
-        [NotMapped]
-        public IFrequencyTestItems PostTestItemValues { get; set; }
-
-        private string _postTestItemData;
-        public string PostTestItemData
-        {
-            get => JsonConvert.SerializeObject(PostTestItemValues);
-            set => _postTestItemData = value;
+            get
+            {
+                return decimal.Round(AdjustedVolume() * TotalCorrection().Value, 4);
+            }
         }
 
         public decimal? AdjustedVolumePercentError
@@ -59,10 +35,71 @@ namespace Prover.Core.Models.Instruments
             {
                 if (AdjustedVolume() == 0) return null;
 
-                var result = (EvcAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
+                var result = (TibAdjustedVolume() - AdjustedVolume()) / AdjustedVolume() * 100;
                 return result.HasValue ? decimal.Round(result.Value, 2) : default(decimal?);
             }
         }
+
+        public bool DoesTibEqualMainAdjusted => (TibAdjustedVolume().Value == EvcAdjustedVolume().Value);
+
+        public decimal EvcAdjustedCorrectedVolume
+        {
+            get
+            {
+                if (!TibAdjustedVolume().HasValue) return 0;
+
+                return decimal.Round(TibAdjustedVolume().Value * TotalCorrection().Value, 4);
+            }
+        }
+
+        public decimal? EvcAdjustedEndReading => PostTestItemValues?.MainAdjustedVolumeReading;
+
+        public decimal? EvcAdjustedStartReading => PreTestItemValues?.MainAdjustedVolumeReading;
+
+        [NotMapped]
+        public bool HasPassed =>
+            (AdjustedVolumePercentError.HasValue && AdjustedVolumePercentError < 1 && AdjustedVolumePercentError > -1)
+        && (UnadjustedVolumePercentError.HasValue && UnadjustedVolumePercentError < 1 && UnadjustedVolumePercentError > -1);
+
+        public string ItemsType
+        {
+            get => PreTestItemValues?.GetType().AssemblyQualifiedName;
+            set => _itemsType = value;
+        }
+
+        public long MainRotorPulseCount { get; set; }
+
+        public long MechanicalOutputFactor { get; set; }
+
+        public decimal? PercentError { get; }
+
+        public string PostTestItemData
+        {
+            get => JsonConvert.SerializeObject(PostTestItemValues);
+            set => _postTestItemData = value;
+        }
+
+        [NotMapped]
+        public IFrequencyTestItems PostTestItemValues { get; set; }
+
+        public string PreTestItemData
+        {
+            get => JsonConvert.SerializeObject(PreTestItemValues);
+            set => _preTestItemData = value;
+        }
+
+        [NotMapped]
+        public IFrequencyTestItems PreTestItemValues { get; set; }
+
+        public long SenseRotorPulseCount { get; set; }
+
+        public decimal? TibAdjustedEndReading => PostTestItemValues?.TibAdjustedVolumeReading;
+
+        public decimal? TibAdjustedStartReading => PreTestItemValues?.TibAdjustedVolumeReading;
+
+        public decimal? UnadjustedEndReading => PostTestItemValues?.MainUnadjustVolumeReading;
+
+        public decimal? UnadjustedStartReading => PreTestItemValues?.MainUnadjustVolumeReading;
 
         public decimal? UnadjustedVolumePercentError
         {
@@ -75,12 +112,21 @@ namespace Prover.Core.Models.Instruments
             }
         }
 
-        public decimal? PercentError { get; }
+        [Required]
+        public virtual VerificationTest VerificationTest { get; set; }
 
-        [NotMapped]
-        public bool HasPassed => 
-            (AdjustedVolumePercentError.HasValue && AdjustedVolumePercentError < 1 && AdjustedVolumePercentError > -1)
-        && (UnadjustedVolumePercentError.HasValue && UnadjustedVolumePercentError < 1 && UnadjustedVolumePercentError > -1);
+        public Guid VerificationTestId { get; set; }
+
+        public FrequencyTest()
+        {
+            MechanicalOutputFactor = 70;
+        }
+
+        public FrequencyTest(VerificationTest verificationTest)
+        {
+            VerificationTest = verificationTest;
+            VerificationTestId = verificationTest.Id;
+        }
 
         public decimal AdjustedVolume()
         {
@@ -89,46 +135,62 @@ namespace Prover.Core.Models.Instruments
             return decimal.Round(mainAdjVol - senseAdjVol, 4);
         }
 
-        public long RoundedAdjustedVolume()
-        {
-            var indexRate = (long) VerificationTest.Instrument.Items.GetItem(98).NumericValue;
-            var result = (long) (AdjustedVolume() / indexRate);
-            return result * indexRate;
-        }
-
-        public decimal UnadjustedVolume()
-        {
-            if (MainRotorPulseCount == 0 || MechanicalOutputFactor == 0) return 0m;
-
-            return decimal.Round((decimal) MainRotorPulseCount / MechanicalOutputFactor, 4);
-        }
-
         public decimal? EvcAdjustedVolume()
         {
-            var result = (PostTestItemValues?.AdjustedVolumeReading - PreTestItemValues?.AdjustedVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            var result = (EvcAdjustedEndReading - EvcAdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
 
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
 
         public decimal? EvcUnadjustedVolume()
         {
-            var result = (PostTestItemValues?.UnadjustVolumeReading - PreTestItemValues?.UnadjustVolumeReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
-            //
+            var result = (UnadjustedEndReading - UnadjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
             return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
         }
-        
+
         public override void OnInitializing()
         {
             base.OnInitializing();
 
             if (string.IsNullOrEmpty(_itemsType)) return;
 
-            var type = Type.GetType(_itemsType, name => Assembly.Load(name), (assembly, s, arg3) => assembly.GetType(s)); 
+            var type = Type.GetType(_itemsType, name => Assembly.Load(name), (assembly, s, arg3) => assembly.GetType(s));
             if (type != null && !string.IsNullOrEmpty(_preTestItemData) && !string.IsNullOrEmpty(_postTestItemData))
             {
-                PreTestItemValues = (IFrequencyTestItems) JsonConvert.DeserializeObject(_preTestItemData, type);
-                PostTestItemValues = (IFrequencyTestItems) JsonConvert.DeserializeObject(_postTestItemData, type);
+                PreTestItemValues = (IFrequencyTestItems)JsonConvert.DeserializeObject(_preTestItemData, type);
+                PostTestItemValues = (IFrequencyTestItems)JsonConvert.DeserializeObject(_postTestItemData, type);
             }
         }
+
+        public long RoundedAdjustedVolume()
+        {
+            var indexRate = (long)VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+            var result = (long)(AdjustedVolume() / indexRate);
+            return result * indexRate;
+        }
+
+        public decimal? TibAdjustedVolume()
+        {
+            var result = (TibAdjustedEndReading - TibAdjustedStartReading) * VerificationTest.Instrument.Items.GetItem(98).NumericValue;
+
+            return result != null ? decimal.Round(result.Value, 4) : default(decimal?);
+        }
+
+        public decimal? TotalCorrection()
+        {
+            return VerificationTest.SuperFactorTest.SuperFactorSquared * VerificationTest.PressureTest.ActualFactor
+                * VerificationTest.TemperatureTest.ActualFactor;
+        }
+
+        public decimal UnadjustedVolume()
+        {
+            if (MainRotorPulseCount == 0 || MechanicalOutputFactor == 0) return 0m;
+
+            return decimal.Round((decimal)MainRotorPulseCount / MechanicalOutputFactor, 4);
+        }
+
+        private string _itemsType;
+        private string _postTestItemData;
+        private string _preTestItemData;
     }
 }

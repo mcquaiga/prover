@@ -1,0 +1,448 @@
+﻿[
+  {
+    "number": "0",
+    "code": "COR_VOL",
+    "shortDescription": "Corrected Vol",
+    "description": "Corrected Volume",
+    "isVolume": "true",
+    "isVolumeTest": "true"
+  },
+  {
+    "number": "2",
+    "code": "UNCOR_VOL",
+    "shortDescription": "UnCor Vol",
+    "description": "Uncorrected Volume",
+    "isVolume": "true",
+    "isVolumeTest": "true"
+  },
+  {
+    "number": "26",
+    "code": "GAS_TEMP",
+    "shortDescription": "Temperature",
+    "description": "Gas Temperature",
+    "isTemperatureTest": "true",
+    "isLiveReadTemperature": true
+  },
+  {
+    "number": "27",
+    "shortDescription": "Gas Temp Lo",
+    "description": "Gas Temp Lo",
+    "isTemperature": "true"
+  },
+  {
+    "number": "28",
+    "shortDescription": "Gas Temp Hi",
+    "description": "Gas Temp Hi",
+    "isTemperature": "true"
+  },
+  {
+    "number": "34",
+    "shortDescription": "Base Temp",
+    "description": "Base Temperature",
+    "isTemperature": "true"
+  },
+  {
+    "number": "45",
+    "code": "TEMP_FACTOR",
+    "shortDescription": "Temperature Factor",
+    "description": "Temperature Factor",
+    "isTemperatureTest": "true"
+  },
+  {
+    "number": "56",
+    "code": "PULSER_A_SCALING",
+    "shortDescription": "Pulser A Scaling",
+    "description": "Pulser A Scaling",
+    "isVolume": "true"
+  },
+  {
+    "number": "57",
+    "code": "PULSER_B_SCALING",
+    "shortDescription": "Pulser B Scaling",
+    "description": "Pulser B Scaling",
+    "isVolume": "true"
+  },
+  {
+    "number": "58",
+    "code": "PULSER_C_SCALING",
+    "shortDescription": "Pulser C Scaling",
+    "description": "Pulser C Scaling",
+    "isVolume": "true"
+  },
+  {
+    "number": "62",
+    "code": "SERIAL_NUM",
+    "shortDescription": "Serial Number",
+    "description": "Serial Number"
+  },
+  {
+    "number": "89",
+    "code": "TEMP_UNITS",
+    "shortDescription": "Temperature Units",
+    "description": "Temperature Units",
+    "isTemperature": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "F"
+      },
+      {
+        "id": "1",
+        "description": "C"
+      },
+      {
+        "id": "2",
+        "description": "R"
+      },
+      {
+        "id": "3",
+        "description": "K"
+      }
+    ]
+  },
+  {
+    "number": "90",
+    "code": "Corr Vol Units",
+    "shortDescription": "Corr Vol Units",
+    "description": "Corrected Volume Units",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
+  },
+  {
+    "number": "92",
+    "code": "Uncorr Volume Units",
+    "shortDescription": "Uncorr Volume Units",
+    "description": "UnCorrected Volume Units",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
+  },
+  {
+    "number": "93",
+    "code": "PULSER_A",
+    "shortDescription": "Pulser A",
+    "description": "Pulser A",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "CorVol"
+      },
+      {
+        "id": "1",
+        "description": "PCorVol"
+      },
+      {
+        "id": "2",
+        "description": "UncVol"
+      },
+      {
+        "id": "3",
+        "description": "NoOut"
+      },
+      {
+        "id": "4",
+        "description": "Time"
+      }
+    ]
+  },
+  {
+    "number": "94",
+    "code": "PULSER_B",
+    "shortDescription": "Pulser B",
+    "description": "Pulser B",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "CorVol"
+      },
+      {
+        "id": "1",
+        "description": "PCorVol"
+      },
+      {
+        "id": "2",
+        "description": "UncVol"
+      },
+      {
+        "id": "3",
+        "description": "NoOut"
+      },
+      {
+        "id": "4",
+        "description": "Time"
+      }
+    ]
+  },
+  {
+    "number": "95",
+    "code": "PULSER_C",
+    "shortDescription": "Pulser C",
+    "description": "Pulser C",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "CorVol"
+      },
+      {
+        "id": "1",
+        "description": "PCorVol"
+      },
+      {
+        "id": "2",
+        "description": "UncVol"
+      },
+      {
+        "id": "3",
+        "description": "NoOut"
+      },
+      {
+        "id": "4",
+        "description": "Time"
+      }
+    ]
+  },
+  {
+    "number": "98",
+    "code": "METER_INDEX",
+    "shortDescription": "Meter Index Rate",
+    "description": "Meter Index Rate",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "CF1",
+        "numericValue": "1"
+      },
+      {
+        "id": "1",
+        "description": "CF5",
+        "numericValue": "5"
+      },
+      {
+        "id": "2",
+        "description": "CF10",
+        "numericValue": "10"
+      },
+      {
+        "id": "3",
+        "description": "CF100",
+        "numericValue": "100"
+      },
+      {
+        "id": "4",
+        "description": "CF1000",
+        "numericValue": "1000"
+      },
+      {
+        "id": "5",
+        "description": "m3x.1",
+        "numericValue": "0.1"
+      },
+      {
+        "id": "6",
+        "description": "m3x1",
+        "numericValue": "1"
+      },
+      {
+        "id": "7",
+        "description": "m3x10",
+        "numericValue": "10"
+      },
+      {
+        "id": "8",
+        "description": "m3x100",
+        "numericValue": "100"
+      },
+      {
+        "id": "9",
+        "description": "m3x0.01",
+        "numericValue": "0.01"
+      }
+    ]
+  },
+  {
+    "number": "109",
+    "code": "FIXED_PRESS_FACTOR",
+    "shortDescription": "F Press Factor",
+    "description": "Fixed Pressure Factor",
+    "isPressure": "true",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "Live"
+
+      },
+      {
+        "id": "1",
+        "description": "Fixed"
+      }
+    ]
+  },
+  {
+    "number": "113",
+    "code": "HIGH_RES_CORRECTED",
+    "shortDescription": "High Res COR",
+    "description": "High Resolution Corrected Volume",
+    "isVolume": "true",
+    "isVolumeTest": "true"
+  },
+  {
+    "number": "115",
+    "code": "PULSER_SCALING",
+    "shortDescription": "Pulse Spacing",
+    "description": "Output Pulse Spacing",
+    "itemDescriptions": [
+      {
+        "id": "0",
+        "description": "50 ms",
+        "numericValue": "50"
+      },
+      {
+        "id": "1",
+        "description": "750 ms",
+        "numericValue": "750"
+      },
+      {
+        "id": "2",
+        "description": "150 ms",
+        "numericValue": "150"
+      },
+      {
+        "id": "3",
+        "description": "200 ms",
+        "numericValue": "200"
+      },
+      {
+        "id": "4",
+        "description": "250 ms",
+        "numericValue": "250"
+      },
+      {
+        "id": "5",
+        "description": "350 ms",
+        "numericValue": "350"
+      },
+      {
+        "id": "6",
+        "description": "500 ms",
+        "numericValue": "500"
+      },
+      {
+        "id": "7",
+        "description": "Pulse Off",
+        "numericValue": "0"
+      }
+    ] 
+  },
+  {
+    "number": "122",
+    "code": "FIRMWARE",
+    "shortDescription": "Firm. Ver.",
+    "description": "Firmware Version"
+  },
+  {
+    "number": "127",
+    "code": "INSTRUMENT_TYPE",
+    "shortDescription": "Instrument Type",
+    "description": "Instrument Type"
+  },
+  {
+    "number": "200",
+    "code": "SITENUMBER1",
+    "shortDescription": "Site Number 1",
+    "description": "Site Number 1"
+  },
+  {
+    "number": "201",
+    "code": "SITENUMBER2",
+    "shortDescription": "Site Number 2",
+    "description": "Site Number 2"
+  },
+  {
+    "number": "203",
+    "code": "TIME",
+    "shortDescription": "Time",
+    "description": "Time"
+  },
+  {
+    "number": "204",
+    "code": "DATE",
+    "shortDescription": "Date",
+    "description": "Date"
+  },
+  {
+    "number": "262",
+    "code": "DATEFORMAT",
+    "shortDescription": "Date Format",
+    "description": "Date Format",
+    "ItemDescriptions": [
+      {
+        "id": "0",
+        "description": "MM-DD-YY"
+      },
+      {
+        "id": "1",
+        "description": "DD-MM-YY"
+      },
+      {
+        "id": "2",
+        "description": "YY-MM-DD"
+      }
+    ]
+  },
+  {
+    "canReset": "false",
+    "canVerify": "false",
+    "code": "METER_TYPE",
+    "description": "Meter Type",
+    "isVolume": "true",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_MeterType"
+      }
+    ],
+    "number": "768",
+    "shortDescription": "Meter Type"
+  },
+  {
+    "number": "767",
+    "code": "HIGH_RES_UNCOR",
+    "shortDescription": "High Res. Uncor. Volume",
+    "description": "High Resolution Uncor. Volume",
+    "isVolume": "true",
+    "isVolumeTest": "true"
+  },
+  {
+    "number": "816",
+    "code": "UNC_PULSE_VOL_UNITS",
+    "shortDescription": "Unc. Pulse Volume",
+    "description": "Uncorrected Pulse Volume Units",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
+  },
+  {
+    "number": "817",
+    "code": "COR_PULSE_VOL_UNITS",
+    "shortDescription": "Cor. Pulse Volume",
+    "description": "Corrected Pulse Volume Units",
+    "ItemDescriptions": [
+      {
+        "definitionPath": "Item_VolumeUnits"
+      }
+    ]
+  }
+]

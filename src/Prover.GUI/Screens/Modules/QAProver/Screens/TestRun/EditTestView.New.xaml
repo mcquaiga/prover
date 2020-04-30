@@ -32,13 +32,24 @@
                         Command="{Binding SaveCommand}"
                         Grid.Column="1"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                        Content="{materialDesign:PackIcon ContentSave}"/>
-                <Button HorizontalAlignment="Right"
-                        Command="{Binding PrintReportCommand}"                        
-                        Grid.Column="1"
+                        Content="{materialDesign:PackIcon ContentSave}" />
+
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <Button Content="Next Test"
+                            HorizontalAlignment="Right"
+                            Margin="8 2"
+                            Width="150"
+                            Visibility="{Binding ShowNextTestButton, Converter={StaticResource BoolToHiddenConverter}}"
+                            Command="{Binding NextTestCommand}" />
+                    <Button
+                        Command="{Binding PrintReportCommand}"
+                        HorizontalAlignment="Right"
                         Height="32" Width="48"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"
-                        Content="{materialDesign:PackIcon Printer}"/>
+                        Content="{materialDesign:PackIcon Printer}" />
+                </StackPanel>
             </Grid>
         </materialDesign:ColorZone>
         <Grid Margin="5"
@@ -48,28 +59,29 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Column="0"
-                          VerticalScrollBarVisibility="Auto">
+            <Viewbox Grid.Column="0"
+                     Stretch="Uniform">
                 <ContentControl Margin="4 8"
                             cal:View.Model="{Binding SiteInformationItem}"
-                            cal:View.Context="SiteInfoCardNew" 
-                            VerticalAlignment="Top"/>
-            </ScrollViewer>
+                            cal:View.Context="SiteInfoCardNew"
+                            VerticalAlignment="Top" />
+            </Viewbox>
 
-            <ScrollViewer Grid.Column="1"
-                          VerticalScrollBarVisibility="Auto">
+            <Viewbox Grid.Column="1"
+                          Stretch="Uniform">
+
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    
-                    <ItemsControl ItemsSource="{Binding PTTestViews}"
+
+                    <ItemsControl ItemsSource="{Binding TestViews}"
                                   Grid.ColumnSpan="3">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -80,26 +92,26 @@
                             <DataTemplate>
                                 <Border Style="{StaticResource SubSectionDividerBorder}"
                                         BorderThickness="0 0 1 0"
-                                        Padding="4">
-                                    <ContentControl cal:View.Model="{Binding }"                                                    
+                                        Padding="4"
+                                        MaxWidth="300">
+                                    <ContentControl cal:View.Model="{Binding }"
                                                     cal:View.Context="CardNew" />
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Border Style="{StaticResource SubSectionDividerBorder}"                           
-                            Grid.Column="0" 
+                    <Border Style="{StaticResource SubSectionDividerBorder}"
+                            Grid.Column="0"
                             Grid.ColumnSpan="3"
                             Grid.Row="1"
                             Padding="4"
                             VerticalAlignment="Stretch">
-                        <ContentControl cal:View.Model="{Binding VolumeTestView}" 
-                                        cal:View.Context="CardNew" />
+                        <ContentControl cal:View.Model="{Binding VolumeTestView}"
+                                        cal:View.Context="Base" />
                     </Border>
                 </Grid>
-
-            </ScrollViewer>
+            </Viewbox>
         </Grid>
 
         <Grid HorizontalAlignment="Right"
@@ -112,6 +124,4 @@
             </materialDesign:Snackbar>
         </Grid>
     </Grid>
-
-
 </UserControl>

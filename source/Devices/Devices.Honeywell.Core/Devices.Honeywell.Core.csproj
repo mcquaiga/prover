@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="MiDeviceTypes\Items.json" />
+    <None Remove="MiDeviceTypes\Item_MeterType.json" />
+    <None Remove="MiDeviceTypes\Item_VolumeUnits.json" />
+    <None Remove="MiDeviceTypes\Type_EC350.json" />
+    <None Remove="MiDeviceTypes\Type_MiniAT.json" />
+    <None Remove="MiDeviceTypes\Type_MiniMax.json" />
+    <None Remove="MiDeviceTypes\Type_TCI.json" />
+    <None Remove="MiDeviceTypes\Type_TibBoard.json" />
+    <None Remove="MiDeviceTypes\Type_TOC.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="MiDeviceTypes\Items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Item_MeterType.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Item_VolumeUnits.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_EC350.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_MiniAT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_TCI.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_TibBoard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MiDeviceTypes\Type_TOC.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </PackageReference>
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+
+    <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+  </ItemGroup>
+</Project>

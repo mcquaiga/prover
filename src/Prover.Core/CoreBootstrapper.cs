@@ -30,17 +30,14 @@ namespace Prover.Core
 {
     public static class CoreBootstrapper
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public static void RegisterServices(ContainerBuilder builder)
         {
-   
-            SetupDatabase(builder);                       
+            SetupDatabase(builder);
 
-            builder.RegisterType<SettingsService>()                              
-                .As<ISettingsService>()     
+            builder.RegisterType<SettingsService>()
+                .As<ISettingsService>()
                 .As<IStartable>()
-                .SingleInstance();          
+                .SingleInstance();
 
             RegisterCommunications(builder);
 
@@ -48,15 +45,17 @@ namespace Prover.Core
             builder.RegisterBuildCallback(_ => Task.Run(ItemHelpers.GetInstrumentDefinitions));
         }
 
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         private static void RegisterCommunications(ContainerBuilder builder)
-        {    
+        {
             builder.RegisterType<SerialPort>();
 
             builder.RegisterType<IrDAPort>()
                 .Named<ICommPort>("IrDAPort");
 
             builder.Register<Func<string, int, ICommPort>>(c =>
-            {     
+            {
                 var resolve = c;
                 return (port, baud) =>
                 {
@@ -65,9 +64,9 @@ namespace Prover.Core
                         return new IrDAPort();
                     }
 
-                    return new SerialPort(port, baud);                    
-                };              
-            });           
+                    return new SerialPort(port, baud);
+                };
+            });
 
             //QA Test Runs
             builder.Register(c => DInOutBoardFactory.CreateBoard(0, 0, 1))
@@ -80,10 +79,12 @@ namespace Prover.Core
                         : string.Empty;
                     return new TachometerService(tach, c.Resolve<IDInOutBoard>());
                 })
-                .As<TachometerService>();           
+                .As<TachometerService>();
+            //.InstancePerDependency();
 
             builder.RegisterType<MechanicalAutoVolumeTestManager>();
             builder.RegisterType<RotaryAutoVolumeTestManager>();
+            builder.RegisterType<FrequencyVolumeTestManager>();
             builder.RegisterType<ManualVolumeTestManager>();
 
             builder.RegisterType<AverageReadingStabilizer>()
@@ -99,15 +100,17 @@ namespace Prover.Core
 
         private static void RegisterTestActions(ContainerBuilder builder)
         {
-            builder.RegisterType<TestActionsManager>().As<ITestActionsManager>();
+            builder.RegisterType<TestActionsManager>()
+                .As<ITestActionsManager>()
+                .SingleInstance();
 
             builder.Register(c =>
             {
                 var resetItems = c.Resolve<ISettingsService>().Shared.TestSettings.TocResetItems;
                 return new TocItemUpdaterAction(resetItems);
             })
-            .As<IPreVolumeTestAction>()
-            .Named<IPreVolumeTestAction>("TocVolPulsesWaitingReset");
+            .As<IEvcDeviceValidationAction>()
+            .Named<IEvcDeviceValidationAction>("TocVolPulsesWaitingReset");
 
             builder.Register(c =>
             {
@@ -117,17 +120,15 @@ namespace Prover.Core
                     {6, "0" },
                     {7, "0" }
                 };
-                return new ItemUpdaterAction(resetItems);
+                return new ItemUpdaterAction(VerificationStep.PreVolumeVerification, resetItems);
             })
-            .As<IPreVolumeTestAction>()
-            .Named<IPreVolumeTestAction>("PulseOutputWaitingReset");
-
-
+            .As<IEvcDeviceValidationAction>()
+            .Named<IEvcDeviceValidationAction>("PulseOutputWaitingReset");
         }
 
         private static void SetupDatabase(ContainerBuilder builder)
         {
-            //Database registrations           
+            //Database registrations
             builder.RegisterType<ProverContext>()
                 .AsSelf()
                 .As<IStartable>()

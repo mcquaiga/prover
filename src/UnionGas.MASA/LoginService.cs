@@ -4,11 +4,7 @@
     using NLog;
     using Prover.Core.Login;
     using Prover.GUI.Screens;
-    using System;
-    using System.ServiceModel;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.Windows;
     using UnionGas.MASA.DCRWebService;
     using UnionGas.MASA.Dialogs.LoginDialog;
     using UnionGas.MASA.Screens.Toolbars;

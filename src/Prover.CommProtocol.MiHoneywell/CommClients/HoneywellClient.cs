@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 
 namespace Prover.CommProtocol.MiHoneywell.CommClients
@@ -16,7 +17,7 @@ namespace Prover.CommProtocol.MiHoneywell.CommClients
     {
         protected Task LoadItemsTask { get; private set; }
 
-        public HoneywellClient(ICommPort commPort, InstrumentType instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
+        public HoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
         {            
         }
 

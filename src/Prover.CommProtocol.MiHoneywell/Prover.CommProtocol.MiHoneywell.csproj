@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Prover.CommProtocol.MiHoneywell</RootNamespace>
     <AssemblyName>Prover.CommProtocol.MiHoneywell</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\build\legacy\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -105,6 +105,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Utilities">
+      <HintPath>..\..\source\lib\Utilities.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +115,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="CommClients\HoneywellClient.cs" />
     <Compile Include="HoneywellInstrumentTypes.cs" />
+    <Compile Include="HoneywellDevice.cs" />
     <Compile Include="Items\DeviceItems.cs" />
     <Compile Include="Items\FrequencyTestItems.cs" />
     <Compile Include="Items\ItemHelpers.cs" />
@@ -155,8 +159,11 @@
     <Content Include="ItemDefinitions\Item_MeterType.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ItemDefinitions\DisabledType_TOC.json">
+    <Content Include="ItemDefinitions\Type_TOC.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemDefinitions\Type_TibBoard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
   </ItemGroup>

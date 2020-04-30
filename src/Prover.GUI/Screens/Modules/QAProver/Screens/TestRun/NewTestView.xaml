@@ -5,8 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    TextElement.FontSize="18"
-    mc:Ignorable="d">
+    TextElement.FontSize="20"
+    mc:Ignorable="d"
+    d:DesignHeight="1000" d:DesignWidth="1000">
     <DockPanel>
         <materialDesign:ColorZone
             Padding="16,8"
@@ -18,8 +19,8 @@
         </materialDesign:ColorZone>
         <Grid
             Margin="5"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -70,10 +71,6 @@
                         Margin="0,5"
                         Content="IrDA"
                         Style="{StaticResource MaterialDesignCheckBox}" />
-                    <Button
-                        HorizontalAlignment="Right"
-                        Command="{Binding RefreshCommPortsCommand}"
-                        Content="Refresh Ports" />
                 </StackPanel>
             </GroupBox>
 
@@ -89,15 +86,22 @@
                         Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                     <CheckBox x:Name="TachIsNotUsed" Content="Not available" />
+                    <Button
+                        HorizontalAlignment="Right"
+                        Command="{Binding RefreshCommPortsCommand}"
+                        FontSize="14"
+                        Width="150"
+                        Margin="10 20 10 5"
+                        Content="Refresh Ports" />
                 </StackPanel>
             </GroupBox>
             <Button
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
-                Width="150"
+                Width="250"
                 Height="60"
-                Margin="15"
+                Margin="50"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Command="{Binding StartTestCommand}"
@@ -107,13 +111,13 @@
             <Button
                 Grid.Row="2"
                 Grid.Column="2"
-                Margin="15"
+                Margin="25"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Command="{Binding StartRotarySmokeTestCommand}"
                 Content="Run Rotary Smoke Test"
-                FontSize="14"
-                Style="{StaticResource MaterialDesignFlatButton}" />
+                FontSize="16"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
         </Grid>
     </DockPanel>
 </UserControl>

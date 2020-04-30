@@ -1,5 +1,6 @@
 ﻿{
-  "modules": [
-
-  ]
+	"modules": [
+		"UnionGas.MASA",
+		"Certificates"
+	]
 }

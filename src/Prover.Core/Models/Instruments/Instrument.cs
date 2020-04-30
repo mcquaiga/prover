@@ -1,8 +1,8 @@
 ﻿namespace Prover.Core.Models.Instruments
 {
     using Newtonsoft.Json;
-    using Prover.CommProtocol.Common;
     using Prover.CommProtocol.Common.Items;
+    using Prover.CommProtocol.Common.Models.Instrument;
     using Prover.CommProtocol.MiHoneywell;
     using Prover.Core.Models.Certificates;
     using Prover.Core.Models.Clients;
@@ -12,15 +12,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;    
+    using System.Linq;
 
     /// <summary>
     /// Defines the <see cref="Instrument" />
     /// </summary>
     public partial class Instrument : ProverBaseEntity
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the ArchivedDateTime
         /// </summary>
@@ -63,13 +61,19 @@
             get
             {
                 if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase) && string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.PTZ;
+                }
 
                 if (string.Equals(Items.GetItem(ItemCodes.Pressure.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.P;
+                }
 
                 if (string.Equals(Items.GetItem(ItemCodes.Temperature.FixedFactor).Description, "live", StringComparison.OrdinalIgnoreCase))
+                {
                     return EvcCorrectorType.T;
+                }
 
                 return EvcCorrectorType.T;
             }
@@ -107,9 +111,11 @@
             {
                 var verificationTestsPassed = VerificationTests.FirstOrDefault(x => x.HasPassed == false) == null;
                 if (VolumeTest.DriveType is MechanicalDrive)
+                {
                     return verificationTestsPassed
                         && EventLogPassed != null && EventLogPassed.Value
                         && CommPortsPassed != null && CommPortsPassed.Value;
+                }
 
                 return verificationTestsPassed;
             }
@@ -119,7 +125,7 @@
         /// Gets or sets the InstrumentType
         /// </summary>
         [NotMapped]
-        public override InstrumentType InstrumentType { get; set; }
+        public override IEvcDevice InstrumentType { get; set; }
 
         /// <summary>
         /// Gets the InstrumentTypeString
@@ -156,6 +162,10 @@
         /// Gets or sets the JobId
         /// </summary>
         public string JobId { get; set; }
+
+        public virtual Instrument LinkedTest { get; set; }
+
+        public Guid? LinkedTestId { get; set; }
 
         /// <summary>
         /// Gets the PulseAScaling
@@ -200,12 +210,6 @@
         public decimal PulseOutputTiming => Items.GetItem(115).NumericValue;
 
         /// <summary>
-        /// Gets the SerialNumber
-        /// </summary>
-        [NotMapped]
-        public int SerialNumber => (int)Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
-
-        /// <summary>
         /// Gets the SiteNumber1
         /// </summary>
         [NotMapped]
@@ -221,12 +225,6 @@
         /// Gets or sets the TestDateTime
         /// </summary>
         public DateTime TestDateTime { get; set; }
-
-        /// <summary>
-        /// Gets the Transducer
-        /// </summary>
-        [NotMapped]
-        public TransducerType Transducer => (TransducerType)Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
         /// <summary>
         /// Gets or sets the Type
@@ -248,14 +246,25 @@
             {
                 var firstOrDefault = VerificationTests.FirstOrDefault(vt => vt.VolumeTest != null);
                 if (firstOrDefault != null)
+                {
                     return firstOrDefault.VolumeTest;
+                }
+
                 return null;
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the SerialNumber
+        /// </summary>
+        [NotMapped]
+        public int SerialNumber => (int)Items.GetItem(ItemCodes.SiteInfo.SerialNumber).NumericValue;
 
-        #region Methods
+        /// <summary>
+        /// Gets the Transducer
+        /// </summary>
+        [NotMapped]
+        public TransducerType Transducer => (TransducerType)Items.GetItem(ItemCodes.Pressure.TransducerType).NumericValue;
 
         /// <summary>
         /// The Create
@@ -265,7 +274,7 @@
         /// <param name="testSettings">The testSettings<see cref="TestSettings"/></param>
         /// <param name="client">The client<see cref="Client"/></param>
         /// <returns>The <see cref="Instrument"/></returns>
-        public static Instrument Create(InstrumentType instrumentType, IEnumerable<ItemValue> itemValues,
+        public static Instrument Create(IEvcDevice instrumentType, IEnumerable<ItemValue> itemValues,
             TestSettings testSettings, Client client = null)
         {
             var i = new Instrument()
@@ -277,7 +286,9 @@
                 Items = itemValues.ToList(),
 
                 Client = client,
-                ClientId = client?.Id
+                ClientId = client?.Id,
+                EventLogPassed = true,
+                CommPortsPassed = true
             };
 
             i.VerificationTests = AddVerificationTests(i, testSettings);
@@ -285,44 +296,11 @@
             return i;
         }
 
-        private static List<VerificationTest> AddVerificationTests(Instrument instrument, TestSettings testSettings)
+        public override void OnInitializing()
         {
-            var results = new List<VerificationTest>();
-            foreach (var tp in testSettings.TestPoints)
-            {
-                var vt = new VerificationTest(instrument, tp.Level);
-                if (instrument.CompositionType == EvcCorrectorType.P)
-                {
-                    vt.PressureTest = new PressureTest(vt, tp.PressureGaugePercent);
-                }
+            InstrumentType = HoneywellInstrumentTypes.GetById(Type);
 
-                if (instrument.CompositionType == EvcCorrectorType.T)
-                {
-                    vt.TemperatureTest = new TemperatureTest(vt, tp.TemperatureGauge);
-                }
-
-                if (instrument.CompositionType == EvcCorrectorType.PTZ)
-                {
-                    vt.PressureTest = new PressureTest(vt, tp.PressureGaugePercent);
-                    vt.TemperatureTest = new TemperatureTest(vt, tp.TemperatureGauge);
-                    vt.SuperFactorTest = new SuperFactorTest(vt);
-                }
-
-                if (tp.IsVolumeTest)
-                {
-                    var volume = new VolumeTest(vt, testSettings.MechanicalUncorrectedTestLimits);
-                    
-                    if (instrument.InstrumentType.Name == "TOC")
-                    {
-                        vt.FrequencyTest = new FrequencyTest(vt);
-                    }
-
-                    vt.VolumeTest = volume;
-                }
-
-                results.Add(vt);
-            }
-            return results;
+            base.OnInitializing();
         }
 
         /// <summary>
@@ -334,14 +312,26 @@
             return $@"{ JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }) }";
         }
 
-        public override void OnInitializing()
-        {            
-            InstrumentType = HoneywellInstrumentTypes.GetById(this.Type);     
+        private static List<VerificationTest> AddVerificationTests(Instrument instrument, TestSettings testSettings)
+        {
+            var results = new List<VerificationTest>();
 
-            base.OnInitializing();
+            if (instrument.InstrumentType == HoneywellInstrumentTypes.Toc)
+            {
+                var firstLevel = testSettings.TestPoints.Find(t => t.Level == 0);
+                results.Add(VerificationTest.Create(instrument, testSettings, firstLevel));
+                return results;
+            }
+            else
+            {
+                foreach (var tp in testSettings.TestPoints)
+                {
+                    var vt = VerificationTest.Create(instrument, testSettings, tp);
+                    results.Add(vt);
+                }
+            }
+            return results;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -349,44 +339,6 @@
     /// </summary>
     public partial class Instrument
     {
-        #region Methods
-        /// <summary>
-        /// The GetDateFormatted
-        /// </summary>
-        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
-        /// <returns>The <see cref="string"/></returns>
-        public string GetDateFormatted(DateTime dateTime)
-        {
-            var dateFormat = Items.GetItem(262).Description;
-            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
-            return dateTime.ToString(dateFormat);
-        }
-
-        /// <summary>
-        /// The GetDateTime
-        /// </summary>
-        /// <returns>The <see cref="DateTime"/></returns>
-        public DateTime GetDateTime()
-        {
-            var dateFormat = Items.GetItem(262).Description;
-            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
-            dateFormat = $"{dateFormat} HH mm ss";
-            var time = Items.GetItem(203).RawValue;
-            var date = Items.GetItem(204).RawValue;
-
-            return DateTime.ParseExact($"{date} {time}", dateFormat, null);
-        }
-
-        /// <summary>
-        /// The GetTimeFormatted
-        /// </summary>
-        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
-        /// <returns>The <see cref="string"/></returns>
-        public string GetTimeFormatted(DateTime dateTime)
-        {
-            return dateTime.ToString("HH mm ss");
-        }
-
         /// <summary>
         /// The CanExport
         /// </summary>
@@ -443,6 +395,41 @@
             return i => string.Equals(i.InstrumentType.Name, instrumentType, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(instrumentType) || string.Equals(instrumentType, "all", StringComparison.OrdinalIgnoreCase);
         }
 
-        #endregion
+        /// <summary>
+        /// The GetDateFormatted
+        /// </summary>
+        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
+        /// <returns>The <see cref="string"/></returns>
+        public string GetDateFormatted(DateTime dateTime)
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            return dateTime.ToString(dateFormat);
+        }
+
+        /// <summary>
+        /// The GetDateTime
+        /// </summary>
+        /// <returns>The <see cref="DateTime"/></returns>
+        public DateTime GetDateTime()
+        {
+            var dateFormat = Items.GetItem(262).Description;
+            dateFormat = dateFormat.Replace("YY", "yy").Replace("DD", "dd");
+            dateFormat = $"{dateFormat} HH mm ss";
+            var time = Items.GetItem(203).RawValue;
+            var date = Items.GetItem(204).RawValue;
+
+            return DateTime.ParseExact($"{date} {time}", dateFormat, null);
+        }
+
+        /// <summary>
+        /// The GetTimeFormatted
+        /// </summary>
+        /// <param name="dateTime">The dateTime<see cref="DateTime"/></param>
+        /// <returns>The <see cref="string"/></returns>
+        public string GetTimeFormatted(DateTime dateTime)
+        {
+            return dateTime.ToString("HH mm ss");
+        }
     }
 }

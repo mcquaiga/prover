@@ -2,72 +2,26 @@
 using Caliburn.Micro;
 using Prover.GUI.Events;
 using ReactiveUI;
+using System.Threading.Tasks;
+using Prover.Core.VerificationTests;
+using System.Reactive.Subjects;
+using Prover.Core.Models.Instruments;
 
 namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
 {
-    public class SaveTestEvent
-    {
-        
-    }
-
     public class FrequencyTestViewModel : TestRunViewModelBase<Core.Models.Instruments.FrequencyTest>
-    {       
-        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun) : base(screenManager, eventAggregator, testRun)
+    {
+        public decimal AdjustedEndReading
         {
-            _mainRotorPulses = testRun.MainRotorPulseCount;
-            _senseRotorPulses = testRun.SenseRotorPulseCount;
-            _mechanicalOutputFactor = testRun.MechanicalOutputFactor;
-            RaisePropertyChangeEvents();
-
-            this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
-                .Subscribe(x =>
-                {
-                    TestRun.MainRotorPulseCount = x.Item1 ?? 0;
-                    TestRun.SenseRotorPulseCount = x.Item2 ?? 0;
-                    TestRun.MechanicalOutputFactor = x.Item3 ?? 0;
-                    eventAggregator.PublishOnUIThread(VerificationTestEvent.Raise(TestRun.VerificationTest));
-                    eventAggregator.PublishOnUIThread(new SaveTestEvent());
-                });
+            get { return _adjustedEndReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedEndReading, value); }
         }
 
-        private long? _mechanicalOutputFactor;
-        public long? MechanicalOutputFactor
+        public decimal AdjustedStartReading
         {
-            get { return _mechanicalOutputFactor; }
-            set { this.RaiseAndSetIfChanged(ref _mechanicalOutputFactor, value); }
+            get { return _adjustedStartReading; }
+            set { this.RaiseAndSetIfChanged(ref _adjustedStartReading, value); }
         }
-
-        private long? _mainRotorPulses;
-        public long? MainRotorPulses
-        {
-            get { return _mainRotorPulses; }
-            set { this.RaiseAndSetIfChanged(ref _mainRotorPulses, value); }
-        }
-
-        private long? _senseRotorPulses;
-        public long? SenseRotorPulses
-        {
-            get { return _senseRotorPulses; }
-            set { this.RaiseAndSetIfChanged(ref _senseRotorPulses, value); }
-        }
-
-        private decimal _unadjustedVolume;
-
-        public decimal UnadjustedVolume
-        {
-            get { return _unadjustedVolume; }
-            set { this.RaiseAndSetIfChanged(ref _unadjustedVolume, value); }
-        }
-
-        private decimal _evcUnadjustedVolume;
-
-        public decimal EvcUnadjustedVolume
-        {
-            get { return _evcUnadjustedVolume; }
-            set { this.RaiseAndSetIfChanged(ref _evcUnadjustedVolume, value); }
-        }
-
-        private decimal _adjustedVolume;
 
         public decimal AdjustedVolume
         {
@@ -75,12 +29,90 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             set { this.RaiseAndSetIfChanged(ref _adjustedVolume, value); }
         }
 
-        private decimal _evcAdjustedVolume;
-
         public decimal EvcAdjustedVolume
         {
             get { return _evcAdjustedVolume; }
             set { this.RaiseAndSetIfChanged(ref _evcAdjustedVolume, value); }
+        }
+
+        public decimal EvcUnadjustedVolume
+        {
+            get { return _evcUnadjustedVolume; }
+            set { this.RaiseAndSetIfChanged(ref _evcUnadjustedVolume, value); }
+        }
+
+        public long? MainRotorPulses
+        {
+            get { return _mainRotorPulses; }
+            set { this.RaiseAndSetIfChanged(ref _mainRotorPulses, value); }
+        }
+
+        public long? MechanicalOutputFactor
+        {
+            get { return _mechanicalOutputFactor; }
+            set { this.RaiseAndSetIfChanged(ref _mechanicalOutputFactor, value); }
+        }
+
+        public ReactiveCommand PostTestCommand
+        {
+            get
+            {
+                return _postTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _postTestCommand, value);
+            }
+        }
+
+        public ReactiveCommand PreTestCommand
+        {
+            get
+            {
+                return _preTestCommand;
+            }
+
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _preTestCommand, value);
+            }
+        }
+
+        public long? SenseRotorPulses
+        {
+            get { return _senseRotorPulses; }
+            set { this.RaiseAndSetIfChanged(ref _senseRotorPulses, value); }
+        }
+
+        public decimal UnadjustedVolume
+        {
+            get { return _unadjustedVolume; }
+            set { this.RaiseAndSetIfChanged(ref _unadjustedVolume, value); }
+        }
+
+        public FrequencyTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator, Core.Models.Instruments.FrequencyTest testRun
+            , ISubject<VerificationTest> changeObservable, IQaRunTestManager testRunManager = null) : base(screenManager, eventAggregator, testRun, changeObservable)
+        {
+            _testRunManager = testRunManager;
+            if (_testRunManager != null)
+            {
+                PreTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPreVolumeTest);
+                PostTestCommand = ReactiveCommand.CreateFromTask(_testRunManager.DownloadPostVolumeTest);
+            }
+
+            MainRotorPulses = testRun.MainRotorPulseCount;
+            SenseRotorPulses = testRun.SenseRotorPulseCount;
+            MechanicalOutputFactor = testRun.MechanicalOutputFactor;
+
+            this.WhenAnyValue(x => x.MainRotorPulses, x => x.SenseRotorPulses, x => x.MechanicalOutputFactor)
+                .Subscribe(x =>
+                {
+                    TestRun.MainRotorPulseCount = x.Item1 ?? 0;
+                    TestRun.SenseRotorPulseCount = x.Item2 ?? 0;
+                    TestRun.MechanicalOutputFactor = x.Item3 ?? 0;
+                    ChangedEvent.OnNext(TestRun.VerificationTest);
+                });
         }
 
         protected sealed override void RaisePropertyChangeEvents()
@@ -88,11 +120,29 @@ namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
             AdjustedVolume = TestRun.AdjustedVolume();
             TestRun.RoundedAdjustedVolume();
             UnadjustedVolume = TestRun.UnadjustedVolume();
-            EvcAdjustedVolume = TestRun.EvcAdjustedVolume() ?? 0;
+            EvcAdjustedVolume = TestRun.TibAdjustedVolume() ?? 0;
             EvcUnadjustedVolume = TestRun.EvcUnadjustedVolume() ?? 0;
 
             NotifyOfPropertyChange(() => TestRun);
             NotifyOfPropertyChange(() => TestRun.PercentError);
         }
+
+        private readonly IQaRunTestManager _testRunManager;
+
+        private decimal _adjustedEndReading;
+        private decimal _adjustedStartReading;
+        private decimal _adjustedVolume;
+        private decimal _evcAdjustedVolume;
+        private decimal _evcUnadjustedVolume;
+        private long? _mainRotorPulses;
+        private long? _mechanicalOutputFactor;
+        private ReactiveCommand _postTestCommand;
+        private ReactiveCommand _preTestCommand;
+        private long? _senseRotorPulses;
+        private decimal _unadjustedVolume;
+    }
+
+    public class SaveTestEvent
+    {
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prover.CommProtocol.Common;
 using Prover.CommProtocol.Common.IO;
 using Prover.CommProtocol.Common.Messaging;
+using Prover.CommProtocol.Common.Models.Instrument;
 using Prover.CommProtocol.MiHoneywell.Messaging.Response;
+using static Prover.CommProtocol.MiHoneywell.CRC.CRC;
 
 namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
 {
@@ -49,7 +50,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
         ///     NoError indicates we're connected
         /// </returns>
         public static MiCommandDefinition<StatusResponseMessage>
-            SignOn(InstrumentType instrument, string accessCode = null)
+            SignOn(IEvcDevice instrument, string accessCode = null)
         {
             if (string.IsNullOrEmpty(accessCode))
                 accessCode = DefaultAccessCode;
@@ -132,7 +133,7 @@ namespace Prover.CommProtocol.MiHoneywell.Messaging.Requests
             if (!body.Contains(ControlCharacters.ETX))
                 body = string.Concat(body, ControlCharacters.ETX);
 
-            var crc = CRC.CRC.CalcCRC(body);
+            var crc = CalcCRC(body);
             return string.Concat(ControlCharacters.SOH, body, crc, ControlCharacters.EOT);
         }
     }

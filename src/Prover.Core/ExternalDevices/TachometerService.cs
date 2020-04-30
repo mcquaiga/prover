@@ -14,27 +14,6 @@
     /// </summary>
     public class TachometerService : IDisposable
     {
-        #region Fields
-
-        /// <summary>
-        /// Defines the Log
-        /// </summary>
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// Defines the _outputBoard
-        /// </summary>
-        private readonly IDInOutBoard _outputBoard;
-
-        /// <summary>
-        /// Defines the _serialPort
-        /// </summary>
-        private readonly SerialPort _serialPort;
-
-        #endregion
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TachometerService"/> class.
         /// </summary>
@@ -51,10 +30,6 @@
 
             _outputBoard = outputBoard;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// The ParseTachValue
@@ -80,9 +55,8 @@
         /// </summary>
         public void Dispose()
         {
-            _serialPort?.Close();
-            _serialPort?.Dispose();
-            _outputBoard?.Dispose();
+            _serialPort.Dispose();
+            _outputBoard.Dispose();
         }
 
         /// <summary>
@@ -94,27 +68,25 @@
             if (_serialPort == null)
                 return -1;
 
-            return await Task.Run(async () =>
+            try
             {
-                try
-                {
-                    if (!_serialPort.IsOpen)
-                        _serialPort.Open();
+                if (!_serialPort.IsOpen)
+                    _serialPort.Open();
 
-                    _serialPort.DiscardInBuffer();
-                    _serialPort.Write("@D0");
-                    _serialPort.Write(((char)13).ToString());
-                    await Task.Delay(100);
+                _serialPort.DiscardInBuffer();
+                _serialPort.Write("@D0");
+                _serialPort.Write(((char)13).ToString());
+                await Task.Delay(100);
 
-                    var tachString = _serialPort.ReadExisting();
+                var tachString = _serialPort.ReadExisting();
 
-                    Log.Debug($"Read data from Tach: {tachString}");
-                    return ParseTachValue(tachString);
-                }
-                finally
-                {
-                }
-            });
+                Log.Debug($"Read data from Tach: {tachString}");
+                return ParseTachValue(tachString);
+            }
+            finally
+            {
+                _serialPort?.Close();
+            }
         }
 
         /// <summary>
@@ -123,30 +95,37 @@
         /// <returns>The <see cref="Task"/></returns>
         public async Task ResetTach()
         {
-            await Task.Run(() =>
-            {
-                if (_serialPort == null)
-                    return;
+            if (_serialPort == null)
+                return;
 
-                if (!_serialPort.IsOpen) _serialPort.Open();
+            if (!_serialPort.IsOpen) _serialPort.Open();
 
-                _serialPort.Write($"@T1{(char)13}");
-                Thread.Sleep(50);
-                _serialPort.Write($"6{(char)13}");
-                _serialPort.DiscardInBuffer();
-            });
+            _serialPort.Write($"@T1{(char)13}");
+            await Task.Delay(50);
+            _serialPort.Write($"6{(char)13}");
+            _serialPort.DiscardInBuffer();
 
-            await Task.Run(() =>
-            {
-                _outputBoard?.StartMotor();
-                Thread.Sleep(500);
-                _outputBoard?.StopMotor();
-                Thread.Sleep(100);
-            });
+            _outputBoard?.StartMotor();
+            await Task.Delay(500);
+            _outputBoard?.StopMotor();
+            await Task.Delay(100);
 
-            Thread.Sleep(2000);
+            await Task.Delay(2000);
         }
 
-        #endregion
+        /// <summary>
+        /// Defines the Log
+        /// </summary>
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Defines the _outputBoard
+        /// </summary>
+        private readonly IDInOutBoard _outputBoard;
+
+        /// <summary>
+        /// Defines the _serialPort
+        /// </summary>
+        private readonly SerialPort _serialPort;
     }
 }

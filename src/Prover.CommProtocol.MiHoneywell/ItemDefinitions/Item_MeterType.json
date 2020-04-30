@@ -66,7 +66,7 @@
     },
     {
       "description": "Roots 16M",
-      "UnCorPulsesX10": "152",
+      "UnCorPulsesX10": "151",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1481500",
       "MountType": "LMMA",
@@ -124,7 +124,7 @@
       "UnCorPulsesX10": "10",
       "UnCorPulsesX100": "1",
       "MeterDisplacement": "0.0080246",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "11",
         "140"
@@ -135,7 +135,7 @@
       "UnCorPulsesX10": "12",
       "UnCorPulsesX100": "2",
       "MeterDisplacement": "0.0111111",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "12",
         "142"
@@ -146,7 +146,7 @@
       "UnCorPulsesX10": "17",
       "UnCorPulsesX100": "2",
       "MeterDisplacement": "0.0153199",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "13",
         "143"
@@ -157,7 +157,7 @@
       "UnCorPulsesX10": "17",
       "UnCorPulsesX100": "2",
       "MeterDisplacement": "0.0",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "50",
         "154"
@@ -168,7 +168,7 @@
       "UnCorPulsesX10": "17",
       "UnCorPulsesX100": "2",
       "MeterDisplacement": "0.0",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [ "156" ]
     },
     {
@@ -176,7 +176,7 @@
       "UnCorPulsesX10": "25",
       "UnCorPulsesX100": "3",
       "MeterDisplacement": "0.0222222",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "14",
         "144"
@@ -187,7 +187,7 @@
       "UnCorPulsesX10": "40",
       "UnCorPulsesX100": "4",
       "MeterDisplacement": "0.0367347",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "15",
         "145"
@@ -198,7 +198,7 @@
       "UnCorPulsesX10": "65",
       "UnCorPulsesX100": "7",
       "MeterDisplacement": "0.0612245",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "16",
         "146"
@@ -209,7 +209,7 @@
       "UnCorPulsesX10": "102",
       "UnCorPulsesX100": "10",
       "MeterDisplacement": "0.0993789",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "17",
         "147"
@@ -220,7 +220,7 @@
       "UnCorPulsesX10": "152",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1408163",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "18",
         "148"
@@ -231,7 +231,7 @@
       "UnCorPulsesX10": "112",
       "UnCorPulsesX100": "11",
       "MeterDisplacement": "0.1085343",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "34",
         "149"
@@ -239,10 +239,10 @@
     },
     {
       "description": "RM 23000",
-      "UnCorPulsesX10": "152",
+      "UnCorPulsesX10": "151",
       "UnCorPulsesX100": "15",
       "MeterDisplacement": "0.1408163",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "35",
         "150"
@@ -253,7 +253,7 @@
       "UnCorPulsesX10": "290",
       "UnCorPulsesX100": "29",
       "MeterDisplacement": "0.2840580",
-      "MountType": "RM",
+      "MountType": "LMMA",
       "ids": [
         "36",
         "151"

@@ -5,20 +5,25 @@ using Prover.CommProtocol.Common.Items;
 
 namespace Prover.CommProtocol.MiHoneywell.Items
 {
-    public class FrequencyTestItems : DeviceItems, IFrequencyTestItems
+    internal class FrequencyTestItems : DeviceItems, IFrequencyTestItems
     {    
         [JsonConstructor]
         private FrequencyTestItems() { }
 
-        public FrequencyTestItems(IEnumerable<ItemValue> itemValues)
+        public FrequencyTestItems(IEnumerable<ItemValue> mainItemValues, IEnumerable<ItemValue> tibItemValues)
         {
-            var items = itemValues.ToList();
+            var mainItems = mainItemValues.ToList();
 
-            AdjustedVolumeReading = GetHighResolutionValue(items, 850, 851);
-            UnadjustVolumeReading = (long)items.GetItem(852).NumericValue;
+            TibAdjustedVolumeReading = GetHighResolutionValue(tibItemValues.ToList(), 850, 851);
+            TibUnadjustedVolumeReading = (long)tibItemValues.GetItem(852).NumericValue;
+
+            MainAdjustedVolumeReading = (long)mainItems.GetItem(850).NumericValue;
+            MainUnadjustVolumeReading = (long)mainItems.GetItem(852).NumericValue;
         }
 
-        public decimal AdjustedVolumeReading { get; set; }
-        public long UnadjustVolumeReading { get; set; }
+        public decimal TibAdjustedVolumeReading { get; set; }
+        public long TibUnadjustedVolumeReading { get; }
+        public long MainAdjustedVolumeReading { get; set; }
+        public long MainUnadjustVolumeReading { get; set; }
     }
 }
