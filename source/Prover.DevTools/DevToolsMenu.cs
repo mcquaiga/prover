@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Prover.DevTools
+namespace Prover.Modules.DevTools
 {
 	public interface IDevToolsMenuItem
 	{

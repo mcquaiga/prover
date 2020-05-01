@@ -1,8 +1,8 @@
-﻿using ReactiveUI;
-using System.Linq;
+﻿using System.Linq;
 using System.Reactive.Disposables;
+using ReactiveUI;
 
-namespace Prover.DevTools.Views
+namespace Prover.Modules.DevTools.Views
 {
 	/// <summary>
 	/// Interaction logic for DeviceTemplatesView.xaml

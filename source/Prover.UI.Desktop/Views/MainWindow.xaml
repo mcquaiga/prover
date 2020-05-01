@@ -10,6 +10,7 @@
 	xmlns:viewModels="clr-namespace:Prover.UI.Desktop.ViewModels"
 	x:Name="MainWindowView"
 	Title="EVC Prover"
+	Icon="../Resources/clipboard-check-white.ico"
 	x:TypeArguments="viewModels:MainViewModel"
 	Style="{StaticResource DialogWindowStyle}"
 	WindowStartupLocation="CenterScreen"

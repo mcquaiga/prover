@@ -1,10 +1,3 @@
-using Devices.Communications.Interfaces;
-using Devices.Communications.Status;
-using Devices.Core.Items;
-using Devices.Core.Repository;
-using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.Verifications;
-using Prover.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +5,15 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Devices.Communications.Interfaces;
+using Devices.Communications.Status;
+using Devices.Core.Items;
+using Devices.Core.Repository;
+using Prover.Application.Services.LiveReadCorrections;
+using Prover.Application.Verifications;
+using Prover.Shared.Extensions;
 
-namespace Prover.DevTools.FileLoader
+namespace Prover.Modules.DevTools.FileLoader
 {
     public class LiveReadSimulator
     {

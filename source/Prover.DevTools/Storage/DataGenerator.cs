@@ -1,21 +1,21 @@
-﻿using Devices.Core.Interfaces;
+﻿using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows.Input;
+using Devices.Core.Interfaces;
 using DynamicData.Kernel;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Builders;
 using Prover.Application.Verifications;
 using Prover.Application.ViewModels;
-using Prover.DevTools.SampleData;
+using Prover.Modules.DevTools.SampleData;
 using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Windows.Input;
 
-namespace Prover.DevTools.Storage
+namespace Prover.Modules.DevTools.Storage
 {
 	internal class DataGenerator : ViewModelBase, IDevToolsMenuItem
 	{

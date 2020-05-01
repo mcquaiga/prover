@@ -4,7 +4,7 @@ using Prover.Application.Interactions;
 using Prover.Application.ViewModels;
 using ReactiveUI.Fody.Helpers;
 
-namespace Prover.DevTools
+namespace Prover.Modules.DevTools
 {
 	public class DevToolbarMenu : ViewModelBase, IToolbarItem
 	{

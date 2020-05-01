@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Prover.DevTools\Prover.DevTools.csproj" />
+    <ProjectReference Include="..\Prover.DevTools\Prover.Modules.DevTools.csproj" />
     <ProjectReference Include="..\Prover.Storage.MongoDb\Prover.Storage.MongoDb.csproj" />
   </ItemGroup>
 

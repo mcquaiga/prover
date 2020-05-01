@@ -1,4 +1,10 @@
-﻿using Devices.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
@@ -7,14 +13,8 @@ using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
 
-namespace Prover.DevTools.FileLoader
+namespace Prover.Modules.DevTools.FileLoader
 {
     public class ItemLoader
     {

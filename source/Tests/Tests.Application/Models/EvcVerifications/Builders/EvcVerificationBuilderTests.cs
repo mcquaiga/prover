@@ -2,9 +2,9 @@
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Prover.DevTools.SampleData;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using Prover.Modules.DevTools.SampleData;
 using Tests.Application.Services;
 
 namespace Prover.Application.Models.EvcVerifications.Builders.Tests
