@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.DevTools.json" />
     <None Remove="SampleData\Devices\Adem.json" />
     <None Remove="SampleData\Devices\MiniAt.json" />
     <None Remove="SampleData\Devices\MiniMax.json" />
@@ -24,6 +25,10 @@
 	  <OutputPath>..\..\build\Release</OutputPath>
 	</PropertyGroup>
   <ItemGroup>
+    <Content Include="appsettings.DevTools.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Content>
     <Content Include="SampleData\Devices\Adem.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

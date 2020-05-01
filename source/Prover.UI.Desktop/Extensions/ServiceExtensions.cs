@@ -1,16 +1,19 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Prover.Shared;
+using Prover.UI.Desktop.Startup;
+using Prover.UI.Desktop.ViewModels;
+using ReactiveUI;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Prover.UI.Desktop.Startup;
-using Prover.UI.Desktop.ViewModels;
-using ReactiveUI;
 
 namespace Prover.UI.Desktop.Extensions
 {
@@ -19,7 +22,7 @@ namespace Prover.UI.Desktop.Extensions
         public static void AddAllTypes<T>(this IServiceCollection services, Assembly[] assemblies = null,
                                           ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
-            assemblies ??= new[] {Assembly.GetCallingAssembly()};
+            assemblies ??= new[] { Assembly.GetCallingAssembly() };
 
             var typesFromAssemblies = assemblies.SelectMany(a => a.DefinedTypes.Where(x => x.GetInterfaces().Contains(typeof(T))));
             foreach (var type in typesFromAssemblies)
@@ -34,7 +37,7 @@ namespace Prover.UI.Desktop.Extensions
                            .DefinedTypes
                            .Where(t => t.ImplementedInterfaces.Contains(typeof(IMainMenuItem)) && !t.IsAbstract);
 
-            foreach (var item in items) 
+            foreach (var item in items)
                 services.AddSingleton(typeof(IMainMenuItem), item);
         }
 
@@ -96,33 +99,104 @@ namespace Prover.UI.Desktop.Extensions
             }
         }
 
-        public static void ConfigureModules(this HostBuilderContext builder, IServiceCollection services)
+
+        public static void DiscoverModules(this HostBuilderContext host)
         {
-            var modules = builder.Configuration.GetSection("Modules")?.GetChildren();
+            var names = host.Configuration.GetSection("Modules")?.GetChildren().Select(c => c.Value).ToList();
+            var modules = LoadConfigModules(names);
 
-            if (modules != null)
-                foreach (var mod in modules)
-                    try
+            host.Properties.Add("Modules", modules);
+        }
+
+        public static ICollection<IConfigureModule> LoadConfigModules(ICollection<string> moduleNames)
+        {
+            var results = new List<IConfigureModule>();
+            var basePath = Directory.GetParent(Assembly.GetEntryAssembly()?.Location).FullName;
+            foreach (var module in moduleNames)
+            {
+                try
+                {
+                    var ass = Assembly.LoadFile(Path.Combine(basePath, module));
+
+                    var moduleConfig =
+                            ass.GetExportedTypes().FirstOrDefault(t =>
+                                    t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
+
+                    if (moduleConfig != null)
                     {
-                        var ass = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mod.Value));
+                        var instance = Activator.CreateInstance(moduleConfig);
 
-                        var moduleConfig =
-                                ass.GetExportedTypes().FirstOrDefault(t =>
-                                                                              t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
+                        results.Add(instance as IConfigureModule);
 
-                        if (moduleConfig != null)
-                        {
-                            var instance = Activator.CreateInstance(moduleConfig);
-
-                            moduleConfig
-                                   .GetMethod(nameof(IConfigureModule.Configure))
-                                  ?.Invoke(instance, new object[] {builder, services});
-                        }
+                        //moduleConfig
+                        //        .GetMethod(nameof(IConfigureModule.ConfigureServices))
+                        //        ?.Invoke(instance, new object[] { builder, services });
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"An error occured loading module {mod.Value}. {Environment.NewLine} Exception: {ex.Message}.");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"An error occured loading module {module}. {Environment.NewLine} Exception: {ex.Message}.");
+                }
+            }
+
+            return results;
+        }
+
+        public static void AddModuleConfigurations(this HostBuilderContext builder, IConfigurationBuilder config)
+        {
+            if (builder.Properties.TryGetValue("Modules", out var property))
+            {
+                if (property is List<IConfigureModule> modules)
+                {
+                    modules.ForEach(m => m.ConfigureAppConfiguration(builder, config));
+                }
+            }
+        }
+
+        public static void AddModuleServices(this HostBuilderContext builder, IServiceCollection services)
+        {
+            if (builder.Properties.TryGetValue("Modules", out var property))
+            {
+                if (property is List<IConfigureModule> modules)
+                {
+                    modules.ForEach(m => m.ConfigureServices(builder, services));
+                }
+            }
+
+            //builder.DiscoverModules();
+            //if (!builder.Properties.TryGetValue("Modules", out var modules) || string.IsNullOrEmpty(basePath))
+            //    return;
+
+            //foreach (var module in ((List<string>)modules))
+            //{
+            //    try
+            //    {
+            //        var ass = Assembly.LoadFile(Path.Combine(basePath, module));
+
+            //        var moduleConfig =
+            //                ass.GetExportedTypes().FirstOrDefault(t =>
+            //                        t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IConfigureModule)));
+
+            //        if (moduleConfig != null)
+            //        {
+            //            var instance = Activator.CreateInstance(moduleConfig);
+
+            //            moduleConfig
+            //                   .GetMethod(nameof(IConfigureModule.ConfigureServices))
+            //                  ?.Invoke(instance, new object[] { builder, services });
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.WriteLine($"An error occured loading module {module}. {Environment.NewLine} Exception: {ex.Message}.");
+            //    }
+            //}
+
+
+
+            //return builder;
+
+
         }
 
         private static void AddReactiveObjects(IServiceCollection services, Assembly assembly)
