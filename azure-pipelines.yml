@@ -58,3 +58,7 @@ jobs:
         PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         ArtifactName: 'Tests'
         publishLocation: 'Container'
+
+    - task: gitmirror@0
+      inputs:
+          GitRepoUrl: 'https://$(githubPAT)@github.com/mcquaiga/EvcProver.git'
