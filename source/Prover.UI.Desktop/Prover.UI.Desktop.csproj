@@ -9,7 +9,7 @@
     <RootNamespace>Prover.UI.Desktop</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup>
+<PropertyGroup>
     <BuildPath>..\..\build\</BuildPath>
   </PropertyGroup>
 
