@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Prover.Modules.UnionGas\Prover.Modules.UnionGas.csproj" />
+    <ProjectReference Include="..\..\Prover.Modules.UnionGas\Prover.Modules.UnionGas.csproj" />
   </ItemGroup>
 
 </Project>
