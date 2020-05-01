@@ -1,7 +1,10 @@
 name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
 
 resources:
 - repo: self
