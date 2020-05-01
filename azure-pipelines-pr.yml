@@ -1,8 +1,5 @@
 name: $(Build.BuildId)-$(Build.SourceBranchName)
 
-pr:
-- master
-
 resources:
 - repo: self
   clean: false
