@@ -62,10 +62,3 @@ jobs:
         ArtifactName: 'Tests'
         publishLocation: 'Container'
           
-    - task: GitTag@5
-      inputs:
-        workingdir: '$(Build.Repository.LocalPath)'
-        tagUser: 'Azure CI'
-        tag: '$(build.buildNumber)-$(build.SourceBranchName)'
-        tagMessage: '$(build.buildNumber)-$(build.SourceBranchName)'
-        useLightweightTags: true
