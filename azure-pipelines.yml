@@ -41,7 +41,7 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**   
           !**\Tests.Shared.dll  
-        searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        searchFolder: '\build\tests\$(buildConfiguration)'
         rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
@@ -62,3 +62,10 @@ jobs:
     - task: gitmirror@0
       inputs:
           GitRepoUrl: 'https://$(githubPAT)@github.com/mcquaiga/EvcProver.git'
+    - task: GitTag@5
+      inputs:
+        workingdir: '$(Build.Repository.LocalPath)'
+        tagUser: 'Azure CI'
+        tag: '$(build.buildNumber)-$(build.SourceBranchName)'
+        tagMessage: '$(build.buildNumber)-$(build.SourceBranchName)'
+        useLightweightTags: true\
