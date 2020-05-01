@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>Prover.UI.Desktop.Program</StartupObject>
-    <AssemblyName>EvcProver</AssemblyName>
+    <AssemblyName>Prover.UI.Desktop</AssemblyName>
     <RootNamespace>Prover.UI.Desktop</RootNamespace>
   </PropertyGroup>
 
@@ -27,7 +27,7 @@
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <FileVersion>4.0.0.0</FileVersion>
     <PackageIcon>clipboard-check-blue.ico</PackageIcon>
-    <ApplicationIcon>clipboard-check-white.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 

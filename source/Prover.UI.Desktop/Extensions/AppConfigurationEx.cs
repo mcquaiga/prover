@@ -3,6 +3,11 @@ using System;
 
 namespace Prover.UI.Desktop.Extensions
 {
+    public static class AppConfig
+    {
+
+    }
+
     public static class AppConfigurationEx
     {
         private const string LiteDbKey = "Storage:LiteDb";

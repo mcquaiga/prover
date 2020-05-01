@@ -24,10 +24,14 @@
 
 
   <ItemGroup>
+    <None Remove="appsettings.UnionGas.json" />
     <None Remove="dcrwebservice.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.UnionGas.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="MasaWebService\dcrwebservice.xml" />
   </ItemGroup>
 
