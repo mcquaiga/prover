@@ -65,6 +65,7 @@ jobs:
     - task: gitmirror@0
       inputs:
           GitRepoUrl: 'https://$(githubPAT)@github.com/mcquaiga/EvcProver.git'
+          
     - task: GitTag@5
       inputs:
         workingdir: '$(Build.Repository.LocalPath)'
