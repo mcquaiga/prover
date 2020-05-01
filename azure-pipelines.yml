@@ -41,7 +41,7 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**   
           !**\Tests.Shared.dll  
-        searchFolder: '\build\tests\$(buildConfiguration)'
+        searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
