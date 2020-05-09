@@ -4,6 +4,7 @@ using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
 using DynamicData;
 using DynamicData.Binding;
+using MaterialDesignThemes.Wpf;
 using Prover.Application.Extensions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -26,7 +27,7 @@ using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class ExporterViewModel : ViewModelWpfBase, IRoutableViewModel, IHaveToolbarItems
+    public class ExporterViewModel : ViewModelWpfBase, IRoutableViewModel, IHaveToolbarItems, IMainMenuItem
     {
         private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
 
@@ -34,16 +35,16 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         (IScreenManager screenManager, IVerificationTestService verificationTestService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
                 IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
                 ExportToolbarViewModel exportToolbar)
-        //, Func<ExportToolbarViewModel> exporterToolbarFactory = null)
         {
             ScreenManager = screenManager;
             TestsByJobNumberViewModel = testsByJobNumberViewModel;
             HostScreen = screenManager;
 
+            OpenCommand = ReactiveCommand.CreateFromTask(async () => { await screenManager.ChangeView<ExporterViewModel>(); });
+
             DeviceTypes = deviceRepository.GetAll()
                 .OrderBy(d => d.Name).Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" })
                                         .ToList();
-
 
             FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
             TestDateFilter = ReactiveCommand.Create(DateTimeFilter).DisposeWith(Cleanup);
@@ -128,7 +129,10 @@ namespace Prover.Modules.UnionGas.Exporter.Views
         {
             return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
         }
-
+        public PackIconKind MenuIconKind { get; } = PackIconKind.CloudUpload;
+        public string MenuTitle { get; } = "Export Test Run";
+        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+        public int? Order { get; } = 2;
         #region Nested type: AllDeviceType
 
         private class AllDeviceType : DeviceType

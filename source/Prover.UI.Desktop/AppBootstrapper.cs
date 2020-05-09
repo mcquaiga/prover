@@ -56,13 +56,17 @@ namespace Prover.UI.Desktop
 
         private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
                 Host.CreateDefaultBuilder()
+                    .ConfigureHostConfiguration(config =>
+                    {
+                        config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json");
+                    })
+                    .ConfigureAppConfiguration((host, config) =>
+                    {
+                        host.DiscoverModules();
+                        host.AddModuleConfigurations(config);
+                    })
                     .ConfigureLogging((host, log) =>
                     {
-                        //Log.Logger = new LoggerConfiguration()
-                        //  .MinimumLevel.Debug()
-                        //  .WriteTo();
-
-                        //log.AddConfiguration()
                         log.ClearProviders();
 
                         log.Services.AddSplatLogging();
@@ -75,7 +79,7 @@ namespace Prover.UI.Desktop
                     .ConfigureServices((host, services) =>
                     {
                         booter.AddServices(services, host);
-                        host.ConfigureModules(services);
+                        host.AddModuleServices(services);
                     })
                     .Build();
 

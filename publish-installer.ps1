@@ -1,2 +1,2 @@
 
-Invoke-Expression "& az artifacts universal publish --organization https://mcquaiga.visualstudio.com/ --project=EvcProver --scope project --feed Tools --name install-tools --version 1.0.4 --description 'EvcProver installer tools' --path .\install\"
+Invoke-Expression "& az artifacts universal publish --organization https://mcquaiga.visualstudio.com/ --project=EvcProver --scope project --feed Tools --name install-tools --version 1.0.5 --description 'EvcProver installer tools' --path .\install\"
