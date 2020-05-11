@@ -1,4 +1,4 @@
-﻿namespace Prover.DevTools.Calculators
+﻿namespace Prover.Modules.DevTools.Calculators
 {
 	/// <summary>
 	/// Interaction logic for CalculatorsView.xaml

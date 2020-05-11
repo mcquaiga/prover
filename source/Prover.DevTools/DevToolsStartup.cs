@@ -2,16 +2,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prover.Application.Interactions;
-using Prover.DevTools.Hardware;
-using Prover.DevTools.Importer;
-using Prover.DevTools.SampleData;
-using Prover.DevTools.Storage;
+using Prover.Modules.DevTools.Hardware;
+using Prover.Modules.DevTools.Importer;
+using Prover.Modules.DevTools.SampleData;
+using Prover.Modules.DevTools.Storage;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Extensions;
 using System;
 
-namespace Prover.DevTools
+namespace Prover.Modules.DevTools
 {
     public class DevToolsStartup : IConfigureModule
     {

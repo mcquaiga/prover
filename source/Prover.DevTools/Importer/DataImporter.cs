@@ -1,4 +1,14 @@
-﻿using Devices.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Input;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Repository;
 using Microsoft.Extensions.Logging;
@@ -10,18 +20,8 @@ using Prover.Application.ViewModels;
 using Prover.Calculations;
 using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Input;
 
-namespace Prover.DevTools.Importer
+namespace Prover.Modules.DevTools.Importer
 {
 	public class DataImporter : ViewModelBase, IDevToolsMenuItem
 	{

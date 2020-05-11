@@ -3,12 +3,12 @@ using Microsoft.Reactive.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Prover.Application.Services;
-using Prover.DevTools.Hardware;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using Prover.Modules.DevTools.Hardware;
 using Tests.Shared;
 
 namespace Tests.Application.ExternalDevices.DInOutBoards

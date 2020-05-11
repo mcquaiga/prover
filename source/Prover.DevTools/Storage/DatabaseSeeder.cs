@@ -1,4 +1,8 @@
-﻿using Devices.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Devices.Core.Repository;
@@ -6,14 +10,10 @@ using Prover.Application.Extensions;
 using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.ViewModels.Factories;
-using Prover.DevTools.SampleData;
+using Prover.Modules.DevTools.SampleData;
 using Prover.Shared.Storage.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
-namespace Prover.DevTools.Storage
+namespace Prover.Modules.DevTools.Storage
 {
 	public class DatabaseSeeder
 	{

@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+	  <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\build\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.DevTools.json" />
+    <None Remove="SampleData\Devices\Adem.json" />
+    <None Remove="SampleData\Devices\MiniAt.json" />
+    <None Remove="SampleData\Devices\MiniMax.json" />
+    <None Remove="SampleData\MiniMax.json" />
+    <None Remove="SampleData\TemperatureTests.json" />
+  </ItemGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <OutputPath>..\..\build\Release</OutputPath>
+	</PropertyGroup>
+  <ItemGroup>
+    <Content Include="appsettings.DevTools.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Content>
+    <Content Include="SampleData\Devices\Adem.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\Devices\MiniAt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\Devices\MiniMax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\MiniMax.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SampleData\TemperatureTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+   <PackageReference Include="Cronos" Version="0.7.0" />
+    <PackageReference Include="DynamicData" Version="6.14.14" />
+    <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
+ 
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.3" />
+    <PackageReference Include="ReactiveUI" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI.Events.WPF" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI.Fody" Version="11.3.7" />
+    <PackageReference Include="ReactiveUI.Validation" Version="1.4.13" />
+    <PackageReference Include="ReactiveUI.WPF" Version="11.3.7" />
+
+    <PackageReference Include="Splat" Version="9.4.5" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
+    <PackageReference Include="System.Reactive.Core" Version="4.4.1" />
+    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
+    <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
+    <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Modules.UnionGas\Prover.Modules.UnionGas.csproj" />
+    <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
+    <ProjectReference Include="..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
+    <ProjectReference Include="..\Prover.Storage.MongoDb\Prover.Storage.MongoDb.csproj" />
+    <ProjectReference Include="..\Prover.UI.Desktop\Prover.UI.Desktop.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DevMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

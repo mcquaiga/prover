@@ -46,10 +46,7 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Stretch="Uniform">
-			<Grid
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				>
+			<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="Auto" />
@@ -69,11 +66,14 @@
 									Padding="4"
 									BorderThickness="0"
 									Style="{StaticResource SubSectionDividerBorder}">
-									<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-										<ContentControl
+									<StackPanel
+										HorizontalAlignment="Stretch"
+										VerticalAlignment="Stretch"
+										Orientation="Horizontal">
+										<!--<ContentControl
 											HorizontalAlignment="Left"
 											VerticalAlignment="Top"
-											ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+											ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />-->
 										<reactiveUi:ViewModelViewHost
 											x:Name="CorrectionsTestManagerViewHost"
 											HorizontalAlignment="Stretch"

@@ -1,0 +1,6 @@
+<Project>
+ <PropertyGroup>
+   <!--<BuildOutputDir>..\..\build</BuildOutputDir>-->
+	 <Deterministic>true</Deterministic>
+ </PropertyGroup>
+</Project>
