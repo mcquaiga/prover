@@ -3,12 +3,9 @@ using System.Threading;
 
 namespace Prover.Shared.Events
 {
-	public sealed class EventContext<TInput, TOutput>
+	public class EventContext<TInput>
 	{
 		private readonly TInput _input;
-		private TOutput _output;
-		private int _outputSet;
-
 		internal EventContext(TInput input)
 		{
 			_input = input;
@@ -18,6 +15,19 @@ namespace Prover.Shared.Events
 		/// Gets the input for the interaction.
 		/// </summary>
 		public TInput Input => _input;
+	}
+
+
+	public sealed class EventContext<TInput, TOutput> : EventContext<TInput>
+	{
+
+		private TOutput _output;
+		private int _outputSet;
+
+		internal EventContext(TInput input) : base(input)
+		{
+
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether the interaction is handled. That is, whether the output has been set.

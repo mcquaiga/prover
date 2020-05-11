@@ -85,6 +85,97 @@ namespace Prover.Shared.Events
 		IObservable<TOutput> Publish(TInput input);
 	}
 
+	public class EventHub<TInput>
+	{
+		private readonly IList<Func<EventContext<TInput>, IObservable<Unit>>> _handlers;
+		private readonly object _sync;
+		private readonly IScheduler _handlerScheduler;
+
+		public EventHub(IScheduler handlerScheduler = null)
+		{
+			_handlers = new List<Func<EventContext<TInput>, IObservable<Unit>>>();
+			_sync = new object();
+			_handlerScheduler = handlerScheduler ?? CurrentThreadScheduler.Instance;
+		}
+
+		public IDisposable Subscribe(Action<EventContext<TInput>> handler)
+		{
+			if (handler == null)
+			{
+				throw new ArgumentNullException(nameof(handler));
+			}
+
+			return Subscribe(message =>
+			{
+				handler(message);
+			});
+		}
+		public IDisposable Subscribe(Func<EventContext<TInput>, Task> handler)
+		{
+			if (handler == null)
+			{
+				throw new ArgumentNullException(nameof(handler));
+			}
+
+			return Subscribe(message => handler(message).ToObservable());
+		}
+
+		public IObservable<Unit> Publish(TInput input)
+		{
+			var contexts = new ConcurrentBag<EventContext<TInput>>();
+			return GetHandlers().Reverse()
+								.ToObservable()
+								.ObserveOn(_handlerScheduler)
+								.Select(handler =>
+								{
+									var ctx = new EventContext<TInput>(input);
+									contexts.Add(ctx);
+									return Observable.Defer(() => handler(ctx));
+								})
+								.Concat();
+			//.Concat(
+			//Observable.Defer(
+			//() =>
+			//{
+			// var output = contexts.LastOrDefault(c => c.IsHandled);
+			// var result = output != null ? output.GetOutput() : default(TOutput);
+			// return Observable.Return(result);
+			//}));
+			//: Observable.Throw<TOutput>(new UnhandledErrorException("Error"))));
+			//: Observable.Throw<TOutput>(new UnhandledeventException<TInput, TOutput>(this, input))));
+		}
+
+		/// <summary>
+		/// Gets all registered handlers in order of their registration.
+		/// </summary>
+		/// <returns>
+		/// All registered handlers.
+		/// </returns>
+		private IEnumerable<Func<EventContext<TInput>, IObservable<Unit>>> GetHandlers()
+		{
+			lock (_sync)
+			{
+				return _handlers.ToArray();
+			}
+		}
+
+		private void AddHandler(Func<EventContext<TInput>, IObservable<Unit>> handler)
+		{
+			lock (_sync)
+			{
+				_handlers.Add(handler);
+			}
+		}
+
+		private void RemoveHandler(Func<EventContext<TInput>, IObservable<Unit>> handler)
+		{
+			lock (_sync)
+			{
+				_handlers.Remove(handler);
+			}
+		}
+	}
+
 	public sealed class EventHub<TInput, TOutput> : IEventHub<TInput, TOutput>
 	{
 		private readonly IList<Func<EventContext<TInput, TOutput>, IObservable<Unit>>> _handlers;
@@ -133,6 +224,7 @@ namespace Prover.Shared.Events
 			});
 		}
 
+
 		/// <summary>
 		/// Registers a task-based asynchronous event handler.
 		/// </summary>
@@ -157,6 +249,7 @@ namespace Prover.Shared.Events
 
 			return Subscribe(message => handler(message).ToObservable());
 		}
+
 
 		/// <summary>
 		/// Registers an observable-based asynchronous event handler.
@@ -186,6 +279,8 @@ namespace Prover.Shared.Events
 			AddHandler(unitHandler);
 			return Disposable.Create(() => RemoveHandler(unitHandler));
 		}
+
+
 
 		/// <summary>
 		/// Handles an event and asynchronously returns the result.
