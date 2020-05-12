@@ -13,45 +13,45 @@ using System;
 
 namespace Prover.Modules.DevTools
 {
-    public class DevToolsStartup : IConfigureModule
-    {
-        /// <inheritdoc />
-        private void AddServices(HostBuilderContext builder, IServiceCollection services)
-        {
-            services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
-            services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
-            services.AddViewsAndViewModels();
-            services.AddSingleton<IDevToolsMenuItem, DataGenerator>();
-            services.AddSingleton<IDevToolsMenuItem, DataImporter>();
-            services.AddSingleton<IDevToolsMenuItem, DeviceTemplates>();
-            services.AddSingleton<IToolbarItem, DevToolbarMenu>();
+	public class DevToolsStartup : IConfigureModule
+	{
+		/// <inheritdoc />
+		private void AddServices(HostBuilderContext builder, IServiceCollection services)
+		{
+			services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
+			services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
+			services.AddViewsAndViewModels();
+			services.AddSingleton<IDevToolsMenuItem, DataGenerator>();
+			services.AddSingleton<IDevToolsMenuItem, DataImporter>();
+			services.AddSingleton<IDevToolsMenuItem, DeviceTemplates>();
+			services.AddSingleton<IModuleToolbarItem, DevToolbarMenu>();
 
-            //DevelopmentServices(services);
-            //Task.Run(async () => await DeviceTemplates.Initialize());
-        }
+			//DevelopmentServices(services);
+			//Task.Run(async () => await DeviceTemplates.Initialize());
+		}
 
-        //private void DevelopmentServices(IServiceCollection services)
-        //{
-        //    services.AddSingleton<DevelopmentWebService>();
-        //    services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
-        //    services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
-        //    services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<DevelopmentWebService>());
-        //}
+		//private void DevelopmentServices(IServiceCollection services)
+		//{
+		//    services.AddSingleton<DevelopmentWebService>();
+		//    services.AddSingleton<IUserService<EmployeeDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
+		//    services.AddSingleton<IMeterService<MeterDTO>>(c => c.GetRequiredService<DevelopmentWebService>());
+		//    services.AddSingleton<IExportService<QARunEvcTestResult>>(c => c.GetRequiredService<DevelopmentWebService>());
+		//}
 
-        /// <inheritdoc />
-        public void ConfigureServices(HostBuilderContext builder, IServiceCollection services)
-        {
-            AddServices(builder, services);
-        }
+		/// <inheritdoc />
+		public void ConfigureServices(HostBuilderContext builder, IServiceCollection services)
+		{
+			AddServices(builder, services);
+		}
 
-        /// <inheritdoc />
+		/// <inheritdoc />
 
-        /// <inheritdoc />
-        public void ConfigureAppConfiguration(HostBuilderContext builder, IConfigurationBuilder config)
-        {
-            config.AddJsonFile("appsettings.DevTools.json");
-        }
-    }
+		/// <inheritdoc />
+		public void ConfigureAppConfiguration(HostBuilderContext builder, IConfigurationBuilder config)
+		{
+			config.AddJsonFile("appsettings.DevTools.json");
+		}
+	}
 }
 
 /*

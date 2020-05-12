@@ -6,17 +6,25 @@ using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {
-    public interface IScreenManager : IScreen
-    {
-        Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel;
-        Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel;
 
-        IDialogServiceManager DialogManager { get; }
+	public interface IToolbarManager
+	{
+		ReadOnlyObservableCollection<IToolbarItem> ToolbarItems { get; }
+		IDisposable AddToolbarItem(IToolbarItem item);
 
-        Task GoHome(IRoutableViewModel viewModel = null);
-        Task GoBack();
+	}
 
-        ReadOnlyObservableCollection<IToolbarActionItem> ToolbarItems { get; }
-        IDisposable AddToolbarItem(IToolbarActionItem item);
-    }
+	public interface IScreenManager : IScreen
+	{
+		Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel;
+		Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel;
+
+		IDialogServiceManager DialogManager { get; }
+
+		Task GoHome(IRoutableViewModel viewModel = null);
+		Task GoBack();
+
+		//ReadOnlyObservableCollection<IToolbarActionItem> ToolbarItems { get; }
+		//IDisposable AddToolbarItem(IToolbarActionItem item);
+	}
 }

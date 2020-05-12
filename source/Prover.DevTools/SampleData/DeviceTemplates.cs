@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications.Builders;
+using Prover.Application.Verifications;
+using Prover.Application.ViewModels;
 using Prover.UI.Desktop.Dialogs;
 using Prover.UI.Desktop.ViewModels.Verifications;
 using ReactiveUI;

@@ -2,9 +2,9 @@
 
 namespace Prover.Application.Interfaces
 {
-    public interface IVolumeTestManager
-    {
-        Task RunFinishActions();
-        Task RunStartActions();
-    }
+	public interface IVolumeTestManager
+	{
+		Task CompleteVolumeVerification();
+		Task BeginVolumeVerification();
+	}
 }

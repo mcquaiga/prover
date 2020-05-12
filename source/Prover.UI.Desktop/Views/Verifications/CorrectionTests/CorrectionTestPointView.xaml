@@ -59,7 +59,8 @@
 			Grid.Column="0"
 			Margin="5,0"
 			VerticalAlignment="Top"
-			Style="{StaticResource PrimaryTestHeaderStyle}" />
+			Style="{StaticResource PrimaryTestHeaderStyle}"
+			Visibility="Collapsed" />
 		<!--<TextBlock
             x:Name="TestLevelBlock"
             Grid.Row="0"
@@ -87,19 +88,23 @@
 			</ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Border
-						Padding="0"
-						BorderThickness="0,0,0,0"
-						Style="{StaticResource SubSectionDividerBorder}">
-						<reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}">
-							<reactiveUi:ViewModelViewHost.Resources>
-								<Style TargetType="controls:ValueDescriptionControl">
-									<Setter Property="LabelFontSize" Value="12" />
-									<Setter Property="ValueFontSize" Value="16" />
-								</Style>
-							</reactiveUi:ViewModelViewHost.Resources>
-						</reactiveUi:ViewModelViewHost>
-					</Border>
+					<StackPanel Orientation="Horizontal">
+						<!--<TextBlock Text="{Binding ElementName=TestItems, Path=}" />-->
+						<Border
+							Padding="0"
+							BorderThickness="0,0,0,0"
+							Style="{StaticResource SubSectionDividerBorder}">
+							<reactiveUi:ViewModelViewHost x:Name="CorrectionTestViewHost" ViewModel="{Binding}">
+								<reactiveUi:ViewModelViewHost.Resources>
+									<Style TargetType="controls:ValueDescriptionControl">
+										<Setter Property="LabelFontSize" Value="12" />
+										<Setter Property="ValueFontSize" Value="16" />
+									</Style>
+								</reactiveUi:ViewModelViewHost.Resources>
+							</reactiveUi:ViewModelViewHost>
+						</Border>
+					</StackPanel>
+
 				</DataTemplate>
 
 			</ItemsControl.ItemTemplate>

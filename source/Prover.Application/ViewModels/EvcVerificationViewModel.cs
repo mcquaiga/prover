@@ -11,56 +11,60 @@ using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels
 {
-    public class EvcVerificationViewModel : VerificationViewModel
-    {
-        private EvcVerificationViewModel()
-        {
-        }
+	public class EvcVerificationViewModel : VerificationViewModel
+	{
+		private EvcVerificationViewModel()
+		{
+		}
 
-        private EvcVerificationViewModel(bool verified)
-        {
-        }
+		private EvcVerificationViewModel(bool verified)
+		{
+		}
 
-        [Reactive] public DeviceInstance Device { get; set; }
+		[Reactive] public DeviceInstance Device { get; set; }
 
-        [Reactive] public CompositionType CompositionType { get; set; }
+		[Reactive] public CompositionType CompositionType { get; set; }
 
-        //[Reactive] public IVolumeInputType DriveType { get; set; }
+		//[Reactive] public IVolumeInputType DriveType { get; set; }
 
-        [Reactive] public DateTime TestDateTime { get; set; }
+		[Reactive] public DateTime TestDateTime { get; set; }
 
-        [Reactive] public DateTime? ExportedDateTime { get; set; }
+		[Reactive] public DateTime? ExportedDateTime { get; set; }
 
-        [Reactive] public DateTime? SubmittedDateTime { get; set; }
+		[Reactive] public DateTime? SubmittedDateTime { get; set; }
 
-        [Reactive] public DateTime? ArchivedDateTime { get; set; }
+		[Reactive] public DateTime? ArchivedDateTime { get; set; }
 
-        [Reactive] public string JobId { get; set; }
+		[Reactive] public string JobId { get; set; }
 
-        [Reactive] public string EmployeeId { get; set; }
+		[Reactive] public string EmployeeId { get; set; }
 
-        [Reactive] public string EmployeeName { get; set; }
+		[Reactive] public string EmployeeName { get; set; }
 
-        public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
+		public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
-        public SiteInformationViewModel DeviceInfo { get; set; }
+		//public CorrectionVerificationsViewModel CorrectionVerificationTests { get; } = new CorrectionVerificationsViewModel();
 
-        public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
+		public SiteInformationViewModel DeviceInfo { get; set; }
 
-        public void Initialize(ICollection<VerificationViewModel> verificationTests, ILoginService loginService = null)
-        {
-            DeviceInfo = new SiteInformationViewModel(Device, this, loginService);
-            //DriveType = VolumeInputBuilderFactory.GetBuilder(Device).BuildVolumeType();
-            VerificationTests.Clear();
-            VerificationTests.AddRange(verificationTests.ToArray());
+		public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
 
-            RegisterVerificationsForVerified(VerificationTests);
-        }
+		public void Initialize(ICollection<VerificationViewModel> verificationTests, ILoginService loginService = null)
+		{
+			DeviceInfo = new SiteInformationViewModel(Device, this, loginService);
 
-        protected override void Dispose(bool isDisposing)
-        {
-            VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
-            VerificationTests.Clear();
-        }
-    }
+			VerificationTests.Clear();
+			VerificationTests.AddRange(verificationTests.ToArray());
+
+			//CorrectionVerificationTests.RefreshTests(VerificationTests.OfType<VerificationTestPointViewModel>().ToList());
+
+			RegisterVerificationsForVerified(VerificationTests);
+		}
+
+		protected override void Dispose(bool isDisposing)
+		{
+			VerificationTests.ForEach(t => t.DisposeWith(Cleanup));
+			VerificationTests.Clear();
+		}
+	}
 }

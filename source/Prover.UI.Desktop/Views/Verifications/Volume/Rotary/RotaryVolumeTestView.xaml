@@ -28,6 +28,13 @@
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 
+			<ContentControl
+				x:Name="VolumeTestContent"
+				Margin="5"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Top"
+				ContentTemplate="{Binding VolumeTestContentTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
 			<StackPanel
 				Grid.Column="0"
 				Margin="4,0,12,0"
@@ -59,7 +66,7 @@
 						BorderThickness="1,0,0,0"
 						Style="{StaticResource SubSectionDividerBorder}" />
 
-					<reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" Margin="8,0"/>
+					<reactiveUi:ViewModelViewHost x:Name="UncorrectedVolumeContent" Margin="8,0" />
 
 					<Border
 						Margin="12,24"

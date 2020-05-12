@@ -1,31 +1,30 @@
-using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.Logging;
-using Prover.Application.Interactions;
-using Prover.Application.Interfaces;
-using Prover.Application.Verifications;
-using Prover.Application.ViewModels;
-using ReactiveUI;
 using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Microsoft.Extensions.Logging;
+using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
+using ReactiveUI;
 
-namespace Prover.UI.Desktop.ViewModels.Verifications
+namespace Prover.Application.Verifications
 {
-	public abstract class TestManagerBase : ViewModelWpfBase, IHaveToolbarItems, IQaTestRunManager
+	public abstract class TestManagerBase : ViewModelBase, IHaveToolbarItems, IQaTestRunManager
 	{
-		protected ILogger<ManualTestManager> Logger { get; }
+		protected ILogger<TestManagerBase> Logger { get; }
 		protected IScreenManager ScreenManager { get; }
-		protected IVerificationTestService VerificationService { get; }
+		protected IVerificationService VerificationService { get; }
 
 
-		protected TestManagerBase(ILogger<ManualTestManager> logger,
+		protected TestManagerBase(ILogger<TestManagerBase> logger,
 									IScreenManager screenManager,
-									IVerificationTestService verificationService,
+									IVerificationService verificationService,
 									EvcVerificationViewModel testViewModel)
 		{
 			Logger = logger;
 			ScreenManager = screenManager;
+			HostScreen = screenManager;
 			VerificationService = verificationService;
 
 			TestViewModel = testViewModel;
@@ -57,7 +56,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 											{
 												SuppressChangeNotifications().DisposeWith(Cleanup);
 												await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
-												await verificationService.SubmitVerification(TestViewModel);
+												await verificationService.CompleteVerification(TestViewModel);
 												await screenManager.GoHome();
 											}
 										}, canSubmit)
@@ -71,9 +70,9 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			//	.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
 			//	.Subscribe()
 			//	.DisposeWith(Cleanup);
-			AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
-			AddToolbarItem(SubmitTest, PackIconKind.Send);
-			AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
+			//this.AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
+			//this.AddToolbarItem(SubmitTest, PackIconKind.Send);
+			//this.AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
 		}
 
 		public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
@@ -81,12 +80,20 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 		public ReactiveCommand<Unit, Unit> SubmitTest { get; protected set; }
 
 		/// <inheritdoc />
-		public EvcVerificationViewModel TestViewModel { get; set; }
+		public IDeviceSessionManager DeviceManager { get; protected set; }
+
+		/// <inheritdoc />
+		public EvcVerificationViewModel TestViewModel { get; protected set; }
 
 		//protected void Initialize(ILogger<TestManagerBase> logger, IScreenManager screenManager, IVerificationTestService verificationService, EvcVerificationViewModel testViewModel, string urlSegment = null
 		//) //: base(screenManager, urlSegment ?? "VerificationManager")
 		//{
 
 		//}
+		/// <inheritdoc />
+		public string UrlPathSegment { get; } = "TestManager";
+
+		/// <inheritdoc />
+		public IScreen HostScreen { get; }
 	}
 }

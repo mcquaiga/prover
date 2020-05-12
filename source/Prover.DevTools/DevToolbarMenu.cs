@@ -6,7 +6,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.DevTools
 {
-	public class DevToolbarMenu : ViewModelBase, IToolbarItem
+	public class DevToolbarMenu : ViewModelBase, IModuleToolbarItem
 	{
 		public DevToolbarMenu(IEnumerable<IDevToolsMenuItem> devMenuItems = null) => MenuItems = devMenuItems.ToList();
 

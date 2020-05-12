@@ -17,94 +17,112 @@ using System.Threading.Tasks;
 
 namespace Prover.Application.Services
 {
-    public class VerificationService : IVerificationTestService, IDisposable
-    {
-        private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
-        private readonly ILogger<VerificationService> _logger;
-        private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
-        private readonly IEntityDataCache<EvcVerificationTest> _verificationCache;
-        private readonly IVerificationViewModelFactory _verificationViewModelFactory;
+	public class VerificationService : IVerificationService, IDisposable
+	{
+		private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
+		private readonly ILogger<VerificationService> _logger;
+		private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
+		private readonly IEntityDataCache<EvcVerificationTest> _verificationCache;
+		private readonly IVerificationManagerService _managerService;
+		private readonly IDeviceSessionManager _deviceManager;
 
-        public VerificationService(
-                ILogger<VerificationService> logger,
-                IAsyncRepository<EvcVerificationTest> verificationRepository,
-                IEntityDataCache<EvcVerificationTest> verificationCache,
-                IVerificationViewModelFactory verificationViewModelFactory,
-                Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
-                IScheduler scheduler = null)
-        {
-            _logger = logger ?? NullLogger<VerificationService>.Instance;
+		public VerificationService(
+				ILogger<VerificationService> logger,
+				IAsyncRepository<EvcVerificationTest> verificationRepository,
+				IEntityDataCache<EvcVerificationTest> verificationCache,
+				IVerificationManagerService managerService,
+				IDeviceSessionManager deviceManager,
+				Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
+				IScheduler scheduler = null)
+		{
+			_logger = logger ?? NullLogger<VerificationService>.Instance;
 
-            _verificationRepository = verificationRepository;
-            _verificationCache = verificationCache;
-            _verificationViewModelFactory = verificationViewModelFactory;
+			_verificationRepository = verificationRepository;
+			_verificationCache = verificationCache;
 
-            _evcVerificationTestFactory = evcVerificationTestFactory;
-        }
+			_managerService = managerService;
+			_deviceManager = deviceManager;
+			_evcVerificationTestFactory = evcVerificationTestFactory;
+		}
 
-        public async Task<EvcVerificationViewModel> Save(EvcVerificationViewModel viewModel)
-        {
-            var model = await Upsert(VerificationMapper.MapViewModelToModel(viewModel));
-            return model.ToViewModel();
-        }
+		public async Task<EvcVerificationViewModel> Save(EvcVerificationViewModel viewModel)
+		{
+			var model = await Save(VerificationMapper.MapViewModelToModel(viewModel));
+			return model.ToViewModel();
+		}
 
-        public async Task<EvcVerificationTest> Upsert(EvcVerificationTest evcVerificationTest)
-        {
-            await _verificationRepository.UpsertAsync(evcVerificationTest);
+		public async Task<EvcVerificationTest> Save(EvcVerificationTest evcVerificationTest)
+		{
+			await _verificationRepository.UpsertAsync(evcVerificationTest);
 
-            await VerificationEvents.OnSave.Publish(evcVerificationTest);
+			await VerificationEvents.OnSave.Publish(evcVerificationTest);
 
-            return evcVerificationTest;
-        }
+			return evcVerificationTest;
+		}
 
-        public async Task UpsertBatch(IEnumerable<EvcVerificationTest> evcVerificationTest)
-        {
-            await evcVerificationTest.ToObservable()
-                                     .ForEachAsync(async test =>
-                                     {
-                                         await _verificationRepository.UpsertAsync(test);
-                                     });
+		public async Task Save(IEnumerable<EvcVerificationTest> evcVerificationTest)
+		{
+			await evcVerificationTest.ToObservable()
+									 .ForEachAsync(async test =>
+									 {
+										 await _verificationRepository.UpsertAsync(test);
+									 });
 
-            await Task.CompletedTask;
-        }
+			await Task.CompletedTask;
+		}
 
-        /// <inheritdoc />
-        public async Task<EvcVerificationTest> Archive(EvcVerificationTest model)
-        {
-            model.ArchivedDateTime = DateTime.Now;
-            return await Upsert(model);
-        }
+		/// <inheritdoc />
+		public async Task<EvcVerificationTest> Archive(EvcVerificationTest model)
+		{
+			model.ArchivedDateTime = DateTime.Now;
+			return await Save(model);
+		}
 
-        public EvcVerificationTest CreateModel(EvcVerificationViewModel viewModel) => VerificationMapper.MapViewModelToModel(viewModel);
+		public IVerificationManagerService ManagerService => _managerService;
 
-        public EvcVerificationViewModel NewVerification(DeviceInstance device, VerificationTestOptions options = null)
-        {
-            options = options ?? VerificationTestOptions.Defaults;
-            //var testModel = _evcVerificationTestFactory?.Invoke(device) ?? new EvcVerificationTest(device);
-            var testModel = device.NewVerification(options);
-            return testModel.ToViewModel();
-        }
+		public async Task<IQaTestRunManager> StartVerification(DeviceType deviceType, VerificationTestOptions options = null)
+		{
+			var device = await _deviceManager.StartSession(deviceType);
 
-        public async Task<EvcVerificationTest> SubmitVerification(EvcVerificationViewModel viewModel)
-        {
-            if (viewModel.SubmittedDateTime != null) throw new NotSupportedException("This test has already been submitted");
+			var manager = await StartVerification(device, options, true);
 
-            viewModel.SubmittedDateTime = DateTime.Now;
+			await _deviceManager.Disconnect();
 
-            _logger.LogDebug($"Submitting verification Id: {viewModel.Id} at {viewModel.SubmittedDateTime:g}");
+			return manager;
+		}
 
-            var model = await Upsert(viewModel.ToModel());
+		public async Task<IQaTestRunManager> StartVerification(DeviceInstance device, VerificationTestOptions options = null, bool publishEvent = false)
+		{
+			options = options ?? VerificationTestOptions.Defaults;
 
-            await VerificationEvents.OnSubmit.Publish(model);
+			var manager = _managerService.CreateManager(
+										device.NewVerification(options));
 
+			if (publishEvent)
+				await VerificationEvents.OnInitialize.Publish(manager.TestViewModel);
 
+			return manager;
+		}
 
-            return model;
-        }
+		public async Task<bool> CompleteVerification(EvcVerificationViewModel viewModel)
+		{
+			if (viewModel.SubmittedDateTime != null)
+				throw new NotSupportedException("This test has already been submitted");
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-        }
-    }
+			viewModel.SubmittedDateTime = DateTime.Now;
+
+			_logger.LogDebug($"Submitting verification Id: {viewModel.Id} at {viewModel.SubmittedDateTime:g}");
+
+			var model = await Save(viewModel.ToModel());
+
+			await VerificationEvents.OnSubmit.Publish(model);
+
+			return model != null;
+		}
+
+		/// <inheritdoc />
+		public void Dispose()
+		{
+		}
+	}
 }

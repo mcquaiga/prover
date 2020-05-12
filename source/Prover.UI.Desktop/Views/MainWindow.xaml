@@ -10,74 +10,24 @@
 	xmlns:viewModels="clr-namespace:Prover.UI.Desktop.ViewModels"
 	x:Name="MainWindowView"
 	Title="EVC Prover"
-	Icon="../Resources/clipboard-check-white.ico"
 	x:TypeArguments="viewModels:MainViewModel"
+	Icon="../Resources/clipboard-check-white.ico"
 	Style="{StaticResource DialogWindowStyle}"
 	WindowStartupLocation="CenterScreen"
 	WindowState="Maximized"
 	mc:Ignorable="d">
 	<Grid>
 		<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<materialDesign:Card
-				materialDesign:ShadowAssist.Darken="True"
-				materialDesign:ShadowAssist.ShadowDepth="Depth1"
-				materialDesign:ShadowAssist.ShadowEdges="Right"
-				DockPanel.Dock="Left">
-				<Grid Width="Auto" Margin="0,0,0,0">
-					<StackPanel
-						x:Name="NavigationBar"
-						VerticalAlignment="Top"
-						Orientation="Vertical">
-						<Button
-							x:Name="GoHomeButton"
-							Content="{materialDesign:PackIcon Home}"
-							Style="{StaticResource MainToolbarButtonStyle}" />
-						<Button
-							x:Name="GoBackButton"
-							Content="{materialDesign:PackIcon NavigateBefore}"
-							Style="{StaticResource MainToolbarButtonStyle}"
-							Visibility="Collapsed" />
-					</StackPanel>
-
-					<ItemsControl x:Name="ToolbarActionItemsControl">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<StackPanel
-									MinHeight="250"
-									HorizontalAlignment="Center"
-									VerticalAlignment="Center" />
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate DataType="{x:Type interactions:IToolbarActionItem}">
-								<Button Command="{Binding ToolbarAction}" Style="{StaticResource MainToolbarButtonStyle}">
-									<Button.Content>
-										<materialDesign:PackIcon Kind="{Binding Icon, Converter={StaticResource PackIconConverter}}" />
-									</Button.Content>
-								</Button>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-
-
-					<ItemsControl x:Name="ToolbarItemsControl">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-
-								<StackPanel
-									HorizontalAlignment="Stretch"
-									VerticalAlignment="Bottom"
-									Orientation="Vertical" />
-
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-					</ItemsControl>
-
-				</Grid>
-			</materialDesign:Card>
+			<rxui:ViewModelViewHost
+				x:Name="MenuToolbarViewHost"
+				Margin="0"
+				HorizontalContentAlignment="Stretch"
+				VerticalContentAlignment="Stretch"
+				DockPanel.Dock="Left" />
 
 			<rxui:RoutedViewHost
 				x:Name="RoutedViewHost"
+				Margin="0,8"
 				HorizontalContentAlignment="Stretch"
 				VerticalContentAlignment="Stretch"
 				DockPanel.Dock="Right" />

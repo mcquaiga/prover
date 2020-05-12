@@ -41,10 +41,10 @@ namespace Prover.Modules.UnionGas.Exporter
 		/// <summary>
 		///     Defines the _testRunService
 		/// </summary>
-		private readonly IVerificationTestService _testRunService;
+		private readonly IVerificationService _testRunService;
 
 		public ExportToMasaManager
-		(ILogger<ExportToMasaManager> logger, IVerificationTestService testRunService, ILoginService<Employee> loginService, IExportService<QARunEvcTestResult> exportService,
+		(ILogger<ExportToMasaManager> logger, IVerificationService testRunService, ILoginService<Employee> loginService, IExportService<QARunEvcTestResult> exportService,
 				IMeterService<MeterDTO> meterService
 		)
 		{
@@ -73,7 +73,7 @@ namespace Prover.Modules.UnionGas.Exporter
 			foreach (var instr in forExport)
 			{
 				instr.ExportedDateTime = DateTime.Now;
-				await _testRunService.Upsert(instr);
+				await _testRunService.Save(instr);
 			}
 
 			return true;

@@ -53,7 +53,7 @@ namespace Prover.Modules.UnionGas
 		private void AddServices(HostBuilderContext builder, IServiceCollection services)
 		{
 			services.AddSingleton<IMainMenuItem, ExporterViewModel>();
-			services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
+			services.AddSingleton<IModuleToolbarItem, LoginToolbarViewModel>();
 			services.AddSingleton<ExportToolbarViewModel>();
 			services.AddViewsAndViewModels();
 

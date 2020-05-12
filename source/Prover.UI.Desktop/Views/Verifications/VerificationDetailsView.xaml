@@ -46,17 +46,17 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Stretch="Uniform">
-			<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Grid VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 
-				<Viewbox HorizontalAlignment="Left" Stretch="Uniform">
+				<Viewbox Stretch="Uniform">
 					<ItemsControl x:Name="TestPointItems" DataContext="{Binding}">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
-								<UniformGrid HorizontalAlignment="Stretch" Rows="1" />
+								<UniformGrid Rows="1" />
 							</ItemsPanelTemplate>
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
@@ -69,17 +69,18 @@
 									<StackPanel
 										HorizontalAlignment="Stretch"
 										VerticalAlignment="Stretch"
-										Orientation="Horizontal">
-										<!--<ContentControl
-											HorizontalAlignment="Left"
-											VerticalAlignment="Top"
-											ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />-->
+										Orientation="Vertical">
 										<reactiveUi:ViewModelViewHost
 											x:Name="CorrectionsTestManagerViewHost"
 											HorizontalAlignment="Stretch"
 											VerticalAlignment="Stretch"
 											HorizontalContentAlignment="Stretch"
 											ViewModel="{Binding}" />
+										<ContentControl
+											HorizontalAlignment="Center"
+											VerticalAlignment="Top"
+											ContentTemplate="{Binding CorrectionTestsItemTemplate, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
 									</StackPanel>
 								</Border>
 							</DataTemplate>

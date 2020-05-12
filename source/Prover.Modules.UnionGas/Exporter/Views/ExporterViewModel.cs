@@ -9,6 +9,7 @@ using Prover.Application.Extensions;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
+using Prover.Application.ViewModels;
 using Prover.Modules.UnionGas.Exporter.Views.TestsByJobNumber;
 using Prover.Modules.UnionGas.Models;
 using Prover.Modules.UnionGas.Verifications;
@@ -27,139 +28,139 @@ using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class ExporterViewModel : ViewModelWpfBase, IRoutableViewModel, IHaveToolbarItems, IMainMenuItem
-    {
-        private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
+	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IHaveToolbarItems, IMainMenuItem
+	{
+		private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
 
-        public ExporterViewModel
-        (IScreenManager screenManager, IVerificationTestService verificationTestService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
-                IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
-                ExportToolbarViewModel exportToolbar)
-        {
-            ScreenManager = screenManager;
-            TestsByJobNumberViewModel = testsByJobNumberViewModel;
-            HostScreen = screenManager;
+		public ExporterViewModel
+		(IScreenManager screenManager, IVerificationService verificationService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
+				IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
+				ExportToolbarViewModel exportToolbar)
+		{
+			ScreenManager = screenManager;
+			TestsByJobNumberViewModel = testsByJobNumberViewModel;
+			HostScreen = screenManager;
 
-            OpenCommand = ReactiveCommand.CreateFromTask(async () => { await screenManager.ChangeView<ExporterViewModel>(); });
+			OpenCommand = ReactiveCommand.CreateFromTask(async () => { await screenManager.ChangeView<ExporterViewModel>(); });
 
-            DeviceTypes = deviceRepository.GetAll()
-                .OrderBy(d => d.Name).Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" })
-                                        .ToList();
+			DeviceTypes = deviceRepository.GetAll()
+				.OrderBy(d => d.Name).Prepend(new AllDeviceType { Id = Guid.Empty, Name = "All" })
+										.ToList();
 
-            FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
-            TestDateFilter = ReactiveCommand.Create(DateTimeFilter).DisposeWith(Cleanup);
-            FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
-            FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
+			FilterByTypeCommand = ReactiveCommand.Create<DeviceType, Func<EvcVerificationTest, bool>>(BuildDeviceFilter).DisposeWith(Cleanup);
+			TestDateFilter = ReactiveCommand.Create(DateTimeFilter).DisposeWith(Cleanup);
+			FilterIncludeArchived = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeArchivedFilter).DisposeWith(Cleanup);
+			FilterIncludeExported = ReactiveCommand.Create<bool, Func<EvcVerificationTest, bool>>(BuildIncludeExportedFilter).DisposeWith(Cleanup);
 
-            FilterByTypeCommand.ThrownExceptions
-                               .Merge(TestDateFilter.ThrownExceptions)
-                               .Merge(FilterIncludeArchived.ThrownExceptions)
-                               .Merge(FilterIncludeExported.ThrownExceptions)
-                               .LogErrors(Logger)
-                               .Subscribe()
-                               .DisposeWith(Cleanup);
+			FilterByTypeCommand.ThrownExceptions
+							   .Merge(TestDateFilter.ThrownExceptions)
+							   .Merge(FilterIncludeArchived.ThrownExceptions)
+							   .Merge(FilterIncludeExported.ThrownExceptions)
+							   .LogErrors(Logger)
+							   .Subscribe()
+							   .DisposeWith(Cleanup);
 
-            var visibleItems = verificationCache.Items
-                                                .Connect()
-                                                .Filter(FilterByTypeCommand)
-                                                .Filter(TestDateFilter.StartWith(DateTimeFilter()))
-                                                .Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
-                                                .Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)))
-                                                .LogErrors(Logger);
+			var visibleItems = verificationCache.Items
+												.Connect()
+												.Filter(FilterByTypeCommand)
+												.Filter(TestDateFilter.StartWith(DateTimeFilter()))
+												.Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
+												.Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)))
+												.LogErrors(Logger);
 
-            visibleItems.Sort(SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime))
-                        .ObserveOn(RxApp.MainThreadScheduler)
-                        .Bind(out _data)
-                        .DisposeMany()
-                        .Subscribe()
-                        .DisposeWith(Cleanup);
+			visibleItems.Sort(SortExpressionComparer<EvcVerificationTest>.Ascending(t => t.TestDateTime))
+						.ObserveOn(RxApp.MainThreadScheduler)
+						.Bind(out _data)
+						.DisposeMany()
+						.Subscribe()
+						.DisposeWith(Cleanup);
 
-            //verificationCache.Data().Connect()
-            //                 .Filter(x => !string.IsNullOrEmpty(x.JobId))
-            //                 .DistinctValues(x => x.JobId)
-            //                 .Bind(out var jobIds).Subscribe()
-            //                 .DisposeWith(Cleanup);
-            //JobIdsList = jobIds;
+			//verificationCache.Data().Connect()
+			//                 .Filter(x => !string.IsNullOrEmpty(x.JobId))
+			//                 .DistinctValues(x => x.JobId)
+			//                 .Bind(out var jobIds).Subscribe()
+			//                 .DisposeWith(Cleanup);
+			//JobIdsList = jobIds;
 
-            ToolbarViewModel = exportToolbar; //; exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
-            //AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
-        }
+			ToolbarViewModel = exportToolbar; //; exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
+											  //AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
+		}
 
-        public ExportToolbarViewModel ToolbarViewModel { get; set; }
-        //public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
+		public ExportToolbarViewModel ToolbarViewModel { get; set; }
+		//public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
 
-        public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
-        public ReactiveCommand<Unit, Func<EvcVerificationTest, bool>> TestDateFilter { get; private set; }
-        public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeExported { get; protected set; }
-        public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeArchived { get; protected set; }
+		public ReactiveCommand<DeviceType, Func<EvcVerificationTest, bool>> FilterByTypeCommand { get; protected set; }
+		public ReactiveCommand<Unit, Func<EvcVerificationTest, bool>> TestDateFilter { get; private set; }
+		public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeExported { get; protected set; }
+		public ReactiveCommand<bool, Func<EvcVerificationTest, bool>> FilterIncludeArchived { get; protected set; }
 
-        public ReadOnlyObservableCollection<EvcVerificationTest> Data => _data;
+		public ReadOnlyObservableCollection<EvcVerificationTest> Data => _data;
 
-        public ICollection<DeviceType> DeviceTypes { get; }
+		public ICollection<DeviceType> DeviceTypes { get; }
 
-        public IScreenManager ScreenManager { get; }
-        public TestsByJobNumberViewModel TestsByJobNumberViewModel { get; }
-        public string UrlPathSegment => "/Exporter";
-        public IScreen HostScreen { get; }
+		public IScreenManager ScreenManager { get; }
+		public TestsByJobNumberViewModel TestsByJobNumberViewModel { get; }
+		public string UrlPathSegment => "/Exporter";
+		public IScreen HostScreen { get; }
 
-        [Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
-        [Reactive] public DateTime ToDateTime { get; set; } = DateTime.Today.Tomorrow();
+		[Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
+		[Reactive] public DateTime ToDateTime { get; set; } = DateTime.Today.Tomorrow();
 
-        private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType)
-        {
-            return t => t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
-        }
+		private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType)
+		{
+			return t => t.Device.DeviceType.Id == deviceType.Id || deviceType.Id == Guid.Empty;
+		}
 
-        private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include)
-        {
-            return test => include || test.ArchivedDateTime == null;
-        }
+		private Func<EvcVerificationTest, bool> BuildIncludeArchivedFilter(bool include)
+		{
+			return test => include || test.ArchivedDateTime == null;
+		}
 
-        private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include)
-        {
-            return test => include || test.ExportedDateTime == null;
-        }
+		private Func<EvcVerificationTest, bool> BuildIncludeExportedFilter(bool include)
+		{
+			return test => include || test.ExportedDateTime == null;
+		}
 
-        private Func<EvcVerificationTest, bool> DateTimeFilter()
-        {
-            return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
-        }
+		private Func<EvcVerificationTest, bool> DateTimeFilter()
+		{
+			return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
+		}
 
-        private Expression<Func<EvcVerificationTest, bool>> DateTimePredicate()
-        {
-            return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
-        }
-        public PackIconKind MenuIconKind { get; } = PackIconKind.CloudUpload;
-        public string MenuTitle { get; } = "Export Test Run";
-        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
-        public int? Order { get; } = 2;
-        #region Nested type: AllDeviceType
+		private Expression<Func<EvcVerificationTest, bool>> DateTimePredicate()
+		{
+			return test => test.TestDateTime.Between(FromDateTime, ToDateTime);
+		}
+		public PackIconKind MenuIconKind { get; } = PackIconKind.CloudUpload;
+		public string MenuTitle { get; } = "Export Test Run";
+		public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+		public int? Order { get; } = 2;
+		#region Nested type: AllDeviceType
 
-        private class AllDeviceType : DeviceType
-        {
-            public override Type GetBaseItemGroupClass(Type itemGroupType)
-            {
-                throw new NotImplementedException();
-            }
+		private class AllDeviceType : DeviceType
+		{
+			public override Type GetBaseItemGroupClass(Type itemGroupType)
+			{
+				throw new NotImplementedException();
+			}
 
-            public override TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues)
-            {
-                throw new NotImplementedException();
-            }
+			public override TGroup GetGroup<TGroup>(IEnumerable<ItemValue> itemValues)
+			{
+				throw new NotImplementedException();
+			}
 
-            public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
-            {
-                throw new NotImplementedException();
-            }
+			public override ItemGroup GetGroupValues(IEnumerable<ItemValue> itemValues, Type groupType)
+			{
+				throw new NotImplementedException();
+			}
 
-            public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
-            {
-                throw new NotImplementedException();
-            }
-        }
+			public override IEnumerable<ItemMetadata> GetItemMetadata<T>()
+			{
+				throw new NotImplementedException();
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
 
 /*

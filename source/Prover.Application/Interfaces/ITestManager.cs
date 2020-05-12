@@ -4,18 +4,15 @@ using ReactiveUI;
 
 namespace Prover.Application.Interfaces
 {
-    public interface IQaTestRunManager : IReactiveObject
-    {
-        EvcVerificationViewModel TestViewModel { get; }
+	public interface IQaTestRunManager : IRoutableViewModel
+	{
+		IDeviceSessionManager DeviceManager { get; }
+		EvcVerificationViewModel TestViewModel { get; }
+	}
 
-
-    }
-
-
-    public interface IDeviceQaTestManager : IQaTestRunManager
-    {
-        IDeviceSessionManager DeviceManager { get; }
-        IVolumeTestManager VolumeTestManager { get; }
-        ICorrectionTestsManager CorrectionVerifications { get; }
-    }
+	public interface ITestManagersProvider
+	{
+		IVolumeTestManager VolumeTestManager { get; }
+		ICorrectionTestsManager CorrectionVerifications { get; }
+	}
 }

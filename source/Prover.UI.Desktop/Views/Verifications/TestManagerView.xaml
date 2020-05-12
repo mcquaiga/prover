@@ -8,9 +8,9 @@
 	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:reactiveUi="http://reactiveui.net"
-	xmlns:verifications="clr-namespace:Prover.UI.Desktop.ViewModels.Verifications"
+	xmlns:verifications="clr-namespace:Prover.Application.Verifications;assembly=Prover.Application"
 	x:Name="TestManagerControl"
-	d:DataContext="{d:DesignInstance verifications:TestManager,
+	d:DataContext="{d:DesignInstance verifications1:TestManager,
 	                                 IsDesignTimeCreatable=False}"
 	d:DesignHeight="450"
 	d:DesignWidth="800"
@@ -24,11 +24,12 @@
 				Height="Auto"
 				Margin="2"
 				HorizontalAlignment="Right"
-				Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
+				Command="{Binding RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
 				CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
 				Content="{materialDesign:PackIcon Kind=PlayArrow,
-				                                  Size=22}"
-				Style="{StaticResource MaterialDesignRaisedDarkButton}" />
+				                                  Size=12}"
+				Style="{StaticResource MaterialDesignRaisedDarkButton}"
+				Visibility="Visible" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="RotaryVolumeContentControlTemplate">
@@ -36,7 +37,7 @@
 				Width="120"
 				Height="28"
 				Margin="4,0"
-				Command="{Binding ViewModel.RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
+				Command="{Binding RunVolumeVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
 				Content="{materialDesign:PackIcon Kind=PlayArrow,
 				                                  Size=20}"
 				Style="{StaticResource MaterialDesignRaisedDarkButton}" />
@@ -65,7 +66,6 @@
 				</UniformGrid.Resources>
 				<Button
 					x:Name="SaveButton"
-					
 					Command="{Binding ViewModel.SaveCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
 					Content="{materialDesign:PackIcon ContentSave}" />
 
@@ -98,12 +98,12 @@
 			<reactiveUi:ViewModelViewHost.Resources />
 		</reactiveUi:ViewModelViewHost>
 
-	
+
 	</Grid>
 
 
 </reactiveUi:ReactiveUserControl>
-	<!--<materialDesign:Snackbar
+<!--<materialDesign:Snackbar
 			x:Name="ActionSnackbar"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Center"
@@ -124,8 +124,8 @@
 										ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
 
 									-->
-		<!--  Needed by the template, wont use it though  -->
-		<!--
+<!--  Needed by the template, wont use it though  -->
+<!--
 
 									<Button
 										x:Name="PART_YesActionButton"
@@ -135,12 +135,12 @@
 										Visibility="Collapsed" />
 
 									-->
-		<!--<Button
+<!--<Button
                                         x:Name="PART_NoActionButton"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
                                         Content="No" />-->
-		<!--
+<!--
 								</StackPanel>
 							</ControlTemplate>
 						</Setter.Value>

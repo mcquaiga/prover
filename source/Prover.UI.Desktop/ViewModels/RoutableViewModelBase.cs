@@ -1,10 +1,11 @@
 ﻿using System.Reactive;
 using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Prover.UI.Desktop.ViewModels
 {
-    public abstract class RoutableViewModelBase : ViewModelWpfBase, IRoutableViewModel
+    public abstract class RoutableViewModelBase : ViewModelBase, IRoutableViewModel
     {
         protected RoutableViewModelBase(IScreenManager screenManager, string urlPathSegment = null)
         {

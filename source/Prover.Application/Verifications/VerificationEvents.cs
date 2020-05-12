@@ -5,7 +5,9 @@ using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 using System.Reactive;
+using Prover.Application.Interfaces;
 using Prover.Shared.Events;
+using Prover.Application.Verifications.Corrections;
 
 namespace Prover.Application.Verifications
 {
@@ -43,9 +45,9 @@ namespace Prover.Application.Verifications
 					OnComplete
 			{ get; } = new EventHub<VerificationTestPointViewModel, VerificationTestPointViewModel>();
 
-			public static EventHub<StabilizeLiveReadItemsCoordinator, StabilizeLiveReadItemsCoordinator>
+			public static EventHub<ILiveReadHandler, ILiveReadHandler>
 					OnLiveReadStart
-			{ get; } = new EventHub<StabilizeLiveReadItemsCoordinator, StabilizeLiveReadItemsCoordinator>();
+			{ get; } = new EventHub<ILiveReadHandler, ILiveReadHandler>();
 
 			public static EventHub<VerificationTestPointViewModel, VerificationTestPointViewModel>
 					OnLiveReadComplete

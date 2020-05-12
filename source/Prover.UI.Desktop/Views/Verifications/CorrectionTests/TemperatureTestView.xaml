@@ -15,40 +15,54 @@
 	mc:Ignorable="d">
 
 	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<Border Style="{StaticResource SubSectionDividerBorder}">
-			<TextBlock
-				Grid.Row="0"
-				Style="{StaticResource SectionHeaderTextBlockStyle}"
-				Text="Temperature" />
-		</Border>
-		<controls:PercentageControlNew
-			x:Name="PercentError"
-			Grid.Row="1"
-			Margin="16,0"
-			HorizontalAlignment="Center" />
-		<UniformGrid
-			Grid.Row="2"
-			Margin="4"
-			Columns="2"
-			Rows="2">
-			<!--  INstrument Report , Text display instead of the decimal control  -->
-			<controls:ValueDescriptionControl
-				x:Name="Gauge"
-				IsReadOnly="False"
-				Label="Gauge" />
+		<!--<Border Style="{StaticResource SubSectionDividerBorder}">-->
+		<TextBlock
+			x:Name="TitleTextBlock"
+			Grid.Row="0"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			Padding="12"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			FontSize="28"
+			Style="{StaticResource SectionHeaderTextBlockStyle}"
+			Text="T" />
+		<!--</Border>-->
+		<StackPanel Grid.Column="1" Orientation="Vertical">
+			<controls:PercentageControlNew
+				x:Name="PercentError"
+				Grid.Row="1"
+				Margin="16,0"
+				HorizontalAlignment="Center" />
+			<UniformGrid
+				Grid.Row="2"
+				Margin="4"
+				Columns="2"
+				Rows="2">
+				<!--  INstrument Report , Text display instead of the decimal control  -->
+				<controls:ValueDescriptionControl
+					x:Name="Gauge"
+					IsReadOnly="False"
+					Label="Gauge" />
 
-			<controls:ValueDescriptionControl x:Name="EvcReading" Label="EVC Reading" />
+				<controls:ValueDescriptionControl x:Name="EvcReading" Label="EVC Reading" />
 
-			<controls:ValueDescriptionControl x:Name="ExpectedFactor" Label="True Factor" />
+				<controls:ValueDescriptionControl x:Name="ExpectedFactor" Label="True Factor" />
 
-			<controls:ValueDescriptionControl x:Name="ActualFactor" Label="EVC Factor" />
-		</UniformGrid>
+				<controls:ValueDescriptionControl x:Name="ActualFactor" Label="EVC Factor" />
+			</UniformGrid>
+		</StackPanel>
+
 	</Grid>
 
 
