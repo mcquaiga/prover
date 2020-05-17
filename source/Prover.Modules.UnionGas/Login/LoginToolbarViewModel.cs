@@ -8,6 +8,8 @@ using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Prover.Application.Interfaces;
+using Prover.UI.Desktop.Controls;
 
 namespace Prover.Modules.UnionGas.Login
 {
@@ -50,6 +52,6 @@ namespace Prover.Modules.UnionGas.Login
 		public ReactiveCommand<Unit, Unit> LogOut { get; }
 
 		/// <inheritdoc />
-		public int SortOrder { get; } = 99;
+		public int SortOrder { get; } = 1;
 	}
 }

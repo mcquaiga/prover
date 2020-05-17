@@ -10,6 +10,8 @@ using Prover.Shared;
 using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Extensions;
 using System;
+using Prover.Application.Interfaces;
+using Prover.UI.Desktop.Controls;
 
 namespace Prover.Modules.DevTools
 {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using DynamicData;
 using Prover.Application.Interactions;
 using ReactiveUI;
 
@@ -9,8 +11,9 @@ namespace Prover.Application.Interfaces
 
 	public interface IToolbarManager
 	{
-		ReadOnlyObservableCollection<IToolbarItem> ToolbarItems { get; }
-		IDisposable AddToolbarItem(IToolbarItem item);
+		ICollection<IModuleToolbarItem> ToolbarItems { get; }
+		ReadOnlyObservableCollection<IToolbarActionItem> ActionToolbarItems { get; set; }
+		IDisposable AddToolbarItem(IToolbarActionItem item);
 
 	}
 

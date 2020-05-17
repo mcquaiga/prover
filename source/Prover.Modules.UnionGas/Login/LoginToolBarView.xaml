@@ -22,10 +22,24 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Grid
-		Margin="2"
+		Margin="2,8"
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch">
 
+
+
+		<!--  Signed Off state  -->
+		<StackPanel
+			x:Name="NotLoggedInContent"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center">
+			<Button
+				x:Name="LoginButton"
+				Content="{materialDesign:PackIcon UserOff}"
+				Style="{StaticResource MainToolbarButtonStyle}" />
+		</StackPanel>
+
+		<!--  Executing state  -->
 		<StackPanel
 			x:Name="ExecutingContent"
 			HorizontalAlignment="Stretch"
@@ -36,15 +50,6 @@
 
 		</StackPanel>
 
-		<StackPanel
-			x:Name="NotLoggedInContent"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center">
-			<Button
-				x:Name="LoginButton"
-				Content="{materialDesign:PackIcon UserOff}"
-				Style="{StaticResource MainToolbarButtonStyle}" />
-		</StackPanel>
 
 		<StackPanel
 			x:Name="LoggedInContent"

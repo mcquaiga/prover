@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications
 {
-	public abstract class TestManagerBase : ViewModelBase, IHaveToolbarItems, IQaTestRunManager
+	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager
 	{
 		protected ILogger<TestManagerBase> Logger { get; }
 		protected IScreenManager ScreenManager { get; }

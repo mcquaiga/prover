@@ -31,10 +31,12 @@ namespace Prover.UI.Desktop.Views
 
 			this.WhenActivated(d =>
 			{
-				this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource, value => value.OrderBy(x => x.SortOrder)).DisposeWith(d);
-				ViewModel.ToolbarItems
-						 .ToObservableChangeSet()
-						 .OfType<IToolbarActionItem>().ToListObservable().BindTo(this, x => x.ToolbarActionItemsControl.ItemsSource).DisposeWith(d);
+				//, value => value.OrderBy(x => x.SortOrder)
+				this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource, items => items.OrderByDescending(i => i.SortOrder)).DisposeWith(d);
+				this.OneWayBind(ViewModel, x => x.ActionToolbarItems, x => x.ToolbarActionItemsControl.ItemsSource).DisposeWith(d);
+				//ViewModel.ToolbarItems
+				//         .OfType<IToolbarActionItem>()
+				//		.Observable().BindTo(this, x => x.ToolbarActionItemsControl.ItemsSource).DisposeWith(d);
 
 				this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
 				this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);

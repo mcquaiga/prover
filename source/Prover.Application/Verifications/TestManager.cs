@@ -46,7 +46,7 @@ namespace Prover.Application.Verifications
 		{
 			if (isDisposing)
 			{
-				DeviceManager.EndSession();
+				DeviceManager?.EndSession();
 				base.Dispose(true);
 			}
 

@@ -11,7 +11,7 @@ using Prover.UI.Desktop.Reports;
 using Prover.UI.Desktop.ViewModels;
 using Prover.UI.Desktop.ViewModels.Verifications;
 using Prover.UI.Desktop.Views;
-using Prover.UI.Desktop.Views.Verifications.Volume;
+using Prover.UI.Desktop.Views.QATests.Volume.Rotary;
 using ReactiveUI;
 using Splat;
 
@@ -45,7 +45,8 @@ namespace Prover.UI.Desktop.Startup
 
 			services.AddSingleton<IToolbarManager, ToolbarManager>();
 
-			services.AddScoped<IViewFor<RotaryUncorrectedVolumeTestViewModel>, RotaryUncorrectedVolumeView>();
+			services.AddTransient<IViewFor<RotaryUncorrectedVolumeTestViewModel>, RotaryUncorrectedVolumeView>();
+			services.AddTransient<RotaryUncorrectedVolumeTestViewModel>();
 
 
 			services.AddMainMenuItems();

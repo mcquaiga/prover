@@ -37,19 +37,19 @@
     <Compile Remove="ViewModels\Certificates\**" />
     <Compile Remove="ViewModels\Dashboard\**" />
     <Compile Remove="Views\Certificates\**" />
-    <Compile Remove="Views\Verifications\Managers\**" />
+    <Compile Remove="Views\QATests\Managers\**" />
     <EmbeddedResource Remove="Modules\**" />
     <EmbeddedResource Remove="Screens\**" />
     <EmbeddedResource Remove="ViewModels\Certificates\**" />
     <EmbeddedResource Remove="ViewModels\Dashboard\**" />
     <EmbeddedResource Remove="Views\Certificates\**" />
-    <EmbeddedResource Remove="Views\Verifications\Managers\**" />
+    <EmbeddedResource Remove="Views\QATests\Managers\**" />
     <None Remove="Modules\**" />
     <None Remove="Screens\**" />
     <None Remove="ViewModels\Certificates\**" />
     <None Remove="ViewModels\Dashboard\**" />
     <None Remove="Views\Certificates\**" />
-    <None Remove="Views\Verifications\Managers\**" />
+    <None Remove="Views\QATests\Managers\**" />
     <Resource Include="Resources\clipboard-check-blue.ico">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -60,7 +60,7 @@
     <Page Remove="ViewModels\Certificates\**" />
     <Page Remove="ViewModels\Dashboard\**" />
     <Page Remove="Views\Certificates\**" />
-    <Page Remove="Views\Verifications\Managers\**" />
+    <Page Remove="Views\QATests\Managers\**" />
   </ItemGroup>
 
   <!--<ItemGroup>
@@ -170,13 +170,13 @@
     <Compile Update="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Verifications\Volume\PulseOutputsView.xaml.cs">
+    <Compile Update="Views\QATests\Volume\PulseOutputsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Verifications\Volume\CorrectedVolumeView.xaml.cs">
+    <Compile Update="Views\QATests\Volume\CorrectedVolumeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml.cs">
+    <Compile Update="Views\QATests\Dialogs\VolumeTestDialogView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -209,13 +209,13 @@
     <Page Update="Views\Dashboards\VerifiedDashboardView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Volume\PulseOutputsView.xaml">
+    <Page Update="Views\QATests\Volume\PulseOutputsView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Volume\CorrectedVolumeView.xaml">
+    <Page Update="Views\QATests\Volume\CorrectedVolumeView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Verifications\Dialogs\VolumeTestDialogView.xaml">
+    <Page Update="Views\QATests\Dialogs\VolumeTestDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Styles\VerificationStyles.xaml">

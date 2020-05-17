@@ -22,7 +22,7 @@ using Prover.Application.ViewModels;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-	public class ExportToolbarViewModel : ViewModelBase, IHaveToolbarItems
+	public class ExportToolbarViewModel : ViewModelBase
 	{
 		private readonly string VsCode = "C:\\Users\\mcqua\\AppData\\Local\\Programs\\Microsoft VS Code\\code.exe";
 		private readonly ILoginService<Employee> _loginService;

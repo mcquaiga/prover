@@ -8,6 +8,7 @@ using MaterialDesignThemes.Wpf;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
+using Prover.UI.Desktop.Controls;
 
 namespace Prover.UI.Desktop.ViewModels
 {

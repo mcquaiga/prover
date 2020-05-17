@@ -31,11 +31,10 @@ namespace Prover.UI.Desktop
 		public async Task<AppBootstrapper> StartAsync(string[] args)
 		{
 			AppHost = ConfigureBuilder(this, args);
-			AppHost.Services.UseMicrosoftDependencyResolver();
 
 			await AppHost.StartAsync(CancellationTokenSource.Token);
 
-			InitializeLogging();
+			ProverLogging.Initialize(AppHost.Services);
 
 			return this;
 		}
@@ -46,69 +45,64 @@ namespace Prover.UI.Desktop
 			AppHost.StopAsync(ApplicationStopped);
 		}
 
-		private void AddServices(IServiceCollection services, HostBuilderContext host)
+		private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args)
 		{
-			services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
-			services.AddSingleton<UnhandledExceptionHandler>();
+			var host = Host.CreateDefaultBuilder()
 
-			Settings.AddServices(services, host);
-			StorageStartup.AddServices(services, host);
-			UserInterface.AddServices(services, host);
-			DeviceServices.AddServices(services, host);
-			// UpdaterService.AddServices(services, host);
+					   .ConfigureHostConfiguration(config => { config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json"); })
+
+					   .ConfigureAppConfiguration((host, config) =>
+					   {
+						   host.DiscoverModules();
+						   host.AddModuleConfigurations(config);
+					   })
+
+					   .ConfigureLogging((host, log) =>
+					   {
+						   log.ClearProviders();
+						   log.Services.AddSplatLogging();
+
+						   if (host.HostingEnvironment.IsProduction())
+							   log.AddEventLog();
+						   else
+							   log.AddDebug();
+					   })
+
+					   .ConfigureServices((host, services) =>
+					   {
+						   services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
+						   services.AddSingleton<UnhandledExceptionHandler>();
+
+						   host.AddModuleServices(services);
+
+						   Settings.AddServices(services, host);
+						   StorageStartup.AddServices(services, host);
+						   UserInterface.AddServices(services, host);
+						   DeviceServices.AddServices(services, host);
+
+					   })
+					   .Build();
+
+			host.Services.UseMicrosoftDependencyResolver();
+
+			return host;
 		}
 
-		private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args) =>
-				Host.CreateDefaultBuilder()
-					.ConfigureHostConfiguration(config =>
-					{
-						config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json");
-					})
-					.ConfigureAppConfiguration((host, config) =>
-					{
-						host.DiscoverModules();
-						host.AddModuleConfigurations(config);
-					})
-					.ConfigureLogging((host, log) =>
-					{
-						log.ClearProviders();
+		//private void InitializeLogging()
+		//{
+		//	var logFactory = AppHost.Services.GetService<ILoggerFactory>();
+		//	ProverLogging.LogFactory = logFactory;
 
-						log.Services.AddSplatLogging();
+		//	_logger = logFactory.CreateLogger<AppBootstrapper>();
 
-						if (host.HostingEnvironment.IsProduction())
-							log.AddEventLog();
-						else
-							log.AddDebug();
-					})
-					.ConfigureServices((host, services) =>
-					{
-						services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
-						services.AddSingleton<UnhandledExceptionHandler>();
+		//	var config = AppHost.Services.GetService<IConfiguration>();
+		//	var host = AppHost.Services.GetService<IHostEnvironment>();
 
-						Settings.AddServices(services, host);
-						StorageStartup.AddServices(services, host);
-						UserInterface.AddServices(services, host);
-						DeviceServices.AddServices(services, host);
+		//	_logger.LogInformation($"Loggers Hosting App Name: {host.ApplicationName}");
+		//	_logger.LogInformation($"Loggers Hosting Env: {host.EnvironmentName}");
 
-						host.AddModuleServices(services);
-					})
-					.Build();
-
-		private void InitializeLogging()
-		{
-			var logFactory = AppHost.Services.GetService<ILoggerFactory>();
-			ProverLogging.LogFactory = logFactory;
-
-			_logger = logFactory.CreateLogger<AppBootstrapper>();
-
-			var config = AppHost.Services.GetService<IConfiguration>();
-			var host = AppHost.Services.GetService<IHostEnvironment>();
-
-			_logger.LogInformation($"Loggers Hosting App Name: {host.ApplicationName}");
-			_logger.LogInformation($"Loggers Hosting Env: {host.EnvironmentName}");
-
-			var level = config.GetValue<LogLevel>("Logging:LogLevel:Default");
-			_logger.LogInformation($"Log Level = {level}");
-		}
+		//	var level = config.GetValue<LogLevel>("Logging:LogLevel:Default");
+		//	_logger.LogInformation($"Log Level = {level}");
+		//}
 	}
 }

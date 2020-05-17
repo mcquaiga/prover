@@ -19,23 +19,24 @@ namespace Prover.Application.ViewModels
 		{
 			Dispose(true);
 
-			if (!Cleanup.IsDisposed)
+			if (Cleanup != null && !Cleanup.IsDisposed)
 				Cleanup.Dispose();
 
-			GC.SuppressFinalize(this);
+			//GC.SuppressFinalize(this);
+
 		}
 
 		protected virtual void Dispose(bool isDisposing)
 		{
 		}
 
-		private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
-		/// <inheritdoc />
-		public IEnumerable<IToolbarActionItem> ToolbarActionItems => _toolbarActionItems;
+		//private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
+		///// <inheritdoc />
+		//public IEnumerable<IToolbarActionItem> ToolbarActionItems => _toolbarActionItems;
 
-		public void AddToolbarItem(IToolbarActionItem toolbarItem)
-		{
-			_toolbarActionItems.Add(toolbarItem);
-		}
+		//public void AddToolbarItem(IToolbarActionItem toolbarItem)
+		//{
+		//	_toolbarActionItems.Add(toolbarItem);
+		//}
 	}
 }

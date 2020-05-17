@@ -28,7 +28,7 @@ using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IHaveToolbarItems, IMainMenuItem
+	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IMainMenuItem
 	{
 		private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
 

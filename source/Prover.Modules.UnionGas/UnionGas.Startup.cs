@@ -15,6 +15,7 @@ using Prover.Shared;
 using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
+using Prover.UI.Desktop.Controls;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.ViewModels;
 
