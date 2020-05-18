@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DynamicData.Binding;
 using Prover.Application.Interactions;
+using Prover.Application.Interfaces;
 using ReactiveUI;
 
 namespace Prover.UI.Desktop.Views
@@ -23,16 +24,24 @@ namespace Prover.UI.Desktop.Views
 	/// Interaction logic for MainMenuUserControl.xaml
 	/// </summary>
 	[SingleInstanceView]
-	public partial class MainMenuUserControl
+	public partial class ToolbarMenuView
 	{
-		public MainMenuUserControl()
+		public ToolbarMenuView()
 		{
 			InitializeComponent();
 
 			this.WhenActivated(d =>
 			{
 				//, value => value.OrderBy(x => x.SortOrder)
-				this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource, items => items.OrderByDescending(i => i.SortOrder)).DisposeWith(d);
+				this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.ToolbarItemsControl.ItemsSource,
+							items => items.Where(x => x.ItemType == ToolbarItemType.Module)
+										  .OrderBy(i => i.SortOrder)).DisposeWith(d);
+
+				this.OneWayBind(ViewModel, x => x.ToolbarItems, x => x.MainMenuToolbarItemsControl.ItemsSource,
+					items => items.Where(x => x.ItemType == ToolbarItemType.MainMenu)
+								  .OrderBy(i => i.SortOrder))
+					.DisposeWith(d);
+
 				this.OneWayBind(ViewModel, x => x.ActionToolbarItems, x => x.ToolbarActionItemsControl.ItemsSource).DisposeWith(d);
 				//ViewModel.ToolbarItems
 				//         .OfType<IToolbarActionItem>()
@@ -41,6 +50,33 @@ namespace Prover.UI.Desktop.Views
 				this.BindCommand(ViewModel, x => x.NavigateBack, x => x.GoBackButton).DisposeWith(d);
 				this.BindCommand(ViewModel, x => x.NavigateHome, x => x.GoHomeButton).DisposeWith(d);
 			});
+		}
+	}
+
+	public class ToolbarItemTemplateSelector : DataTemplateSelector
+	{
+		/// <inheritdoc />
+		public override DataTemplate SelectTemplate(object item, DependencyObject container)
+		{
+			FrameworkElement element = container as FrameworkElement;
+
+			if (element != null && item != null)
+			{
+				if (item is IToolbarButton button)
+				{
+					return
+							element.FindResource("ToolbarButtonTemplate") as DataTemplate;
+				}
+
+				if (item is IToolbarItem barItem)
+				{
+					return element.FindResource("ToolbarItemTemplate") as DataTemplate;
+				}
+
+			}
+
+			return null;
+
 		}
 	}
 }

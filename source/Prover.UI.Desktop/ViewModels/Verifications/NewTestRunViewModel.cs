@@ -16,10 +16,12 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
-	public class NewTestRunViewModel : DialogViewModel
+	public class NewTestRunViewModel : DialogViewModel, IToolbarButton
 	{
 		private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
@@ -35,6 +37,13 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			SerialPort.BaudRates.AsObservableChangeSet().ObserveOn(RxApp.MainThreadScheduler).Bind(out var baudRates).Subscribe().DisposeWith(_cleanup);
 			BaudRates = baudRates;
 			ApplicationSettings.Local.VerificationFilePath = "";
+
+			OpenCommand = ReactiveCommand.CreateFromObservable(() =>
+			{
+				screenManager.DialogManager.ShowViewModel(this);
+				return Observable.Return(Unit.Default);
+			});
+
 
 			StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
 			{
@@ -66,5 +75,19 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
 			ApplicationSettings.Instance.SaveSettings();
 		}
+
+		public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+
+		/// <inheritdoc />
+		public int SortOrder { get; } = 1;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.MainMenu;
+
+		/// <inheritdoc />
+		public string Icon { get; } = PackIconKind.ClipboardCheck.ToString();
+
+		/// <inheritdoc />
+		public ICommand ToolbarAction => OpenCommand;
 	}
 }

@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 
 namespace Prover.UI.Desktop.Extensions
@@ -47,10 +48,10 @@ namespace Prover.UI.Desktop.Extensions
 			var items =
 					assembly
 						   .DefinedTypes
-						   .Where(t => t.ImplementedInterfaces.Contains(typeof(IMainMenuItem)) && !t.IsAbstract);
+						   .Where(t => t.ImplementedInterfaces.Contains(typeof(IToolbarItem)) && !t.IsAbstract);
 
 			foreach (var item in items)
-				services.AddSingleton(typeof(IMainMenuItem), item);
+				services.AddSingleton(typeof(IToolbarItem), item);
 		}
 
 		public static void AddStartTask<T>(this IServiceCollection services) where T : class, IStartupTask

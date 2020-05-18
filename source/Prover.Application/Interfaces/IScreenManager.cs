@@ -11,10 +11,9 @@ namespace Prover.Application.Interfaces
 
 	public interface IToolbarManager
 	{
-		ICollection<IModuleToolbarItem> ToolbarItems { get; }
-		ReadOnlyObservableCollection<IToolbarActionItem> ActionToolbarItems { get; set; }
-		IDisposable AddToolbarItem(IToolbarActionItem item);
-
+		ICollection<IToolbarItem> ToolbarItems { get; }
+		ReadOnlyObservableCollection<IToolbarButton> ActionToolbarItems { get; set; }
+		IDisposable AddToolbarItem(IToolbarButton item);
 	}
 
 	public interface IScreenManager : IScreen

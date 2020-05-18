@@ -18,18 +18,21 @@
 	mc:Ignorable="d">
 	<UserControl.Resources>
 		<DataTemplate x:Key="CorrectionsTestDataTemplate">
-			<Button
-				x:Name="DownloadButton"
-				Width="Auto"
-				Height="Auto"
-				Margin="2"
-				HorizontalAlignment="Right"
-				Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
-				CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
-				Content="{materialDesign:PackIcon Kind=PlayArrow,
-				                                  Size=12}"
-				Style="{StaticResource MaterialDesignRaisedDarkButton}"
-				Visibility="Visible" />
+			<Grid ZIndex="100">
+
+
+				<Button
+					x:Name="DownloadButton"
+					Width="Auto"
+					Height="Auto"
+					Margin="2"
+					Command="{Binding ViewModel.RunCorrectionVerifications, RelativeSource={RelativeSource AncestorType={x:Type managers:TestManagerView}}}"
+					CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
+					Content="{materialDesign:PackIcon Kind=PlayArrow,
+					                                  Size=12}"
+					Style="{StaticResource MaterialDesignRaisedDarkButton}"
+					Visibility="Visible" />
+			</Grid>
 		</DataTemplate>
 
 		<DataTemplate x:Key="RotaryVolumeContentControlTemplate">
@@ -86,8 +89,7 @@
 		</DataTemplate>
 	</UserControl.Resources>
 
-	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-	      Margin="25 0">
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
 		<reactiveUi:ViewModelViewHost
 			x:Name="TestViewContent"

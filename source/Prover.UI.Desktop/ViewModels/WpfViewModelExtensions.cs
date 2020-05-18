@@ -19,7 +19,7 @@ namespace Prover.UI.Desktop.ViewModels
 			return toolbar.AddToolbarItem(new ToolbarActionItem(iconKind.ToString(), command));
 		}
 
-		public static IDisposable AddToolbarItem(this IToolbarManager toolbar, IEnumerable<IToolbarActionItem> toolbarItems)
+		public static IDisposable AddToolbarItem(this IToolbarManager toolbar, IEnumerable<IToolbarButton> toolbarItems)
 		{
 			return new CompositeDisposable(toolbarItems.Select(i => toolbar.AddToolbarItem(i)));
 		}

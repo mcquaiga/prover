@@ -26,7 +26,7 @@ namespace Prover.Modules.DevTools
 			services.AddSingleton<IDevToolsMenuItem, DataGenerator>();
 			services.AddSingleton<IDevToolsMenuItem, DataImporter>();
 			services.AddSingleton<IDevToolsMenuItem, DeviceTemplates>();
-			services.AddSingleton<IModuleToolbarItem, DevToolbarMenu>();
+			services.AddSingleton<IToolbarItem, DevToolbarMenu>();
 
 			//DevelopmentServices(services);
 			//Task.Run(async () => await DeviceTemplates.Initialize());

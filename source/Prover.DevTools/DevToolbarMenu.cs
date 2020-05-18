@@ -8,13 +8,16 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.DevTools
 {
-	public class DevToolbarMenu : ViewModelBase, IModuleToolbarItem
+	public class DevToolbarMenu : ViewModelBase, IToolbarItem
 	{
 		public DevToolbarMenu(IEnumerable<IDevToolsMenuItem> devMenuItems = null) => MenuItems = devMenuItems.ToList();
 
 		[Reactive] public ICollection<IDevToolsMenuItem> MenuItems { get; set; }
 
 		/// <inheritdoc />
-		public int SortOrder { get; } = 99;
+		public int SortOrder { get; } = -1;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.Module;
 	}
 }

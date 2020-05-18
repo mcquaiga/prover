@@ -13,7 +13,7 @@ using Prover.UI.Desktop.Controls;
 
 namespace Prover.Modules.UnionGas.Login
 {
-	public class LoginToolbarViewModel : ViewModelBase, IModuleToolbarItem
+	public class LoginToolbarViewModel : ViewModelBase, IToolbarItem
 	{
 		public LoginToolbarViewModel(ILoginService<Employee> loginService)
 		{
@@ -52,6 +52,9 @@ namespace Prover.Modules.UnionGas.Login
 		public ReactiveCommand<Unit, Unit> LogOut { get; }
 
 		/// <inheritdoc />
-		public int SortOrder { get; } = 1;
+		public int SortOrder { get; } = 1000;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.Module;
 	}
 }

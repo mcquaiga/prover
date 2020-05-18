@@ -3,8 +3,10 @@ using Prover.Application.Interfaces;
 
 namespace Prover.UI.Desktop.Controls
 {
-	public class ToolbarActionItem : IToolbarActionItem
+	public class ToolbarActionItem : IToolbarButton
 	{
+		public ToolbarActionItem() { }
+
 		public ToolbarActionItem(string icon, ICommand toolbarAction)
 		{
 			Icon = icon;
@@ -19,5 +21,8 @@ namespace Prover.UI.Desktop.Controls
 
 		/// <inheritdoc />
 		public int SortOrder { get; } = 50;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.Action;
 	}
 }

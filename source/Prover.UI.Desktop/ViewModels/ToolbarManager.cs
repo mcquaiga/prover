@@ -17,51 +17,50 @@ namespace Prover.UI.Desktop.ViewModels
 {
 	public class ToolbarManager : ViewModelBase, IToolbarManager
 	{
+		private readonly IEnumerable<IToolbarItem> _toolbarItems;
+
 		/// <inheritdoc />
-		private readonly SourceList<IToolbarActionItem> _toolbarItems = new SourceList<IToolbarActionItem>();
+		private readonly SourceList<IToolbarButton> _actionItems = new SourceList<IToolbarButton>();
 
-		public ToolbarManager(IScreenManager screenManager, IEnumerable<IModuleToolbarItem> moduleToolbarItems)
+		public ToolbarManager(IScreenManager screenManager, IEnumerable<IToolbarItem> toolbarItems)
 		{
-			var items = _toolbarItems.Connect()
-									 .ObserveOn(RxApp.MainThreadScheduler)
-									 .Bind(out var toolbarItems)
-									 .DisposeMany()
-									 .Subscribe();
-
-			ActionToolbarItems = toolbarItems;
+			_toolbarItems = toolbarItems;
+			//AppMainMenus = toolbarItems
+			//ToolbarItems = toolbarItems.Where(x => x.ItemType == ToolbarItemType.Module).ToList();
 
 
-			//Sort(x => x.SortOrder)
-			//.AsObservableList();
-
-			//items.Filter(i => i.IsTypeOrInheritsOf(typeof(IToolbarActionItem)))
-			//	 .Transform((i => i as IToolbarActionItem))
-			//	 .ObserveOn(RxApp.MainThreadScheduler)
-			//	 .Bind(out var actionItems)
-			//	 .DisposeMany()
-			//	 .Subscribe();//.ToListObservable();// ToolbarItems(i => i.IsTypeOf(typeof(IToolbarActionItem))).ToListObservable();
-			//ActionToolbarItems = toolbarItems; //.ToObservable().Where(x => x.IsTypeOrInheritsOf(typeof(IToolbarActionItem)));
+			_actionItems.Connect()
+						 .ObserveOn(RxApp.MainThreadScheduler)
+						 .Bind(out var actionItems)
+						 .DisposeMany()
+						 .Subscribe()
+						 .DisposeWith(Cleanup);
+			ActionToolbarItems = actionItems;
 
 
 			NavigateForward = ReactiveCommand.CreateFromTask<IRoutableViewModel, IRoutableViewModel>(screenManager.ChangeView);
 			NavigateBack = ReactiveCommand.CreateFromTask(screenManager.GoBack, screenManager.Router.NavigateBack.CanExecute);
 			NavigateHome = ReactiveCommand.CreateFromTask(async () => { await screenManager.GoHome(); });
-			ToolbarItems = moduleToolbarItems.ToList();
-			//items.DisposeWith(Cleanup);
+
+
+			NavigateForward.DisposeWith(Cleanup);
+			NavigateBack.DisposeWith(Cleanup);
+			NavigateHome.DisposeWith(Cleanup);
 		}
 
-		public ReadOnlyObservableCollection<IToolbarActionItem> ActionToolbarItems { get; set; }
+		public ReadOnlyObservableCollection<IToolbarButton> ActionToolbarItems { get; set; }
 
 		public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> NavigateForward { get; }
 		public ReactiveCommand<Unit, Unit> NavigateBack { get; }
 		public ReactiveCommand<Unit, Unit> NavigateHome { get; }
 
-		public ICollection<IModuleToolbarItem> ToolbarItems { get; } //=> _toolbarItems.Connect().AsObservableList();
+		//public ICollection<IToolbarItem> AppMainMenus => _toolbarItems.Where(x => x.ItemType == ToolbarItemType.MainMenu).OrderBy(x => x.SortOrder).ToList();
+		public ICollection<IToolbarItem> ToolbarItems => _toolbarItems.ToList();
 
-		public IDisposable AddToolbarItem(IToolbarActionItem item)
+		public IDisposable AddToolbarItem(IToolbarButton item)
 		{
-			_toolbarItems.Add(item);
-			return Disposable.Create(() => { _toolbarItems.Remove(item); });
+			_actionItems.Add(item);
+			return Disposable.Create(() => { _actionItems.Remove(item); });
 		}
 
 		/*

@@ -6,23 +6,21 @@ using ReactiveUI;
 
 namespace Prover.UI.Desktop.ViewModels
 {
-    public class HomeViewModel : ReactiveObject, IRoutableViewModel
-    {
-        public HomeViewModel(IScreenManager screen, IEnumerable<IMainMenuItem> appMainMenus, DashboardViewModel dashboard = null)
-        {
-            ScreenManager = screen;
-            AppMainMenus = appMainMenus.OrderBy(x => x.Order).ToList();
-            Dashboard = dashboard;
-        }
+	public class HomeViewModel : ReactiveObject, IRoutableViewModel
+	{
+		public HomeViewModel(IScreenManager screen, DashboardViewModel dashboard = null)
+		{
+			ScreenManager = screen;
+			//AppMainMenus = appMainMenus.OrderBy(x => x.Order).ToList();
+			Dashboard = dashboard;
+		}
 
-        public IScreenManager ScreenManager { get; }
+		public IScreenManager ScreenManager { get; }
 
-        public ICollection<IMainMenuItem> AppMainMenus { get; }
+		public string UrlPathSegment => "Home";
 
-        public string UrlPathSegment => "Home";
+		public IScreen HostScreen => ScreenManager;
 
-        public IScreen HostScreen => ScreenManager;
-
-        public DashboardViewModel Dashboard { get; }
-    }
+		public DashboardViewModel Dashboard { get; }
+	}
 }

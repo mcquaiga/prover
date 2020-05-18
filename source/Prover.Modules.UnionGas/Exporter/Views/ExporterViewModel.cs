@@ -25,10 +25,11 @@ using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Input;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IMainMenuItem
+	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IToolbarButton
 	{
 		private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
 
@@ -160,6 +161,18 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 		}
 
 		#endregion
+
+		/// <inheritdoc />
+		public int SortOrder { get; } = 1;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.MainMenu;
+
+		/// <inheritdoc />
+		public string Icon { get; } = PackIconKind.ClipboardList.ToString();
+
+		/// <inheritdoc />
+		public ICommand ToolbarAction => OpenCommand;
 	}
 }
 
