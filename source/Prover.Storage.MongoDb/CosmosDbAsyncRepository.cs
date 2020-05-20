@@ -1,6 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Prover.Application;
 using Prover.Application.Interfaces;
 using Prover.Application.Models.EvcVerifications;
@@ -8,200 +7,236 @@ using Prover.Shared.Domain;
 using Prover.Shared.Storage.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Linq;
+using Prover.Application.Services;
+using System.Diagnostics;
+using DynamicData;
 
 namespace Prover.Storage.MongoDb
 {
+	public class CosmosDbAsyncRepository<T> : IAsyncRepository<T>, IQueryableRepository<T>, IEventsSubscriber, IRequireInitialization
+		where T : AggregateRoot
+	{
+		private static readonly string EndPointUrl = "https://4c9731fb-0ee0-4-231-b9ee.documents.azure.com:443/";
+		private static readonly string AuthKey = "mgncs2xyrkkNnypoLptN4wtE9qvYYYHt8dX7hD6s5CkRU0moi5Sx95KyXTlbPiZVG9WdrzoLfLy5QvzZVnxfZg==";
 
-    public class CosmosJsonNetSerializer : CosmosSerializer
-    {
-        private static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
-        private readonly JsonSerializer Serializer;
-        private readonly JsonSerializerSettings serializerSettings;
+		private static readonly string databaseId = "EvcProver";
+		private static readonly string containerId = typeof(T).Name;
 
-        public CosmosJsonNetSerializer()
-                : this(new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
-        {
-        }
+		//Reusable instance of ItemClient which represents the connection to a Cosmos endpoint          
+		private Database _database = null;
+		private Container _container = null;
+		private CosmosClient _client;
+		private Task _warmupTask;
+		private static ILogger<CosmosDbAsyncRepository<T>> _logger = ProverLogging.CreateLogger<CosmosDbAsyncRepository<T>>();
 
-        public CosmosJsonNetSerializer(
-                JsonSerializerSettings serializerSettings
-        )
-        {
-            this.serializerSettings = serializerSettings;
-            this.Serializer = JsonSerializer.Create(this.serializerSettings);
-        }
+		private Subject<bool> _isInitialized = new Subject<bool>();
+		//private IObservable<Unit> _initializedObservable;
+		private bool _initialized = false;
 
-        public override T FromStream<T>(Stream stream)
-        {
-            using (stream)
-            {
-                if (typeof(Stream).IsAssignableFrom(typeof(T)))
-                {
-                    return (T)(object)(stream);
-                }
+		public CosmosDbAsyncRepository()
+		{
+			CosmosClientOptions clientOptions = new CosmosClientOptions()
+			{
+				Serializer = new CosmosJsonNetSerializer()
+			};
 
-                using (StreamReader sr = new StreamReader(stream))
-                {
-                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
-                    {
-                        return Serializer.Deserialize<T>(jsonTextReader);
-                    }
-                }
-            }
-        }
+			_client = new CosmosClient(EndPointUrl, AuthKey, clientOptions);
 
-        public override Stream ToStream<T>(T input)
-        {
-            MemoryStream streamPayload = new MemoryStream();
-            using (StreamWriter streamWriter = new StreamWriter(streamPayload, encoding: DefaultEncoding, bufferSize: 1024, leaveOpen: true))
-            {
-                using (JsonWriter writer = new JsonTextWriter(streamWriter))
-                {
-                    writer.Formatting = Newtonsoft.Json.Formatting.None;
-                    Serializer.Serialize(writer, input);
-                    writer.Flush();
-                    streamWriter.Flush();
-                }
-            }
+			_isInitialized.OnNext(false);
 
-            streamPayload.Position = 0;
-            return streamPayload;
-        }
-    }
+			_warmupTask = Initialize();
 
-    public class CosmosDbAsyncRepository<T> : IAsyncRepository<T>, IEventsSubscriber
-    where T : AggregateRoot
-    {
-        private static readonly string EndPointUrl = "https://4c9731fb-0ee0-4-231-b9ee.documents.azure.com:443/";
-        private static readonly string AuthKey = "mgncs2xyrkkNnypoLptN4wtE9qvYYYHt8dX7hD6s5CkRU0moi5Sx95KyXTlbPiZVG9WdrzoLfLy5QvzZVnxfZg==";
+			//_initializedObservable.Select(_ => true)
+			//					   .Subscribe(_isInitialized);
+			// _warmupTask = Task.Run(() => Initialize());
+		}
 
-        private static readonly string databaseId = "EvcProver";
-        private static readonly string containerId = typeof(T).Name;
+		public IObservable<Unit> Initialized => _isInitialized.Where(i => i).Select(_ => Unit.Default);
+		/// <inheritdoc />
+		public async Task<T> UpsertAsync(T entity)
+		{
+			await WaitForInit();
 
-        //Reusable instance of ItemClient which represents the connection to a Cosmos endpoint          
-        private Database database = null;
-        private Container container = null;
-        private CosmosClient client;
-        private Task _warmupTask;
-        private static ILogger<CosmosDbAsyncRepository<T>> _logger = ProverLogging.CreateLogger<CosmosDbAsyncRepository<T>>();
+			var partitionKey = new PartitionKey((entity as EvcVerificationTest).Device.DeviceType.Id.ToString());
+			T result = default;
+			try
+			{
+				var response = await _container.UpsertItemAsync<T>(entity, partitionKey);
 
-        private Subject<bool> _isInitialized = new Subject<bool>();
+				//var response = await container.ReadItemAsync<T>(entity.Id.ToString(), partitionKey);
 
-        public CosmosDbAsyncRepository()
-        {
-            CosmosClientOptions clientOptions = new CosmosClientOptions()
-            {
+				//response = await container.ReplaceItemAsync<T>(entity, entity.Id.ToString());
 
-                Serializer = new CosmosJsonNetSerializer()
-            };
+				_logger.LogDebug("Upserted item with id: {0}", response.Resource.Id);
 
+				result = response.Resource;
+			}
+			catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+			{
+				var response = await _container.UpsertItemAsync<T>(entity, partitionKey);
+				_logger.LogDebug("Created item with id: {0}", response.Resource.Id);
 
-            client = new CosmosClient(EndPointUrl, AuthKey, clientOptions);
-            _isInitialized.OnNext(false);
+				result = response.Resource;
+			}
 
-            // _warmupTask = Task.Run(() => Initialize());
-        }
+			return result;
+		}
 
-        /// <inheritdoc />
-        public async Task<T> UpsertAsync(T entity)
-        {
-            await _warmupTask;
+		/// <inheritdoc />
+		public Task<bool> DeleteAsync(Guid id) => throw new NotImplementedException();
 
-            var partitionKey = new PartitionKey((entity as EvcVerificationTest).Device.DeviceType.Id.ToString());
-            T result = default;
-            try
-            {
-                var response = await container.UpsertItemAsync<T>(entity, partitionKey);
+		/// <inheritdoc />
+		public Task DeleteAsync(T entity) => throw new NotImplementedException();
 
-                //var response = await container.ReadItemAsync<T>(entity.Id.ToString(), partitionKey);
+		/// <inheritdoc />
+		public Task<T> GetAsync(Guid id) => throw new NotImplementedException();
 
-                //response = await container.ReplaceItemAsync<T>(entity, entity.Id.ToString());
+		/// <inheritdoc />
+		public Task<int> CountAsync(IQuerySpecification<T> spec) => throw new NotImplementedException();
 
-                _logger.LogDebug("Upserted item with id: {0}", response.Resource.Id);
+		/// <inheritdoc />
+		public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null)
+		{
+			await WaitForInit();
 
-                result = response.Resource;
-            }
-            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                var response = await container.UpsertItemAsync<T>(entity, partitionKey);
-                _logger.LogDebug("Created item with id: {0}", response.Resource.Id);
+			var sqlQueryText = "SELECT * FROM c";
 
-                result = response.Resource;
-            }
+			_logger.LogDebug("Running query: {0}\n", sqlQueryText);
 
-            return result;
-        }
+			var queryDefinition = new QueryDefinition(sqlQueryText);
+			var queryResultSetIterator = _container
+											 .GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true)
+											 .Where(predicate);
 
-        /// <inheritdoc />
-        public Task DeleteAsync(Guid id) => throw new NotImplementedException();
+			return queryResultSetIterator.AsEnumerable();
 
-        /// <inheritdoc />
-        public Task DeleteAsync(T entity) => throw new NotImplementedException();
+		}
 
-        /// <inheritdoc />
-        public Task<T> GetAsync(Guid id) => throw new NotImplementedException();
+		/// <inheritdoc />
+		public async Task<IEnumerable<T>> QueryAsync(IQuerySpecification<T> specification)
+		{
+			await WaitForInit();
+			var query = ApplySpecification(specification);
+			return query.AsEnumerable();
+		}
 
-        /// <inheritdoc />
-        public Task<int> CountAsync(ISpecification<T> spec) => throw new NotImplementedException();
+		/// <inheritdoc />
+		//public IQbservable<T> QueryObservable() => throw new NotImplementedException();
 
-        /// <inheritdoc />
-        public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null)
-        {
-            await _warmupTask.ConfigureAwait(false);
+		public IObservable<T> QueryObservable(IQuerySpecification<T> specification)
+		{
+			return Observable.Create<T>(async obs =>
+			{
+				var disposer = new CompositeDisposable();
 
-            var sqlQueryText = "SELECT * FROM c";
+				void GetItems()
+				{
+					var query = ApplySpecification(specification);
+					//specification.CompileSpecification();
 
-            Console.WriteLine("Running query: {0}\n", sqlQueryText);
+					//var query = _container
+					//            .GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true)
+					//            .Where(specification.Predicate);
 
-            var queryDefinition = new QueryDefinition(sqlQueryText);
-            var queryResultSetIterator = this.container.GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true);
+					query.Subscribe(obs)
+						 .DisposeWith(disposer);
+				}
 
-            return await Task.FromResult(queryResultSetIterator.AsEnumerable());
+				async Task Feeder()
+				{
+					var queryIterator = ApplySpecification(specification).ToFeedIterator();
 
-        }
-
-
-        /// <inheritdoc />
-        public Task<IReadOnlyList<T>> ListAsync() => throw new NotImplementedException();
+					var reader = Observable.FromAsync(async () =>
+										   {
+											   var feed = await queryIterator.ReadNextAsync();
+											   return feed.ToObservable();
+										   })
+										   .RepeatWhen(x => Observable.Create<bool>(handler =>
+																	  {
+																		  if (queryIterator.HasMoreResults)
+																			  handler.OnNext(true);
+																		  else
+																			  handler.OnCompleted();
+																		  return Disposable.Empty;
+																	  }))
+										   .Concat()
+										   .Subscribe(obs)
+										   .DisposeWith(disposer);
+				}
 
 
-        public Task Initialize()
-        {
+				await WaitForInit();
+
+				GetItems();
+				//await Feeder();
+
+				return disposer;
+			});
+			//
+
+			//return query.AsEnumerable();
+		}
+
+		/// <inheritdoc />
+		public Task<IReadOnlyList<T>> ListAsync() => throw new NotImplementedException();
+
+		private IQueryable<T> ApplySpecification(IQueryable<T> queryable, IQuerySpecification<T> spec)
+		{
+			return SpecificationEvaluator<T>.GetQuery(queryable, spec);
+		}
+
+		private IQueryable<T> ApplySpecification(IQuerySpecification<T> spec)
+		{
+			return ApplySpecification(_container.GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true), spec);
+		}
+
+		private Task WaitForInit()
+		{
+			return Task.WhenAll(new[] { _warmupTask });
+		}
+
+		public Task Initialize()
+		{
+			if (_initialized)
+				return Task.CompletedTask;
+
+			return Task.Run(async () =>
+			{
+				_database = await _client.CreateDatabaseIfNotExistsAsync(databaseId);
+
+				// Delete the existing container to prevent create item conflicts
+				//using (await repo.database.GetContainer(containerId).DeleteContainerStreamAsync())
+				//{ }
+
+				// We create a partitioned collection here which needs a partition key. Partitioned collections
+				// can be created with very high values of provisioned throughput (up to Throughput = 250,000)
+				// and used to store up to 250 GB of data. You can also skip specifying a partition key to create
+				// single partition collections that store up to 10 GB of data.
+				// For this demo, we create a collection to store SalesOrders. We set the partition key to the account
+				// number so that we can retrieve all sales orders for an account efficiently from a single partition,
+				// and perform transactions across multiple sales order for a single account number. 
+				ContainerProperties containerProperties = new ContainerProperties(containerId, partitionKeyPath: "/Device/DeviceTypeId");
+
+				// Create with a throughput of 1000 RU/s
+				_container = await _database.CreateContainerIfNotExistsAsync(
+					containerProperties,
+					throughput: 1000);
+				_isInitialized.OnNext(true);
+			});
+
+			//return _warmupTask;
+		}
 
 
 
-
-            _warmupTask = Task.Run(async () =>
-            {
-                database = await client.CreateDatabaseIfNotExistsAsync(databaseId);
-
-                // Delete the existing container to prevent create item conflicts
-                //using (await repo.database.GetContainer(containerId).DeleteContainerStreamAsync())
-                //{ }
-
-                // We create a partitioned collection here which needs a partition key. Partitioned collections
-                // can be created with very high values of provisioned throughput (up to Throughput = 250,000)
-                // and used to store up to 250 GB of data. You can also skip specifying a partition key to create
-                // single partition collections that store up to 10 GB of data.
-                // For this demo, we create a collection to store SalesOrders. We set the partition key to the account
-                // number so that we can retrieve all sales orders for an account efficiently from a single partition,
-                // and perform transactions across multiple sales order for a single account number. 
-                ContainerProperties containerProperties = new ContainerProperties(containerId, partitionKeyPath: "/Device/DeviceTypeId");
-
-                // Create with a throughput of 1000 RU/s
-                container = await database.CreateContainerIfNotExistsAsync(
-                containerProperties,
-                throughput: 1000);
-                _isInitialized.OnNext(true);
-            });
-
-            return Task.CompletedTask;
-        }
-    }
+	}
 }

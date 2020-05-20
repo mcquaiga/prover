@@ -9,49 +9,49 @@ using System.Reactive.Linq;
 
 namespace Prover.Application.Dashboard
 {
-    public class VerificationDashboardService : ReactiveObject, IDisposable
-    {
-        private readonly CompositeDisposable _cleanup = new CompositeDisposable();
-        private readonly IEntityDataCache<EvcVerificationTest> _verificationCache;
-        private readonly IObservable<IChangeSet<EvcVerificationTest, Guid>> _cache;
+	public class VerificationDashboardService : ReactiveObject, IDisposable
+	{
+		private readonly CompositeDisposable _cleanup = new CompositeDisposable();
+		private readonly IEntityCache<EvcVerificationTest> _verificationCache;
+		private readonly IObservable<IChangeSet<EvcVerificationTest, Guid>> _cache;
 
-        private ReadOnlyObservableCollection<EvcVerificationTest> _verified;
-        private ReadOnlyObservableCollection<EvcVerificationTest> _today;
+		private ReadOnlyObservableCollection<EvcVerificationTest> _verified;
+		private ReadOnlyObservableCollection<EvcVerificationTest> _today;
 
-        public VerificationDashboardService(IEntityDataCache<EvcVerificationTest> verificationCache)
-        {
-            _cache = verificationCache.Items.Connect();
+		public VerificationDashboardService(IEntityCache<EvcVerificationTest> verificationCache)
+		{
+			_cache = verificationCache.Data.Connect();
 
-            SetVerifiedTests();
+			SetVerifiedTests();
 
-            _cache.Filter(v => v.TestDateTime.IsToday())
-                  .ObserveOn(RxApp.MainThreadScheduler)
-                  .Bind(out _today)
-                  .Subscribe()
-                  .DisposeWith(_cleanup);
-        }
+			_cache.Filter(v => v.TestDateTime.IsToday())
+				  .ObserveOn(RxApp.MainThreadScheduler)
+				  .Bind(out _today)
+				  .Subscribe()
+				  .DisposeWith(_cleanup);
+		}
 
-        public ReadOnlyObservableCollection<EvcVerificationTest> Verified => _verified;
-        public ReadOnlyObservableCollection<EvcVerificationTest> Today => _today;
+		public ReadOnlyObservableCollection<EvcVerificationTest> Verified => _verified;
+		public ReadOnlyObservableCollection<EvcVerificationTest> Today => _today;
 
-        private void SetVerifiedTests(DateTime? fromDateTime = null, DateTime? toDateTime = null)
-        {
-            _cache.Filter(v => v.Verified)
-                  .ObserveOn(RxApp.MainThreadScheduler)
-                  .Bind(out _verified)
-                  .Subscribe()
-                  .DisposeWith(_cleanup);
+		private void SetVerifiedTests(DateTime? fromDateTime = null, DateTime? toDateTime = null)
+		{
+			_cache.Filter(v => v.Verified)
+				  .ObserveOn(RxApp.MainThreadScheduler)
+				  .Bind(out _verified)
+				  .Subscribe()
+				  .DisposeWith(_cleanup);
 
-            //&& (!fromDateTime.HasValue  ||
-            //(fromDateTime.HasValue && toDateTime.HasValue && v.TestDateTime.Between(fromDateTime.Value, toDateTime.Value)))
-        }
+			//&& (!fromDateTime.HasValue  ||
+			//(fromDateTime.HasValue && toDateTime.HasValue && v.TestDateTime.Between(fromDateTime.Value, toDateTime.Value)))
+		}
 
 
 
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            _cleanup?.Dispose();
-        }
-    }
+		/// <inheritdoc />
+		public void Dispose()
+		{
+			_cleanup?.Dispose();
+		}
+	}
 }

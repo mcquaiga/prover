@@ -39,7 +39,7 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto" />
 						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
 					<Grid.Resources>
@@ -63,7 +63,7 @@
 									<StackPanel
 										Margin="5,5,0,0"
 										HorizontalAlignment="Left"
-										VerticalAlignment="Bottom"
+										VerticalAlignment="Center"
 										Orientation="Horizontal" />
 								</ItemsPanelTemplate>
 							</ItemsControl.ItemsPanel>
@@ -85,7 +85,7 @@
 
 
 					<StackPanel
-						Grid.Column="1"
+						Grid.Column="2"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
 						Orientation="Horizontal"
@@ -121,10 +121,10 @@
 
 						<TextBlock
 							x:Name="TestCountTextBlock"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Bottom"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
 							FontWeight="Thin"
-							Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+							Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
 
 
 

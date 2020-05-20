@@ -5,57 +5,61 @@ using System.Windows.Data;
 
 namespace Prover.UI.Desktop.Converters
 {
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public sealed class BoolToVisibilityConverter : IValueConverter
-    {
-        public BoolToVisibilityConverter()
-            : this(Visibility.Visible, Visibility.Collapsed)
-        {
-        }
+	[ValueConversion(typeof(bool), typeof(Visibility))]
+	public sealed class BoolToVisibilityConverter : IValueConverter
+	{
+		public static BoolToVisibilityConverter TrueThenCollapsedConverter { get; } = new BoolToVisibilityConverter(Visibility.Collapsed, Visibility.Visible);
+		public static BoolToVisibilityConverter ThenCollapsedConverter { get; } = new BoolToVisibilityConverter(Visibility.Collapsed, Visibility.Visible);
 
-        public BoolToVisibilityConverter(Visibility trueValue, Visibility falseValue)
-        {
-            // set defaults
-            TrueValue = trueValue;
-            FalseValue = falseValue;
-        }
+		public BoolToVisibilityConverter()
+		: this(Visibility.Visible, Visibility.Collapsed)
+		{
 
-        public Visibility TrueValue { get; set; }
-        public Visibility FalseValue { get; set; }
+		}
 
-        public object Convert(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            if (value == null)
-                return FalseValue;
+		public BoolToVisibilityConverter(Visibility trueValue, Visibility falseValue)
+		{
+			// set defaults
+			TrueValue = trueValue;
+			FalseValue = falseValue;
+		}
 
-            if (!(value is bool))
-                return TrueValue;
+		public Visibility TrueValue { get; set; }
+		public Visibility FalseValue { get; set; }
 
-            return (bool) value ? TrueValue : FalseValue;
-        }
+		public object Convert(object value, Type targetType,
+			object parameter, CultureInfo culture)
+		{
+			if (value == null)
+				return FalseValue;
 
-        public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            if (Equals(value, TrueValue))
-                return true;
-            if (Equals(value, FalseValue))
-                return false;
-            return null;
-        }
-    }
+			if (!(value is bool))
+				return TrueValue;
 
-    //public class BoolToVisibilityBinding : IBindingTypeConverter
-    //{
-    //    public Visibility TrueValue { get; set; } = Visibility.Visible;
-    //    public Visibility FalseValue { get; set; } = Visibility.Collapsed;
+			return (bool)value ? TrueValue : FalseValue;
+		}
 
-    //    public int GetAffinityForObjects(Type fromType, Type toType) => 2;
+		public object ConvertBack(object value, Type targetType,
+			object parameter, CultureInfo culture)
+		{
+			if (Equals(value, TrueValue))
+				return true;
+			if (Equals(value, FalseValue))
+				return false;
+			return null;
+		}
+	}
 
-    //    public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
-    //    {
+	//public class BoolToVisibilityBinding : IBindingTypeConverter
+	//{
+	//    public Visibility TrueValue { get; set; } = Visibility.Visible;
+	//    public Visibility FalseValue { get; set; } = Visibility.Collapsed;
 
-    //    }
-    //}
+	//    public int GetAffinityForObjects(Type fromType, Type toType) => 2;
+
+	//    public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+	//    {
+
+	//    }
+	//}
 }

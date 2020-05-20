@@ -79,7 +79,7 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 		public ReactiveCommand<Unit, Unit> OpenCommand { get; }
 
 		/// <inheritdoc />
-		public int SortOrder { get; } = 1;
+		public int SortOrder { get; } = 0;
 
 		/// <inheritdoc />
 		public ToolbarItemType ItemType { get; } = ToolbarItemType.MainMenu;

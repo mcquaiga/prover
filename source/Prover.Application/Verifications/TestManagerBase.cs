@@ -2,6 +2,7 @@ using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -10,18 +11,25 @@ using ReactiveUI;
 
 namespace Prover.Application.Verifications
 {
-	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager
+	public interface IViewModelNavigationEvents
+	{
+		bool CanNavigateAway();
+	}
+
+	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager, IActivatableViewModel, IViewModelNavigationEvents
 	{
 		protected ILogger<TestManagerBase> Logger { get; }
 		protected IScreenManager ScreenManager { get; }
 		protected IVerificationService VerificationService { get; }
-
 
 		protected TestManagerBase(ILogger<TestManagerBase> logger,
 									IScreenManager screenManager,
 									IVerificationService verificationService,
 									EvcVerificationViewModel testViewModel)
 		{
+			var cts = new CancellationTokenSource();
+
+
 			Logger = logger;
 			ScreenManager = screenManager;
 			HostScreen = screenManager;
@@ -70,9 +78,7 @@ namespace Prover.Application.Verifications
 			//	.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
 			//	.Subscribe()
 			//	.DisposeWith(Cleanup);
-			//this.AddToolbarItem(SaveCommand, PackIconKind.ContentSave);
-			//this.AddToolbarItem(SubmitTest, PackIconKind.Send);
-			//this.AddToolbarItem(PrintTestReport, PackIconKind.PrintPreview);
+
 		}
 
 		public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
@@ -82,6 +88,7 @@ namespace Prover.Application.Verifications
 		/// <inheritdoc />
 		public IDeviceSessionManager DeviceManager { get; protected set; }
 
+		public IObservable<bool> HasUnsavedChanges { get; protected set; }
 		/// <inheritdoc />
 		public EvcVerificationViewModel TestViewModel { get; protected set; }
 
@@ -95,5 +102,23 @@ namespace Prover.Application.Verifications
 
 		/// <inheritdoc />
 		public IScreen HostScreen { get; }
+
+		/// <inheritdoc />
+		public ViewModelActivator Activator { get; } = new ViewModelActivator();
+
+		/// <inheritdoc />
+		public bool CanNavigateAway()
+		{
+			var canChange = true;
+
+			if (!TestViewModel.Verified && )
+
+				return CanNavigateAway(canChange);
+		}
+
+		protected virtual bool CanNavigateAway(bool canNavigateAway)
+		{
+			return canNavigateAway;
+		}
 	}
 }

@@ -35,18 +35,25 @@
 			<converters:InstanceToBooleanConverter x:Key="ValueToCheckedConverter" />
 
 			<converters:BoolToVisibilityConverter
-				x:Key="FalseToHiddenConverter"
+				x:Key="IfFalseHideConverter"
 				FalseValue="Hidden"
 				TrueValue="Visible" />
 
 			<converters:BoolToVisibilityConverter
-				x:Key="TrueToHiddenConverter"
+				x:Key="IfFalseCollapseConverter"
+				FalseValue="Collapsed"
+				TrueValue="Visible" />
+
+			<converters:BoolToVisibilityConverter
+				x:Key="IfTrueHideConverter"
 				FalseValue="Visible"
 				TrueValue="Hidden" />
+
 			<converters:BoolToVisibilityConverter
-				x:Key="TrueToCollapsedConverter"
+				x:Key="IfTrueCollapseConverter"
 				FalseValue="Visible"
 				TrueValue="Collapsed" />
+
 			<converters:BooleanToPassConverter
 				x:Key="BoolToPassFailConverter"
 				FalseValue="Fail"
@@ -165,6 +172,7 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
+
 
 		</ResourceDictionary>
 	</ResourceDictionary.MergedDictionaries>

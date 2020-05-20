@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DynamicData.Binding;
 using Microsoft.Extensions.DependencyInjection;
 using Prover.Application.Interfaces;
+using Prover.Application.Verifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -27,45 +28,79 @@ namespace Prover.UI.Desktop.ViewModels
 
 			Router = new RoutingState();
 			Router.CurrentViewModel.Subscribe(vm => _currentViewModel = vm);
+
 		}
 
 		public IDialogServiceManager DialogManager { get; }
 
 		public RoutingState Router { get; set; }
 
-		public async Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
+		public Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
 		{
-			var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-			await Router.Navigate.Execute(viewModel);
-			return viewModel;
+			return TryChangeView(viewModel);
 		}
 
-		public async Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel
+		public Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel
 		{
+			if (_currentViewModel.GetType() == typeof(TViewModel))
+				return default;
+
 			var model = parameters.IsNullOrEmpty()
 								? _services.GetService<TViewModel>()
 								: ActivatorUtilities.CreateInstance<TViewModel>(_services, typeof(TViewModel), parameters);
-			return await ChangeView(model);
+
+			return ChangeView(model);
+		}
+
+		private Task<TViewModel> TryChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
+		{
+			var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+			if (_currentViewModel.GetType() == typeof(TViewModel))
+				return default;
+
+			_currentViewModel.
+
+					Router.Navigate
+				  .Execute(viewModel)
+				  .Subscribe();
+
+			return Task.FromResult(viewModel);
 		}
 
 		public async Task GoBack()
 		{
 			var current = _currentViewModel;
 			await Router.NavigateBack.Execute();
-			//_toolbarRemover.Disposable = Disposable.Empty;
+			(current as IDisposable)?.Dispose();
 		}
 
-		public async Task GoHome(IRoutableViewModel home = null)
+		public Task GoHome(IRoutableViewModel home = null)
 		{
 			_homeViewModel ??= home;
+
 			if (_homeViewModel == null)
 				throw new ArgumentNullException(nameof(home), @"No viewmodel has been set for home.");
 
-			var stack = Router.NavigationStack.Reverse().SkipLast(1);
+			if (_currentViewModel == _homeViewModel)
+				return Task.CompletedTask;
 
-			await Router.NavigateAndReset.Execute(_homeViewModel);
+			//var stack = Router.NavigationStack.Reverse().SkipLast(1).ToList();
 
-			stack.ForEach(v => (v as IDisposable)?.Dispose());
+			Router.NavigateAndReset.Execute(_homeViewModel).Subscribe();
+
+			//stack.ForEach(v => (v as IDisposable)?.Dispose());
+
+			return Task.CompletedTask;
+		}
+
+		protected void NavigationChanging(IRoutableViewModel viewModel)
+		{
+			var cts = new CancellationTokenSource();
+			if (viewModel is IViewModelNavigationEvents events)
+			{
+
+				events.ChangingNavigation.Register()
+			}
 		}
 	}
 }

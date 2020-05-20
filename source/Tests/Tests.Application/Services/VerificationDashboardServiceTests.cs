@@ -10,38 +10,38 @@ using Tests.Application.Services;
 
 namespace Prover.Application.Services.Tests
 {
-    [TestClass()]
-    public class VerificationDashboardServiceTests
-    {
-        private CompositeDisposable _cleanup;
-        private static DeviceInstance _device;
-        private static DeviceType _deviceType;
-        private static IDeviceRepository _repo;
+	[TestClass()]
+	public class VerificationDashboardServiceTests
+	{
+		private CompositeDisposable _cleanup;
+		private static DeviceInstance _device;
+		private static DeviceType _deviceType;
+		private static IDeviceRepository _repo;
 
-        private static IAsyncRepository<EvcVerificationTest> _testRepo;
-        private static IEntityDataCache<EvcVerificationTest> _cache;
+		private static IAsyncRepository<EvcVerificationTest> _testRepo;
+		private static ICacheClient<EvcVerificationTest> _cache;
 
-        [ClassInitialize]
-        public static async Task ClassInitialize(TestContext context)
-        {
-            _repo = StorageTestsInitialize.DeviceRepo;
-            _deviceType = _repo.GetByName("Mini-Max");
+		[ClassInitialize]
+		public static async Task ClassInitialize(TestContext context)
+		{
+			_repo = StorageTestsInitialize.DeviceRepo;
+			_deviceType = _repo.GetByName("Mini-Max");
 
-            _testRepo = StorageTestsInitialize.TestRepo;
-            _cache = StorageTestsInitialize.VerificationCache;
-            await Task.CompletedTask;
-        }
+			_testRepo = StorageTestsInitialize.TestRepo;
+			_cache = StorageTestsInitialize.VerificationCache;
+			await Task.CompletedTask;
+		}
 
-        [TestMethod()]
-        public void VerificationDashboardServiceTest()
-        {
-            //Assert.Fail();
-        }
+		[TestMethod()]
+		public void VerificationDashboardServiceTest()
+		{
+			//Assert.Fail();
+		}
 
-        [TestMethod()]
-        public void DisposeTest()
-        {
-            //Assert.Fail();
-        }
-    }
+		[TestMethod()]
+		public void DisposeTest()
+		{
+			//Assert.Fail();
+		}
+	}
 }

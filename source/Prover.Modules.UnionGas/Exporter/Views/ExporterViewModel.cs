@@ -26,18 +26,30 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Prover.Application.Services;
+using Prover.Application.Specifications;
+using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
 	public class ExporterViewModel : ViewModelBase, IRoutableViewModel, IToolbarButton
 	{
+		private readonly IQueryableRepository<EvcVerificationTest> _verificationRepository;
 		private readonly ReadOnlyObservableCollection<EvcVerificationTest> _data;
 
-		public ExporterViewModel
-		(IScreenManager screenManager, IVerificationService verificationService, IEntityDataCache<EvcVerificationTest> verificationCache, IDeviceRepository deviceRepository,
-				IExportVerificationTest exporter, ILoginService<Employee> loginService, TestsByJobNumberViewModel testsByJobNumberViewModel, MeterInventoryNumberValidator inventoryNumberValidator,
+		public ExporterViewModel(
+				IScreenManager screenManager,
+				IVerificationService verificationService,
+				IQueryableRepository<EvcVerificationTest> verificationRepository,
+				IEntityCache<EvcVerificationTest> verificationCache,
+				IDeviceRepository deviceRepository,
+				IExportVerificationTest exporter,
+				ILoginService<Employee> loginService,
+				TestsByJobNumberViewModel testsByJobNumberViewModel,
+				MeterInventoryNumberValidator inventoryNumberValidator,
 				ExportToolbarViewModel exportToolbar)
 		{
+			_verificationRepository = verificationRepository;
 			ScreenManager = screenManager;
 			TestsByJobNumberViewModel = testsByJobNumberViewModel;
 			HostScreen = screenManager;
@@ -61,10 +73,11 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 							   .Subscribe()
 							   .DisposeWith(Cleanup);
 
-			var visibleItems = verificationCache.Items
-												.Connect()
+			ReloadData = ReactiveCommand.CreateFromObservable(() => verificationRepository.QueryObservable(VerificationQuerySpecs.Default));
+
+			var visibleItems = verificationCache.Data.Connect()
+												.Merge(ReloadData.ToObservableChangeSet(k => k.Id))
 												.Filter(FilterByTypeCommand)
-												.Filter(TestDateFilter.StartWith(DateTimeFilter()))
 												.Filter(FilterIncludeExported.StartWith(BuildIncludeExportedFilter(false))) //, changeObservable.Select(x => Unit.Default)
 												.Filter(FilterIncludeArchived.StartWith(BuildIncludeArchivedFilter(false)))
 												.LogErrors(Logger);
@@ -76,16 +89,12 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 						.Subscribe()
 						.DisposeWith(Cleanup);
 
-			//verificationCache.Data().Connect()
-			//                 .Filter(x => !string.IsNullOrEmpty(x.JobId))
-			//                 .DistinctValues(x => x.JobId)
-			//                 .Bind(out var jobIds).Subscribe()
-			//                 .DisposeWith(Cleanup);
-			//JobIdsList = jobIds;
-
 			ToolbarViewModel = exportToolbar; //; exporterToolbarFactory?.Invoke() ?? new ExportToolbarViewModel(screenManager, verificationTestService, loginService, exporter, inventoryNumberValidator);
 											  //AddToolbarItem(ToolbarViewModel.ToolbarActionItems);
 		}
+
+		//public ReactiveCommand<Unit, IChangeSet<EvcVerificationTest, Guid>> ReloadData { get; set; }
+		public ReactiveCommand<Unit, EvcVerificationTest> ReloadData { get; set; }
 
 		public ExportToolbarViewModel ToolbarViewModel { get; set; }
 		//public ReadOnlyObservableCollection<string> JobIdsList { get; set; }
@@ -104,8 +113,8 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 		public string UrlPathSegment => "/Exporter";
 		public IScreen HostScreen { get; }
 
-		[Reactive] public DateTime FromDateTime { get; set; } = DateTime.Now.Subtract(TimeSpan.FromDays(30));
-		[Reactive] public DateTime ToDateTime { get; set; } = DateTime.Today.Tomorrow();
+		[Reactive] public DateTime FromDateTime { get; set; } = DateTime.Today.AddDays(-30);
+		[Reactive] public DateTime ToDateTime { get; set; } = DateTime.Today.AddDays(1);
 
 		private Func<EvcVerificationTest, bool> BuildDeviceFilter(DeviceType deviceType)
 		{
@@ -134,7 +143,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 		public PackIconKind MenuIconKind { get; } = PackIconKind.CloudUpload;
 		public string MenuTitle { get; } = "Export Test Run";
 		public ReactiveCommand<Unit, Unit> OpenCommand { get; }
-		public int? Order { get; } = 2;
+
 		#region Nested type: AllDeviceType
 
 		private class AllDeviceType : DeviceType
@@ -163,7 +172,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 		#endregion
 
 		/// <inheritdoc />
-		public int SortOrder { get; } = 1;
+		public int SortOrder { get; } = 50;
 
 		/// <inheritdoc />
 		public ToolbarItemType ItemType { get; } = ToolbarItemType.MainMenu;

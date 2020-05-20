@@ -30,6 +30,7 @@ namespace Prover.Application.ViewModels
 		{
 		}
 
+
 		//private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
 		///// <inheritdoc />
 		//public IEnumerable<IToolbarActionItem> ToolbarActionItems => _toolbarActionItems;

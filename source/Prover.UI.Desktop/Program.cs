@@ -73,7 +73,8 @@ namespace Prover.UI.Desktop
 		//[STAThread]
 		private static async Task<IHost> Initialize(string[] args)
 		{
-			var bootstrapper = await new AppBootstrapper().StartAsync(args);
+			var bootstrapper =
+					await new AppBootstrapper().StartAsync(args);
 
 			return bootstrapper.AppHost;
 		}

@@ -78,11 +78,7 @@ namespace Prover.UI.Desktop.Extensions
 			});
 			services.AddTransient<ICorrectionTestsManager, LiveReadStabilizeCorrectionTestManager>();
 			services.AddTransient<IVerificationManagerService, VerificationManagerService>();
-			services.AddTransient<IVolumeTestManagerFactory>(c =>
-			{
-				//				if (ApplicationSettings.Shared.TestSettings.)
-				return ActivatorUtilities.CreateInstance<AutomatedVolumeTestManagerFactory>(c);
-			});
+			services.AddTransient<IVolumeTestManagerFactory>(c => ActivatorUtilities.CreateInstance<AutomatedVolumeTestManagerFactory>(c));
 			//services.AddTransient<EvcVerificationViewModel>();
 			//services.AddTransient<IVolumeTestManager, RotaryVolumeTestRunner>();
 		}

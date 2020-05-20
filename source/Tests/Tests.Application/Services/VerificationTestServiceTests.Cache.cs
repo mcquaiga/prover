@@ -13,114 +13,121 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Prover.Application.Interfaces;
 using Prover.Modules.DevTools.SampleData;
 using Tests.Application.Services;
 using Tests.Shared;
 
 namespace Prover.Application.Services.Tests
 {
-    [TestClass()]
-    public class VerificationTestServiceTests
-    {
-        private static Mock<IAsyncRepository<EvcVerificationTest>> _verificationRepository;
-        private static VerificationCache _cache;
+	[TestClass()]
+	public class VerificationTestServiceTests
+	{
+		private static Mock<IAsyncRepository<EvcVerificationTest>> _verificationRepository;
+		private static ICacheClient<EvcVerificationTest> _cache;
 
-        private static List<EvcVerificationTest> _tests;
-        private DeviceType _deviceType = StorageTestsInitialize.DeviceRepo.GetByName("Mini-Max");
-        private DeviceInstance _device;
+		private static List<EvcVerificationTest> _tests;
+		private DeviceType _deviceType = StorageTestsInitialize.DeviceRepo.GetByName("Mini-Max");
+		private DeviceInstance _device;
 
-        [TestInitialize]
-        public async Task Init()
-        {
-            _tests.Clear();
+		[TestInitialize]
+		public async Task Init()
+		{
+			_tests.Clear();
 
-            _device = _deviceType.CreateInstance(SampleItemFiles.MiniMaxItemFile);
-
-
-
-        }
-
-        [TestMethod()]
-        public void ApplyDateFilterTest()
-        {
-            var scheduler = new TestSchedulers();
-            var dispatcher = scheduler.Dispatcher;
+			_device = _deviceType.CreateInstance(SampleItemFiles.MiniMaxItemFile);
 
 
-            _tests.Add(_device.NewVerification());
 
-            _cache = new VerificationCache(_verificationRepository.Object, null, mainScheduler: scheduler.TaskPool);
+		}
 
-            //scheduler.TaskPool.Schedule(() => _verificationRepository.Object.UpsertAsync(_device.NewVerification()));
+		[TestMethod()]
+		public void ApplyDateFilterTest()
+		{
+			var scheduler = new TestSchedulers();
+			var dispatcher = scheduler.Dispatcher;
 
-            var shared = _cache.Items.Connect();
+			_tests.Add(_device.NewVerification());
 
-            shared
-                   .QueryWhenChanged(query => query.Count)
-                   .Do(x => Debug.WriteLine($"{x}"))
-                   //.ObserveOn(scheduler.Dispatcher)
-                   .Subscribe();
+			_cache = new EntityCache<EvcVerificationTest>(null, scheduler: scheduler.TaskPool);
 
-            shared.QueryWhenChanged(query =>
-            {
-                return query.Items.Count();
-            })
-             //  .LogDebug("shared 2 change")
+			//scheduler.TaskPool.Schedule(() => _verificationRepository.Object.UpsertAsync(_device.NewVerification()));
 
-             //.AutoRefreshOnObservable(x => shared.WhereReasonsAre(ChangeReason.Add).CountChanged().Select(_ => Unit.Default))
-             //.ToCollection()
-             .ObserveOn(dispatcher)
-             //.Select(x => x.Count)
-             //.Do(x => Debug.WriteLine($"{x}"))
-             .LogDebug(x => $"totals changed {x}")
-            .Subscribe();
+			var shared = _cache.Data.Connect();
 
-            // scheduler.TaskPool.Start();
+			shared.QueryWhenChanged(query => query.Count)
+				  .Do(x => Debug.WriteLine($"{x}"))
+				  .Subscribe();
 
-            //while (true)
-            //{
-            //    scheduler.TaskPool.AdvanceBySeconds(5);
-            //    scheduler.Dispatcher.AdvanceByMilliSeconds(2);
-            //}
-        }
+			shared.QueryWhenChanged(query => query.Items.Count())
+				  .ObserveOn(dispatcher)
+				  .LogDebug(x => $"totals changed {x}")
+				  .Subscribe();
 
-        //[TestMethod()]
-        //public void DisposeTest()
-        //{
-        //    Assert.Fail();
-        //}
+			//  .LogDebug("shared 2 change")
+			//.Select(x => x.Count)
+			//.Do(x => Debug.WriteLine($"{x}"))
+			//.AutoRefreshOnObservable(x => shared.WhereReasonsAre(ChangeReason.Add).CountChanged().Select(_ => Unit.Default))
+			//.ToCollection()
+			// scheduler.TaskPool.Start();
 
-        //[TestMethod()]
-        //public void LoadAsyncTest()
-        //{
-        //    Assert.Fail();
-        //}
+			//while (true)
+			//{
+			//    scheduler.TaskPool.AdvanceBySeconds(5);
+			//    scheduler.Dispatcher.AdvanceByMilliSeconds(2);
+			//}
+		}
 
-        //[TestMethod()]
-        //public void UpdateTest()
-        //{
-        //    Assert.Fail();
-        //}
+		//[TestMethod()]
+		//public void DisposeTest()
+		//{
+		//    Assert.Fail();
+		//}
 
-        [ClassInitialize]
-        public static async Task ClassInitialize(TestContext context)
-        {
-            _tests = new List<EvcVerificationTest>();
+		//[TestMethod()]
+		//public void LoadAsyncTest()
+		//{
+		//    Assert.Fail();
+		//}
 
-            _verificationRepository = new Mock<IAsyncRepository<EvcVerificationTest>>(MockBehavior.Loose);
+		//[TestMethod()]
+		//public void UpdateTest()
+		//{
+		//    Assert.Fail();
+		//}
 
-            _verificationRepository.Setup(repo => repo.Query(null)).ReturnsAsync(_tests);
-            _verificationRepository.Setup(repo => repo.UpsertAsync(It.IsAny<EvcVerificationTest>()))
-                                   .Returns<EvcVerificationTest>(async test =>
-                                   {
-                                       await VerificationEvents.OnSave.Publish(test);
-                                       _tests.Add(test);
-                                       return await Task.FromResult(test);
-                                   });
+		[ClassInitialize]
+		public static async Task ClassInitialize(TestContext context)
+		{
+			_tests = new List<EvcVerificationTest>();
+			_verificationRepository = GetVerificationRepostiory(_tests);
+		}
 
+		private static Mock<IAsyncRepository<EvcVerificationTest>> GetVerificationRepostiory(ICollection<EvcVerificationTest> mockedItems = null)
+		{
+			mockedItems = mockedItems ?? new List<EvcVerificationTest>();
 
-        }
-    }
+			var repo = new Mock<IAsyncRepository<EvcVerificationTest>>(MockBehavior.Loose);
+
+			repo.Setup(repo => repo.QueryAsync(It.IsAny<IQuerySpecification<EvcVerificationTest>>()))
+				// .ReturnsAsync<IQuerySpecification<EvcVerificationTest>, IEnumerable<EvcVerificationTest>>(spec => mockedItems.Where(spec))
+				.ReturnsAsync(mockedItems);
+
+			//repo.Setup(repo => repo.Query(It.IsAny<Expression<Func<EvcVerificationTest, bool>>>()))
+			//	.ReturnsAsync(mockedItems);
+
+			repo.Setup(repo => repo.UpsertAsync(It.IsAny<EvcVerificationTest>()))
+				.Returns<EvcVerificationTest>(async test =>
+				{
+					await VerificationEvents.OnSave.Publish(test);
+					mockedItems.Add(test);
+					return await Task.FromResult(test);
+				});
+
+			return repo;
+		}
+	}
 }

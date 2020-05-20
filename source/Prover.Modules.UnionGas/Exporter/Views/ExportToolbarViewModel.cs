@@ -18,6 +18,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Prover.Application.ViewModels;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
@@ -28,9 +29,13 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 		private readonly ILoginService<Employee> _loginService;
 
 		public ExportToolbarViewModel
-		(IScreenManager screenManager, IVerificationService verificationTestService, ILoginService<Employee> loginService, IExportVerificationTest exporter,
-				MeterInventoryNumberValidator inventoryNumberValidator, ReadOnlyObservableCollection<EvcVerificationTest> selectedObservable = null
-		)
+				(
+				IScreenManager screenManager,
+				IVerificationService verificationTestService,
+				ILoginService<Employee> loginService,
+				IExportVerificationTest exporter,
+				VerificationTestReportGenerator reportService,
+				MeterInventoryNumberValidator inventoryNumberValidator, ReadOnlyObservableCollection<EvcVerificationTest> selectedObservable = null)
 		{
 			_loginService = loginService;
 
@@ -97,13 +102,15 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
 			Updates = this.WhenAnyObservable(x => x.AddSignedOnUser, x => x.AddJobId, x => x.ArchiveVerification, x => x.ExportVerification);
 
-			PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(async test =>
+			PrintReport = ReactiveCommand.CreateFromTask<EvcVerificationTest>(test =>
 										 {
-											 if (test == null)
-												 return;
-											 var report = await screenManager.ChangeView<ReportViewModel>();
+											 return reportService.GenerateAndViewReport(test);
+											 //if (test == null)
+											 // return Task.CompletedTask;
 
-											 report.ContentViewModel = test.ToViewModel();
+											 //var content = test.ToViewModel();
+
+											 //return screenManager.ChangeView<ReportViewModel>((ReactiveObject)content);
 										 })
 										 .DisposeWith(Cleanup);
 

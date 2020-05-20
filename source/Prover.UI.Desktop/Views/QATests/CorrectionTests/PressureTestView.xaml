@@ -7,6 +7,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:reactiveUi="http://reactiveui.net"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	d:DataContext="{d:DesignInstance corrections1:PressureFactorViewModel,
 	                                 IsDesignTimeCreatable=False}"
 	d:DesignHeight="450"
@@ -15,67 +16,88 @@
 	mc:Ignorable="d">
 
 	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<Border Style="{StaticResource SubSectionDividerBorder}">
+
+		<materialDesign:Card
+			x:Name="TitleBorderSection"
+			Grid.Row="0"
+			Grid.RowSpan="2"
+			Grid.Column="0"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			materialDesign:ShadowAssist.ShadowDepth="Depth0"
+			materialDesign:ShadowAssist.ShadowEdges="None"
+			Background="{StaticResource MaterialDesignPaper}">
 			<TextBlock
-				Grid.Row="0"
-				Style="{StaticResource SecondaryTestHeaderStyle}"
-				Text="Pressure" />
-		</Border>
+				x:Name="TitleTextBlock"
+				Margin="5,0,5,0"
+				Padding="2,2,2,2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				FontSize="32"
+				Style="{StaticResource SectionHeaderTextBlockStyle}"
+				Text="P" />
+		</materialDesign:Card>
+		
+		<StackPanel Grid.Column="1">
+			<controls:PercentageControlNew
+				x:Name="PercentError"
+				Grid.Row="1"
+				HorizontalAlignment="Center" />
+			<StackPanel Grid.Row="2" Margin="4">
+				<UniformGrid
+					x:Name="GaugeTransducer"
+					Margin="0"
+					Columns="2">
 
-		<controls:PercentageControlNew
-			x:Name="PercentError"
-			Grid.Row="1"
-			HorizontalAlignment="Center" />
-		<StackPanel Grid.Row="2" Margin="4">
-			<UniformGrid
-				x:Name="GaugeTransducer"
-				Margin="0"
-				Columns="2">
+					<controls:ValueDescriptionControl
+						x:Name="GaugeControl"
+						IsReadOnly="False"
+						Label="Gas Gauge" />
 
-				<controls:ValueDescriptionControl
-					x:Name="GaugeControl"
-					IsReadOnly="False"
-					Label="Gas Gauge" />
+					<!--<controls:ValueDescriptionControl Label="EVC Reading" Value="{Binding EvcGasPressure}" />-->
 
-				<!--<controls:ValueDescriptionControl Label="EVC Reading" Value="{Binding EvcGasPressure}" />-->
-
-				<!--<controls:ValueDescriptionControl
+					<!--<controls:ValueDescriptionControl
                     x:Name="GasGaugeControl"
                     IsReadOnly="False"
                     Label="Gas Gauge" />-->
 
-				<!--<UniformGrid
+					<!--<UniformGrid
                     x:Name="AbsoluteTransducerSection"
                     Margin="0"
                     Visibility="{Binding ShowAbsolute, Converter={StaticResource BoolToHiddenConverter}}">-->
-				<!--</UniformGrid>-->
+					<!--</UniformGrid>-->
 
-				<controls:ValueDescriptionControl
-					x:Name="AtmosphericControl"
-					IsReadOnly="False"
-					Label="Atmospheric"
-					Visibility="Collapsed" />
+					<controls:ValueDescriptionControl
+						x:Name="AtmosphericControl"
+						IsReadOnly="False"
+						Label="Atmospheric"
+						Visibility="Collapsed" />
 
-				<controls:ValueDescriptionControl
-					x:Name="AbsoluteControl"
-					IsReadOnly="True"
-					Label="Absolute"
-					Visibility="Collapsed" />
+					<controls:ValueDescriptionControl
+						x:Name="AbsoluteControl"
+						IsReadOnly="True"
+						Label="Absolute"
+						Visibility="Collapsed" />
 
 
-				<controls:ValueDescriptionControl x:Name="EvcReadingControl" Label="EVC Reading" />
-			</UniformGrid>
-			<UniformGrid Margin="0" Columns="2">
-				<controls:ValueDescriptionControl x:Name="ExpectedFactorControl" Label="True Factor" />
+					<controls:ValueDescriptionControl x:Name="EvcReadingControl" Label="EVC Reading" />
+				</UniformGrid>
+				<UniformGrid Margin="0" Columns="2">
+					<controls:ValueDescriptionControl x:Name="ExpectedFactorControl" Label="True Factor" />
 
-				<controls:ValueDescriptionControl x:Name="ActualFactorControl" Label="EVC Factor" />
+					<controls:ValueDescriptionControl x:Name="ActualFactorControl" Label="EVC Factor" />
 
-			</UniformGrid>
+				</UniformGrid>
+			</StackPanel>
 		</StackPanel>
 	</Grid>
 

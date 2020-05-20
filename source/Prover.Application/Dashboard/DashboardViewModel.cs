@@ -2,61 +2,63 @@
 using Prover.Application.Models.EvcVerifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Prover.Application.Extensions;
+using Prover.Application.ViewModels;
 
 namespace Prover.Application.Dashboard
 {
-    public class DashboardViewModel : ReactiveObject
-    {
-        public DashboardViewModel(
-                DashboardService dashboardFactory,
-                IEntityDataCache<EvcVerificationTest> cache)
-        {
+	public class DashboardViewModel : ViewModelBase
+	{
+		public DashboardViewModel(
+				DashboardService dashboardService,
+				IEntityCache<EvcVerificationTest> cache)
+		{
+			DateFilters = dashboardService.DateFilters;
 
-            ApplyDateFilter = ReactiveCommand.Create<string>(dashboardFactory.ApplyFilter, outputScheduler: RxApp.MainThreadScheduler);
+			DashboardItems = dashboardService.CreateDashboard()
+											 .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
+											 .ToList();
+			GroupedItems = DashboardItems
+								   .GroupBy(i => i.GroupName, i => i, (group, items) => new DashboardGroup() { GroupName = group, Items = items.ToList() })
+								   .ToList();
 
-            DashboardItems = dashboardFactory.CreateDashboard()
-                                             .OrderBy(x => x.SortOrder).ThenBy(x => x.Title)
-                                             .ToList();
-            GroupedItems = DashboardItems
-                                   .GroupBy(i => i.GroupName, i => i, (group, items) => new DashboardGroup() { GroupName = group, Items = items.ToList() })
-                                   .ToList();
+			ApplyDateFilter = ReactiveCommand.Create<string>(dashboardService.ApplyFilter, outputScheduler: RxApp.MainThreadScheduler)
+											 .DisposeWith(Cleanup);
 
-            DateFilters = dashboardFactory.Filters.Keys;
+			RefreshData = ReactiveCommand.CreateFromTask(() => cache.Refresh())
+										 .DisposeWith(Cleanup);
 
-            RefreshData = ReactiveCommand.Create(() =>
-            {
-                cache.Update();
-            });
+			RefreshData.IsExecuting
+					   .Select(x => !x)
+					   .ObserveOn(RxApp.MainThreadScheduler)
+					   .ToPropertyEx(this, x => x.IsLoaded, scheduler: RxApp.MainThreadScheduler, initialValue: false)
+					   .DisposeWith(Cleanup);
+		}
 
-            DefaultSelectedDate = "7d";
-        }
+		public ReactiveCommand<Unit, Unit> RefreshData { get; set; }
 
-        public ReactiveCommand<Unit, Unit> RefreshData { get; set; }
+		public ReactiveCommand<string, Unit> ApplyDateFilter { get; }
 
-        [Reactive] public string DefaultSelectedDate { get; set; }
+		[Reactive] public string DefaultSelectedDate { get; set; } = "7d";
 
-        public ICollection<string> DateFilters { get; }
+		public extern bool IsLoaded { [ObservableAsProperty] get; }
 
-        public ICollection<IDashboardItem> DashboardItems { get; }
-        public ICollection<DashboardGroup> GroupedItems { get; }
+		public ICollection<string> DateFilters { get; }
 
-        //public ReactiveCommand<Unit, Unit> LoadCaches { get; }
-        public ReactiveCommand<string, Unit> ApplyDateFilter { get; }
+		public ICollection<IDashboardItem> DashboardItems { get; }
 
-        private Func<EvcVerificationTest, bool> BuildTestDateTimeFilter(Func<DateTime, bool> dateTime)
-        {
-            return test => dateTime.Invoke(test.TestDateTime);
-        }
-    }
+		public ICollection<DashboardGroup> GroupedItems { get; }
+	}
 
-    public class DashboardGroup
-    {
-        public string GroupName { get; set; }
-        public ICollection<IDashboardItem> Items { get; set; }
-    }
+	public class DashboardGroup
+	{
+		public string GroupName { get; set; }
+		public ICollection<IDashboardItem> Items { get; set; }
+	}
 }

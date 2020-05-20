@@ -33,7 +33,10 @@
 			x:Name="NotLoggedInContent"
 			HorizontalAlignment="Center"
 			VerticalAlignment="Center">
-			<Button x:Name="LoginButton" Content="{materialDesign:PackIcon UserOff}" />
+			<Button
+				x:Name="LoginButton"
+				Content="{materialDesign:PackIcon UserOff}"
+				Style="{StaticResource MainToolbarButtonStyle}" />
 		</StackPanel>
 
 		<!--  Executing state  -->

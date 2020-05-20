@@ -11,38 +11,53 @@ using Prover.Application.ViewModels.Factories;
 using Prover.Shared.Storage.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Devices.Core.Repository;
+using DynamicData;
+using Prover.Shared.Extensions;
 
 namespace Prover.Application.Services
 {
-	public class VerificationService : IVerificationService, IDisposable
+
+	public interface IVerificationQueries
 	{
-		private readonly Func<DeviceInstance, EvcVerificationTest> _evcVerificationTestFactory;
+		Task<IEnumerable<EvcVerificationTest>> Query(Expression<Func<EvcVerificationTest, bool>> filter);
+		Task<IEnumerable<EvcVerificationTest>> Query(DateTime fromDateTime, DateTime? toDateTime = null, bool includeArchived = false, bool includeExported = false);
+	}
+
+	public class VerificationService :
+			IVerificationService,
+			//ICacheAggregateRoot<EvcVerificationTest>,
+			IDisposable
+	{
 		private readonly ILogger<VerificationService> _logger;
 		private readonly IAsyncRepository<EvcVerificationTest> _verificationRepository;
-		private readonly IEntityDataCache<EvcVerificationTest> _verificationCache;
+		//private readonly ICacheAggregateRoot<EvcVerificationTest> _verificationCache;
 		private readonly IVerificationManagerService _managerService;
+		private readonly IDeviceRepository _deviceRepository;
 		private readonly IDeviceSessionManager _deviceManager;
 
 		public VerificationService(
 				ILogger<VerificationService> logger,
 				IAsyncRepository<EvcVerificationTest> verificationRepository,
-				IEntityDataCache<EvcVerificationTest> verificationCache,
 				IVerificationManagerService managerService,
+				IDeviceRepository deviceRepository,
 				IDeviceSessionManager deviceManager,
-				Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null,
-				IScheduler scheduler = null)
+				Func<DeviceInstance, EvcVerificationTest> evcVerificationTestFactory = null)
 		{
 			_logger = logger ?? NullLogger<VerificationService>.Instance;
 
 			_verificationRepository = verificationRepository;
-			_verificationCache = verificationCache;
-
 			_managerService = managerService;
+			_deviceRepository = deviceRepository;
 			_deviceManager = deviceManager;
-			_evcVerificationTestFactory = evcVerificationTestFactory;
+
+			Query = VerificationQueries.Initialize(_verificationRepository);
 		}
 
 		public async Task<EvcVerificationViewModel> Save(EvcVerificationViewModel viewModel)
@@ -54,9 +69,6 @@ namespace Prover.Application.Services
 		public async Task<EvcVerificationTest> Save(EvcVerificationTest evcVerificationTest)
 		{
 			await _verificationRepository.UpsertAsync(evcVerificationTest);
-
-			await VerificationEvents.OnSave.Publish(evcVerificationTest);
-
 			return evcVerificationTest;
 		}
 
@@ -71,14 +83,14 @@ namespace Prover.Application.Services
 			await Task.CompletedTask;
 		}
 
+		public VerificationQueries Query { get; }
+
 		/// <inheritdoc />
 		public async Task<EvcVerificationTest> Archive(EvcVerificationTest model)
 		{
 			model.ArchivedDateTime = DateTime.Now;
 			return await Save(model);
 		}
-
-		public IVerificationManagerService ManagerService => _managerService;
 
 		public async Task<IQaTestRunManager> StartVerification(DeviceType deviceType, VerificationTestOptions options = null)
 		{
@@ -95,8 +107,7 @@ namespace Prover.Application.Services
 		{
 			options = options ?? VerificationTestOptions.Defaults;
 
-			var manager = _managerService.CreateManager(
-										device.NewVerification(options));
+			var manager = _managerService.CreateManager(device.NewVerification(options));
 
 			if (publishEvent)
 				await VerificationEvents.OnInitialize.Publish(manager.TestViewModel);
@@ -123,6 +134,36 @@ namespace Prover.Application.Services
 		/// <inheritdoc />
 		public void Dispose()
 		{
+		}
+
+
+
+		///// <inheritdoc />
+		//public IObservableCache<EvcVerificationTest, Guid> Data => _verificationCache.Data;
+
+		///// <inheritdoc />
+		//public Task Refresh(Expression<Func<EvcVerificationTest, bool>> filter = null) => _verificationCache.Refresh(filter);
+
+
+	}
+
+	public static class VerificationServiceEx
+	{
+		public static IObservable<IChangeSet<EvcVerificationTest, Guid>> QueryObservable(this IVerificationService service, DateTime fromDateTime, DateTime? toDateTime = null)
+		{
+			return ObservableChangeSet.Create<EvcVerificationTest, Guid>(async cache =>
+			{
+				var loader = await service.Query.TestDateBetween(fromDateTime, toDateTime);
+
+				cache.Edit(updater =>
+				{
+					loader.ToObservable()
+						  .Subscribe(updater.AddOrUpdate);
+				});
+
+				return new CompositeDisposable();
+			}, test => test.Id);
+
 		}
 	}
 }
