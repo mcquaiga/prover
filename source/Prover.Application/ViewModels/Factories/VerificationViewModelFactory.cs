@@ -11,130 +11,128 @@ using Prover.Shared.Interfaces;
 
 namespace Prover.Application.ViewModels.Factories
 {
-    public interface IVerificationViewModelFactory
-    {
-        EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest);
-    }
+	public interface IVerificationViewModelFactory
+	{
+		EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest);
+	}
 
+	public class VerificationViewModelFactory : IVerificationViewModelFactory
+	{
+		private readonly ILoginService _loginService;
 
+		private readonly ICollection<CorrectionTestDefinition> _testDefinitions = new List<CorrectionTestDefinition>
+		{
+				new CorrectionTestDefinition
+				{
+						Level = 0,
+						TemperatureGauge = 32,
+						PressureGaugePercent = 80,
+						IsVolumeTest = true
+				},
+				new CorrectionTestDefinition
+				{
+						Level = 1,
+						TemperatureGauge = 60,
+						PressureGaugePercent = 50,
+						IsVolumeTest = false
+				},
+				new CorrectionTestDefinition
+				{
+						Level = 2,
+						TemperatureGauge = 90,
+						PressureGaugePercent = 20,
+						IsVolumeTest = false
+				}
+		};
 
-    public class VerificationViewModelFactory : IVerificationViewModelFactory
-    {
-        private readonly ILoginService _loginService;
+		public VerificationViewModelFactory(ILoginService loginService = null, ICollection<CorrectionTestDefinition> testDefinitions = null)
+		{
+			_loginService = loginService;
+			_testDefinitions = testDefinitions ?? _testDefinitions;
+		}
 
-        private readonly ICollection<CorrectionTestDefinition> _testDefinitions = new List<CorrectionTestDefinition>
-        {
-                new CorrectionTestDefinition
-                {
-                        Level = 0,
-                        TemperatureGauge = 32,
-                        PressureGaugePercent = 80,
-                        IsVolumeTest = true
-                },
-                new CorrectionTestDefinition
-                {
-                        Level = 1,
-                        TemperatureGauge = 60,
-                        PressureGaugePercent = 50,
-                        IsVolumeTest = false
-                },
-                new CorrectionTestDefinition
-                {
-                        Level = 2,
-                        TemperatureGauge = 90,
-                        PressureGaugePercent = 20,
-                        IsVolumeTest = false
-                }
-        };
+		private VerificationViewModelFactory() { }
 
-        public VerificationViewModelFactory(ILoginService loginService = null, ICollection<CorrectionTestDefinition> testDefinitions = null)
-        {
-            _loginService = loginService;
-            _testDefinitions = testDefinitions ?? _testDefinitions;
-        }
+		public static EvcVerificationViewModel Create(DeviceInstance device)
+		{
+			var model = new EvcVerificationTest(device);
+			return new VerificationViewModelFactory()
+					.CreateViewModel(model);
+		}
 
-        private VerificationViewModelFactory(){}
+		public EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest)
+		{
+			var viewModel = evcTest.ToViewModel();
 
-        public static EvcVerificationViewModel Create(DeviceInstance device)
-        {
-            var model = new EvcVerificationTest(device);
-            return new VerificationViewModelFactory()
-                    .CreateViewModel(model);
-        }
+			var testPoints = BuildTestPointViewModel(evcTest.Device, viewModel, _testDefinitions);
 
-        public EvcVerificationViewModel CreateViewModel(EvcVerificationTest evcTest)
-        {
-            var viewModel = evcTest.ToViewModel();
+			viewModel.Initialize(testPoints.ToList(), _loginService);
 
-            var testPoints = BuildTestPointViewModel(evcTest.Device, viewModel, _testDefinitions);
+			return viewModel;
+		}
 
-            viewModel.Initialize(testPoints.ToList(), _loginService);
+		public IEnumerable<VerificationViewModel> BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel, ICollection<CorrectionTestDefinition>
+				testDefinitions)
+		{
+			return testDefinitions.Select(td => BuildTestPointViewModel(device, viewModel, td));
+		}
 
-            return viewModel;
-        }
+		private VerificationViewModel BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel,
+				CorrectionTestDefinition definition)
+		{
+			var tpViewModel = new VerificationTestPointViewModel
+			{
+				TestNumber = definition.Level
+			};
 
-        public IEnumerable<VerificationViewModel> BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel, ICollection<CorrectionTestDefinition>
-                testDefinitions)
-        {
-            return testDefinitions.Select(td => BuildTestPointViewModel(device, viewModel, td));
-        }
+			if (device.HasLivePressure())
+				tpViewModel.VerificationTests.Add(
+						MakePressureVieWModel(device.CreateItemGroup<PressureItems>(),
+								definition.PressureGaugePercent));
 
-        private VerificationViewModel BuildTestPointViewModel(DeviceInstance device, EvcVerificationViewModel viewModel,
-                CorrectionTestDefinition definition)
-        {
-            var tpViewModel = new VerificationTestPointViewModel
-            {
-                    TestNumber = definition.Level
-            };
+			if (device.HasLiveTemperature())
+				tpViewModel.VerificationTests.Add(
+						MakeTemperatureViewModel(device.CreateItemGroup<TemperatureItems>(),
+								definition.TemperatureGauge));
 
-            if (device.HasLivePressure())
-                tpViewModel.VerificationTests.Add(
-                        MakePressureVieWModel(device.CreateItemGroup<PressureItems>(),
-                                definition.PressureGaugePercent));
+			if (device.HasLiveSuper())
+				tpViewModel.VerificationTests.Add(
+						MakeSuperFactorViewModel(device.CreateItemGroup<SuperFactorItems>(),
+								tpViewModel.GetTemperatureTest(),
+								tpViewModel.GetPressureTest()));
 
-            if (device.HasLiveTemperature())
-                tpViewModel.VerificationTests.Add(
-                        MakeTemperatureViewModel(device.CreateItemGroup<TemperatureItems>(),
-                                definition.TemperatureGauge));
+			if (definition.IsVolumeTest)
+				VolumeViewModelFactory.Create(device, viewModel, tpViewModel);
 
-            if (device.HasLiveSuper())
-                tpViewModel.VerificationTests.Add(
-                        MakeSuperFactorViewModel(device.CreateItemGroup<SuperFactorItems>(),
-                                tpViewModel.GetTemperatureTest(),
-                                tpViewModel.GetPressureTest()));
+			tpViewModel.Initialize();
+			return tpViewModel;
+		}
 
-            if (definition.IsVolumeTest)
-                VolumeViewModelFactory.Create(device, viewModel, tpViewModel);
+		private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge,
+				decimal? atmPressure = null)
+		{
+			if (items != null)
+				return new PressureFactorViewModel(items, gauge, atmPressure ?? items.AtmosphericPressure);
 
-            tpViewModel.Initialize();
-            return tpViewModel;
-        }
+			return null;
+		}
 
-        private PressureFactorViewModel MakePressureVieWModel(PressureItems items, decimal gauge,
-                decimal? atmPressure = null)
-        {
-            if (items != null)
-                return new PressureFactorViewModel(items, gauge, atmPressure ?? items.AtmosphericPressure);
+		private SuperFactorViewModel MakeSuperFactorViewModel(SuperFactorItems items,
+				TemperatureFactorViewModel temperature,
+				PressureFactorViewModel pressure)
+		{
+			if (items != null && pressure != null && temperature != null)
+				return new SuperFactorViewModel(items, temperature, pressure);
 
-            return null;
-        }
+			return null;
+		}
 
-        private SuperFactorViewModel MakeSuperFactorViewModel(SuperFactorItems items,
-                TemperatureFactorViewModel temperature,
-                PressureFactorViewModel pressure)
-        {
-            if (items != null && pressure != null && temperature != null)
-                return new SuperFactorViewModel(items, temperature, pressure);
+		private TemperatureFactorViewModel MakeTemperatureViewModel(TemperatureItems items, decimal gauge)
+		{
+			if (items != null)
+				return new TemperatureFactorViewModel(items, gauge);
 
-            return null;
-        }
-
-        private TemperatureFactorViewModel MakeTemperatureViewModel(TemperatureItems items, decimal gauge)
-        {
-            if (items != null)
-                return new TemperatureFactorViewModel(items, gauge);
-
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 }

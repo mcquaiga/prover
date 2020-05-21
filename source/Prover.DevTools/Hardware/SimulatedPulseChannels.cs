@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Prover.Application;
-using Prover.Shared;
-using Prover.Shared.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Prover.Application;
+using Prover.Shared;
+using Prover.Shared.Interfaces;
 
-namespace Prover.DevTools.Hardware
+namespace Prover.Modules.DevTools.Hardware
 {
     public class SimulatorPulseChannelFactory : IInputChannelFactory, IOutputChannelFactory
     {

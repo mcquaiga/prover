@@ -16,14 +16,18 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.UI.Desktop.ViewModels.Verifications
 {
-	public class NewTestRunViewModel : DialogViewModel
+	public class NewTestRunViewModel : DialogViewModel, IToolbarButton
 	{
 		private readonly CompositeDisposable _cleanup = new CompositeDisposable();
 
-		public NewTestRunViewModel(ILogger<NewTestRunViewModel> logger, IScreenManager screenManager, IVerificationManagerFactory verificationManagerFactory, IDeviceRepository deviceRepository)
+		public NewTestRunViewModel(ILogger<NewTestRunViewModel> logger, IScreenManager screenManager,
+				IVerificationService verificationService,
+				IDeviceRepository deviceRepository)
 		{
 			deviceRepository.All.Connect().Filter(d => !d.IsHidden).Sort(SortExpressionComparer<DeviceType>.Ascending(p => p.Name)).ObserveOn(RxApp.MainThreadScheduler).Bind(out var deviceTypes)
 							.Filter(d => d.Id == ApplicationSettings.Local.LastDeviceTypeUsed).Do(d => SelectedDeviceType = d.FirstOrDefault().Current).Subscribe().DisposeWith(_cleanup);
@@ -34,13 +38,23 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			BaudRates = baudRates;
 			ApplicationSettings.Local.VerificationFilePath = "";
 
+			OpenCommand = ReactiveCommand.CreateFromObservable(() =>
+			{
+				screenManager.DialogManager.ShowViewModel(this);
+				return Observable.Return(Unit.Default);
+			});
+
+
 			StartTestCommand = ReactiveCommand.CreateFromObservable(() =>
 			{
 				SetLastUsedSettings();
-				return Observable.StartAsync(async () => await verificationManagerFactory.StartNew(SelectedDeviceType));
+				return Observable.StartAsync(async () => await verificationService.StartVerification(SelectedDeviceType));
 			}).DisposeWith(_cleanup);
-			StartTestCommand
-					.InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
+
+			StartTestCommand.Select(x => x as IRoutableViewModel)
+							//.Do(x => x == null ? throw new NullReferenceException("Test Manager was not convertable to IRoutableViewModel"))
+							.Where(x => x != null)
+							.InvokeCommand(ReactiveCommand.CreateFromTask<IRoutableViewModel>(screenManager.ChangeView));
 		}
 
 		public LocalSettings Selected => ApplicationSettings.Local;
@@ -61,5 +75,19 @@ namespace Prover.UI.Desktop.ViewModels.Verifications
 			ApplicationSettings.Local.LastDeviceTypeUsed = SelectedDeviceType.Id;
 			ApplicationSettings.Instance.SaveSettings();
 		}
+
+		public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+
+		/// <inheritdoc />
+		public int SortOrder { get; } = 0;
+
+		/// <inheritdoc />
+		public ToolbarItemType ItemType { get; } = ToolbarItemType.MainMenu;
+
+		/// <inheritdoc />
+		public string Icon { get; } = PackIconKind.ClipboardCheck.ToString();
+
+		/// <inheritdoc />
+		public ICommand ToolbarAction => OpenCommand;
 	}
 }

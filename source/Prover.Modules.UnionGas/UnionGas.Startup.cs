@@ -15,6 +15,7 @@ using Prover.Shared;
 using Prover.Shared.Interfaces;
 using Prover.Shared.Storage.Interfaces;
 using Prover.Storage.LiteDb;
+using Prover.UI.Desktop.Controls;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.ViewModels;
 
@@ -52,7 +53,7 @@ namespace Prover.Modules.UnionGas
 
 		private void AddServices(HostBuilderContext builder, IServiceCollection services)
 		{
-			services.AddSingleton<IMainMenuItem, ExporterViewModel>();
+			services.AddSingleton<IToolbarItem, ExporterViewModel>();
 			services.AddSingleton<IToolbarItem, LoginToolbarViewModel>();
 			services.AddSingleton<ExportToolbarViewModel>();
 			services.AddViewsAndViewModels();

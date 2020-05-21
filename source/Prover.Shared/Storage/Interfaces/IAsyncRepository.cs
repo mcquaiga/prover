@@ -1,36 +1,51 @@
 ﻿using Prover.Shared.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DynamicData;
 
 namespace Prover.Shared.Storage.Interfaces
 {
-    public interface IAsyncRepository<in TId, TEntity>
-        where TEntity : GenericEntity<TId>
-    {
-        Task<TEntity> UpsertAsync(TEntity entity);
+	public interface IQueryableRepository<T>
+			where T : AggregateRoot
+	{
+		Task<int> CountAsync(IQuerySpecification<T> spec);
 
-        Task DeleteAsync(TId id);
-        Task DeleteAsync(TEntity entity);
+		IObservable<T> QueryObservable(IQuerySpecification<T> specification);
 
-        Task<TEntity> GetAsync(TId id);
-    }
+		Task<IEnumerable<T>> QueryAsync(IQuerySpecification<T> specification);
 
-    public interface IAsyncRepository<T> : IAsyncRepository<Guid, T>
-        where T : AggregateRoot
-    {
-        Task<int> CountAsync(ISpecification<T> spec);
+		Task<IReadOnlyList<T>> ListAsync();
+	}
 
-        Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null);
+	public interface IAsyncCrudRepository<in TId, TEntity> where TEntity : GenericEntity<TId>
+	{
 
-        Task<IReadOnlyList<T>> ListAsync();
-    }
+		Task<TEntity> GetAsync(TId id);
 
-    public interface IObservableRepository<T>
-        where T : AggregateRoot
-    {
-        IQbservable<T> QueryObservable(Expression<Func<T, bool>> predicate = null);
-    }
+
+		Task<TEntity> UpsertAsync(TEntity entity);
+
+
+		Task<bool> DeleteAsync(TId id);
+
+	}
+
+	public interface IAsyncRepository<T> : IAsyncCrudRepository<Guid, T>, IQueryableRepository<T>
+		where T : AggregateRoot
+	{
+
+	}
+
+
+
+	public interface IRequireInitialization
+	{
+		IObservable<Unit> Initialized { get; }
+		Task Initialize();
+	}
 }

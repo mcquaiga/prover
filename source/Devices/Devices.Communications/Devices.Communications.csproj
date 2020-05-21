@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
+
 </Project>

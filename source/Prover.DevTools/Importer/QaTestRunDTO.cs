@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Prover.DevTools.Importer
+namespace Prover.Modules.DevTools.Importer
 {
     internal class SessionContext
     {

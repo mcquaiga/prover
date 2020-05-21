@@ -1,3 +1,4 @@
+using Devices.Core.Items;
 using Devices.Core.Items.ItemGroups;
 using Newtonsoft.Json;
 using Prover.Calculations;
@@ -25,8 +26,9 @@ namespace Prover.Application.Models.EvcVerifications.Verifications
 		public PulseOutputVerification(PulseOutputItems.ChannelItems items, decimal actualValue, decimal expectedValue, decimal percentError, bool verified)
 				: base(items, expectedValue, actualValue, percentError, verified)
 		{
-			//_multiplier = (Items as IVolumeUnits)?.Units.Multiplier ?? multiplier;
+			_multiplier = (Items as IVolumeUnits)?.Units.Multiplier;
 			ActualValue = actualValue;
+			ExpectedValue = expectedValue;
 		}
 
 		public decimal TotalVolume { get; set; }

@@ -1,20 +1,22 @@
-﻿using Devices.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Input;
+using Devices.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Prover.Application.Interfaces;
 using Prover.Application.Mappers;
 using Prover.Application.Models.EvcVerifications.Builders;
+using Prover.Application.Verifications;
+using Prover.Application.ViewModels;
 using Prover.UI.Desktop.Dialogs;
 using Prover.UI.Desktop.ViewModels.Verifications;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Input;
 
-namespace Prover.DevTools.SampleData
+namespace Prover.Modules.DevTools.SampleData
 {
 	public class DeviceTemplates : DialogViewModel, IDevToolsMenuItem
 	{

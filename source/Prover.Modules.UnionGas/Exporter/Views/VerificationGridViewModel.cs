@@ -16,122 +16,122 @@ using System.Reactive.Linq;
 
 namespace Prover.Modules.UnionGas.Exporter.Views
 {
-    public class VerificationGridViewModel : ViewModelBase
-    {
-        public VerificationGridViewModel(
-            ILogger<VerificationGridViewModel> logger,
-            EvcVerificationTest verificationTest,
-            IVerificationTestService verificationTestService,
-            ILoginService<Employee> loginService,
-            IExportVerificationTest exporter,
-            ExporterViewModel exporterViewModel) : base(logger)
-        {
-            LoginService = loginService;
-            ExporterViewModel = exporterViewModel;
-            IsLoggedOnObservable = loginService.LoggedIn;
-            Test = verificationTest;
+	public class VerificationGridViewModel : ViewModelBase
+	{
+		public VerificationGridViewModel(
+			ILogger<VerificationGridViewModel> logger,
+			EvcVerificationTest verificationTest,
+			IVerificationService verificationTestService,
+			ILoginService<Employee> loginService,
+			IExportVerificationTest exporter,
+			ExporterViewModel exporterViewModel) : base(logger)
+		{
+			LoginService = loginService;
+			ExporterViewModel = exporterViewModel;
+			IsLoggedOnObservable = loginService.LoggedIn;
+			Test = verificationTest;
 
-            DeviceInfo = new DeviceInfoViewModel(verificationTest.Device);
+			DeviceInfo = new DeviceInfoViewModel(verificationTest.Device);
 
-            SetupRx();
+			SetupRx();
 
-            void SetupRx()
-            {
-                var canAddUser = loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler);
-                canAddUser
-                    .LogDebug(x => $"CanAddUser = {x}");
+			void SetupRx()
+			{
+				var canAddUser = loginService.LoggedIn.ObserveOn(RxApp.MainThreadScheduler);
+				canAddUser
+					.LogDebug(x => $"CanAddUser = {x}");
 
-                AddSignedOnUser = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    if (loginService.User != null)
-                    {
-                        Test.EmployeeId = loginService.User?.UserId;
-                        await verificationTestService.Upsert(Test);
-                    }
+				AddSignedOnUser = ReactiveCommand.CreateFromTask(async () =>
+				{
+					if (loginService.User != null)
+					{
+						Test.EmployeeId = loginService.User?.UserId;
+						await verificationTestService.Save(Test);
+					}
 
-                    return loginService.User?.UserId;
-                }, canAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
-                //canAddUser.DefaultIfEmpty(loginService.IsSignedOn).Subscribe();
+					return loginService.User?.UserId;
+				}, canAddUser, RxApp.MainThreadScheduler).DisposeWith(Cleanup);
+				//canAddUser.DefaultIfEmpty(loginService.IsSignedOn).Subscribe();
 
-                AddSignedOnUser
-                    .ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(Cleanup);
-
-
-                var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime,
-                    (ex, a) => ex == null && a == null);
-                AddJobId = ReactiveCommand.CreateFromTask(async () =>
-                    {
-                        var jobId = await Messages.GetInputString.Handle("Enter Job #");
-                        if (!string.IsNullOrEmpty(jobId))
-                        {
-                            Test.JobId = jobId;
-                            await verificationTestService.Upsert(Test);
-                        }
-
-                        return jobId;
-                    }, canAddJobId)
-                    .DisposeWith(Cleanup);
-
-                AddJobId
-                    .ToPropertyEx(this, x => x.JobId, Test.JobId)
-                    .DisposeWith(Cleanup);
+				AddSignedOnUser
+					.ToPropertyEx(this, x => x.EmployeeId, Test.EmployeeId).DisposeWith(Cleanup);
 
 
-                //var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId,
-                //    (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
-                //ExportVerification = ReactiveCommand.CreateFromTask(async () =>
-                //    {
-                //        var success = await exporter.Export(Test);
+				var canAddJobId = this.WhenAnyValue(x => x.ExportedDateTime, x => x.ArchivedDateTime,
+					(ex, a) => ex == null && a == null);
+				AddJobId = ReactiveCommand.CreateFromTask(async () =>
+					{
+						var jobId = await Messages.GetInputString.Handle("Enter Job #");
+						if (!string.IsNullOrEmpty(jobId))
+						{
+							Test.JobId = jobId;
+							await verificationTestService.Save(Test);
+						}
 
-                //        return Test.ExportedDateTime;
-                //    }, canExport)
-                //    .DisposeWith(Cleanup);
+						return jobId;
+					}, canAddJobId)
+					.DisposeWith(Cleanup);
 
-                //ExportVerification
-                //    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, true)
-                //    .DisposeWith(Cleanup);
+				AddJobId
+					.ToPropertyEx(this, x => x.JobId, Test.JobId)
+					.DisposeWith(Cleanup);
 
 
-                //ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
-                //{
-                //    if (
-                //        await MessageInteractions.ShowYesNo.Handle(
-                //            "Are you sure you want to archive this test?"))
-                //    {
-                //        Test.ArchivedDateTime = DateTime.Now;
-                //        var updated = await verificationTestService.Upsert(Test);
-                //    }
+				//var canExport = this.WhenAnyValue(x => x.JobId, x => x.EmployeeId,
+				//    (j, e) => !string.IsNullOrEmpty(j) && !string.IsNullOrEmpty(e));
+				//ExportVerification = ReactiveCommand.CreateFromTask(async () =>
+				//    {
+				//        var success = await exporter.Export(Test);
 
-                //    return Test.ArchivedDateTime;
-                //}).DisposeWith(Cleanup);
+				//        return Test.ExportedDateTime;
+				//    }, canExport)
+				//    .DisposeWith(Cleanup);
 
-                //ArchiveVerification
-                //    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, true)
-                //    .DisposeWith(Cleanup);
-            }
-        }
+				//ExportVerification
+				//    .ToPropertyEx(this, x => x.ExportedDateTime, Test.ExportedDateTime, true)
+				//    .DisposeWith(Cleanup);
 
-        public ILoginService<Employee> LoginService { get; set; }
-        public ExporterViewModel ExporterViewModel { get; }
-        public IObservable<bool> IsLoggedOnObservable { get; set; }
 
-        public ReactiveCommand<Unit, Unit> PrintReport { get; protected set; }
-        public ReactiveCommand<Unit, string> AddSignedOnUser { get; protected set; }
-        public ReactiveCommand<Unit, string> AddJobId { get; protected set; }
-        public ReactiveCommand<Unit, DateTime?> ArchiveVerification { get; protected set; }
-        public ReactiveCommand<Unit, DateTime?> ExportVerification { get; protected set; }
+				//ArchiveVerification = ReactiveCommand.CreateFromTask(async () =>
+				//{
+				//    if (
+				//        await MessageInteractions.ShowYesNo.Handle(
+				//            "Are you sure you want to archive this test?"))
+				//    {
+				//        Test.ArchivedDateTime = DateTime.Now;
+				//        var updated = await verificationTestService.Upsert(Test);
+				//    }
 
-        public EvcVerificationTest Test { get; }
+				//    return Test.ArchivedDateTime;
+				//}).DisposeWith(Cleanup);
 
-        public extern string EmployeeId { [ObservableAsProperty] get; }
+				//ArchiveVerification
+				//    .ToPropertyEx(this, x => x.ArchivedDateTime, Test.ArchivedDateTime, true)
+				//    .DisposeWith(Cleanup);
+			}
+		}
 
-        public extern string JobId { [ObservableAsProperty] get; }
+		public ILoginService<Employee> LoginService { get; set; }
+		public ExporterViewModel ExporterViewModel { get; }
+		public IObservable<bool> IsLoggedOnObservable { get; set; }
 
-        public extern DateTime? ExportedDateTime { [ObservableAsProperty] get; }
-        public extern DateTime? ArchivedDateTime { [ObservableAsProperty] get; }
+		public ReactiveCommand<Unit, Unit> PrintReport { get; protected set; }
+		public ReactiveCommand<Unit, string> AddSignedOnUser { get; protected set; }
+		public ReactiveCommand<Unit, string> AddJobId { get; protected set; }
+		public ReactiveCommand<Unit, DateTime?> ArchiveVerification { get; protected set; }
+		public ReactiveCommand<Unit, DateTime?> ExportVerification { get; protected set; }
 
-        public DeviceInfoViewModel DeviceInfo { get; }
+		public EvcVerificationTest Test { get; }
 
-        public string CompositionType => Test.Device.CompositionShort();
-    }
+		public extern string EmployeeId { [ObservableAsProperty] get; }
+
+		public extern string JobId { [ObservableAsProperty] get; }
+
+		public extern DateTime? ExportedDateTime { [ObservableAsProperty] get; }
+		public extern DateTime? ArchivedDateTime { [ObservableAsProperty] get; }
+
+		public DeviceInfoViewModel DeviceInfo { get; }
+
+		public string CompositionType => Test.Device.CompositionShort();
+	}
 }

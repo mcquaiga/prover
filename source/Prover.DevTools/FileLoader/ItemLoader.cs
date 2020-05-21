@@ -1,227 +1,228 @@
-﻿using Devices.Core.Interfaces;
-using Devices.Core.Items;
-using Devices.Core.Items.ItemGroups;
-using Devices.Core.Repository;
-using Newtonsoft.Json;
-using Prover.Application.Interfaces;
-using Prover.Application.Models.EvcVerifications;
-using Prover.Application.Models.EvcVerifications.Verifications;
-using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Devices.Core.Interfaces;
+using Devices.Core.Items;
+using Devices.Core.Items.ItemGroups;
+using Devices.Core.Repository;
+using Newtonsoft.Json;
+using Prover.Application.Interfaces;
+using Prover.Application.Mappers;
+using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Application.Models.EvcVerifications.Verifications.CorrectionFactors;
 
-namespace Prover.DevTools.FileLoader
+namespace Prover.Modules.DevTools.FileLoader
 {
-    public class ItemLoader
-    {
-        private readonly IDeviceRepository _deviceRepository;
-        private readonly JsonConverter<EvcVerificationTest> _jsonConverter;
-        private readonly IVerificationTestService _testService;
-        private JsonSerializerSettings _jsonOptions;
+	public class ItemLoader
+	{
+		private readonly IDeviceRepository _deviceRepository;
+		private readonly JsonConverter<EvcVerificationTest> _jsonConverter;
+		private readonly IVerificationService _testService;
+		private JsonSerializerSettings _jsonOptions;
 
-        public ItemLoader(IDeviceRepository deviceRepository, IVerificationTestService testService)
-        {
-            _deviceRepository = deviceRepository;
-            _testService = testService;
-            //_jsonConverter = new TestTemplateConverter(_deviceRepository, _testService);
-            //_jsonOptions = new JsonSerializerSettings() ;
-            //_jsonOptions.Converters.Add(_jsonConverter);
-        }
+		public ItemLoader(IDeviceRepository deviceRepository, IVerificationService testService)
+		{
+			_deviceRepository = deviceRepository;
+			_testService = testService;
+			//_jsonConverter = new TestTemplateConverter(_deviceRepository, _testService);
+			//_jsonOptions = new JsonSerializerSettings() ;
+			//_jsonOptions.Converters.Add(_jsonConverter);
+		}
 
-        //private static JsonSerializerOptions _serializerOptions = new JsonSerialierOptions() { PropertyNameCaseInsensitive = true};
+		//private static JsonSerializerOptions _serializerOptions = new JsonSerialierOptions() { PropertyNameCaseInsensitive = true};
 
-        public static async Task<string> GetFileInput() => await Application.Interactions.Messages.OpenFileDialog.Handle("Open file");
+		public static async Task<string> GetFileInput() => await Application.Interactions.Messages.OpenFileDialog.Handle("Open file");
 
-        public static async Task<ItemAndTestFile> LoadFromFile(IDeviceRepository devices, string filePath)
-        {
-            if (!File.Exists(filePath))
-                return null;
-            var json = File.ReadAllText(filePath);
-            var itemFile = JsonConvert.DeserializeObject<JsonItemAndTestFile>(json);
-            var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
+		public static async Task<ItemAndTestFile> LoadFromFile(IDeviceRepository devices, string filePath)
+		{
+			if (!File.Exists(filePath))
+				return null;
+			var json = File.ReadAllText(filePath);
+			var itemFile = JsonConvert.DeserializeObject<JsonItemAndTestFile>(json);
+			var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
 
-            if (deviceType == null)
-                throw new NullReferenceException(nameof(deviceType));
+			if (deviceType == null)
+				throw new NullReferenceException(nameof(deviceType));
 
-            //var itemValues = deviceType.ToItemValues(itemFile.Items);
-            var deviceInstance = deviceType.CreateInstance(itemFile.Items);
-            var testNum = -1;
+			//var itemValues = deviceType.ToItemValues(itemFile.Items);
+			var deviceInstance = deviceType.CreateInstance(itemFile.Items);
+			var testNum = -1;
 
-            var pressures = itemFile.PressureTests.Select(p => deviceType.ToItemValues(p))
-                                    .ToDictionary(x =>
-                                            {
-                                                testNum++;
-                                                return testNum;
-                                            },
-                                            values => values.ToList());
-            testNum = -1;
+			var pressures = itemFile.PressureTests.Select(p => deviceType.ToItemValues(p))
+									.ToDictionary(x =>
+											{
+												testNum++;
+												return testNum;
+											},
+											values => values.ToList());
+			testNum = -1;
 
-            var temps = itemFile.TemperatureTests.Select(p => deviceType.ToItemValues(p))
-                                .ToDictionary(x =>
-                                        {
-                                            testNum++;
-                                            return testNum;
-                                        },
-                                        values => values.ToList());
+			var temps = itemFile.TemperatureTests.Select(p => deviceType.ToItemValues(p))
+								.ToDictionary(x =>
+										{
+											testNum++;
+											return testNum;
+										},
+										values => values.ToList());
 
-            return new ItemAndTestFile
-            {
-                Device = deviceInstance,
-                PressureTests = pressures,
-                TemperatureTests = temps
-            };
-        }
+			return new ItemAndTestFile
+			{
+				Device = deviceInstance,
+				PressureTests = pressures,
+				TemperatureTests = temps
+			};
+		}
 
-        public async Task<EvcVerificationTest> LoadTemplate(string filePath)
-        {
-            if (!File.Exists(filePath))
-                return null;
-            var serializer = new JsonSerializer();
-            serializer.Formatting = Formatting.Indented;
-            serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+		public async Task<EvcVerificationTest> LoadTemplate(string filePath)
+		{
+			if (!File.Exists(filePath))
+				return null;
+			var serializer = new JsonSerializer();
+			serializer.Formatting = Formatting.Indented;
+			serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
-            //serializer.Converters.Add(_jsonConverter);
+			//serializer.Converters.Add(_jsonConverter);
 
-            using (var streamer = File.OpenText(filePath))
-            {
-                var json = await streamer.ReadToEndAsync();
-                var test = JsonConvert.DeserializeObject<VerificationTestTemplate>(json);
+			using (var streamer = File.OpenText(filePath))
+			{
+				var json = await streamer.ReadToEndAsync();
+				var test = JsonConvert.DeserializeObject<VerificationTestTemplate>(json);
 
-                var vm = _testService.NewVerification(test.Device);
-                vm.SubmittedDateTime = DateTime.Now;
-                return _testService.CreateModel(vm);
-            }
+				var vm = await _testService.StartVerification(test.Device);
+				vm.TestViewModel.SubmittedDateTime = DateTime.Now;
+				return vm.TestViewModel.ToModel();
+			}
 
-            //var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
-            //if (deviceType == null)
-            //    throw new NullReferenceException(nameof(deviceType));
+			//var deviceType = devices.GetById(Guid.Parse(itemFile.DeviceId));
+			//if (deviceType == null)
+			//    throw new NullReferenceException(nameof(deviceType));
 
-            ////var itemValues = deviceType.ToItemValues(itemFile.Items);
-            //var deviceInstance = deviceType.CreateInstance(itemFile.Items);
-        }
+			////var itemValues = deviceType.ToItemValues(itemFile.Items);
+			//var deviceInstance = deviceType.CreateInstance(itemFile.Items);
+		}
 
-        #region Nested type: JsonItemAndTestFile
+		#region Nested type: JsonItemAndTestFile
 
-        private class JsonItemAndTestFile
-        {
-            public string DeviceId { get; set; }
-            public Dictionary<string, string> Items { get; set; }
+		private class JsonItemAndTestFile
+		{
+			public string DeviceId { get; set; }
+			public Dictionary<string, string> Items { get; set; }
 
-            public ICollection<Dictionary<string, string>> PressureTests { get; set; }
-            public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
-            public Dictionary<string, string> VolumeTest { get; set; }
-        }
+			public ICollection<Dictionary<string, string>> PressureTests { get; set; }
+			public ICollection<Dictionary<string, string>> TemperatureTests { get; set; }
+			public Dictionary<string, string> VolumeTest { get; set; }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
-    public class EvcVerificationFactory
-    {
-        private readonly EvcVerificationTest _instance;
-        private DeviceInstance _device => _instance.Device;
+	public class EvcVerificationFactory
+	{
+		private readonly EvcVerificationTest _instance;
+		private DeviceInstance _device => _instance.Device;
 
-        private EvcVerificationFactory(DeviceInstance device)
-        {
-            _instance = new EvcVerificationTest(device);
+		private EvcVerificationFactory(DeviceInstance device)
+		{
+			_instance = new EvcVerificationTest(device);
 
-        }
+		}
 
-        public static EvcVerificationFactory Create(DeviceInstance device)
-        {
-            return new EvcVerificationFactory(device);
+		public static EvcVerificationFactory Create(DeviceInstance device)
+		{
+			return new EvcVerificationFactory(device);
 
-            //ProverDefaults.TestDefinitions.ForEach(td =>
-            //{
-            //    var testPoint = new VerificationTestPoint(td.Level, new List<VerificationEntity>(), decimal.Zero);
+			//ProverDefaults.TestDefinitions.ForEach(td =>
+			//{
+			//    var testPoint = new VerificationTestPoint(td.Level, new List<VerificationEntity>(), decimal.Zero);
 
-            //    var values = template.TestPoints.FirstOrDefault(tp => tp.TestNumber == td.Level)?.ItemValues;
+			//    var values = template.TestPoints.FirstOrDefault(tp => tp.TestNumber == td.Level)?.ItemValues;
 
-            //    if (template.Device.HasLiveTemperature())
-            //    {
-            //        testPoint.AddTests(new TemperatureCorrectionTest(template.Device.CreateItemGroup<TemperatureItems>(values), td.TemperatureGauge, decimal.Zero, decimal.Zero, 100m));
-            //    }
-            //    if (template.Device)
-            //        case CompositionType.P:
-            //            break;
-            //        case CompositionType.PTZ:
-            //            break;
-            //        case CompositionType.Fixed:
-            //            break;
-            //        default:
-            //            throw new ArgumentOutOfRangeException();
-            //    }
-            //});
-        }
+			//    if (template.Device.HasLiveTemperature())
+			//    {
+			//        testPoint.AddTests(new TemperatureCorrectionTest(template.Device.CreateItemGroup<TemperatureItems>(values), td.TemperatureGauge, decimal.Zero, decimal.Zero, 100m));
+			//    }
+			//    if (template.Device)
+			//        case CompositionType.P:
+			//            break;
+			//        case CompositionType.PTZ:
+			//            break;
+			//        case CompositionType.Fixed:
+			//            break;
+			//        default:
+			//            throw new ArgumentOutOfRangeException();
+			//    }
+			//});
+		}
 
-        public EvcVerificationFactory AddTestPoint(CorrectionTestDefinition testDefinition, ICollection<ItemValue> itemValues, int? testNumber = null)
-        {
-            testNumber = testNumber ?? _instance.Tests.Count;
-            var tests = new List<VerificationEntity>();
+		public EvcVerificationFactory AddTestPoint(CorrectionTestDefinition testDefinition, ICollection<ItemValue> itemValues, int? testNumber = null)
+		{
+			testNumber = testNumber ?? _instance.Tests.Count;
+			var tests = new List<VerificationEntity>();
 
-            if (_device.HasLiveTemperature())
-            {
-                tests.Add(new TemperatureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.TemperatureGauge));
-            }
+			if (_device.HasLiveTemperature())
+			{
+				tests.Add(new TemperatureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.TemperatureGauge));
+			}
 
-            //if (_device.HasLivePressure())
-            //{
-            //    tests.Add(
-            //            new PressureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.PressureGaugePercent, decimal.Zero, decimal.Zero));
-            //}
-            //if (template.Device)
-            //        case CompositionType.P:
-            //            break;
-            //        case CompositionType.PTZ:
-            //            break;
-            //        case CompositionType.Fixed:
-            //            break;
-            //default:
-            //            throw new ArgumentOutOfRangeException();
+			//if (_device.HasLivePressure())
+			//{
+			//    tests.Add(
+			//            new PressureCorrectionTest(_device.CreateItemGroup<TemperatureItems>(itemValues), testDefinition.PressureGaugePercent, decimal.Zero, decimal.Zero));
+			//}
+			//if (template.Device)
+			//        case CompositionType.P:
+			//            break;
+			//        case CompositionType.PTZ:
+			//            break;
+			//        case CompositionType.Fixed:
+			//            break;
+			//default:
+			//            throw new ArgumentOutOfRangeException();
 
-            return this;
-        }
+			return this;
+		}
 
-    }
+	}
 
-    public class ItemAndTestFile
-    {
-        public DeviceInstance Device { get; set; }
+	public class ItemAndTestFile
+	{
+		public DeviceInstance Device { get; set; }
 
-        public Dictionary<int, List<ItemValue>> PressureTests { get; set; }
-        public Dictionary<int, List<ItemValue>> TemperatureTests { get; set; }
-    }
+		public Dictionary<int, List<ItemValue>> PressureTests { get; set; }
+		public Dictionary<int, List<ItemValue>> TemperatureTests { get; set; }
+	}
 
-    public class VerificationTestTemplate
-    {
-        public DeviceInstance Device { get; set; }
-        public ICollection<TestPoint> TestPoints { get; set; }
+	public class VerificationTestTemplate
+	{
+		public DeviceInstance Device { get; set; }
+		public ICollection<TestPoint> TestPoints { get; set; }
 
-        #region Nested type: TestPoint
-        public void UpdateTestPoints()
-        {
-            TestPoints.ForEach(tp =>
-            {
-                tp.ItemValues = Device.DeviceType.ToItemValues(tp.Values)
-                                      .ToList();
-            });
-            //.SelectMany(tp => .A tp.ItemValues = v))
-            //  .Select(v => )
-        }
-        public class TestPoint
-        {
-            public int TestNumber { get; set; }
-            public Dictionary<string, string> Values { get; set; }
+		#region Nested type: TestPoint
+		public void UpdateTestPoints()
+		{
+			TestPoints.ForEach(tp =>
+			{
+				tp.ItemValues = Device.DeviceType.ToItemValues(tp.Values)
+									  .ToList();
+			});
+			//.SelectMany(tp => .A tp.ItemValues = v))
+			//  .Select(v => )
+		}
+		public class TestPoint
+		{
+			public int TestNumber { get; set; }
+			public Dictionary<string, string> Values { get; set; }
 
-            [JsonIgnore]
-            public ICollection<ItemValue> ItemValues { get; set; }
-        }
+			[JsonIgnore]
+			public ICollection<ItemValue> ItemValues { get; set; }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
 
 

@@ -10,72 +10,82 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Prover.Application.Services;
+
 // ReSharper disable PossibleInvalidOperationException
 
 namespace Prover.Application.Dashboard
 {
-    public class SummaryDashboardViewModel : DashboardItemViewModel, IDashboardItem, IDisposable
-    {
-        protected string SummaryTitle = "Summary";
-        private readonly IScheduler _scheduler;
-        /// <inheritdoc />
-        public SummaryDashboardViewModel(IObservableCache<EvcVerificationTest, Guid> itemsCache, IScheduler mainScheduler = null) : base(groupName: "Summary", sortOrder: 0)
-        {
-            if (itemsCache == null)
-                throw new NullReferenceException(nameof(IEntityDataCache<EvcVerificationTest>));
+	public class SummaryDashboardViewModel : DashboardItemViewModel, IDashboardItem, IDisposable
+	{
+		protected string SummaryTitle = "Summary";
+		private readonly IScheduler _scheduler;
+		/// <inheritdoc />
+		public SummaryDashboardViewModel(IObservableCache<EvcVerificationTest, Guid> itemsCache, IScheduler mainScheduler = null) : base(groupName: "Summary", sortOrder: 0)
+		{
+			if (itemsCache == null)
+				throw new NullReferenceException(nameof(IObservableCache<EvcVerificationTest, Guid>));
 
-            _scheduler = mainScheduler ?? RxApp.MainThreadScheduler;
+			_scheduler = mainScheduler ?? RxApp.MainThreadScheduler;
 
-            var shared = itemsCache.Connect()
-                                   .ObserveOn(_scheduler);
+			var shared = itemsCache.Connect()
+								   .ObserveOn(_scheduler);
 
-            shared.QueryWhenChanged(query => CreateSummaryTotals(query.Items.ToList()))
-                    .ToPropertyEx(this, x => x.Totals, scheduler: _scheduler, initialValue: new SummaryTotals())
-                    .DisposeWith(Cleanup);
+			shared.QueryWhenChanged(query => CreateSummaryTotals(query.Items.ToList()))
+					.ToPropertyEx(this, x => x.Totals, scheduler: _scheduler, initialValue: new SummaryTotals())
+					.DisposeWith(Cleanup);
 
-            shared.Filter(t => t.SubmittedDateTime.HasValue) //.SelectMany(x => x.Items.Where(t => t.SubmittedDateTime.HasValue))
-                  .Avg(x => x.SubmittedDateTime.Value.Subtract(x.TestDateTime).TotalSeconds)
-                  .Select<double, TimeSpan?>(seconds => TimeSpan.FromSeconds(seconds))
-                  //.LogDebug(x => $"totals changed {x}")
-                  .ToPropertyEx(this, x => x.AverageDuration, scheduler: _scheduler)
-                  .DisposeWith(Cleanup);
+			shared.Filter(t => t.SubmittedDateTime.HasValue)
+				  .Avg(x => x.SubmittedDateTime.Value.Subtract(x.TestDateTime).TotalSeconds)
+				  .Select<double, TimeSpan?>(seconds => TimeSpan.FromSeconds(seconds))
+				  .ToPropertyEx(this, x => x.AverageDuration, scheduler: _scheduler)
+				  .DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.Totals)
-                .Select(summary =>
-                {
-                    if (summary.TotalTests == 0)
-                        return 0;
+			this.WhenAnyValue(x => x.Totals)
+				.Select(summary =>
+				{
+					if (summary.TotalTests == 0)
+						return 0;
 
-                    return (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32();
-                })
-                .ToPropertyEx(this, x => x.PassPercentage, scheduler: _scheduler)
-                .DisposeWith(Cleanup);
-
-
-
-        }
-
-        private SummaryTotals CreateSummaryTotals(ICollection<EvcVerificationTest> itemCollection) => new SummaryTotals { TotalTests = itemCollection.Count, TotalPassed = itemCollection.Count(VerificationFilters.IsVerified), TotalFailed = itemCollection.Count(VerificationFilters.IsNotVerified), TotalNotExported = itemCollection.Where(VerificationFilters.IsVerified).Count(VerificationFilters.IsNotExported) };
+					return (summary.TotalPassed / summary.TotalTests.ToDecimal() * 100m).ToInt32();
+				})
+				.ToPropertyEx(this, x => x.PassPercentage, scheduler: _scheduler)
+				.DisposeWith(Cleanup);
 
 
 
-        //[Reactive] public SummaryTotals Totals { get; set; }
-        public extern SummaryTotals Totals { [ObservableAsProperty] get; }
-        public extern int PassPercentage { [ObservableAsProperty] get; }
-        public extern TimeSpan? AverageDuration { [ObservableAsProperty] get; }
+		}
 
-        #region Nested type: SummaryTotals
+		private SummaryTotals CreateSummaryTotals(ICollection<EvcVerificationTest> itemCollection)
+		{
+			return new SummaryTotals
+			{
+				TotalTests = itemCollection.Count,
+				TotalPassed = itemCollection.Count(VerificationFilters.IsVerifiedFilter),
+				TotalFailed = itemCollection.Count(VerificationFilters.IsNotVerifiedFilter),
+				TotalNotExported = itemCollection.Where(VerificationFilters.IsVerifiedFilter).Count(VerificationFilters.IsNotExportedFilter)
+			};
+		}
 
-        public class SummaryTotals
-        {
-            [Reactive] public int TotalTests { get; set; }
-            [Reactive] public int TotalPassed { get; set; }
-            [Reactive] public int TotalFailed { get; set; }
-            [Reactive] public int TotalNotExported { get; set; }
-        }
 
-        #endregion
-    }
+
+		//[Reactive] public SummaryTotals Totals { get; set; }
+		public extern SummaryTotals Totals { [ObservableAsProperty] get; }
+		public extern int PassPercentage { [ObservableAsProperty] get; }
+		public extern TimeSpan? AverageDuration { [ObservableAsProperty] get; }
+
+		#region Nested type: SummaryTotals
+
+		public class SummaryTotals
+		{
+			[Reactive] public int TotalTests { get; set; }
+			[Reactive] public int TotalPassed { get; set; }
+			[Reactive] public int TotalFailed { get; set; }
+			[Reactive] public int TotalNotExported { get; set; }
+		}
+
+		#endregion
+	}
 }
 
 /*

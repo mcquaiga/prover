@@ -1,6 +1,6 @@
 ﻿using Prover.Application.ViewModels;
 
-namespace Prover.DevTools.Calculators
+namespace Prover.Modules.DevTools.Calculators
 {
 	public class CalculatorsViewModel : ViewModelBase
 	{

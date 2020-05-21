@@ -10,19 +10,19 @@
     x:Name="HomeScreen"
     x:TypeArguments="viewModels:HomeViewModel"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
 
-        <rxui:ViewModelViewHost
+		<rxui:ViewModelViewHost
             x:Name="DashboardHostControl"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Top"
             />
 
-        <ItemsControl x:Name="MenuItems" Grid.Row="1">
+		<!--<ItemsControl x:Name="MenuItems" Grid.Row="1">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button
@@ -54,9 +54,9 @@
                     <UniformGrid VerticalAlignment="Bottom" Rows="1" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        </ItemsControl>-->
 
 
-    </Grid>
+	</Grid>
 
 </rxui:ReactiveUserControl>

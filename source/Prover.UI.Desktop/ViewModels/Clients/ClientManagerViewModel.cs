@@ -1,4 +1,5 @@
 ﻿using Prover.Application.Interfaces;
+using Prover.Application.ViewModels;
 using ReactiveUI;
 
 namespace Prover.UI.Desktop.ViewModels.Clients

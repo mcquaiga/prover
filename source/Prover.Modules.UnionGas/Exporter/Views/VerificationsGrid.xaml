@@ -225,10 +225,16 @@
 					Command="{Binding ToolbarViewModel.PrintReport, ElementName=VerificationsGridControl, Mode=OneWay}"
 					CommandParameter="{Binding Path=SelectedItem, ElementName=VerificationsDataGrid}"
 					MouseAction="LeftDoubleClick" />
-				<!--<MouseBinding Command="{}" CommandTarget="{StaticResource ActionMenuItemsPopupBox}" />-->
+				<!--<MouseBinding
+					Command="{}"
+					CommandTarget="{StaticResource ActionMenuItemsPopupBox}"
+					MouseAction="RightClick" />-->
 			</DataGrid.InputBindings>
 			<DataGrid.Columns>
-				<DataGridTemplateColumn Width="50" CellTemplate="{StaticResource ActionMenuItemsPopupBox}" />
+				<DataGridTemplateColumn
+					x:Name="ActionMenuPopupCell"
+					Width="Auto"
+					CellTemplate="{StaticResource ActionMenuItemsPopupBox}" />
 
 				<DataGridTemplateColumn
 					Width="80"
@@ -313,7 +319,8 @@
 				<materialDesign:DataGridTextColumn
 					x:Name="JobIdColumn"
 					Binding="{Binding JobId, Mode=OneTime}"
-					Header="Job #" />
+					Header="Job #"
+					SortMemberPath="" />
 
 				<materialDesign:DataGridTextColumn
 					x:Name="EmployeeColumn"

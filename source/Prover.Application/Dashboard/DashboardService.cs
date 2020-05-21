@@ -7,45 +7,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
+using Prover.Application.Services;
 
 namespace Prover.Application.Dashboard
 {
 	public class DashboardService
 	{
 		private readonly List<IDashboardItem> _dashboardItems = new List<IDashboardItem>();
-
 		private readonly Subject<Func<EvcVerificationTest, bool>> _dashboardSharedFilter = new Subject<Func<EvcVerificationTest, bool>>();
 		private readonly IDeviceRepository _deviceRepository;
-		private readonly IEntityDataCache<EvcVerificationTest> _entityCache;
+		private IObservableCache<EvcVerificationTest, Guid> _cache;
 
-		public readonly Dictionary<string, Func<DateTime, bool>> Filters = new Dictionary<string, Func<DateTime, bool>>
+		public DashboardService(IEntityCache<EvcVerificationTest> entityCache, IDeviceRepository deviceRepository)
 		{
-				{"1h", time => time.IsLessThanTimeAgo(TimeSpan.FromHours(1))},
-				{"1d", time => time.IsLessThanTimeAgo(TimeSpan.FromDays(1))},
-				{"3d", time => time.IsLessThanTimeAgo(TimeSpan.FromDays(3))},
-				{"7d", time => time.IsLessThanTimeAgo(TimeSpan.FromDays(7))},
-				{"30d", time => time.IsLessThanTimeAgo(TimeSpan.FromDays(30))}
-		};
-
-		public DashboardService(IEntityDataCache<EvcVerificationTest> entityCache, IDeviceRepository deviceRepository)
-		{
-			_entityCache = entityCache;
+			//_entityCache = entityCache;
 			_deviceRepository = deviceRepository;
+
+			_cache = entityCache.Data.Connect()
+									.Filter(_dashboardSharedFilter)
+									.AsObservableCache();
 		}
 
 		public void ApplyFilter(string filterKey)
 		{
-			_dashboardSharedFilter.OnNext(test => Filters[filterKey].Invoke(test.TestDateTime));
+			_dashboardSharedFilter.OnNext(test => VerificationFilters.TimeAgoFilters[filterKey].Invoke(test.TestDateTime));
 		}
+
+		public ICollection<string> DateFilters { get; } = VerificationFilters.TimeAgoFilters.Select(k => k.Key).ToList();
 
 		public IEnumerable<IDashboardItem> CreateDashboard()
 		{
-			var cache = _entityCache.Items.Connect()
-									.Filter(_dashboardSharedFilter)
-									.AsObservableCache();
-
-			CreateDeviceViews(cache);
-			CreateSummaryItem(cache);
+			CreateDeviceViews(_cache);
+			CreateSummaryItem(_cache);
 
 			return _dashboardItems;
 		}
@@ -55,7 +48,7 @@ namespace Prover.Application.Dashboard
 			//var filter = new Func<DeviceType, Func<EvcVerificationTest, bool>>(d => v => v.Device.DeviceType.Id == d.Id);
 
 			_dashboardItems.AddRange(_deviceRepository
-									 .GetAll().Select(deviceType => new VerifiedCountsDashboardViewModel(deviceType.Name, "By Device Type", cache, v => v.Device.DeviceType.Id == deviceType.Id)));
+									 .GetAll().Select(deviceType => new VerifiedCountsDashboardViewModel(deviceType.Name, "By Device", cache, v => v.Device.DeviceType.Id == deviceType.Id)));
 		}
 
 		private void CreateSummaryItem(IObservableCache<EvcVerificationTest, Guid> cache)

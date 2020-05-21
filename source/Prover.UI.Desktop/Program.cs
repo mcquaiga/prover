@@ -14,114 +14,113 @@ using Prover.UI.Desktop.Views;
 
 namespace Prover.UI.Desktop
 {
-    internal static class Program
-    {
-        private static App App;
-        private static MainWindow _mainWindow;
-        private static IHost _host;
+	internal static class Program
+	{
+		private static App App;
+		private static MainWindow _mainWindow;
+		private static IHost _host;
 
-        /// <summary>
-        ///     The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
-            
-            using (var splashScreen = new StartScreen())
-            {
-                splashScreen.Show();
+		/// <summary>
+		///     The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		public static void Main(string[] args)
+		{
+			SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
 
-                var task = Initialize(args);
-                HandleExceptions(task);
-                _host = task.Result;
+			using (var splashScreen = new StartScreen())
+			{
+				splashScreen.Show();
 
-                App = new App { AppHost = _host, ShutdownMode = ShutdownMode.OnExplicitShutdown };
-                App.InitializeComponent();
+				var task = Initialize(args);
+				HandleExceptions(task);
+				_host = task.Result;
 
-                splashScreen.Owner = LoadMainWindow();
-                splashScreen.Close();
-            }
+				App = new App { AppHost = _host, ShutdownMode = ShutdownMode.OnExplicitShutdown };
+				App.InitializeComponent();
 
-            _host.Services.GetService<UnhandledExceptionHandler>();
-            App.Run();
-        }
+				splashScreen.Owner = LoadMainWindow();
+				splashScreen.Close();
+			}
 
-        public static event EventHandler<EventArgs> ExitRequested;
+			_host.Services.GetService<UnhandledExceptionHandler>();
+			App.Run();
+		}
 
-        private static async void HandleExceptions(Task task)
-        {
-            try
-            {
-                await Task.Yield();
-                await task;
-            }
-            catch (AggregateException aggEx)
-            {
-                foreach (var ex in aggEx.InnerExceptions) Debug.WriteLine(ex.Message);
-                App.Shutdown();
-            }
+		public static event EventHandler<EventArgs> ExitRequested;
 
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                App.Shutdown();
-            }
-        }
+		private static async void HandleExceptions(Task task)
+		{
+			try
+			{
+				await Task.Yield();
+				await task;
+			}
+			catch (AggregateException aggEx)
+			{
+				foreach (var ex in aggEx.InnerExceptions)
+					Debug.WriteLine(ex.Message);
+				App.Shutdown();
+			}
 
-        //[STAThread]
-        private static async Task<IHost> Initialize(string[] args)
-        {
-            var bootstrapper = await new AppBootstrapper().StartAsync(args);
-           
-            return bootstrapper.AppHost;
-        }
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				App.Shutdown();
+			}
+		}
 
-        private static MainWindow LoadMainWindow()
-        {
-            var model = _host.Services.GetService<MainViewModel>();
-            _mainWindow = _host.Services.GetService<MainWindow>();
-            _mainWindow.ViewModel = model;
+		//[STAThread]
+		private static async Task<IHost> Initialize(string[] args)
+		{
+			var bootstrapper =
+					await new AppBootstrapper().StartAsync(args);
 
-            var home = _host.Services.GetService<HomeViewModel>();
-            model.ShowHome(home);
+			return bootstrapper.AppHost;
+		}
 
-            _mainWindow.Closed += (sender, args) => { ShutdownApp(); };
+		private static MainWindow LoadMainWindow()
+		{
+			var model = _host.Services.GetService<MainViewModel>();
+			_mainWindow = _host.Services.GetService<MainWindow>();
+			_mainWindow.ViewModel = model;
 
-            _mainWindow.InitializeComponent();
-            _mainWindow.Show();
+			var home = _host.Services.GetService<HomeViewModel>();
+			model.ShowHome(home);
 
-            return _mainWindow;
-        }
+			_mainWindow.Closed += (sender, args) => { ShutdownApp(); };
 
-        private static void OnExitRequested(EventArgs e)
-        {
-            ExitRequested?.Invoke(_mainWindow, e);
-        }
+			_mainWindow.InitializeComponent();
+			_mainWindow.Show();
 
-        private static void ShutdownApp()
-        {
-            (_mainWindow?.ViewModel as IDisposable)?.Dispose();
-            ShutdownHostedServices();
-            App.Shutdown();
-        }
+			return _mainWindow;
+		}
 
-        private static void ShutdownHostedServices()
-        {
-            using (_host)
-            {
-                var services = _host.Services.GetServices<IHostedService>().ToList();
+		private static void OnExitRequested(EventArgs e) => ExitRequested?.Invoke(_mainWindow, e);
 
-                var t = Task.WhenAll(services.Select(s =>
-                    Task.Run(() => s.StopAsync(new CancellationToken()))));
+		private static void ShutdownApp()
+		{
+			(_mainWindow?.ViewModel as IDisposable)?.Dispose();
+			ShutdownHostedServices();
+			App.Shutdown();
+		}
 
-                t.Wait();
-            }
-        }
+		private static void ShutdownHostedServices()
+		{
+			using (_host)
+			{
+				var services = _host.Services.GetServices<IHostedService>().ToList();
 
-        private static void viewModel_CloseRequested(object sender, EventArgs e)
-        {
-            ShutdownApp();
-        }
-    }
+				var t = Task.WhenAll(services.Select(s =>
+					Task.Run(() => s.StopAsync(new CancellationToken()))));
+
+				t.Wait();
+			}
+		}
+
+		private static void viewModel_CloseRequested(object sender, EventArgs e)
+		{
+			ShutdownApp();
+		}
+	}
 }

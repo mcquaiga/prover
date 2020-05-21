@@ -12,7 +12,7 @@ using Prover.Application.Services.LiveReadCorrections;
 using Prover.Application.Verifications.Volume;
 using Prover.UI.Desktop.Dialogs;
 using Prover.UI.Desktop.Views.Devices;
-using Prover.UI.Desktop.Views.Verifications.Dialogs;
+using Prover.UI.Desktop.Views.QATests.Dialogs;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

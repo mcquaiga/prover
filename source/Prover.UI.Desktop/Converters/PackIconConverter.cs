@@ -5,17 +5,18 @@ using MaterialDesignThemes.Wpf;
 
 namespace Prover.UI.Desktop.Converters
 {
-    public class PackIconConverter : IValueConverter
-    {
-        /// <inheritdoc />
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null) return PackIconKind.AbTesting;
+	public class PackIconConverter : IValueConverter
+	{
+		/// <inheritdoc />
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value == null)
+				return PackIconKind.CrosshairsUnknown;
 
-            return Enum.Parse(typeof(PackIconKind), value.ToString());
-        }
+			return Enum.Parse(typeof(PackIconKind), value.ToString());
+		}
 
-        /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-    }
+		/// <inheritdoc />
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+	}
 }

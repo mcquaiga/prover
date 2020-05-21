@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Prover.DevTools
+namespace Prover.Modules.DevTools
 {
 	/// <summary>
 	/// Interaction logic for DevMenuView.xaml

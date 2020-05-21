@@ -8,114 +8,128 @@ using Prover.Application.ViewModels.Corrections;
 using Prover.Application.ViewModels.Factories.Volume;
 using System;
 using System.Linq;
+using Prover.Shared.Interfaces;
 
 namespace Prover.Application.Mappers
 {
-    public static class VerificationMapper
-    {
-        private static readonly Mapper _mapper = Mappers.Setup();
+	public static class VerificationMapper
+	{
+		private static readonly Mapper _mapper = Mappers.Setup();
 
-        public static EvcVerificationTest ToModel(this EvcVerificationViewModel viewModel)
-        {
-            return MapViewModelToModel(viewModel);
-        }
+		public class MapperOptions
+		{
+			public ILoginService LoginService { get; }
+			internal MapperOptions() { }
 
-        public static EvcVerificationViewModel ToViewModel(this EvcVerificationTest model)
-        {
-            return MapModelToViewModel(model);
-        }
+			public MapperOptions(ILoginService loginService)
+			{
+				LoginService = loginService;
+			}
+		}
 
-        public static EvcVerificationTest MapViewModelToModel(EvcVerificationViewModel viewModel)
-        {
-            var testPoints = viewModel.VerificationTests.OfType<VerificationTestPointViewModel>().ToList().Select(vm =>
-            {
-                var tp = _mapper.Map<VerificationTestPointViewModel, VerificationTestPoint>(vm);
+		internal static MapperOptions Options = new MapperOptions();
 
-                tp.AddTest(_mapper.Map<PressureCorrectionTest>(vm.GetPressureTest()));
-                tp.AddTest(_mapper.Map<TemperatureCorrectionTest>(vm.GetTemperatureTest()));
-                tp.AddTest(_mapper.Map<SuperCorrectionTest>(vm.GetSuperFactorTest()));
+		public static EvcVerificationTest ToModel(this EvcVerificationViewModel viewModel)
+		{
+			return MapViewModelToModel(viewModel);
+		}
 
-                if (vm.GetVolumeTest() != null)
-                {
-                    var volumeTests = vm.GetVolumeTest()?.AllTests().Select(v =>
-                    {
-                        var destinationType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps()
-                            .First(map => map.SourceType == v.GetType()).DestinationType;
+		public static EvcVerificationViewModel ToViewModel(this EvcVerificationTest model)
+		{
+			return MapModelToViewModel(model);
+		}
 
-                        if (destinationType == null)
-                            throw new Exception($"Couldn't find a mapping for source type {v.GetType()}.");
+		public static EvcVerificationTest MapViewModelToModel(EvcVerificationViewModel viewModel)
+		{
+			var testPoints = viewModel.VerificationTests.OfType<VerificationTestPointViewModel>().ToList().Select(vm =>
+			{
+				var tp = _mapper.Map<VerificationTestPointViewModel, VerificationTestPoint>(vm);
 
-                        var obj = Activator.CreateInstance(destinationType, true);
-                        var instance = (VerificationEntity)_mapper.Map(v, obj, v.GetType(), destinationType);
-                        //if (instance is IPulseOutputVerification)
-                        //{
-                        //    if (v is VolumeTestRunViewModelBase vmBase)
-                        //        (instance as IPulseOutputVerification).PulseOutputTest = _mapper.Map<PulseOutputVerification>(vmBase.PulseOutputTest);
-                        //}
+				tp.AddTest(_mapper.Map<PressureCorrectionTest>(vm.GetPressureTest()));
+				tp.AddTest(_mapper.Map<TemperatureCorrectionTest>(vm.GetTemperatureTest()));
+				tp.AddTest(_mapper.Map<SuperCorrectionTest>(vm.GetSuperFactorTest()));
 
-                        return instance;
-                    }).ToList();
+				if (vm.GetVolumeTest() != null)
+				{
+					var volumeTests = vm.GetVolumeTest()?.AllTests().Select(v =>
+					{
+						var destinationType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps()
+							.First(map => map.SourceType == v.GetType()).DestinationType;
 
-                    tp.AddTests(volumeTests);
-                }
+						if (destinationType == null)
+							throw new Exception($"Couldn't find a mapping for source type {v.GetType()}.");
 
-                return tp;
-            }).ToList();
+						var obj = Activator.CreateInstance(destinationType, true);
+						var instance = (VerificationEntity)_mapper.Map(v, obj, v.GetType(), destinationType);
+						//if (instance is IPulseOutputVerification)
+						//{
+						//    if (v is VolumeTestRunViewModelBase vmBase)
+						//        (instance as IPulseOutputVerification).PulseOutputTest = _mapper.Map<PulseOutputVerification>(vmBase.PulseOutputTest);
+						//}
 
-            var evc = _mapper.Map<EvcVerificationTest>(viewModel);
+						return instance;
+					}).ToList();
 
-            evc.Tests.Clear();
-            evc.AddTests(testPoints);
+					tp.AddTests(volumeTests);
+				}
 
-            return evc;
-        }
+				return tp;
+			}).ToList();
 
-        public static EvcVerificationViewModel MapModelToViewModel(EvcVerificationTest test)
-        {
-            var evcViewModel = _mapper.Map<EvcVerificationViewModel>(test);
+			var evc = _mapper.Map<EvcVerificationTest>(viewModel);
 
-            var testPoints = test.Tests.OfType<VerificationTestPoint>()
-                .ToList().Select(point =>
-                {
-                    var pointViewModel = _mapper.Map<VerificationTestPoint, VerificationTestPointViewModel>(point);
+			evc.Tests.Clear();
+			evc.AddTests(testPoints);
 
-                    var pressure = _mapper.Map<PressureFactorViewModel>(point.GetTest<PressureCorrectionTest>());
-                    if (pressure != null)
-                        pointViewModel.VerificationTests.Add(pressure);
+			return evc;
+		}
 
-                    var temp = _mapper.Map<TemperatureFactorViewModel>(point.GetTest<TemperatureCorrectionTest>());
-                    if (temp != null)
-                        pointViewModel.VerificationTests.Add(temp);
+		public static EvcVerificationViewModel MapModelToViewModel(EvcVerificationTest test)
+		{
+			var evcViewModel = _mapper.Map<EvcVerificationViewModel>(test);
 
-                    var superModel = point.GetTest<SuperCorrectionTest>();
-                    if (superModel != null)
-                    {
-                        var super = _mapper.Map<SuperFactorViewModel>(superModel);
-                        super.Setup(temp, pressure);
+			var testPoints = test.Tests.OfType<VerificationTestPoint>()
+				.ToList().Select(point =>
+				{
+					var pointViewModel = _mapper.Map<VerificationTestPoint, VerificationTestPointViewModel>(point);
 
-                        pointViewModel.VerificationTests.Add(super);
-                    }
+					var pressure = _mapper.Map<PressureFactorViewModel>(point.GetTest<PressureCorrectionTest>());
+					if (pressure != null)
+						pointViewModel.VerificationTests.Add(pressure);
 
-                    if (point.HasVolumeTest())
-                    {
-                        VolumeViewModelFactory.Create(test.Device, evcViewModel, pointViewModel);
-                        var volumeTests = pointViewModel.GetVolumeTest().AllTests().Select(vm =>
-                        {
-                            var sourceType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps().FirstOrDefault(map => map.DestinationType == vm.GetType())?.SourceType;
+					var temp = _mapper.Map<TemperatureFactorViewModel>(point.GetTest<TemperatureCorrectionTest>());
+					if (temp != null)
+						pointViewModel.VerificationTests.Add(temp);
 
-                            var modelInstance = point.Tests.FirstOrDefault(t => t.GetType() == sourceType);
+					var superModel = point.GetTest<SuperCorrectionTest>();
+					if (superModel != null)
+					{
+						var super = _mapper.Map<SuperFactorViewModel>(superModel);
+						super.Setup(temp, pressure);
 
-                            var result = (VerificationViewModel)_mapper.Map(modelInstance, vm, sourceType, vm.GetType());
-                            return result;
-                        }).ToList();
-                    }
-                    pointViewModel.Initialize();
+						pointViewModel.VerificationTests.Add(super);
+					}
 
-                    return (VerificationViewModel)pointViewModel;
-                }).ToList();
+					if (point.HasVolumeTest())
+					{
+						VolumeViewModelFactory.Create(test.Device, evcViewModel, pointViewModel);
+						var volumeTests = pointViewModel.GetVolumeTest().AllTests().Select(vm =>
+						{
+							var sourceType = _mapper.DefaultContext.ConfigurationProvider.GetAllTypeMaps().FirstOrDefault(map => map.DestinationType == vm.GetType())?.SourceType;
 
-            evcViewModel.Initialize(testPoints.ToList());
-            return evcViewModel;
-        }
-    }
+							var modelInstance = point.Tests.FirstOrDefault(t => t.GetType() == sourceType);
+
+							var result = (VerificationViewModel)_mapper.Map(modelInstance, vm, sourceType, vm.GetType());
+							return result;
+						}).ToList();
+					}
+					pointViewModel.Initialize();
+
+					return (VerificationViewModel)pointViewModel;
+				}).ToList();
+
+			evcViewModel.Initialize(testPoints.ToList());
+			return evcViewModel;
+		}
+	}
 }

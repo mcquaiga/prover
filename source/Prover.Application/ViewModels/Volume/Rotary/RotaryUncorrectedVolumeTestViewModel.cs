@@ -4,9 +4,12 @@ using Prover.Shared;
 
 namespace Prover.Application.ViewModels.Volume.Rotary
 {
-	public class RotaryUncorrectedVolumeTestViewModel : UncorrectedVolumeTestViewModel, IUncorrectedVolumeTestViewModel
+	public class RotaryUncorrectedVolumeTestViewModel : UncorrectedVolumeTestViewModel //, IUncorrectedVolumeTestViewModel
 	{
 		private readonly RotaryMeterItems _rotaryItems;
+
+		public RotaryUncorrectedVolumeTestViewModel() : base(VolumeInputType.Rotary, null, null)
+		{ }
 
 		/// <inheritdoc />
 		public RotaryUncorrectedVolumeTestViewModel(RotaryMeterItems rotaryItems, VolumeItems startValues, VolumeItems endValues)

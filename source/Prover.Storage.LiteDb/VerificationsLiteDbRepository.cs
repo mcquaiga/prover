@@ -1,28 +1,73 @@
 ﻿using Devices.Core.Repository;
 using LiteDB;
 using Prover.Application.Models.EvcVerifications;
+using Prover.Application.Services;
 using Prover.Shared.Storage.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
+using DynamicData;
 
 namespace Prover.Storage.LiteDb
 {
-    public class VerificationsLiteDbRepository : LiteDbAsyncRepository<EvcVerificationTest>, IObservableRepository<EvcVerificationTest>
-    {
-        private readonly IDeviceRepository _deviceRepository;
+	public class VerificationsLiteDbRepository : BaseLiteDbAsyncRepository<Guid, EvcVerificationTest>, IAsyncRepository<EvcVerificationTest>
+	{
 
-        public VerificationsLiteDbRepository(ILiteDatabase context, IDeviceRepository deviceRepository) : base(context)
-        {
-            _deviceRepository = deviceRepository;
-        }
+		public VerificationsLiteDbRepository(ILiteDatabase context) : base(context)
+		{
 
-        public IQbservable<EvcVerificationTest> QueryObservable(Expression<Func<EvcVerificationTest, bool>> predicate = null)
-        {
-            return Observable.StartAsync(() => Query(predicate)).SelectMany(t => t).AsQbservable();
+		}
 
+		/// <inheritdoc />
+		public Task<int> CountAsync(IQuerySpecification<EvcVerificationTest> spec) => throw new NotImplementedException();
 
-        }
-    }
+		/// <inheritdoc />
+		public IObservable<EvcVerificationTest> QueryObservable(IQuerySpecification<EvcVerificationTest> specification)
+		{
+			return Observable.StartAsync(async () => await QueryAsync(specification))
+							 .SelectMany(t => t);
+
+		}
+
+		/// <inheritdoc />
+		public Task<IEnumerable<EvcVerificationTest>> QueryAsync(IQuerySpecification<EvcVerificationTest> specification)
+		{
+			return Task.FromResult(ApplySpecification(specification).AsEnumerable());
+		}
+
+		public Task<IReadOnlyList<EvcVerificationTest>> ListAsync()
+		{
+			return Task.FromResult(
+						(IReadOnlyList<EvcVerificationTest>)Collection.FindAll().ToList());
+		}
+
+		///// <inheritdoc />
+		//public async Task<IEnumerable<EvcVerificationTest>> Query(Expression<Func<T, bool>> predicate = null)
+		//{
+		//	predicate = null;
+		//	var results = predicate != null ? Collection.Find(predicate) : Context.GetCollection<T>().FindAll();
+		//	return await Task.FromResult(results);
+		//}
+
+		/// <inheritdoc />
+		//public Task<IEnumerable<T>> Query(IQuerySpecification<T> specification) => throw new NotImplementedException();
+
+		///// <inheritdoc />
+		//public IObservable<T> QueryObservable(IQuerySpecification<T> specification) => throw new NotImplementedException();
+
+		//public Task<int> CountAsync(IQuerySpecification<T> spec) => throw new NotImplementedException();
+
+		private IQueryable<EvcVerificationTest> ApplySpecification(IQuerySpecification<EvcVerificationTest> spec)
+		{
+			return SpecificationEvaluator<EvcVerificationTest>.GetQuery((IQueryable<EvcVerificationTest>)Collection.Query(), spec);
+		}
+
+		//private IQueryable<T> ApplySpecification(IQuerySpecification<T> spec)
+		//{
+		//	return ApplySpecification(_container.GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true), spec);
+		//}
+	}
 }

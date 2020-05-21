@@ -1,0 +1,159 @@
+﻿<rxUi:ReactiveUserControl
+	x:Class="Prover.UI.Desktop.Controls.ItemLiveReadControl"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:evcVerifications="clr-namespace:Prover.Application.Models.EvcVerifications;assembly=Prover.Application"
+	xmlns:liveRead="clr-namespace:Prover.Application.Services.LiveReadCorrections;assembly=Prover.Application"
+	xmlns:local="clr-namespace:Prover.UI.Desktop.Controls"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:rxUi="http://reactiveui.net"
+	d:DataContext="{d:DesignInstance liveRead:ItemLiveReadStatus,
+	                                 IsDesignTimeCreatable=False}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:TypeArguments="liveRead:ItemLiveReadStatus"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<Style TargetType="materialDesign:Card">
+			<Setter Property="Margin" Value="4" />
+			<Setter Property="Padding" Value="5" />
+		</Style>
+		<Style TargetType="{x:Type StackPanel}">
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+	</UserControl.Resources>
+	<Grid>
+
+		<materialDesign:Card
+			x:Name="ItemStackPanelControl"
+			HorizontalAlignment="Stretch"
+			HorizontalContentAlignment="Stretch"
+			materialDesign:ShadowAssist.ShadowDepth="Depth0">
+			<StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+
+				<StackPanel Orientation="Horizontal">
+
+					<materialDesign:PackIcon
+						Width="48"
+						Height="48"
+						Kind="Thermometer" />
+					<TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}" Text="{Binding Path=Item.Description}" />
+
+				</StackPanel>
+
+
+				<Grid
+					MinWidth="300"
+					Margin="0"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Stretch">
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock
+							x:Name="LiveItemValueTextBlock"
+							Margin="5"
+							HorizontalAlignment="Center"
+							Style="{StaticResource MaterialDesignHeadline1TextBlock}" />
+
+					</StackPanel>
+
+				</Grid>
+
+
+				<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+					<StackPanel
+						Margin="12,2,2,2"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						Orientation="Vertical">
+						<TextBlock
+							x:Name="TargetValueTextBlock"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+						<TextBlock
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+							Text="Target" />
+					</StackPanel>
+
+					<materialDesign:PackIcon
+						Width="48"
+						Height="48"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Kind="TemperatureFahrenheit" />
+
+					<materialDesign:PopupBox
+						HorizontalAlignment="Right"
+						VerticalAlignment="Center"
+						StaysOpen="True">
+						<materialDesign:PopupBox.ToggleContent>
+							<materialDesign:PackIcon
+								Width="36"
+								Height="36"
+								Foreground="LightSlateGray"
+								Kind="InfoCircle" />
+						</materialDesign:PopupBox.ToggleContent>
+						<UniformGrid HorizontalAlignment="Stretch" Rows="1">
+							<StackPanel
+								MinWidth="75"
+								Margin="15,8"
+								HorizontalAlignment="Center"
+								Orientation="Vertical">
+
+								<TextBlock
+									x:Name="DifferenceTextBlock"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+								<TextBlock
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+									Text="Difference" />
+
+							</StackPanel>
+							<StackPanel
+								MinWidth="75"
+								Margin="15,8"
+								HorizontalAlignment="Center"
+								Orientation="Vertical">
+
+								<TextBlock
+									x:Name="AverageTextBlock"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+								<TextBlock
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+									Text="Average" />
+
+							</StackPanel>
+						</UniformGrid>
+					</materialDesign:PopupBox>
+				</Grid>
+
+				<!--<ProgressBar
+                    x:Name="TemperatureStableProgressBar"
+                    Width="36"
+                    Height="36"
+                    Margin="0,10"
+                    HorizontalAlignment="Center"
+                    IsIndeterminate="True"
+                    Maximum="100"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="80" />-->
+
+
+			</StackPanel>
+		</materialDesign:Card>
+	</Grid>
+</rxUi:ReactiveUserControl>
