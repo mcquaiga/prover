@@ -30,7 +30,7 @@
 
 			<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="70" />
+					<RowDefinition Height="40" />
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 
@@ -51,7 +51,10 @@
 					</Grid.Resources>
 
 
-					<Grid Grid.Column="1" HorizontalAlignment="Stretch">
+					<Grid
+						Grid.Column="0"
+						Margin="12,0"
+						HorizontalAlignment="Stretch">
 						<ItemsControl
 							x:Name="DeviceTypes"
 							HorizontalAlignment="Stretch"
@@ -85,7 +88,7 @@
 
 
 					<StackPanel
-						Grid.Column="2"
+						Grid.Column="3"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Center"
 						Orientation="Horizontal"
@@ -115,8 +118,10 @@
 					</StackPanel>
 
 					<StackPanel
-						Grid.Column="3"
+						Grid.Column="2"
 						Margin="25,4"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
 						Orientation="Horizontal">
 
 						<TextBlock
@@ -131,8 +136,10 @@
 					</StackPanel>
 
 					<materialDesign:PopupBox
-						Grid.Column="0"
-						Margin="25,12,0,0"
+						Grid.Column="3"
+						Margin="25,4"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
 						PlacementMode="BottomAndAlignLeftEdges"
 						PopupMode="Click"
 						StaysOpen="True">
@@ -147,10 +154,10 @@
 
 							</Style>
 						</materialDesign:PopupBox.Resources>
-						<materialDesign:PopupBox.ToggleContent>
+						<!--<materialDesign:PopupBox.ToggleContent>
 							<materialDesign:PackIcon Kind="HamburgerMenu" Style="{StaticResource MainToolbarPackIconStyle}" />
 
-						</materialDesign:PopupBox.ToggleContent>
+						</materialDesign:PopupBox.ToggleContent>-->
 						<StackPanel>
 							<CheckBox
 								x:Name="IncludeExportedCheckBox"

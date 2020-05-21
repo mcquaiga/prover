@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -16,8 +17,16 @@ namespace Prover.Application.Verifications
 		bool CanNavigateAway();
 	}
 
-	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager, IActivatableViewModel, IViewModelNavigationEvents
+	public interface IRoutableLifetimeHandler
 	{
+		CancellationToken OnChanging { get; set; }
+		IObservable<bool> CanChange { get; set; }
+		Task ChangingRoute(IObserver<bool> canChange);
+	}
+
+	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager, IActivatableViewModel, IRoutableLifetimeHandler
+	{
+		private CancellationToken _onChanging;
 		protected ILogger<TestManagerBase> Logger { get; }
 		protected IScreenManager ScreenManager { get; }
 		protected IVerificationService VerificationService { get; }
@@ -28,7 +37,6 @@ namespace Prover.Application.Verifications
 									EvcVerificationViewModel testViewModel)
 		{
 			var cts = new CancellationTokenSource();
-
 
 			Logger = logger;
 			ScreenManager = screenManager;
@@ -72,13 +80,16 @@ namespace Prover.Application.Verifications
 			SubmitTest.ThrownExceptions.Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"));
 			PrintTestReport = ReactiveCommand.CreateFromObservable(() => Messages.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(Cleanup);
 
+			//OnChanging.
 			//this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
 			//	.Where(v => v)
 			//	.ObserveOn(RxApp.MainThreadScheduler)
 			//	.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
 			//	.Subscribe()
 			//	.DisposeWith(Cleanup);
+			//_onChanging.Register(obj => )
 
+			//Activator.Deactivated
 		}
 
 		public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
@@ -106,19 +117,17 @@ namespace Prover.Application.Verifications
 		/// <inheritdoc />
 		public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
+
 		/// <inheritdoc />
-		public bool CanNavigateAway()
+		public IObservable<bool> CanChange { get; set; }
+
+		/// <inheritdoc />
+		public async Task ChangingRoute(IObserver<bool> canChange)
 		{
-			var canChange = true;
+			if (await HasUnsavedChanges.LastOrDefaultAsync())
+			{
 
-			if (!TestViewModel.Verified && )
-
-				return CanNavigateAway(canChange);
-		}
-
-		protected virtual bool CanNavigateAway(bool canNavigateAway)
-		{
-			return canNavigateAway;
+			}
 		}
 	}
 }

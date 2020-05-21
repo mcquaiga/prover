@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Disposables;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Interactions;
 using ReactiveUI;
@@ -30,6 +31,11 @@ namespace Prover.Application.ViewModels
 		{
 		}
 
+		/// <inheritdoc />
+		public virtual bool CanNavigateAway()
+		{
+			return true;
+		}
 
 		//private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
 		///// <inheritdoc />
@@ -39,5 +45,8 @@ namespace Prover.Application.ViewModels
 		//{
 		//	_toolbarActionItems.Add(toolbarItem);
 		//}
+
+		/// <inheritdoc />
+		public CancellationToken OnChanging { get; set; }
 	}
 }
