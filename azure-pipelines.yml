@@ -64,17 +64,17 @@ jobs:
         artifact: 'Tests'
         publishLocation: 'pipeline'
 
-    - task: NuGetCommand@2
-      displayName: "Create Nuget package "
-      inputs:
-        command: 'pack'
-        packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
-        packDestination: '$(Build.ArtifactStagingDirectory)'
-        versioningScheme: 'byBuildNumber'
-        basePath: '$(buildDir)'
+    # - task: NuGetCommand@2
+    #   displayName: "Create Nuget package "
+    #   inputs:
+    #     command: 'pack'
+    #     packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
+    #     packDestination: '$(Build.ArtifactStagingDirectory)'
+    #     versioningScheme: 'byBuildNumber'
+    #     basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
-      artifact: 'Packages'
+    # - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
+    #   artifact: 'Packages'
     # - task: NuGetCommand@2
     #   inputs:
     #     command: 'push'
