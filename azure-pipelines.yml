@@ -64,6 +64,24 @@ jobs:
         artifact: 'Tests'
         publishLocation: 'pipeline'
 
+    - task: NuGetCommand@2
+      displayName: "Create Nuget package "
+      inputs:
+        command: 'pack'
+        packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
+        packDestination: '$(Build.ArtifactStagingDirectory)'
+        versioningScheme: 'byBuildNumber'
+        basePath: '$(buildDir)'
+
+    - publish: '$(Build.ArtifactStagingDirectory)\**.nupkg'
+      artifact: 'EvcProver.$(Build.BuildNumber).nupkg'
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
+
 
   # - job: Package
   #   dependsOn: Windows
@@ -73,21 +91,3 @@ jobs:
   #           buildType: 'current'
   #           artifactName: 'Binaries'
   #           targetPath: '$(Pipeline.Workspace)'
-
-  #       - task: NuGetCommand@2
-  #         displayName: "Create Nuget package "
-  #         inputs:
-  #           command: 'pack'
-  #           packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
-  #           packDestination: '$(Build.ArtifactStagingDirectory)'
-  #           versioningScheme: 'byBuildNumber'
-  #           basePath: '$(buildDir)'
-          
-  #       - task: NuGetCommand@2
-  #         inputs:
-  #           command: 'push'
-  #           packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-  #           nuGetFeedType: 'internal'
-  #           publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
-    
-
