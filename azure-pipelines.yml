@@ -73,14 +73,14 @@ jobs:
         versioningScheme: 'byBuildNumber'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\**.nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
       artifact: 'EvcProver.$(Build.BuildNumber).nupkg'
-    - task: NuGetCommand@2
-      inputs:
-        command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-        nuGetFeedType: 'internal'
-        publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
+    # - task: NuGetCommand@2
+    #   inputs:
+    #     command: 'push'
+    #     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    #     nuGetFeedType: 'internal'
+    #     publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
 
 
   # - job: Package
