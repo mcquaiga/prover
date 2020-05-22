@@ -65,6 +65,7 @@ jobs:
         publishLocation: 'pipeline'
 
   - job: Package
+    dependsOn: Windows
     steps:
         - task: DownloadPipelineArtifact@2
           inputs:
