@@ -50,36 +50,42 @@ jobs:
         rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
-    - task: PublishBuildArtifacts@1
-      displayName: Publish Binaries Artifact
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Binary Artifacts"
       inputs:
-        PathtoPublish: '$(buildDir)'
-        ArtifactName: 'Binaries'
-        publishLocation: 'Container'
+        targetPath: '$(buildDir)'
+        artifact: 'Binaries'
+        publishLocation: 'pipeline'
 
-    - task: PublishBuildArtifacts@1
-      displayName: Publish Test Artifact
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Test Artifacts"
       inputs:
-        PathtoPublish: '$(testsDir)'
-        ArtifactName: 'Tests'
-        publishLocation: 'Container'
+        targetPath: '$(testsDir)'
+        artifact: 'Tests'
+        publishLocation: 'pipeline'
 
   - job: Package
     steps:
-         - task: NuGetCommand@2
-           displayName: "Create Nuget package "
-           inputs:
-             command: 'pack'
-             packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
-             packDestination: '$(Build.ArtifactStagingDirectory)'
-             versioningScheme: 'byBuildNumber'
-             basePath: '$(buildDir)'
-            
-         - task: NuGetCommand@2
-           inputs:
-              command: 'push'
-              packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-              nuGetFeedType: 'internal'
-              publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
+        - task: DownloadPipelineArtifact@2
+          inputs:
+            buildType: 'current'
+            artifactName: 'Binaries'
+            targetPath: '$(Pipeline.Workspace)'
+
+        - task: NuGetCommand@2
+          displayName: "Create Nuget package "
+          inputs:
+            command: 'pack'
+            packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
+            packDestination: '$(Build.ArtifactStagingDirectory)'
+            versioningScheme: 'byBuildNumber'
+            basePath: '$(buildDir)'
+          
+        - task: NuGetCommand@2
+          inputs:
+            command: 'push'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+            nuGetFeedType: 'internal'
+            publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
     
 
