@@ -25,20 +25,24 @@ namespace Prover.UI.Desktop.Dialogs
 
 			//ShowCommand = ReactiveCommand.CreateFromObservable(() => Observable.Return(true)).DisposeWith(Cleanup);
 			CloseCommand = ReactiveCommand.CreateFromObservable(() =>
-			                              {
-				                              Result = DialogResult.Accepted;
-				                              return Observable.Return(Unit.Default);
-			                              }, this.IsValid())
-			                              .DisposeWith(Cleanup);
+										  {
+											  Result = DialogResult.Accepted;
+											  return Observable.Return(Unit.Default);
+										  }, this.IsValid())
+										  .DisposeWith(Cleanup);
 
 			CancelCommand = ReactiveCommand.CreateFromObservable(() =>
-			                               {
-				                               Result = DialogResult.Cancelled;
-				                               CancellationTokenSource.Cancel();
-				                               return Observable.Return(Unit.Default);
-			                               })
-			                               .DisposeWith(Cleanup);
-			CloseCommand.Merge(CancelCommand).InvokeCommand(DialogHost.CloseDialogCommand).DisposeWith(Cleanup);
+										   {
+											   Result = DialogResult.Cancelled;
+											   CancellationTokenSource.Cancel();
+											   return Observable.Return(Unit.Default);
+										   })
+										   .DisposeWith(Cleanup);
+
+			CloseCommand
+					.Merge(CancelCommand)
+					.InvokeCommand(DialogHost.CloseDialogCommand)
+					.DisposeWith(Cleanup);
 		}
 
 		public DialogViewModel() : this(new CancellationTokenSource())
@@ -58,14 +62,15 @@ namespace Prover.UI.Desktop.Dialogs
 
 		public ValidationContext ValidationContext { get; } = new ValidationContext();
 
-		public void Dispose()
-		{
-			Disposing();
-			Cleanup.Dispose();
-		}
+
 
 		protected virtual void Disposing()
 		{
+		}
+
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+
 		}
 	}
 }

@@ -10,59 +10,59 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Modules.UnionGas.Models
 {
-    public class VerificationProxy
-    {
-        public VerificationProxy(EvcVerificationTest verification,
-            IObservable<EvcVerificationTest> changeUpdates,
-            ILoginService<Employee> loginService,
-            IReactiveCommand viewReport)
-        {
-        }
-    }
+	public class VerificationProxy
+	{
+		public VerificationProxy(EvcVerificationTest verification,
+			IObservable<EvcVerificationTest> changeUpdates,
+			ILoginService<Employee> loginService,
+			IReactiveCommand viewReport)
+		{
+		}
+	}
 
 
-    public class EvcVerificationProxy : ReactiveObject
-    {
-        public IReactiveCommand ViewReport { get; }
-        private readonly IObservable<EvcVerificationTest> _changeUpdates;
+	public class EvcVerificationProxy : ReactiveObject
+	{
+		public IReactiveCommand ViewReport { get; }
+		private readonly IObservable<EvcVerificationTest> _changeUpdates;
 
-        public EvcVerificationProxy
-        (EvcVerificationTest verification, IObservable<EvcVerificationTest> changeUpdates, ILoginService<Employee> loginService, IReactiveCommand viewReport,
-                ExportToolbarViewModel toolbarViewModel
-        )
-        {
-            ViewReport = viewReport;
-            _changeUpdates = changeUpdates;
+		public EvcVerificationProxy
+		(EvcVerificationTest verification, IObservable<EvcVerificationTest> changeUpdates, ILoginService<Employee> loginService, IReactiveCommand viewReport,
+				ExportToolbarViewModel toolbarViewModel
+		)
+		{
+			ViewReport = viewReport;
+			_changeUpdates = changeUpdates;
 
-            this.WhenAnyObservable(x => x._changeUpdates)
-                .Where(x => x.Id == Test.Id)
-                .ToPropertyEx(this, x => x.Test, verification);
+			this.WhenAnyObservable(x => x._changeUpdates)
+				.Where(x => x.Id == Test.Id)
+				.ToPropertyEx(this, x => x.Test, verification);
 
-            //var initEmployee = loginService?.GetUsers().FirstOrDefault(u => u.Id == Test.EmployeeId);
-            
-            //this.WhenAnyValue(x => x.Test)
-            //    .Where(t => !string.IsNullOrEmpty(t.EmployeeId))
-            //    .Select(t => loginService?.GetUsers().FirstOrDefault(u => u.Id == t.EmployeeId))
-            //    .ToPropertyEx(this, x => x.Employee, initEmployee);
+			//var initEmployee = loginService?.GetUsers().FirstOrDefault(u => u.Id == Test.EmployeeId);
 
-            this.WhenAnyValue(x => x.Test)
-                .Select(t => t.ArchivedDateTime.HasValue || t.ExportedDateTime.HasValue)
-                .ToPropertyEx(this, x => x.IsLocked);
-        }
+			//this.WhenAnyValue(x => x.Test)
+			//    .Where(t => !string.IsNullOrEmpty(t.EmployeeId))
+			//    .Select(t => loginService?.GetUsers().FirstOrDefault(u => u.Id == t.EmployeeId))
+			//    .ToPropertyEx(this, x => x.Employee, initEmployee);
 
-        public bool Verified => Test.Verified;
-        public extern EvcVerificationTest Test { [ObservableAsProperty] get; }
-        
-        public extern bool IsLocked { [ObservableAsProperty] get; }
+			this.WhenAnyValue(x => x.Test)
+				.Select(t => t.Archived.HasValue || t.ExportedDateTime.HasValue)
+				.ToPropertyEx(this, x => x.IsLocked);
+		}
 
-        [Reactive] public bool IsSelected { get; set; }
-        
-        public string Composition => Test.Device.CompositionShort();
+		public bool Verified => Test.Verified;
+		public extern EvcVerificationTest Test { [ObservableAsProperty] get; }
 
-        public extern EmployeeDTO Employee { [ObservableAsProperty]get; }
+		public extern bool IsLocked { [ObservableAsProperty] get; }
 
-        public long SerialNumber => Test.Device.SiteInfo().SerialNumber.ToInt32();
+		[Reactive] public bool IsSelected { get; set; }
 
-        public long InventoryNumber => Test.Device.CompanyNumber().ToInt32();
-    }
+		public string Composition => Test.Device.CompositionShort();
+
+		public extern EmployeeDTO Employee { [ObservableAsProperty]get; }
+
+		public long SerialNumber => Test.Device.SiteInfo().SerialNumber.ToInt32();
+
+		public long InventoryNumber => Test.Device.CompanyNumber().ToInt32();
+	}
 }

@@ -88,7 +88,7 @@ namespace Prover.Application.Services
 		/// <inheritdoc />
 		public async Task<EvcVerificationTest> Archive(EvcVerificationTest model)
 		{
-			model.ArchivedDateTime = DateTime.Now;
+			model.Archived = DateTime.Now;
 			return await Save(model);
 		}
 
@@ -105,7 +105,7 @@ namespace Prover.Application.Services
 
 		public async Task<IQaTestRunManager> StartVerification(DeviceInstance device, VerificationTestOptions options = null, bool publishEvent = false)
 		{
-			options = options ?? VerificationTestOptions.Defaults;
+			options = options ?? VerificationDefaults.VerificationOptions;
 
 			var manager = _managerService.CreateManager(device.NewVerification(options));
 

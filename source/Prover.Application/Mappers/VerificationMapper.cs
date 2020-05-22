@@ -79,7 +79,7 @@ namespace Prover.Application.Mappers
 			var evc = _mapper.Map<EvcVerificationTest>(viewModel);
 
 			evc.Tests.Clear();
-			evc.AddTests(testPoints);
+			evc.AddChildren(testPoints);
 
 			return evc;
 		}

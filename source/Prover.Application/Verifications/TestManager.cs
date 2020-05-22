@@ -32,15 +32,10 @@ namespace Prover.Application.Verifications
 			VolumeTestManager = volumeTestManager;
 			CorrectionVerifications = correctionVerificationRunner;
 
-			RunCorrectionVerifications =
-					ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests).DisposeWith(Cleanup);
-			ObservableLoggingExtensions.LogErrors(RunCorrectionVerifications.ThrownExceptions, "Error downloading items from instrument.")
-									   .Subscribe().DisposeWith(Cleanup);
 
-			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.BeginVolumeVerification).DisposeWith(Cleanup);
 		}
 
-		public IDeviceSessionManager DeviceManager { get; }
+		//public IDeviceSessionManager DeviceManager { get; }
 
 		protected override void Dispose(bool isDisposing)
 		{
@@ -52,6 +47,18 @@ namespace Prover.Application.Verifications
 
 		}
 
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
+
+			RunCorrectionVerifications =
+					ReactiveCommand.CreateFromTask<VerificationTestPointViewModel>(CorrectionVerifications.RunCorrectionTests).DisposeWith(cleanup);
+			ObservableLoggingExtensions.LogErrors(RunCorrectionVerifications.ThrownExceptions, "Error downloading items from instrument.")
+									   .Subscribe().DisposeWith(cleanup);
+
+			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.BeginVolumeVerification).DisposeWith(cleanup);
+		}
 
 
 		public ReactiveCommand<VerificationTestPointViewModel, Unit> RunCorrectionVerifications { get; set; }

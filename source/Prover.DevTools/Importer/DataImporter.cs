@@ -143,7 +143,7 @@ namespace Prover.Modules.DevTools.Importer
 			qaTest.Tests.OrderBy(x => x.TestNumber)
 				  .ForEach(vt =>
 				  {
-					  var testDef = VerificationTestOptions.Defaults.CorrectionTestDefinitions.First(x => x.Level == vt.TestNumber);
+					  var testDef = VerificationDefaults.VerificationOptions.CorrectionTestDefinitions.First(x => x.Level == vt.TestNumber);
 
 					  builder.AddTestPoint(tp =>
 					  {

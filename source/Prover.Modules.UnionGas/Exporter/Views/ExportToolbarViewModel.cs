@@ -91,7 +91,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 													 {
 														 if (await Messages.ShowYesNo.Handle("Are you sure you want to archive this test?"))
 														 {
-															 test.ArchivedDateTime = DateTime.Now;
+															 test.Archived = DateTime.Now;
 															 await verificationTestService.Save(test);
 														 }
 
@@ -156,7 +156,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 
 		public void SetCanExecutes(IObservable<EvcVerificationTest> selectedTest)
 		{
-			CanEdit = selectedTest.Select(t => !t.ArchivedDateTime.HasValue && !t.ExportedDateTime.HasValue).ObserveOn(RxApp.MainThreadScheduler);
+			CanEdit = selectedTest.Select(t => !t.Archived.HasValue && !t.ExportedDateTime.HasValue).ObserveOn(RxApp.MainThreadScheduler);
 
 			CanAddUser = selectedTest.Select(t => string.IsNullOrEmpty(t.EmployeeId))
 									 .CombineLatest(CanEdit, (hasNoId, canEdit) => hasNoId && canEdit)

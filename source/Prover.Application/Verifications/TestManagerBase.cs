@@ -45,51 +45,6 @@ namespace Prover.Application.Verifications
 
 			TestViewModel = testViewModel;
 
-			SaveCommand = ReactiveCommand.CreateFromTask(async () =>
-										 {
-											 logger.LogDebug("Saving test...");
-											 var updated = await verificationService.Save(TestViewModel);
-
-											 if (updated != null)
-											 {
-												 logger.LogDebug("Saved test successfully");
-												 await Notifications.SnackBarMessage.Handle("SAVED");
-												 return true;
-											 }
-
-											 return false;
-										 })
-										 .DisposeWith(Cleanup);
-			SaveCommand.ThrownExceptions.Subscribe();
-
-			//SaveCommand.Do(x => VerificationEvents.OnSave.Publish(TestViewModel.ToModel()))
-			//           .Subscribe().DisposeWith(Cleanup);
-			var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable).ObserveOn(RxApp.MainThreadScheduler);
-
-			SubmitTest = ReactiveCommand.CreateFromTask(async () =>
-										{
-											if (true)
-											{
-												SuppressChangeNotifications().DisposeWith(Cleanup);
-												await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
-												await verificationService.CompleteVerification(TestViewModel);
-												await screenManager.GoHome();
-											}
-										}, canSubmit)
-										.DisposeWith(Cleanup);
-			SubmitTest.ThrownExceptions.Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"));
-			PrintTestReport = ReactiveCommand.CreateFromObservable(() => Messages.ShowMessage.Handle("Verifications Report feature not yet implemented.")).DisposeWith(Cleanup);
-
-			//OnChanging.
-			//this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
-			//	.Where(v => v)
-			//	.ObserveOn(RxApp.MainThreadScheduler)
-			//	.Do(async x => await Notifications.ActionMessage.Handle("Submit verified test?"))
-			//	.Subscribe()
-			//	.DisposeWith(Cleanup);
-			//_onChanging.Register(obj => )
-
-			//Activator.Deactivated
 		}
 
 		public ReactiveCommand<Unit, bool> SaveCommand { get; protected set; }
@@ -115,7 +70,49 @@ namespace Prover.Application.Verifications
 		public IScreen HostScreen { get; }
 
 		/// <inheritdoc />
-		public ViewModelActivator Activator { get; } = new ViewModelActivator();
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			SaveCommand = ReactiveCommand.CreateFromTask(async () =>
+										 {
+											 Logger.LogDebug("Saving test...");
+											 var updated = await VerificationService.Save(TestViewModel);
+
+											 if (updated != null)
+											 {
+												 Logger.LogDebug("Saved test successfully");
+												 await Notifications.SnackBarMessage.Handle("SAVED");
+												 return true;
+											 }
+
+											 return false;
+										 })
+										 .DisposeWith(cleanup);
+			SaveCommand.ThrownExceptions.Subscribe().DisposeWith(cleanup);
+
+
+			var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
+								.ObserveOn(RxApp.MainThreadScheduler);
+
+			SubmitTest = ReactiveCommand.CreateFromTask(async () =>
+										{
+											if (true)
+											{
+												SuppressChangeNotifications().DisposeWith(Cleanup);
+												await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+												await VerificationService.CompleteVerification(TestViewModel);
+												await ScreenManager.GoHome();
+											}
+										}, canSubmit)
+										.DisposeWith(cleanup);
+			SubmitTest.ThrownExceptions
+					  .Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"))
+					  .DisposeWith(cleanup);
+
+			PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
+					Messages.ShowMessage.Handle("Verifications Report feature not yet implemented."))
+											 .DisposeWith(cleanup);
+
+		}
 
 
 		/// <inheritdoc />

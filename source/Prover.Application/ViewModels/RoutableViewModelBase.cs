@@ -15,8 +15,6 @@ namespace Prover.Application.ViewModels
 			UrlPathSegment = urlPathSegment;
 
 			CloseView = ReactiveCommand.CreateFromTask(ScreenManager.GoBack);
-
-
 		}
 
 		public IScreenManager ScreenManager { get; protected set; }

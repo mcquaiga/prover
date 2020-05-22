@@ -334,7 +334,7 @@
 
 				<materialDesign:DataGridTextColumn
 					x:Name="ArchivedColumn"
-					Binding="{Binding ArchivedDateTime, Mode=OneTime}"
+					Binding="{Binding Archived, Mode=OneTime}"
 					Header="Archived" />
 
 

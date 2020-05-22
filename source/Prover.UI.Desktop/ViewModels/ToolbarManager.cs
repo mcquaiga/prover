@@ -28,7 +28,6 @@ namespace Prover.UI.Desktop.ViewModels
 			//AppMainMenus = toolbarItems
 			//ToolbarItems = toolbarItems.Where(x => x.ItemType == ToolbarItemType.Module).ToList();
 
-
 			_actionItems.Connect()
 						 .ObserveOn(RxApp.MainThreadScheduler)
 						 .Bind(out var actionItems)
@@ -63,16 +62,10 @@ namespace Prover.UI.Desktop.ViewModels
 			return Disposable.Create(() => { _actionItems.Remove(item); });
 		}
 
-		/*
-		 * 	if (viewModel is IHaveToolbarItems barItems)
-			{
-				_toolbarRemover.Disposable = Disposable.Empty;
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
 
-				var disposables = barItems.ToolbarActionItems.Select(AddToolbarItem).ToList();
-
-				_toolbarRemover.Disposable = new CompositeDisposable(disposables.ToList());
-				//.Prepend(viewModel as IDisposable));
-			}
-		 */
+		}
 	}
 }

@@ -29,7 +29,7 @@ namespace Prover.Application.Services
 
 		public VerificationQueryBuilder IncludeArchived(bool include = true)
 		{
-			_includeArchived = Include(t => t.ArchivedDateTime, include);
+			_includeArchived = Include(t => t.Archived, include);
 			return this;
 		}
 

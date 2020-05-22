@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,14 +31,11 @@ namespace Prover.UI.Desktop.ViewModels
 	//}
 
 
-	internal class ScreenManager : RoutingState, IScreenManager
+	internal class ScreenManager : RoutingState, IScreenManager, IDisposable
 	{
 		private readonly IServiceProvider _services;
-
-		//private readonly SerialDisposable _toolbarRemover = new SerialDisposable();
-		//private IRoutableViewModel _currentViewModel;
-		private IRoutableViewModel _homeViewModel;
 		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+		private IRoutableViewModel _homeViewModel;
 
 		public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager)
 		{
@@ -53,8 +48,7 @@ namespace Prover.UI.Desktop.ViewModels
 
 				if (currentView is IRoutableLifetimeHandler lifetimeHandler)
 				{
-					var linked = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, lifetimeHandler.OnChanging);
-
+					//var linked = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, lifetimeHandler.OnChanging);
 				}
 
 				return Observable.Return(viewModel);
@@ -77,13 +71,16 @@ namespace Prover.UI.Desktop.ViewModels
 			return TryChangeView(model);
 		}
 
+		/// <inheritdoc />
+		public void Dispose()
+		{
+			(_homeViewModel as IDisposable)?.Dispose();
+		}
+
 		public Task GoBack()
 		{
 			var current = this.GetCurrentViewModel();
-
-			NavigateBack.Execute()
-						.Subscribe();
-
+			NavigateBack.Execute().Subscribe();
 			return Task.CompletedTask;
 		}
 
@@ -102,6 +99,13 @@ namespace Prover.UI.Desktop.ViewModels
 			return Task.CompletedTask;
 		}
 
+		private bool CanChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
+		{
+			if (this.GetCurrentViewModel().GetType() == typeof(TViewModel))
+				return false;
+			return true;
+		}
+
 		private Task<TViewModel> TryChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
 		{
 			if (!CanChangeView(viewModel))
@@ -110,22 +114,11 @@ namespace Prover.UI.Desktop.ViewModels
 			if (viewModel is IRoutableLifetimeHandler handler)
 			{
 				//_cancellationTokenSource.
-				handler.OnChanging = _cancellationTokenSource.Token;
+				//handler.OnChanging = _cancellationTokenSource.Token;
 			}
 
-			Navigate.Execute(viewModel)
-					.Subscribe();
-
+			Navigate.Execute(viewModel).Subscribe();
 			return Task.FromResult(viewModel);
-		}
-
-		private bool CanChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
-		{
-			if (this.GetCurrentViewModel().GetType() == typeof(TViewModel))
-				return false;
-
-
-			return true;
 		}
 	}
 }

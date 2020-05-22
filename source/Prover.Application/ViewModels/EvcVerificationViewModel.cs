@@ -43,7 +43,7 @@ namespace Prover.Application.ViewModels
 
 		public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
 
-		//public CorrectionVerificationsViewModel CorrectionVerificationTests { get; } = new CorrectionVerificationsViewModel();
+		//public VerificationResultViewModel Verification { get; set; }
 
 		public SiteInformationViewModel DeviceInfo { get; set; }
 
@@ -55,8 +55,14 @@ namespace Prover.Application.ViewModels
 
 			VerificationTests.Clear();
 			VerificationTests.AddRange(verificationTests.ToArray());
+			//Verification.VerificationTests = VerificationTests;
+		}
 
-			//CorrectionVerificationTests.RefreshTests(VerificationTests.OfType<VerificationTestPointViewModel>().ToList());
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
 
 			RegisterVerificationsForVerified(VerificationTests);
 		}
@@ -67,4 +73,11 @@ namespace Prover.Application.ViewModels
 			VerificationTests.Clear();
 		}
 	}
+
+	//public class VerificationResultViewModel : VerificationViewModel
+	//{
+	//	//public ICollection<VerificationViewModel> VerificationTests { get; set; } = new List<VerificationViewModel>();
+
+	//	//public VolumeViewModelBase VolumeTest => VerificationTests.OfType<VerificationTestPointViewModel>().FirstOrDefault(t => t.Volume != null)?.Volume;
+	//}
 }

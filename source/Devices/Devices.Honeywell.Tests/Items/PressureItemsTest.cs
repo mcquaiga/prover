@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Devices.Core.Interfaces;
 using Devices.Core.Items;
 using Devices.Core.Items.DriveTypes;
 using Devices.Core.Items.ItemGroups;

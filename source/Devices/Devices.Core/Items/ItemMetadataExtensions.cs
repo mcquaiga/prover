@@ -6,182 +6,167 @@ using Devices.Core.Items.Descriptions;
 
 namespace Devices.Core.Items
 {
-    public static class ItemMetadataExtensions
-    {
-        //public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
-        //    IDictionary<int, string> itemValuesDictionary)
-        //{
-        //    var items = ToItemValuesEnumerable(factory.DeviceType, itemValuesDictionary);
-        //    return factory.CreateInstance(items);
-        //}
+	public static class ItemMetadataExtensions
+	{
+		//public static DeviceInstance CreateInstance(this IDeviceInstanceFactory factory,
+		//    IDictionary<int, string> itemValuesDictionary)
+		//{
+		//    var items = ToItemValuesEnumerable(factory.DeviceType, itemValuesDictionary);
+		//    return factory.CreateInstance(items);
+		//}
 
-    
-        public static DeviceInstance CreateInstance(this DeviceType deviceType,
-            IDictionary<string, string> itemValuesDictionary)
-        {
-            var items = deviceType.ToItemValues(itemValuesDictionary);
-            return deviceType.Factory.CreateInstance(items);
-        }
 
-        public static DeviceInstance CreateInstance(this DeviceType deviceType,
-            IEnumerable<ItemValue> itemValues)
-        {
-            return deviceType.Factory.CreateInstance(itemValues);
-        }
-        public static DeviceInstance CreateInstance(this DeviceType deviceType,
-            IDictionary<int, string> itemValuesDictionary)
-        {
-            var items = deviceType.ToItemValues(itemValuesDictionary);
-            return deviceType.Factory.CreateInstance(items);
-        }
 
-        public static IEnumerable<ItemMetadata> FrequencyTestItems(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Where(i => i.IsFrequencyTest == true);
-        }
 
-        public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Select(i => i.Number);
-        }
+		public static IEnumerable<ItemMetadata> FrequencyTestItems(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Where(i => i.IsFrequencyTest == true);
+		}
 
-        /// <summary>
-        ///     Returns the item number of the first instance found in the collection
-        /// </summary>
-        /// <param name="items">Items list</param>
-        /// <param name="code">
-        ///     Code used to identify the item number - these are set in the ItemDefinition.xml files
-        /// </param>
-        /// <returns></returns>
-        public static int GetItem(this IEnumerable<ItemMetadata> items, string code)
-        {
-            var firstOrDefault = items.FirstOrDefault(i => i.Code == code);
+		public static IEnumerable<int> GetAllItemNumbers(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Select(i => i.Number);
+		}
 
-            if (firstOrDefault == null)
-                throw new Exception($"Item Code {code} could not be found in item collection.");
+		/// <summary>
+		///     Returns the item number of the first instance found in the collection
+		/// </summary>
+		/// <param name="items">Items list</param>
+		/// <param name="code">
+		///     Code used to identify the item number - these are set in the ItemDefinition.xml files
+		/// </param>
+		/// <returns></returns>
+		public static int GetItem(this IEnumerable<ItemMetadata> items, string code)
+		{
+			var firstOrDefault = items.FirstOrDefault(i => i.Code == code);
 
-            return firstOrDefault.Number;
-        }
+			if (firstOrDefault == null)
+				throw new Exception($"Item Code {code} could not be found in item collection.");
 
-        public static ItemMetadata GetItem(this IEnumerable<ItemMetadata> items, int itemNumber)
-        {
-            return items.FirstOrDefault(i => i.Number == itemNumber);
-        }
+			return firstOrDefault.Number;
+		}
 
-        public static T GetItem<T>(this IEnumerable<ItemMetadata> items, string code) where T : ItemMetadata
-        {
-            return (T) items.FirstOrDefault(i => i.Code == code);
-        }
+		public static ItemMetadata GetItem(this IEnumerable<ItemMetadata> items, int itemNumber)
+		{
+			return items.FirstOrDefault(i => i.Number == itemNumber);
+		}
 
-        public static IEnumerable<ItemDescription> GetItemDescriptions(this IEnumerable<ItemMetadata> items,
-            int itemNumber)
-        {
-            return items.FirstOrDefault(i => i.Number == itemNumber)?.ItemDescriptions;
-        }
+		public static T GetItem<T>(this IEnumerable<ItemMetadata> items, string code) where T : ItemMetadata
+		{
+			return (T)items.FirstOrDefault(i => i.Code == code);
+		}
 
-        public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
-            string code)
-        {
-            if (itemValues == null || !itemValues.Any()) throw new ArgumentNullException(nameof(itemValues));
+		public static IEnumerable<ItemDescription> GetItemDescriptions(this IEnumerable<ItemMetadata> items,
+			int itemNumber)
+		{
+			return items.FirstOrDefault(i => i.Number == itemNumber)?.ItemDescriptions;
+		}
 
-            var itemNumber = items.GetItem(code);
+		public static string GetItemString(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
+			string code)
+		{
+			if (itemValues == null || !itemValues.Any())
+				throw new ArgumentNullException(nameof(itemValues));
 
-            var result = itemValues.FirstOrDefault(x => x.Key == itemNumber).Value;
-            if (result == null) throw new KeyNotFoundException($"Item value for {code} and #{itemNumber} not found.");
+			var itemNumber = items.GetItem(code);
 
-            return result;
-        }
+			var result = itemValues.FirstOrDefault(x => x.Key == itemNumber).Value;
+			if (result == null)
+				throw new KeyNotFoundException($"Item value for {code} and #{itemNumber} not found.");
 
-        public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
-            string code)
-        {
-            var result = items.GetItemString(itemValues, code);
-            return Decimal.Parse(result);
-        }
+			return result;
+		}
 
-        public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Where(i => i.IsPressureTest == true);
-        }
+		public static decimal GetItemValue(this IEnumerable<ItemMetadata> items, Dictionary<int, string> itemValues,
+			string code)
+		{
+			var result = items.GetItemString(itemValues, code);
+			return Decimal.Parse(result);
+		}
 
-        public static IEnumerable<ItemMetadata> PulseOutputItems(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Where(i => i.Number == 5 || i.Number == 6 || i.Number == 7);
-        }
+		public static IEnumerable<ItemMetadata> PressureItems(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Where(i => i.IsPressureTest == true);
+		}
 
-        public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Where(i => i.IsTemperatureTest == true);
-        }
+		public static IEnumerable<ItemMetadata> PulseOutputItems(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Where(i => i.Number == 5 || i.Number == 6 || i.Number == 7);
+		}
 
-        public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
-            IDictionary<int, string> itemValuesDictionary)
-        {
-            return deviceType.Items.Join(itemValuesDictionary,
-                x => x.Number,
-                y => y.Key,
-                (im, value) => ItemValue.Create(im, value.Value));
-        }
+		public static IEnumerable<ItemMetadata> TemperatureItems(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Where(i => i.IsTemperatureTest == true);
+		}
 
-        public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
-            IDictionary<string, string> itemValuesDictionary)
-        {
-            var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
-            return deviceType.ToItemValues(dict);
-        }
-        
-        public static ICollection<ItemValue> ToItemValues(this DeviceInstance device,
-            IDictionary<string, string> itemValuesDictionary)
-        {
-            var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
-            return device.DeviceType.ToItemValues(dict).ToList();
-        }
+		public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
+			IDictionary<int, string> itemValuesDictionary)
+		{
+			return deviceType.Items.Join(itemValuesDictionary,
+				x => x.Number,
+				y => y.Key,
+				(im, value) => ItemValue.Create(im, value.Value));
+		}
 
-        public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)
-        {
-            number = -1;
-            var firstOrDefault = items.FirstOrDefault(i => i.Code == code);
+		public static IEnumerable<ItemValue> ToItemValues(this DeviceType deviceType,
+			IDictionary<string, string> itemValuesDictionary)
+		{
+			var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
+			return deviceType.ToItemValues(dict);
+		}
 
-            if (firstOrDefault == null)
-                return false;
+		public static ICollection<ItemValue> ToItemValues(this DeviceInstance device,
+			IDictionary<string, string> itemValuesDictionary)
+		{
+			var dict = itemValuesDictionary.ToDictionary(k => Int32.Parse(k.Key), v => v.Value);
+			return device.DeviceType.ToItemValues(dict).ToList();
+		}
 
-            number = firstOrDefault.Number;
-            return true;
-        }
+		public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out int number)
+		{
+			number = -1;
+			var firstOrDefault = items.FirstOrDefault(i => i.Code == code);
 
-        public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out ItemMetadata item)
-        {
-            item = items.FirstOrDefault(i => i.Code == code);
+			if (firstOrDefault == null)
+				return false;
 
-            if (item == null)
-                return false;
+			number = firstOrDefault.Number;
+			return true;
+		}
 
-            return true;
-        }
+		public static bool TryGetItem(this IEnumerable<ItemMetadata> items, string code, out ItemMetadata item)
+		{
+			item = items.FirstOrDefault(i => i.Code == code);
 
-        public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
-        {
-            return items.Where(i => i.IsVolumeTest == true);
-        }
+			if (item == null)
+				return false;
 
-        public static ItemMetadata GetLivePressureItem(this DeviceType deviceType)
-        {
-            return deviceType.Items.FirstOrDefault(i => i.IsLiveReadPressure == true);
-        }
+			return true;
+		}
 
-        public static ItemMetadata GetLivePressureItem(this DeviceInstance device)
-        {
-            return device.DeviceType.GetLivePressureItem();
-        }
+		public static IEnumerable<ItemMetadata> VolumeItems(this IEnumerable<ItemMetadata> items)
+		{
+			return items.Where(i => i.IsVolumeTest == true);
+		}
 
-        public static ItemMetadata GetLiveTemperatureItem(this DeviceType deviceType)
-        {
-            return deviceType.Items.FirstOrDefault(i => i.IsLiveReadTemperature == true);
-        }
+		public static ItemMetadata GetLivePressureItem(this DeviceType deviceType)
+		{
+			return deviceType.Items.FirstOrDefault(i => i.IsLiveReadPressure == true);
+		}
 
-        public static ItemMetadata GetLiveTemperatureItem(this DeviceInstance device)
-        {
-            return device.DeviceType.GetLiveTemperatureItem();
-        }
-    }
+		public static ItemMetadata GetLivePressureItem(this DeviceInstance device)
+		{
+			return device.DeviceType.GetLivePressureItem();
+		}
+
+		public static ItemMetadata GetLiveTemperatureItem(this DeviceType deviceType)
+		{
+			return deviceType.Items.FirstOrDefault(i => i.IsLiveReadTemperature == true);
+		}
+
+		public static ItemMetadata GetLiveTemperatureItem(this DeviceInstance device)
+		{
+			return device.DeviceType.GetLiveTemperatureItem();
+		}
+	}
 }
