@@ -74,7 +74,7 @@ jobs:
         basePath: '$(buildDir)'
 
     - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
-      artifact: 'EvcProver.$(Build.BuildNumber).nupkg'
+      artifact: 'Packages'
     # - task: NuGetCommand@2
     #   inputs:
     #     command: 'push'
