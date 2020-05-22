@@ -23,6 +23,8 @@ variables:
   project: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
   buildPlatform: 'Any CPU'
   verbosityLevel: 'minimal'
+  buildDir: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+  testsDir: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
 
 
 jobs:
@@ -44,21 +46,40 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**   
           !**\Tests.Shared.dll  
-        searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        searchFolder: '$(testsDir)'
         rerunFailedTests: True
         otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
 
     - task: PublishBuildArtifacts@1
       displayName: Publish Binaries Artifact
       inputs:
-        PathtoPublish: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+        PathtoPublish: '$(buildDir)'
         ArtifactName: 'Binaries'
         publishLocation: 'Container'
 
     - task: PublishBuildArtifacts@1
       displayName: Publish Test Artifact
       inputs:
-        PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+        PathtoPublish: '$(testsDir)'
         ArtifactName: 'Tests'
         publishLocation: 'Container'
-          
+
+  - job: Package
+    steps:
+         - task: NuGetCommand@2
+           displayName: "Create Nuget package "
+           inputs:
+             command: 'pack'
+             packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
+             packDestination: '$(Build.ArtifactStagingDirectory)'
+             versioningScheme: 'byBuildNumber'
+             basePath: '$(buildDir)'
+            
+         - task: NuGetCommand@2
+           inputs:
+              command: 'push'
+              packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+              nuGetFeedType: 'internal'
+              publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/36e4609e-14f4-4c9b-90f8-4bd16bba8371'
+    
+
