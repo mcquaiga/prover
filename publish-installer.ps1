@@ -1,2 +1,14 @@
 
-Invoke-Expression "& az artifacts universal publish --organization https://mcquaiga.visualstudio.com/ --project=EvcProver --scope project --feed Tools --name install-tools --version 1.0.5 --description 'EvcProver installer tools' --path .\install\"
+Param(
+    
+    [Parameter(Mandatory)]
+    [string] $version,
+    
+    $project = "EvcProver",
+    $feed = "Tools",
+    $packageName= "install-tools",
+    $localPath = ".\install\",
+    $description = "EvcProver installer tools"
+)
+
+Invoke-Expression "& az artifacts universal publish --organization https://mcquaiga.visualstudio.com/ --project='$project' --scope project --feed '$feed' --name '$packageName' --version '$version' --description '$description' --path '$localPath'"
