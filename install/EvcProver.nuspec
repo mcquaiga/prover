@@ -10,10 +10,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright></copyright>
     <dependencies>
-      <group targetFramework="net45"></group>
+      <group targetFramework="netcoreapp3.1"></group>
     </dependencies>
   </metadata>
   <files>
-    <file src="**\*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+    <file src="**\*.*" target="lib\netcoreapp3.1" exclude="*.pdb;*.nupkg;*.vshost.*"/>
   </files>
 </package>
