@@ -140,11 +140,13 @@ namespace Prover.UI.Desktop {
 
 	public partial class App {
 
+		~App() {
 
-		public static string Title { get; } = "EVC Prover" + $" - v{VersionNumber}" + $" - {AppEnvironment}";
-		public static string VersionNumber { get; } = GetVersionNumber();
-
-		public static string AppEnvironment { get; private set; } = "Producation";
+			AppEnvironment = "Production";
+		}
+		public static string Title => "EVC Prover" + $" - v{VersionNumber}" + $" - {AppEnvironment}";
+		public static string VersionNumber => GetVersionNumber();
+		public static string AppEnvironment { get; private set; }
 
 		private static string GetVersionNumber() {
 			var assembly = Assembly.GetExecutingAssembly();
@@ -154,6 +156,7 @@ namespace Prover.UI.Desktop {
 
 		private void SetAppInfo() {
 			AppEnvironment = AppHost.Services.GetService<IHostEnvironment>().EnvironmentName;
+
 		}
 	}
 }
