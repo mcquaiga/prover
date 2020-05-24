@@ -110,8 +110,8 @@ namespace Prover.Updater {
 		}
 
 		public GitHubUpdateManager() : base() {
-			_updateExePath = Extensions.PathCombine((string)GetDefaultUpdateExePath(), _updateExePath);
-			_downloadPath = Extensions.PathCombine((string)GetDefaultUpdateExePath(), _downloadPath);
+			_updateExePath = GetDefaultUpdateExePath().PathCombine(_updateExePath);
+			_downloadPath = GetDefaultUpdateExePath().PathCombine(_downloadPath);
 			_process = new ProcessStartInfo(_updateExePath);
 		}
 
