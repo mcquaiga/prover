@@ -55,7 +55,11 @@ namespace Prover.Updater {
 			Process.Start(_process);
 		}
 
-		private string GetDefaultUpdateExePath() => Directory.GetParent(Assembly.GetEntryAssembly().Location).FullName;
+		private string GetDefaultUpdateExePath() {
+			var basePath = Directory.GetParent(Assembly.GetEntryAssembly().Location).Parent;
+
+			return basePath.FullName;
+		}
 
 		private GitHubClient GetGitHubClient() {
 			var client = new GitHubClient(new ProductHeaderValue("evcprover-updater"));
