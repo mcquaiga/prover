@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,116 +13,63 @@ using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Startup;
 using Prover.UI.Desktop.ViewModels;
 using Prover.UI.Desktop.Views;
+using ReactiveUI;
 
-namespace Prover.UI.Desktop
-{
-	internal static class Program
-	{
-		private static App App;
-		private static MainWindow _mainWindow;
-		private static IHost _host;
+namespace Prover.UI.Desktop {
+	internal static class Program {
+		private static App _app;
 
 		/// <summary>
 		///     The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		public static void Main(string[] args)
-		{
+		public static void Main(string[] args) {
 			SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
 
-			using (var splashScreen = new StartScreen())
-			{
-				splashScreen.Show();
+			var startup = App.Starting(async () => {
+				await AppBootstrapper.StartAsync(args);
+				return AppBootstrapper.Instance;
+			});
+			HandleExceptions(startup);
+			_app = startup.Result;
 
-				var task = Initialize(args);
-				HandleExceptions(task);
-				_host = task.Result;
+			//AppBootstrapper.Instance.LifetimeHost.ApplicationStopped.Register(async () => {
+			//	//await AppBootstrapper.Instance.StopAsync();
+			//	//App.Shutdown();
+			//}, true);
 
-				App = new App { AppHost = _host, ShutdownMode = ShutdownMode.OnExplicitShutdown };
-				App.InitializeComponent();
-
-				splashScreen.Owner = LoadMainWindow();
-				splashScreen.Close();
-			}
-
-			_host.Services.GetService<UnhandledExceptionHandler>();
-			App.Run();
+			_app.AppMainWindow
+			   .Events().Closed
+			   .Select(_ => Unit.Default)
+			   .InvokeCommand(ReactiveCommand.CreateFromTask(Shutdown));
+			AppBootstrapper.Instance.AppHost.Services.GetService<UnhandledExceptionHandler>();
+			_app.Run();
 		}
-
-		public static event EventHandler<EventArgs> ExitRequested;
-
-		private static async void HandleExceptions(Task task)
-		{
-			try
-			{
+		private static async void HandleExceptions(Task task) {
+			try {
 				await Task.Yield();
 				await task;
 			}
-			catch (AggregateException aggEx)
-			{
+			catch (AggregateException aggEx) {
 				foreach (var ex in aggEx.InnerExceptions)
 					Debug.WriteLine(ex.Message);
-				App.Shutdown();
+				_app.Shutdown();
 			}
 
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				Debug.WriteLine(ex.Message);
-				App.Shutdown();
+				_app.Shutdown();
 			}
 		}
 
-		//[STAThread]
-		private static async Task<IHost> Initialize(string[] args)
-		{
-			var bootstrapper =
-					await new AppBootstrapper().StartAsync(args);
+		public static Task Shutdown() {
 
-			return bootstrapper.AppHost;
-		}
-
-		private static MainWindow LoadMainWindow()
-		{
-			var model = _host.Services.GetService<MainViewModel>();
-			_mainWindow = _host.Services.GetService<MainWindow>();
-			_mainWindow.ViewModel = model;
-
-			var home = _host.Services.GetService<HomeViewModel>();
-			model.ShowHome(home);
-
-			_mainWindow.Closed += (sender, args) => { ShutdownApp(); };
-
-			_mainWindow.InitializeComponent();
-			_mainWindow.Show();
-
-			return _mainWindow;
-		}
-
-		private static void OnExitRequested(EventArgs e) => ExitRequested?.Invoke(_mainWindow, e);
-
-		private static void ShutdownApp()
-		{
-			(_mainWindow?.ViewModel as IDisposable)?.Dispose();
-			ShutdownHostedServices();
-			App.Shutdown();
-		}
-
-		private static void ShutdownHostedServices()
-		{
-			using (_host)
-			{
-				var services = _host.Services.GetServices<IHostedService>().ToList();
-
-				var t = Task.WhenAll(services.Select(s =>
-					Task.Run(() => s.StopAsync(new CancellationToken()))));
-
-				t.Wait();
+			using (var host = AppBootstrapper.Instance) {
+				(_app.AppMainWindow as IDisposable)?.Dispose();
+				host.StopAsync();
+				_app.Shutdown();
 			}
-		}
-
-		private static void viewModel_CloseRequested(object sender, EventArgs e)
-		{
-			ShutdownApp();
+			return Task.CompletedTask;
 		}
 	}
 }

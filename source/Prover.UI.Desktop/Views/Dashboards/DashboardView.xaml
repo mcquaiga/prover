@@ -94,8 +94,8 @@
 
 			<ListBox
 				x:Name="DateFiltersControl"
-				Grid.Column="1"
-				Margin="15,5"
+				Grid.Column="2"
+				Margin="8,5"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Center"
 				Style="{StaticResource MaterialDesignListBox}">
@@ -141,21 +141,11 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 			<StackPanel
-				Grid.Column="2"
+				Grid.Column="1"
 				Margin="15"
+				HorizontalAlignment="Left"
 				VerticalAlignment="Center"
-				DockPanel.Dock="Right"
 				Orientation="Horizontal">
-				<StackPanel
-					x:Name="IsLoadingStateContent"
-					Margin="30,0"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					Orientation="Vertical"
-					Visibility="Collapsed">
-					<TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="Loading..." />
-					<ProgressBar IsIndeterminate="True" Style="{StaticResource MaterialDesignLinearProgressBar}" />
-				</StackPanel>
 
 				<Button
 					x:Name="RefreshDataButton"
@@ -174,6 +164,18 @@
 							Style="{StaticResource MainToolbarPackIconStyle}" />
 					</Button.Content>-->
 				</Button>
+				<StackPanel
+					x:Name="IsLoadingStateContent"
+					Margin="5,4"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Orientation="Vertical"
+					Visibility="Collapsed">
+					<TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="Loading..." />
+					<ProgressBar IsIndeterminate="True" Style="{StaticResource MaterialDesignLinearProgressBar}" />
+				</StackPanel>
+
+
 			</StackPanel>
 
 		</Grid>

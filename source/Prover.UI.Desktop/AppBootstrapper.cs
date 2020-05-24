@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,102 +12,102 @@ using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Common;
 using Prover.UI.Desktop.Extensions;
 using Prover.UI.Desktop.Startup;
-using System.Threading;
-using System.Threading.Tasks;
-using ReactiveUI;
-using Splat;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-using NullLogger = Microsoft.Extensions.Logging.Abstractions.NullLogger;
+using Prover.Updater;
 
-namespace Prover.UI.Desktop
-{
-	public class AppBootstrapper : IHostApplicationLifetime
+namespace Prover.UI.Desktop {
+	public class AppBootstrapper : IDisposable
+	//		: IHostApplicationLifetime 
 	{
-		public static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
-		private ILogger _logger = NullLogger.Instance;
+		public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+		private readonly ILogger<AppBootstrapper> _logger;
 
-		public IHost AppHost { get; private set; }
+		public AppBootstrapper(IServiceProvider provider, IHost appHost) {
+			_logger = provider.GetService<ILogger<AppBootstrapper>>();
+			Provider = provider;
+			AppHost = appHost;
 
-		public CancellationToken ApplicationStarted { get; } = new CancellationToken();
-		public CancellationToken ApplicationStopping { get; } = new CancellationToken();
-		public CancellationToken ApplicationStopped { get; } = new CancellationToken();
-
-		public async Task<AppBootstrapper> StartAsync(string[] args)
-		{
-			AppHost = ConfigureBuilder(this, args);
-
-			await AppHost.StartAsync(CancellationTokenSource.Token);
-
-			ProverLogging.Initialize(AppHost.Services);
-
-			return this;
+			LifetimeHost = Provider.GetService<IHostApplicationLifetime>();
+			//LifetimeHost.ApplicationStarted.Register(() => Task.Run(() => OnApplicationStarted()), true);
+			//LifetimeHost.ApplicationStopping.Register(OnApplicationStopping, true);
+			//LifetimeHost.ApplicationStopped.Register(OnApplicationStopped, true);
 		}
 
-		public void StopApplication()
-		{
-			_logger.LogDebug("Stopping Application.");
-			AppHost.StopAsync(ApplicationStopped);
+		public static AppBootstrapper Instance { get; private set; }
+
+		public IServiceProvider Provider { get; }
+		public IHost AppHost { get; }
+		public IHostApplicationLifetime LifetimeHost { get; }
+
+		public static AppBootstrapper Configure(string[] args) {
+			var host = ConfigureBuilder();
+			Instance = ActivatorUtilities.CreateInstance<AppBootstrapper>(host.Services);
+			return Instance;
 		}
 
-		private static IHost ConfigureBuilder(AppBootstrapper booter, string[] args)
-		{
+		public static void ConfigureAppServices(HostBuilderContext host, IServiceCollection services) {
+			services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
+			services.AddSingleton<UnhandledExceptionHandler>();
+			host.AddModuleServices(services);
+			Settings.AddServices(services, host);
+			StorageStartup.AddServices(services, host);
+			UserInterface.AddServices(services, host);
+			DeviceServices.AddServices(services, host);
+			UpdaterService.AddServices(services, host);
+		}
+
+		public static async Task StartAsync(string[] args) {
+			Configure(args);
+			await Instance.StartAsync();
+			await Instance.OnApplicationStarted();
+		}
+
+		public Task StartAsync() => AppHost.StartAsync(CancellationTokenSource.Token);
+
+		public void StopAsync() {
+			_logger.LogDebug("Stopping Application ...");
+
+			if (CancellationTokenSource.IsCancellationRequested)
+				CancellationTokenSource = new CancellationTokenSource();
+
+			var token = CancellationTokenSource.Token;
+
+			var services = AppHost.Services.GetServices<IHostedService>();
+			var t = Task.WhenAll(services.Select(s => Task.Run(() => s.StopAsync(new CancellationToken()))));
+			t.Wait();
+			//return Task.CompletedTask;
+		}
+
+		private static IHost ConfigureBuilder() {
 			var host = Host.CreateDefaultBuilder()
+						   .ConfigureHostConfiguration(config => { config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json"); })
+						   .ConfigureAppConfiguration((host, config) => {
+							   host.DiscoverModules();
+							   host.AddModuleConfigurations(config);
+						   })
+						   .ConfigureLogging((host, log) => {
+							   log.ClearProviders();
+							   log.Services.AddSplatLogging();
 
-					   .ConfigureHostConfiguration(config => { config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json"); })
-
-					   .ConfigureAppConfiguration((host, config) =>
-					   {
-						   host.DiscoverModules();
-						   host.AddModuleConfigurations(config);
-					   })
-
-					   .ConfigureLogging((host, log) =>
-					   {
-						   log.ClearProviders();
-						   log.Services.AddSplatLogging();
-
-						   if (host.HostingEnvironment.IsProduction())
-							   log.AddEventLog();
-						   else
-							   log.AddDebug();
-					   })
-
-					   .ConfigureServices((host, services) =>
-					   {
-						   services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
-						   services.AddSingleton<UnhandledExceptionHandler>();
-
-						   host.AddModuleServices(services);
-
-						   Settings.AddServices(services, host);
-						   StorageStartup.AddServices(services, host);
-						   UserInterface.AddServices(services, host);
-						   DeviceServices.AddServices(services, host);
-
-					   })
-					   .Build();
-
+							   if (host.HostingEnvironment.IsProduction())
+								   log.AddEventLog();
+							   else
+								   log.AddDebug();
+						   })
+						   .ConfigureServices((host, services) => { ConfigureAppServices(host, services); })
+						   .Build();
 			host.Services.UseMicrosoftDependencyResolver();
-
 			return host;
 		}
 
-		//private void InitializeLogging()
-		//{
-		//	var logFactory = AppHost.Services.GetService<ILoggerFactory>();
-		//	ProverLogging.LogFactory = logFactory;
+		private Task OnApplicationStarted() {
+			ProverLogging.Initialize(AppHost.Services);
+			return Task.CompletedTask;
+		}
 
-		//	_logger = logFactory.CreateLogger<AppBootstrapper>();
 
-		//	var config = AppHost.Services.GetService<IConfiguration>();
-		//	var host = AppHost.Services.GetService<IHostEnvironment>();
-
-		//	_logger.LogInformation($"Loggers Hosting App Name: {host.ApplicationName}");
-		//	_logger.LogInformation($"Loggers Hosting Env: {host.EnvironmentName}");
-
-		//	var level = config.GetValue<LogLevel>("Logging:LogLevel:Default");
-		//	_logger.LogInformation($"Log Level = {level}");
-		//}
+		/// <inheritdoc />
+		public void Dispose() {
+			AppHost?.Dispose();
+		}
 	}
 }
