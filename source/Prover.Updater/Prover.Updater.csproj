@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 

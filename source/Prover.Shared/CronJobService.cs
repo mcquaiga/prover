@@ -44,10 +44,6 @@ namespace Prover.UI.Desktop.Common {
 			//ScheduleWithTimer(cancellationToken);
 
 			return Task.CompletedTask;
-			//await DoWork(cancellationToken);
-			//await ScheduleJob(cancellationToken);
-
-
 		}
 
 		public abstract Task DoWork(CancellationToken cancellationToken);
@@ -89,6 +85,7 @@ namespace Prover.UI.Desktop.Common {
 										 .Select(_ => Observable.StartAsync(workTask))
 										 .ObserveOn(scheduler)
 										 .SubscribeOn(scheduler)
+										 .DelaySubscription(TimeSpan.FromSeconds(20))
 										 .Subscribe();
 				disposer.Add(schedule);
 

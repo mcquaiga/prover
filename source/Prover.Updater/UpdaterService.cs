@@ -13,37 +13,43 @@ using Prover.UI.Desktop.Common;
 
 namespace Prover.Updater {
 	public partial class UpdaterService : CronJobService {
-		private const string AppSettingsReleasesConfigKey = "Releases:Path";
-		private const string AppSettingsUpdateScheduleKey = "Releases:UpdateSchedule";
+		private const string AutoUpdateConfigKey = "AutoUpdate";
+		//private const string AppSettingsUpdateScheduleKey = "Releases:UpdateSchedule";
 		private readonly ILogger<UpdaterService> _logger;
 		private CancellationTokenSource _cancellationSource = new CancellationTokenSource();
-		private readonly GitHubUpdateManager _gitHubUpdateManager;
+		private readonly GitHubUpdateManager _updateManager;
 
 		public UpdaterService(ILogger<UpdaterService> logger, IHostApplicationLifetime host, CronExpression schedule) : base(schedule) {
 			_logger = logger ?? NullLogger<UpdaterService>.Instance;
-			_gitHubUpdateManager = new GitHubUpdateManager();
+			_updateManager = new GitHubUpdateManager();
 
 			host.ApplicationStarted.Register(() => {
 				//Task.Run(() => DoWork(_cancellationSource.Token));
 			}, true);
 		}
 
-		public override Task DoWork(CancellationToken cancellationToken) {
-			if (_gitHubUpdateManager.Status == HealthStatus.Critical) {
-				return StopAsync(cancellationToken);
+		public override async Task DoWork(CancellationToken cancellationToken) {
+			if (_updateManager.Status == HealthStatus.Critical) {
+				await StopAsync(cancellationToken);
 			}
 
-			return CheckForUpdate(cancellationToken);
-		}
-
-		private Task CheckForUpdate(CancellationToken cancellationToken) {
+			_logger.LogInformation("Checking for updates....");
 			try {
-				_logger.LogInformation("Checking for updates....");
-				return _gitHubUpdateManager.Update(cancellationToken);
+
+				if (await _updateManager.CheckForUpdate()) {
+					await _updateManager.Update(cancellationToken);
+					_logger.LogInformation("Update finished!");
+				}
 			}
 			catch (Exception ex) {
 				_logger.LogError(ex, "An error occured checking for updates.");
 			}
+		}
+
+		private Task CheckForUpdate(CancellationToken cancellationToken) {
+
+			Task.Run(() => _updateManager.Update(cancellationToken));
+
 
 			return Task.CompletedTask;
 		}
@@ -57,9 +63,11 @@ namespace Prover.Updater {
 
 	public partial class UpdaterService {
 		public static void AddServices(IServiceCollection services, HostBuilderContext host) {
-			//var path = host.Configuration.GetValue<string>(AppSettingsReleasesConfigKey);
+			var runUpdater = host.Configuration.GetValue<bool>(AutoUpdateConfigKey);
 			//var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
-			services.AddHostedService(c => ActivatorUtilities.CreateInstance<UpdaterService>(c, CronSchedules.Hourly));
+
+			if (runUpdater)
+				services.AddHostedService(c => ActivatorUtilities.CreateInstance<UpdaterService>(c, CronSchedules.Hourly));
 		}
 	}
 }

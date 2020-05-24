@@ -7,23 +7,26 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Prover.Updater.Tests {
+
 	[TestClass()]
 	public class UpdaterServiceTests {
-		[TestMethod()]
-		public async Task UpdaterServiceTest() {
-			var updater = new GitHubUpdateManager();
+		private static GitHubUpdateManager _updater = new GitHubUpdateManager();
 
-			await updater.Update(new CancellationToken());
+		[TestMethod()]
+		public async Task CheckForUpdateTest() {
+
+			Assert.IsTrue(await _updater.CheckForUpdate());
 		}
 
 		[TestMethod()]
-		public void AddServicesTest() {
-			Assert.Fail();
+		public async Task GetLatestReleaseTest() {
+			var ver = await _updater.GetLatestVersion();
+			Assert.IsTrue(ver != null);
 		}
 
 		[TestMethod()]
-		public void DoWorkTest() {
-			Assert.Fail();
+		public async Task DownloadAssets() {
+			await _updater.DownloadLatestAssets(".\\downloads", new CancellationToken());
 		}
 	}
 }

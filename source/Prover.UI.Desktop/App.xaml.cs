@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prover.Shared;
 using Prover.UI.Desktop.Startup;
 using Prover.UI.Desktop.ViewModels;
 using Prover.UI.Desktop.Views;
@@ -145,14 +146,9 @@ namespace Prover.UI.Desktop {
 			AppEnvironment = "Production";
 		}
 		public static string Title => "EVC Prover" + $" - v{VersionNumber}" + $" - {AppEnvironment}";
-		public static string VersionNumber => GetVersionNumber();
+		public static string VersionNumber => ProverApp.GetVersionNumber();
 		public static string AppEnvironment { get; private set; }
 
-		private static string GetVersionNumber() {
-			var assembly = Assembly.GetExecutingAssembly();
-			var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-			return fileVersionInfo.FileVersion;
-		}
 
 		private void SetAppInfo() {
 			AppEnvironment = AppHost.Services.GetService<IHostEnvironment>().EnvironmentName;
