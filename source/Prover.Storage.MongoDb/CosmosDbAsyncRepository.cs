@@ -20,13 +20,11 @@ using Prover.Application.Services;
 using System.Diagnostics;
 using DynamicData;
 
-namespace Prover.Storage.MongoDb
-{
+namespace Prover.Storage.MongoDb {
 	public class CosmosDbAsyncRepository<T> : IAsyncRepository<T>, IQueryableRepository<T>, IEventsSubscriber, IRequireInitialization
-		where T : AggregateRoot
-	{
-		private static readonly string EndPointUrl = "https://4c9731fb-0ee0-4-231-b9ee.documents.azure.com:443/";
-		private static readonly string AuthKey = "mgncs2xyrkkNnypoLptN4wtE9qvYYYHt8dX7hD6s5CkRU0moi5Sx95KyXTlbPiZVG9WdrzoLfLy5QvzZVnxfZg==";
+		where T : AggregateRoot {
+		private static readonly string EndPointUrl = "https://evcprover-data.documents.azure.com:443/";
+		private static readonly string AuthKey = "16EVsdrDAaRg8MHmmhsTiaM19iqcV1wQ2EMiGdMPb5cNdUs0LvDfuT09YjL910TwT3OznpBgembfVz1R3IbjUQ==";
 
 		private static readonly string databaseId = "EvcProver";
 		private static readonly string containerId = typeof(T).Name;
@@ -42,10 +40,8 @@ namespace Prover.Storage.MongoDb
 		//private IObservable<Unit> _initializedObservable;
 		private bool _initialized = false;
 
-		public CosmosDbAsyncRepository()
-		{
-			CosmosClientOptions clientOptions = new CosmosClientOptions()
-			{
+		public CosmosDbAsyncRepository() {
+			CosmosClientOptions clientOptions = new CosmosClientOptions() {
 				Serializer = new CosmosJsonNetSerializer()
 			};
 
@@ -62,14 +58,12 @@ namespace Prover.Storage.MongoDb
 
 		public IObservable<Unit> Initialized => _isInitialized.Where(i => i).Select(_ => Unit.Default);
 		/// <inheritdoc />
-		public async Task<T> UpsertAsync(T entity)
-		{
+		public async Task<T> UpsertAsync(T entity) {
 			await WaitForInit();
 
 			var partitionKey = new PartitionKey((entity as EvcVerificationTest).Device.DeviceType.Id.ToString());
 			T result = default;
-			try
-			{
+			try {
 				var response = await _container.UpsertItemAsync<T>(entity, partitionKey);
 
 				//var response = await container.ReadItemAsync<T>(entity.Id.ToString(), partitionKey);
@@ -80,8 +74,7 @@ namespace Prover.Storage.MongoDb
 
 				result = response.Resource;
 			}
-			catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-			{
+			catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound) {
 				var response = await _container.UpsertItemAsync<T>(entity, partitionKey);
 				_logger.LogDebug("Created item with id: {0}", response.Resource.Id);
 
@@ -104,8 +97,7 @@ namespace Prover.Storage.MongoDb
 		public Task<int> CountAsync(IQuerySpecification<T> spec) => throw new NotImplementedException();
 
 		/// <inheritdoc />
-		public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null)
-		{
+		public async Task<IEnumerable<T>> Query(Expression<Func<T, bool>> predicate = null) {
 			await WaitForInit();
 
 			var sqlQueryText = "SELECT * FROM c";
@@ -122,8 +114,7 @@ namespace Prover.Storage.MongoDb
 		}
 
 		/// <inheritdoc />
-		public async Task<IEnumerable<T>> QueryAsync(IQuerySpecification<T> specification)
-		{
+		public async Task<IEnumerable<T>> QueryAsync(IQuerySpecification<T> specification) {
 			await WaitForInit();
 			var query = ApplySpecification(specification);
 			return query.AsEnumerable();
@@ -132,14 +123,11 @@ namespace Prover.Storage.MongoDb
 		/// <inheritdoc />
 		//public IQbservable<T> QueryObservable() => throw new NotImplementedException();
 
-		public IObservable<T> QueryObservable(IQuerySpecification<T> specification)
-		{
-			return Observable.Create<T>(async obs =>
-			{
+		public IObservable<T> QueryObservable(IQuerySpecification<T> specification) {
+			return Observable.Create<T>(async obs => {
 				var disposer = new CompositeDisposable();
 
-				void GetItems()
-				{
+				void GetItems() {
 					var query = ApplySpecification(specification);
 					//specification.CompileSpecification();
 
@@ -151,23 +139,20 @@ namespace Prover.Storage.MongoDb
 						 .DisposeWith(disposer);
 				}
 
-				async Task Feeder()
-				{
+				async Task Feeder() {
 					var queryIterator = ApplySpecification(specification).ToFeedIterator();
 
-					var reader = Observable.FromAsync(async () =>
-										   {
-											   var feed = await queryIterator.ReadNextAsync();
-											   return feed.ToObservable();
-										   })
-										   .RepeatWhen(x => Observable.Create<bool>(handler =>
-																	  {
-																		  if (queryIterator.HasMoreResults)
-																			  handler.OnNext(true);
-																		  else
-																			  handler.OnCompleted();
-																		  return Disposable.Empty;
-																	  }))
+					var reader = Observable.FromAsync(async () => {
+						var feed = await queryIterator.ReadNextAsync();
+						return feed.ToObservable();
+					})
+										   .RepeatWhen(x => Observable.Create<bool>(handler => {
+											   if (queryIterator.HasMoreResults)
+												   handler.OnNext(true);
+											   else
+												   handler.OnCompleted();
+											   return Disposable.Empty;
+										   }))
 										   .Concat()
 										   .Subscribe(obs)
 										   .DisposeWith(disposer);
@@ -189,28 +174,23 @@ namespace Prover.Storage.MongoDb
 		/// <inheritdoc />
 		public Task<IReadOnlyList<T>> ListAsync() => throw new NotImplementedException();
 
-		private IQueryable<T> ApplySpecification(IQueryable<T> queryable, IQuerySpecification<T> spec)
-		{
+		private IQueryable<T> ApplySpecification(IQueryable<T> queryable, IQuerySpecification<T> spec) {
 			return SpecificationEvaluator<T>.GetQuery(queryable, spec);
 		}
 
-		private IQueryable<T> ApplySpecification(IQuerySpecification<T> spec)
-		{
+		private IQueryable<T> ApplySpecification(IQuerySpecification<T> spec) {
 			return ApplySpecification(_container.GetItemLinqQueryable<T>(allowSynchronousQueryExecution: true), spec);
 		}
 
-		private Task WaitForInit()
-		{
+		private Task WaitForInit() {
 			return Task.WhenAll(new[] { _warmupTask });
 		}
 
-		public Task Initialize()
-		{
+		public Task Initialize() {
 			if (_initialized)
 				return Task.CompletedTask;
 
-			return Task.Run(async () =>
-			{
+			return Task.Run(async () => {
 				_database = await _client.CreateDatabaseIfNotExistsAsync(databaseId);
 
 				// Delete the existing container to prevent create item conflicts
