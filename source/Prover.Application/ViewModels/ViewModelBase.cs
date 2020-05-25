@@ -51,22 +51,29 @@ namespace Prover.Application.ViewModels
 		public void Dispose()
 		{
 			if (Cleanup != null && !Cleanup.IsDisposed)
-				Cleanup.Dispose();
+				Cleanup?.Dispose();
 
 			Dispose(true);
 
 			//GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool isDisposing)
-		{
+		protected virtual void Dispose(bool isDisposing) {
 		}
 
-		protected virtual void SetupActivator(ViewModelBase viewModel)
-		{
+		protected virtual void SetupActivator(ViewModelBase viewModel){
+		}
 			//if (viewModel is IActivatableViewModel activatable)
-
-
+		/// <inheritdoc />
+		public virtual bool CanNavigateAway() {
+			return true;
 		}
+
+		//private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
+		///// <inheritdoc />
+		//public IEnumerable<IToolbarActionItem> ToolbarActionItems => _toolbarActionItems;
+
+
+		
 	}
 }

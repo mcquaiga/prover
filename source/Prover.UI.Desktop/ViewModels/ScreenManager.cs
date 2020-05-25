@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,8 +10,7 @@ using Prover.Application.Interfaces;
 using Prover.Application.Verifications;
 using ReactiveUI;
 
-namespace Prover.UI.Desktop.ViewModels
-{
+namespace Prover.UI.Desktop.ViewModels {
 	//internal class ScreenRouter : RoutingState, IScreenManager
 	//{
 	//	/// <inheritdoc />
@@ -31,24 +33,24 @@ namespace Prover.UI.Desktop.ViewModels
 	//}
 
 
-	internal class ScreenManager : RoutingState, IScreenManager, IDisposable
-	{
+	internal class ScreenManager : RoutingState, IScreenManager, IDisposable {
 		private readonly IServiceProvider _services;
+		private IRoutableViewModel _homeViewModel;
 		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 		private IRoutableViewModel _homeViewModel;
 
-		public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager)
-		{
+		public ScreenManager(IServiceProvider services, IDialogServiceManager dialogManager) {
 			_services = services;
 			DialogManager = dialogManager;
 
-			CanChangeNavigation = ReactiveCommand.CreateFromObservable<IRoutableViewModel, IRoutableViewModel>(viewModel =>
-			{
+
+
+			CanChangeNavigation = ReactiveCommand.CreateFromObservable<IRoutableViewModel, IRoutableViewModel>(viewModel => {
 				var currentView = this.GetCurrentViewModel();
 
-				if (currentView is IRoutableLifetimeHandler lifetimeHandler)
-				{
-					//var linked = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, lifetimeHandler.OnChanging);
+				if (currentView is IRoutableLifetimeHandler lifetimeHandler) {
+					var linked = CancellationTokenSource.CreateLinkedTokenSource(_cancellationTokenSource.Token, lifetimeHandler.OnChanging);
+
 				}
 
 				return Observable.Return(viewModel);
@@ -61,12 +63,12 @@ namespace Prover.UI.Desktop.ViewModels
 
 		public RoutingState Router => this;
 
+
 		public ReactiveCommand<IRoutableViewModel, IRoutableViewModel> CanChangeNavigation { get; set; }
 
 		public Task<TViewModel> ChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel => TryChangeView(viewModel);
 
-		public Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel
-		{
+		public Task<TViewModel> ChangeView<TViewModel>(params object[] parameters) where TViewModel : IRoutableViewModel {
 			var model = parameters.IsNullOrEmpty() ? _services.GetService<TViewModel>() : ActivatorUtilities.CreateInstance<TViewModel>(_services, typeof(TViewModel), parameters);
 			return TryChangeView(model);
 		}
@@ -84,12 +86,11 @@ namespace Prover.UI.Desktop.ViewModels
 			return Task.CompletedTask;
 		}
 
-		public Task GoHome(IRoutableViewModel home = null)
-		{
-			_homeViewModel ??= home;
+		public Task GoHome(IRoutableViewModel home = null) {
+			_homeViewModel = home ?? _homeViewModel;
 
 			if (_homeViewModel == null)
-				throw new ArgumentNullException(nameof(home), @"No viewmodel has been set for home.");
+				_homeViewModel = _services.GetService<HomeViewModel>();
 
 			if (this.GetCurrentViewModel() == _homeViewModel)
 				return Task.CompletedTask;

@@ -19,10 +19,8 @@ using Prover.Application.Verifications;
 using Prover.Shared.Extensions;
 using Prover.Shared.Storage.Interfaces;
 
-namespace Prover.Application.Caching
-{
-	public class VerificationCachedRepository : ICachedRepository, IAsyncRepository<EvcVerificationTest>, IQueryableRepository<EvcVerificationTest>, IEntityCache<EvcVerificationTest>, IDisposable
-	{
+namespace Prover.Application.Caching {
+	public class VerificationCachedRepository : ICachedRepository, IAsyncRepository<EvcVerificationTest>, IQueryableRepository<EvcVerificationTest>, IEntityCache<EvcVerificationTest>, IDisposable {
 		private static readonly Expression<Func<EvcVerificationTest, bool>> _defaultPredicate = t => t.TestDateTime.IsLessThanTimeAgo(TimeSpan.FromDays(30));
 
 		private readonly ICacheClient<EvcVerificationTest> _cache;
@@ -32,10 +30,9 @@ namespace Prover.Application.Caching
 		private bool _isInitialized;
 		private IQuerySpecification<EvcVerificationTest> _cacheSpecification = VerificationQuerySpecs.Default;
 
-		public VerificationCachedRepository(ILoggerFactory loggerFactory, IAsyncRepository<EvcVerificationTest> repository, ICacheClient<EvcVerificationTest> cache = null, IScheduler scheduler = null)
-		{
+		public VerificationCachedRepository(ILoggerFactory loggerFactory, Func<IAsyncRepository<EvcVerificationTest>> repositoryFunc, ICacheClient<EvcVerificationTest> cache = null, IScheduler scheduler = null) {
 			_logger = loggerFactory.CreateLogger<VerificationCachedRepository>();
-			_repository = repository;
+			_repository = repositoryFunc.Invoke();
 			_cache = cache ?? new EntityCache<EvcVerificationTest>(loggerFactory.CreateLogger<EntityCache<EvcVerificationTest>>(), scheduler);
 		}
 
@@ -50,14 +47,12 @@ namespace Prover.Application.Caching
 
 
 		/// <inheritdoc />
-		public void Dispose()
-		{
+		public void Dispose() {
 			(_cache as IDisposable)?.Dispose();
 		}
 
 		/// <inheritdoc />
-		public async Task<EvcVerificationTest> GetAsync(Guid id)
-		{
+		public async Task<EvcVerificationTest> GetAsync(Guid id) {
 			var cachedEntity = await _cache.GetAsync(id);
 
 			if (cachedEntity != null)
@@ -74,8 +69,7 @@ namespace Prover.Application.Caching
 		public Task<IEnumerable<EvcVerificationTest>> QueryAsync(IQuerySpecification<EvcVerificationTest> specification) => _repository.QueryAsync(specification);
 
 		/// <inheritdoc />
-		public IObservable<EvcVerificationTest> QueryObservable(IQuerySpecification<EvcVerificationTest> specification)
-		{
+		public IObservable<EvcVerificationTest> QueryObservable(IQuerySpecification<EvcVerificationTest> specification) {
 			if (specification == _cacheSpecification)
 				return Data.Items.ToObservable();
 
@@ -83,17 +77,14 @@ namespace Prover.Application.Caching
 		}
 
 		/// <inheritdoc />
-		public Task Refresh(IQuerySpecification<EvcVerificationTest> specification = null)
-		{
+		public Task Refresh(IQuerySpecification<EvcVerificationTest> specification = null) {
 			_cacheSpecification = specification ?? _cacheSpecification;
 
-			return Task.Run(async () =>
-			{
+			return Task.Run(async () => {
 				_logger.LogDebug("Loading verifications from repository...");
 				var stopWatch = Stopwatch.StartNew();
 
-				var loadTask = FillCacheFromRepository().ContinueWith(task =>
-				{
+				var loadTask = FillCacheFromRepository().ContinueWith(task => {
 					_logger.LogDebug($"Finished loading verifications in {stopWatch.ElapsedMilliseconds} ms");
 
 					if (task.IsFaulted == false)
@@ -116,21 +107,18 @@ namespace Prover.Application.Caching
 		public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
 		/// <inheritdoc />
-		public async Task<EvcVerificationTest> UpsertAsync(EvcVerificationTest entity)
-		{
+		public async Task<EvcVerificationTest> UpsertAsync(EvcVerificationTest entity) {
 			var result = await _repository.UpsertAsync(entity);
 			await _cache.SetAsync(result);
 			await VerificationEvents.OnSave.Publish(result);
 			return result;
 		}
 
-		private IObservable<EvcVerificationTest> LoadFromRepository()
-		{
+		private IObservable<EvcVerificationTest> LoadFromRepository() {
 			if (_repository is IQueryableRepository<EvcVerificationTest> loadObservable)
 				return loadObservable.QueryObservable(_cacheSpecification);
 
-			return Observable.FromAsync(async () =>
-			{
+			return Observable.FromAsync(async () => {
 				return await _repository.QueryAsync(_cacheSpecification)
 										.ToObservable()
 										.SelectMany(i => i);
@@ -138,8 +126,7 @@ namespace Prover.Application.Caching
 			//return loader;
 		}
 
-		private Task FillCacheFromRepository()
-		{
+		private Task FillCacheFromRepository() {
 			var loader = LoadFromRepository();
 			return _cache.LoadAsync(loader);
 		}

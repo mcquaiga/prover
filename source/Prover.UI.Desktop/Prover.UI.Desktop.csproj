@@ -136,6 +136,7 @@
     <ProjectReference Include="..\Prover.Externals.MccDaq\Prover.Externals.MccDaq.csproj" />
     <ProjectReference Include="..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
     <ProjectReference Include="..\Prover.Storage.MongoDb\Prover.Storage.MongoDb.csproj" />
+    <ProjectReference Include="..\Prover.Updater\Prover.Updater.csproj" />
   </ItemGroup>
 
 
