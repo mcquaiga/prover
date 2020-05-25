@@ -52,7 +52,10 @@ namespace Prover.UI.Desktop {
 			StorageStartup.AddServices(services, host);
 			UserInterface.AddServices(services, host);
 			DeviceServices.AddServices(services, host);
-			UpdaterService.AddServices(services, host);
+
+#if (!DEBUG)
+			services.AddUpdater(host);
+#endif
 		}
 
 		public static async Task StartAsync(string[] args) {

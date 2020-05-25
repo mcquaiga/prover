@@ -12,8 +12,20 @@ using Octokit.Reactive;
 using Prover.UI.Desktop.Common;
 
 namespace Prover.Updater {
-	public partial class UpdaterService : CronJobService {
+
+	public static class UpdaterServiceEx {
 		private const string AutoUpdateConfigKey = "AutoUpdate";
+
+		public static void AddUpdater(this IServiceCollection services, HostBuilderContext host) {
+			var runUpdater = host.Configuration.GetValue<bool>(AutoUpdateConfigKey);
+			//var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
+
+			if (runUpdater)
+				services.AddHostedService(c => ActivatorUtilities.CreateInstance<UpdaterService>(c, CronSchedules.Hourly));
+		}
+	}
+
+	public partial class UpdaterService : CronJobService {
 		//private const string AppSettingsUpdateScheduleKey = "Releases:UpdateSchedule";
 		private readonly ILogger<UpdaterService> _logger;
 		private CancellationTokenSource _cancellationSource = new CancellationTokenSource();
@@ -61,13 +73,5 @@ namespace Prover.Updater {
 		}
 	}
 
-	public partial class UpdaterService {
-		public static void AddServices(IServiceCollection services, HostBuilderContext host) {
-			var runUpdater = host.Configuration.GetValue<bool>(AutoUpdateConfigKey);
-			//var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
 
-			if (runUpdater)
-				services.AddHostedService(c => ActivatorUtilities.CreateInstance<UpdaterService>(c, CronSchedules.Hourly));
-		}
-	}
 }
