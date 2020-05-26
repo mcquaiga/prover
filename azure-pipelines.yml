@@ -1,6 +1,5 @@
-#name: $(CurrentVersion)$(Rev:.r)
-name: $(Date:yy.M)$(Rev:.r)
-
+name: $(CurrentVersion) build #$(Rev:r)
+#name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
   batch: true
@@ -22,6 +21,8 @@ pool:
 
 variables:
 - group: Version
+- name: buildVersionNumber
+  value: '$(CurrentVersion)$(Rev:.r)'
 - name: solution
   value: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
 - name: project
@@ -44,7 +45,7 @@ jobs:
       displayName: Build
       inputs:
         command: 'build'
-        arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+        arguments: '$(solution) -p:Version=$(CurrentVersion) -p:FileVersion=$(buildVersionNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     
     - task: VSTest@2
       displayName: Tests
@@ -82,7 +83,7 @@ jobs:
         versioningScheme: 'byBuildNumber'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(CurrentVersion).nupkg'
       artifact: 'Packages'
 
     # - task: gitmirror@0
