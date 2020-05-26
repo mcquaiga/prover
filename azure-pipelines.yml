@@ -1,4 +1,4 @@
-name: $(CurrentVersion) build $(Rev:.r)
+name: '$(CurrentVersion) build $(Rev:.r)'
 #name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
