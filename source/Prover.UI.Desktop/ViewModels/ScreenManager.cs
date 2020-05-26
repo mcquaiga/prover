@@ -35,7 +35,6 @@ namespace Prover.UI.Desktop.ViewModels {
 
 	internal class ScreenManager : RoutingState, IScreenManager, IDisposable {
 		private readonly IServiceProvider _services;
-		private IRoutableViewModel _homeViewModel;
 		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 		private IRoutableViewModel _homeViewModel;
 
@@ -74,13 +73,11 @@ namespace Prover.UI.Desktop.ViewModels {
 		}
 
 		/// <inheritdoc />
-		public void Dispose()
-		{
+		public void Dispose() {
 			(_homeViewModel as IDisposable)?.Dispose();
 		}
 
-		public Task GoBack()
-		{
+		public Task GoBack() {
 			var current = this.GetCurrentViewModel();
 			NavigateBack.Execute().Subscribe();
 			return Task.CompletedTask;
@@ -100,20 +97,17 @@ namespace Prover.UI.Desktop.ViewModels {
 			return Task.CompletedTask;
 		}
 
-		private bool CanChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
-		{
+		private bool CanChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel {
 			if (this.GetCurrentViewModel().GetType() == typeof(TViewModel))
 				return false;
 			return true;
 		}
 
-		private Task<TViewModel> TryChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel
-		{
+		private Task<TViewModel> TryChangeView<TViewModel>(TViewModel viewModel) where TViewModel : IRoutableViewModel {
 			if (!CanChangeView(viewModel))
 				return Task.FromResult<TViewModel>(default);
 
-			if (viewModel is IRoutableLifetimeHandler handler)
-			{
+			if (viewModel is IRoutableLifetimeHandler handler) {
 				//_cancellationTokenSource.
 				//handler.OnChanging = _cancellationTokenSource.Token;
 			}

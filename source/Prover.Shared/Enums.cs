@@ -7,6 +7,11 @@ namespace Prover.Shared {
 		Channel_C
 	}
 
+	public enum VerificationType {
+		New,
+		Reverified
+	}
+
 	public enum PulseOutputType {
 		CorVol,
 		PCorVol,

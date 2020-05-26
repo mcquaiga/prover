@@ -1,52 +1,56 @@
+using System;
 using Devices.Core.Items.Attributes;
 using Devices.Core.Items.ItemGroups;
 using Prover.Shared;
 
-namespace Devices.Honeywell.Core.Items.ItemGroups
-{
-    public class SiteInformationItemsHoneywell : SiteInformationItems
-    {
-        public override CompositionType CompositionType
-        {
-            get
-            {
-                if (LivePressureFactor == CorrectionFactorType.Live && LiveTemperatureFactor == CorrectionFactorType.Live)
-                    return CompositionType.PTZ;
+namespace Devices.Honeywell.Core.Items.ItemGroups {
+	public class SiteInformationItemsHoneywell : SiteInformationItems {
+		public override CompositionType CompositionType
+		{
+			get {
+				if (LivePressureFactor == CorrectionFactorType.Live && LiveTemperatureFactor == CorrectionFactorType.Live)
+					return CompositionType.PTZ;
 
-                if (LivePressureFactor == CorrectionFactorType.Live)
-                    return CompositionType.P;
+				if (LivePressureFactor == CorrectionFactorType.Live)
+					return CompositionType.P;
 
-                if (LiveTemperatureFactor == CorrectionFactorType.Live)
-                    return CompositionType.T;
+				if (LiveTemperatureFactor == CorrectionFactorType.Live)
+					return CompositionType.T;
 
-                return CompositionType.Fixed;
-            }
-        }
+				return CompositionType.Fixed;
+			}
+		}
 
-        [ItemInfo(122)]
-        public override string FirmwareVersion { get; set; }
+		[ItemInfo(122)]
+		public override string FirmwareVersion { get; set; }
 
-        [ItemInfo(109)]
-        public override CorrectionFactorType LivePressureFactor { get; set; }
+		[ItemInfo(109)]
+		public override CorrectionFactorType LivePressureFactor { get; set; }
 
-        [ItemInfo(62)]
-        public override string SerialNumber { get; set; }
+		[ItemInfo(62)]
+		public override string SerialNumber { get; set; }
 
-        [ItemInfo(200)]
-        public override string SiteId1 { get; set; }
+		[ItemInfo(200)]
+		public override string SiteId1 { get; set; }
 
-        [ItemInfo(201)]
-        public override string SiteId2 { get; set; }
+		[ItemInfo(201)]
+		public override string SiteId2 { get; set; }
 
-        [ItemInfo(110)]
-        public override CorrectionFactorType LiveSuperFactor { get; set; }
+		[ItemInfo(110)]
+		public override CorrectionFactorType LiveSuperFactor { get; set; }
 
-        [ItemInfo(111)]
-        public override CorrectionFactorType LiveTemperatureFactor { get; set; }
+		[ItemInfo(111)]
+		public override CorrectionFactorType LiveTemperatureFactor { get; set; }
 
-    }
 
-    /*
+		[ItemInfo(204)]
+		public override DateTime Date { get; set; }
+
+		[ItemInfo(203)]
+		public override DateTime Time { get; set; }
+	}
+
+	/*
      *
      *     {
             get

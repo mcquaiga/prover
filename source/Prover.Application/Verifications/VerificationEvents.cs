@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Models.EvcVerifications;
 using Prover.Application.Services.LiveReadCorrections;
-using Prover.Application.Verifications.Events;
 using Prover.Application.ViewModels;
 using System.Reactive;
 using Prover.Application.Interfaces;

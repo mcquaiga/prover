@@ -8,11 +8,9 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DynamicData;
 
-namespace Prover.Shared.Storage.Interfaces
-{
+namespace Prover.Shared.Storage.Interfaces {
 	public interface IQueryableRepository<T>
-			where T : AggregateRoot
-	{
+			where T : AggregateRoot {
 		Task<int> CountAsync(IQuerySpecification<T> spec);
 
 		IObservable<T> QueryObservable(IQuerySpecification<T> specification);
@@ -22,8 +20,7 @@ namespace Prover.Shared.Storage.Interfaces
 		Task<IReadOnlyList<T>> ListAsync();
 	}
 
-	public interface IAsyncCrudRepository<in TId, TEntity> where TEntity : GenericEntity<TId>
-	{
+	public interface IAsyncCrudRepository<in TId, TEntity> where TEntity : EntityBase<TId> {
 
 		Task<TEntity> GetAsync(TId id);
 
@@ -36,15 +33,13 @@ namespace Prover.Shared.Storage.Interfaces
 	}
 
 	public interface IAsyncRepository<T> : IAsyncCrudRepository<Guid, T>, IQueryableRepository<T>
-		where T : AggregateRoot
-	{
+		where T : AggregateRoot {
 
 	}
 
 
 
-	public interface IRequireInitialization
-	{
+	public interface IRequireInitialization {
 		IObservable<Unit> Initialized { get; }
 		Task Initialize();
 	}

@@ -1,18 +1,11 @@
 ﻿using System.Collections.Generic;
 using Prover.Application.Models.EvcVerifications;
-using Prover.Application.Models.EvcVerifications.Verifications;
+using Prover.Modules.Clients.Core;
+using Prover.Shared;
 using Prover.Shared.Domain;
 
-namespace Prover.Modules.Certificates.App.Models
-{
-	public enum VerificationType
-	{
-		New,
-		Reverified
-	}
-
-	public class Certificate : AggregateRoot
-	{
+namespace Prover.Modules.Certificates.Models {
+	public class Certificate : AggregateRoot {
 		public ICollection<EvcVerificationTest> EvcVerifications { get; set; }
 
 		public string CreatedBy { get; set; }
@@ -22,6 +15,8 @@ namespace Prover.Modules.Certificates.App.Models
 		public string Apparatus { get; set; }
 
 		public long CerificateNumber { get; set; }
+
+		public Client Client { get; set; }
 	}
 
 

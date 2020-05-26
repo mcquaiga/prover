@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Prover.Application.Helpers.Query;
+using Prover.Shared.Domain;
 using Prover.Shared.Storage.Interfaces;
 
-namespace Prover.Application.Specifications
-{
-	public abstract class BaseQuerySpecification<T> : IQuerySpecification<T>
-	{
-		protected BaseQuerySpecification(Expression<Func<T, bool>> criteria)
-		{
+namespace Prover.Application.Specifications {
+	public static class QuerySpec {
+		public static IQuerySpecification<T> Where<T>(Expression<Func<T, bool>> criteria) where T : EntityBase {
+			return new BaseQuerySpecification<T>(criteria);
+		}
+	}
+
+
+	public class BaseQuerySpecification<T> : IQuerySpecification<T> {
+		internal BaseQuerySpecification(Expression<Func<T, bool>> criteria) {
 			Predicate = criteria;
 		}
 
-		protected BaseQuerySpecification()
-		{
+		protected BaseQuerySpecification() {
 
 		}
 		#region Public Properties
@@ -27,8 +31,7 @@ namespace Prover.Application.Specifications
 		public Expression<Func<T, object>> OrderByDescending { get; private set; }
 
 		/// <inheritdoc />
-		public virtual void CompileSpecification()
-		{
+		public virtual void CompileSpecification() {
 
 		}
 
@@ -41,41 +44,34 @@ namespace Prover.Application.Specifications
 
 		#region Protected
 
-		protected virtual void AddInclude(Expression<Func<T, object>> includeExpression)
-		{
+		protected virtual void AddInclude(Expression<Func<T, object>> includeExpression) {
 			Includes.Add(includeExpression);
 		}
 
-		protected virtual void AddInclude(string includeString)
-		{
+		protected virtual void AddInclude(string includeString) {
 			IncludeStrings.Add(includeString);
 		}
 
 		protected virtual void AddIncludes<TProperty>(
-			Func<IncludeAggregator<T>, IIncludeQuery<T, TProperty>> includeGenerator)
-		{
+			Func<IncludeAggregator<T>, IIncludeQuery<T, TProperty>> includeGenerator) {
 			var includeQuery = includeGenerator(new IncludeAggregator<T>());
 			IncludeStrings.AddRange(includeQuery.Paths);
 		}
 
 		//Not used anywhere at the moment, but someone requested an example of setting this up.
-		protected virtual void ApplyGroupBy(Expression<Func<T, object>> groupByExpression)
-		{
+		protected virtual void ApplyGroupBy(Expression<Func<T, object>> groupByExpression) {
 			GroupBy = groupByExpression;
 		}
 
-		protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression)
-		{
+		protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression) {
 			OrderBy = orderByExpression;
 		}
 
-		protected virtual void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression)
-		{
+		protected virtual void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression) {
 			OrderByDescending = orderByDescendingExpression;
 		}
 
-		protected virtual void ApplyPaging(int skip, int take)
-		{
+		protected virtual void ApplyPaging(int skip, int take) {
 			Skip = skip;
 			Take = take;
 			IsPagingEnabled = true;

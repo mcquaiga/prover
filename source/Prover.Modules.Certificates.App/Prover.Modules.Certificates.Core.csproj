@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
     <ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+    <ProjectReference Include="..\Prover.Modules.Clients\Prover.Modules.Clients.Core.csproj" />
     <ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
   </ItemGroup>
 

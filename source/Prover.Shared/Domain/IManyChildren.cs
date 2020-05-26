@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 
-namespace Prover.Shared.Domain
-{
-	public interface IManyChildren<T> where T : BaseEntity
-	{
+namespace Prover.Shared.Domain {
+	public interface IManyChildren<T> where T : EntityBase {
 		//ICollection<T> Children { get; set; }
 		//void AddChildren(IEnumerable<T> entities);
 		//ICollection<T> SetCollection

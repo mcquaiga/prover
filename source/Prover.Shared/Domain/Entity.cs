@@ -5,14 +5,11 @@ using System;
 
 #endregion
 
-namespace Prover.Shared.Domain
-{
-	public interface IEntity
-	{
+namespace Prover.Shared.Domain {
+	public interface IEntity {
 	}
 
-	public abstract class GenericEntity<TId> : IEntity
-	{
+	public abstract class EntityBase<TId> : IEntity {
 		#region Public Properties
 
 		/// <summary>
@@ -26,19 +23,16 @@ namespace Prover.Shared.Domain
 
 
 	/// <summary>
-	///     Entity base class for domain objects with Ids
+	///     Entity base class for domain objects with Guid as Id
 	/// </summary>
 	/// Id type
 	/// </typeparam>
-	public abstract class BaseEntity : GenericEntity<Guid>
-	{
-		protected BaseEntity()
-		{
+	public abstract class EntityBase : EntityBase<Guid> {
+		protected EntityBase() {
 			Id = Guid.NewGuid();
 		}
 
-		protected BaseEntity(Guid id)
-		{
+		protected EntityBase(Guid id) {
 			if (id == Guid.Empty)
 				id = Guid.NewGuid();
 
@@ -47,8 +41,7 @@ namespace Prover.Shared.Domain
 
 		#region Public Methods
 
-		public virtual void OnInitializing()
-		{
+		public virtual void OnInitializing() {
 		}
 
 		#endregion

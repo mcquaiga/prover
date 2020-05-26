@@ -1,14 +1,11 @@
 using System;
 using Prover.Shared.Domain;
 
-namespace Prover.Application.Models.EvcVerifications
-{
-	public class ProvingApparatus : BaseEntity
-	{
+namespace Prover.Application.Models.EvcVerifications {
+	public class ProvingApparatus : EntityBase {
 		public ProvingApparatus() { }
 
-		public ProvingApparatus(Guid id)
-		{
+		public ProvingApparatus(Guid id) {
 			Id = id;
 		}
 

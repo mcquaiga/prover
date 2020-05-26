@@ -7,18 +7,14 @@ using System.Reflection;
 
 #endregion
 
-namespace Prover.Shared.Domain
-{
-	public abstract class AggregateRoot : BaseEntity, IAggregateRoot
-	{
+namespace Prover.Shared.Domain {
+	public abstract class AggregateRoot : EntityBase, IAggregateRoot {
 		private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
 
-		protected AggregateRoot()
-		{
+		protected AggregateRoot() {
 		}
 
-		protected AggregateRoot(Guid id) : base(id)
-		{
+		protected AggregateRoot(Guid id) : base(id) {
 		}
 
 		public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
@@ -29,47 +25,39 @@ namespace Prover.Shared.Domain
 
 		public DateTime? Archived { get; set; }
 
-		public virtual void AddDomainEvent(IDomainEvent newEvent)
-		{
+		public virtual void AddDomainEvent(IDomainEvent newEvent) {
 			_domainEvents.Add(newEvent);
 		}
 
-		public virtual void ClearEvents()
-		{
+		public virtual void ClearEvents() {
 			_domainEvents.Clear();
 		}
 	}
 
-	public abstract class AggregateRoot<T> : AggregateRoot where T : class
-	{
+	public abstract class AggregateRoot<T> : AggregateRoot where T : class {
 		private readonly Dictionary<Type, object> _childrenDicts = new Dictionary<Type, object>();
 
-		protected AggregateRoot(ICollection<T> children)
-		{
+		protected AggregateRoot(ICollection<T> children) {
 			//_children = children;
 		}
 
-		protected AggregateRoot()
-		{
+		protected AggregateRoot() {
 			//Children = new List<T>();
 			//SetupManyProperty();
 		}
 
-		private void SetupManyProperty()
-		{
+		private void SetupManyProperty() {
 			GetType().GetTypeInfo().ImplementedInterfaces.Where(i => i.IsGenericType && i.IsTypeOf(typeof(IManyChildren<>))).ToList();
 		}
 
 		protected abstract ICollection<T> Children { get; }
 
-		public virtual void AddChild(T entity)
-		{
+		public virtual void AddChild(T entity) {
 			if (!Children.Contains(entity))
 				Children.Add(entity);
 		}
 
-		public virtual void AddChildren(IEnumerable<T> entities)
-		{
+		public virtual void AddChildren(IEnumerable<T> entities) {
 			Children.AddRangeIfNotContains(entities.ToArray());
 		}
 
@@ -87,8 +75,7 @@ namespace Prover.Shared.Domain
 		//	AddChildren<TEntity>(new[] { entity });
 		//}
 
-		protected void SetupChildCollection<TEntity>(ICollection<TEntity> collection) where TEntity : BaseEntity
-		{
+		protected void SetupChildCollection<TEntity>(ICollection<TEntity> collection) where TEntity : EntityBase {
 			if (!_childrenDicts.ContainsKey(typeof(TEntity)))
 				_childrenDicts.Add(typeof(TEntity), collection);
 		}
@@ -96,10 +83,8 @@ namespace Prover.Shared.Domain
 		//protected abstract void SetChildCollection(ICollection<T> children);
 	}
 
-	public static class AggregateRootMixins
-	{
-		public static void AddChildren<T>(this AggregateRoot<T> root, IEnumerable<T> entities) where T : BaseEntity
-		{
+	public static class AggregateRootMixins {
+		public static void AddChildren<T>(this AggregateRoot<T> root, IEnumerable<T> entities) where T : EntityBase {
 			root.AddChildren(entities);
 		}
 	}

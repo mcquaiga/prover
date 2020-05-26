@@ -4,10 +4,8 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
-namespace Prover.Application.ViewModels
-{
-	public abstract class ViewModelBase : ReactiveObject, IActivatableViewModel, IDisposable
-	{
+namespace Prover.Application.ViewModels {
+	public abstract class ViewModelBase : ReactiveObject, IActivatableViewModel, IDisposable {
 		private readonly Lazy<ViewModelActivator> _activatorLazy = new Lazy<ViewModelActivator>(() => new ViewModelActivator());
 		private readonly ViewModelActivator _activator = new ViewModelActivator();
 
@@ -15,13 +13,11 @@ namespace Prover.Application.ViewModels
 		protected CompositeDisposable Cleanup = new CompositeDisposable();
 		protected CompositeDisposable DeactivateDisposer = new CompositeDisposable();
 
-		protected ViewModelBase(ILogger<ViewModelBase> logger = null)
-		{
+		protected ViewModelBase(ILogger<ViewModelBase> logger = null) {
 			Logger = logger ?? ProverLogging.CreateLogger<ViewModelBase>();
 
 			(this as IActivatableViewModel)?
-					.WhenActivated(disposables =>
-					{
+					.WhenActivated(disposables => {
 						DeactivateDisposer = new CompositeDisposable();
 
 						HandleActivation(disposables);
@@ -48,32 +44,20 @@ namespace Prover.Application.ViewModels
 		/// <inheritdoc />
 		public virtual bool CanNavigateAway() => true;
 
-		public void Dispose()
-		{
+		public void Dispose() {
+			Dispose(true);
+
 			if (Cleanup != null && !Cleanup.IsDisposed)
 				Cleanup?.Dispose();
 
-			Dispose(true);
-
-			//GC.SuppressFinalize(this);
+			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void Dispose(bool isDisposing) {
 		}
 
-		protected virtual void SetupActivator(ViewModelBase viewModel){
-		}
-			//if (viewModel is IActivatableViewModel activatable)
-		/// <inheritdoc />
-		public virtual bool CanNavigateAway() {
-			return true;
+		protected virtual void SetupActivator(ViewModelBase viewModel) {
 		}
 
-		//private readonly ICollection<IToolbarActionItem> _toolbarActionItems = new List<IToolbarActionItem>();
-		///// <inheritdoc />
-		//public IEnumerable<IToolbarActionItem> ToolbarActionItems => _toolbarActionItems;
-
-
-		
 	}
 }

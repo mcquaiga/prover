@@ -9,23 +9,22 @@ using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Validation.Abstractions;
+using ReactiveUI.Validation.Contexts;
+using ReactiveUI.Validation.Extensions;
 
-namespace Prover.Application.Verifications
-{
-	public interface IViewModelNavigationEvents
-	{
+namespace Prover.Application.Verifications {
+	public interface IViewModelNavigationEvents {
 		bool CanNavigateAway();
 	}
 
-	public interface IRoutableLifetimeHandler
-	{
+	public interface IRoutableLifetimeHandler {
 		CancellationToken OnChanging { get; set; }
 		IObservable<bool> CanChange { get; set; }
 		Task ChangingRoute(IObserver<bool> canChange);
 	}
 
-	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager, IActivatableViewModel, IRoutableLifetimeHandler
-	{
+	public abstract class TestManagerBase : ViewModelBase, IQaTestRunManager, IActivatableViewModel, IRoutableLifetimeHandler {
 		private CancellationToken _onChanging;
 		protected ILogger<TestManagerBase> Logger { get; }
 		protected IScreenManager ScreenManager { get; }
@@ -34,8 +33,7 @@ namespace Prover.Application.Verifications
 		protected TestManagerBase(ILogger<TestManagerBase> logger,
 									IScreenManager screenManager,
 									IVerificationService verificationService,
-									EvcVerificationViewModel testViewModel)
-		{
+									EvcVerificationViewModel testViewModel) {
 			var cts = new CancellationTokenSource();
 
 			Logger = logger;
@@ -70,22 +68,19 @@ namespace Prover.Application.Verifications
 		public IScreen HostScreen { get; }
 
 		/// <inheritdoc />
-		protected override void HandleActivation(CompositeDisposable cleanup)
-		{
-			SaveCommand = ReactiveCommand.CreateFromTask(async () =>
-										 {
-											 Logger.LogDebug("Saving test...");
-											 var updated = await VerificationService.Save(TestViewModel);
+		protected override void HandleActivation(CompositeDisposable cleanup) {
+			SaveCommand = ReactiveCommand.CreateFromTask(async () => {
+				Logger.LogDebug("Saving test...");
+				var updated = await VerificationService.Save(TestViewModel);
 
-											 if (updated != null)
-											 {
-												 Logger.LogDebug("Saved test successfully");
-												 await Notifications.SnackBarMessage.Handle("SAVED");
-												 return true;
-											 }
+				if (updated != null) {
+					Logger.LogDebug("Saved test successfully");
+					await Notifications.SnackBarMessage.Handle("SAVED");
+					return true;
+				}
 
-											 return false;
-										 })
+				return false;
+			})
 										 .DisposeWith(cleanup);
 			SaveCommand.ThrownExceptions.Subscribe().DisposeWith(cleanup);
 
@@ -93,16 +88,14 @@ namespace Prover.Application.Verifications
 			var canSubmit = this.WhenAnyObservable(x => x.TestViewModel.VerifiedObservable)
 								.ObserveOn(RxApp.MainThreadScheduler);
 
-			SubmitTest = ReactiveCommand.CreateFromTask(async () =>
-										{
-											if (true)
-											{
-												SuppressChangeNotifications().DisposeWith(Cleanup);
-												await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
-												await VerificationService.CompleteVerification(TestViewModel);
-												await ScreenManager.GoHome();
-											}
-										}, canSubmit)
+			SubmitTest = ReactiveCommand.CreateFromTask(async () => {
+				if (true) {
+					SuppressChangeNotifications().DisposeWith(Cleanup);
+					await VerificationEvents.TestEvents<IQaTestRunManager>.OnComplete.Publish(this);
+					await VerificationService.CompleteVerification(TestViewModel);
+					await ScreenManager.GoHome();
+				}
+			}, canSubmit)
 										.DisposeWith(cleanup);
 			SubmitTest.ThrownExceptions
 					  .Subscribe(ex => Exceptions.Error.Handle($"An error occured submitting verification. {ex.Message}"))
@@ -111,7 +104,6 @@ namespace Prover.Application.Verifications
 			PrintTestReport = ReactiveCommand.CreateFromObservable(() =>
 					Messages.ShowMessage.Handle("Verifications Report feature not yet implemented."))
 											 .DisposeWith(cleanup);
-
 		}
 
 
@@ -119,10 +111,8 @@ namespace Prover.Application.Verifications
 		public IObservable<bool> CanChange { get; set; }
 
 		/// <inheritdoc />
-		public async Task ChangingRoute(IObserver<bool> canChange)
-		{
-			if (await HasUnsavedChanges.LastOrDefaultAsync())
-			{
+		public async Task ChangingRoute(IObserver<bool> canChange) {
+			if (await HasUnsavedChanges.LastOrDefaultAsync()) {
 
 			}
 		}
