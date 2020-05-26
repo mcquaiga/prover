@@ -12,7 +12,6 @@ Param(
     [string]$outputPath = "",
 
     [string]$releasesDir = "build\Releases",
-
     [string]$packagePath
 )
 
