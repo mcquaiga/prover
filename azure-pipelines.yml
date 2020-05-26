@@ -1,4 +1,6 @@
-name: $(Date:yy.M)$(Rev:.r)
+name: $(VersionNumber).$(Rev:.r)
+#name: $(Date:yy.M)$(Rev:.r)
+
 
 trigger:
   batch: true
@@ -19,12 +21,19 @@ pool:
   - vstest
 
 variables:
-  solution: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
-  project: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
-  buildPlatform: 'Any CPU'
-  verbosityLevel: 'minimal'
-  buildDir: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
-  testsDir: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+- group: Version
+- name: solution
+  value: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
+- name: project
+  value: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: verbosityLevel
+  value: 'minimal'
+- name: buildDir
+  value: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+- name: testsDir
+  value: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
 
 
 jobs:
