@@ -1,4 +1,4 @@
-name: $(VersionNumber).$(Rev:.r)
+name: ${{ VersionNumber }}.$(Rev:.r)
 #name: $(Date:yy.M)$(Rev:.r)
 
 
