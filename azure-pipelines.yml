@@ -21,8 +21,10 @@ pool:
 
 variables:
 - group: Version
-- name: buildVersionNumber
-  value: '$(CurrentVersion)$(Rev:.r)'
+- name: GitVersion.SemVer
+  value: ''
+- name: GitVersion.NuGetVersion
+  value: ''
 - name: solution
   value: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
 - name: project
@@ -35,17 +37,23 @@ variables:
   value: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
 - name: testsDir
   value: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+- name: build.BuildNumber
+  value: $(GitVersion.NuGetVersion)
 
 
 jobs:
   - job: Windows
     steps:
 
+    - task: GitVersion@5
+      inputs:
+        runtime: 'core'
+
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
         command: 'build'
-        arguments: '$(solution) -p:Version=$(CurrentVersion) -p:FileVersion=$(buildVersionNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+        arguments: '$(solution) -p:Version=$(GitVersion.NuGetVersion) -p:FileVersion=$(GitVersion.SemVer) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     
     - task: VSTest@2
       displayName: Tests
@@ -83,7 +91,7 @@ jobs:
         versioningScheme: 'byBuildNumber'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(CurrentVersion).nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(GitVersion.NuGetVersion).nupkg'
       artifact: 'Packages'
 
     # - task: gitmirror@0
