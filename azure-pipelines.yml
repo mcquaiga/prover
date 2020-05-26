@@ -91,7 +91,7 @@ jobs:
         versioningScheme: 'byBuildNumber'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(GitVersion.NuGetVersion).nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(build.BuildNumber).nupkg'
       artifact: 'Packages'
 
     # - task: gitmirror@0
