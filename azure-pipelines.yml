@@ -37,8 +37,6 @@ variables:
   value: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
 - name: testsDir
   value: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-- name: build.BuildNumber
-  value: $(GitVersion.NuGetVersion)
 
 
 jobs:
@@ -91,7 +89,7 @@ jobs:
         versioningScheme: 'byBuildNumber'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(build.BuildNumber).nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(GitVersion.NuGetVersion).nupkg'
       artifact: 'Packages'
 
     # - task: gitmirror@0
