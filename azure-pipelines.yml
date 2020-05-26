@@ -1,4 +1,4 @@
-name: $(ReleaseVersion).$(Rev:.r)
+name: $(CurrentVersion).$(Rev:.r)
 #name: $(Date:yy.M)$(Rev:.r)
 
 
