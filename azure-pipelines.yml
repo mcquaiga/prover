@@ -75,6 +75,10 @@ jobs:
 
     - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(Build.BuildNumber).nupkg'
       artifact: 'Packages'
+
+    - task: gitmirror@0
+      inputs:
+        GitRepoUrl: 'https://$(githubPAT)@github.com/mcquaiga/EvcProver.git'
 #  - task: NuGetCommand@2
 #   inputs:
 #     command: 'push'
