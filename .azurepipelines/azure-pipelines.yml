@@ -1,4 +1,4 @@
-name: 'build #$(Rev:r)'
+name: '$(GITVERSION_SemVer)'
 #name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
@@ -47,6 +47,7 @@ jobs:
     - task: GitVersion@5
       inputs:
         runtime: 'core'
+        additionalArguments: '/output buildserver'
 
     - task: DotNetCoreCLI@2
       displayName: Build
