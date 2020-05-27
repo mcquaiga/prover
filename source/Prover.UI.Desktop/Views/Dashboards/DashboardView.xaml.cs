@@ -9,22 +9,18 @@ using Prover.Application.Dashboard;
 using Prover.UI.Desktop.Converters;
 using ReactiveUI;
 
-namespace Prover.UI.Desktop.Views.Dashboards
-{
+namespace Prover.UI.Desktop.Views.Dashboards {
 	/// <summary>
 	/// Interaction logic for DashboardView.xaml
 	/// </summary>
 	[SingleInstanceView]
-	public partial class DashboardView
-	{
+	public partial class DashboardView {
 		public ICollection<IDashboardItem> Grouping { get; set; }
 
-		public DashboardView()
-		{
+		public DashboardView() {
 			InitializeComponent();
 
-			this.WhenActivated(d =>
-			{
+			this.WhenActivated(d => {
 				this.WhenAnyValue(x => x.ViewModel)
 					.Where(x => x != null)
 					.Do(PopulateFromViewModel)
@@ -47,16 +43,7 @@ namespace Prover.UI.Desktop.Views.Dashboards
 
 				this.BindCommand(ViewModel, vm => vm.RefreshData, v => v.RefreshDataButton).DisposeWith(d);
 
-				this.WhenAnyValue(x => x.ViewModel.RefreshData)
-					.Where(_ => !ViewModel.IsLoaded)
-					.SelectMany(x => x.Execute())
-					.SubscribeOnDispatcher()
-					//.Select(_ => Unit.Default)
-					.ObserveOnDispatcher()
-					//.DelaySubscription(TimeSpan.FromMilliseconds(200))
-					//.InvokeCommand(ViewModel, vm => vm.RefreshData)
-					.Subscribe()
-					.DisposeWith(d);
+
 
 				this.WhenAnyValue(x => x.ViewModel.ApplyDateFilter)
 					.SelectMany(x => x.Execute(ViewModel.DefaultSelectedDate))
@@ -66,10 +53,15 @@ namespace Prover.UI.Desktop.Views.Dashboards
 					.DisposeWith(d);
 			});
 
+			this.WhenAnyValue(x => x.ViewModel)
+				.SelectMany(x => x.RefreshData.Execute())
+				.SubscribeOnDispatcher()
+				.ObserveOnDispatcher()
+				.Subscribe();
+
 		}
 
-		private void PopulateFromViewModel(DashboardViewModel viewModel)
-		{
+		private void PopulateFromViewModel(DashboardViewModel viewModel) {
 			var collectionView = FindResource("DashboardListBoxItems") as CollectionViewSource;
 			collectionView.Source = ViewModel.DashboardItems;
 

@@ -11,13 +11,10 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DynamicData;
 
-namespace Prover.Storage.LiteDb
-{
-	public class VerificationsLiteDbRepository : BaseLiteDbAsyncRepository<Guid, EvcVerificationTest>, IAsyncRepository<EvcVerificationTest>
-	{
+namespace Prover.Storage.LiteDb {
+	public class VerificationsLiteDbRepository : BaseLiteDbAsyncRepository<Guid, EvcVerificationTest>, IAsyncRepository<EvcVerificationTest> {
 
-		public VerificationsLiteDbRepository(ILiteDatabase context) : base(context)
-		{
+		public VerificationsLiteDbRepository(ILiteDatabase context) : base(context) {
 
 		}
 
@@ -25,21 +22,23 @@ namespace Prover.Storage.LiteDb
 		public Task<int> CountAsync(IQuerySpecification<EvcVerificationTest> spec) => throw new NotImplementedException();
 
 		/// <inheritdoc />
-		public IObservable<EvcVerificationTest> QueryObservable(IQuerySpecification<EvcVerificationTest> specification)
-		{
+		public IObservable<EvcVerificationTest> QueryObservable(IQuerySpecification<EvcVerificationTest> specification) {
 			return Observable.StartAsync(async () => await QueryAsync(specification))
 							 .SelectMany(t => t);
 
 		}
 
 		/// <inheritdoc />
-		public Task<IEnumerable<EvcVerificationTest>> QueryAsync(IQuerySpecification<EvcVerificationTest> specification)
-		{
-			return Task.FromResult(ApplySpecification(specification).AsEnumerable());
+		public Task<IEnumerable<EvcVerificationTest>> QueryAsync(IQuerySpecification<EvcVerificationTest> specification) {
+
+			return Task.FromResult(
+								LiteDbQueryEvaluator<EvcVerificationTest>.GetQuery(Collection.Query(), specification)
+																		 .ToEnumerable()
+							);
+
 		}
 
-		public Task<IReadOnlyList<EvcVerificationTest>> ListAsync()
-		{
+		public Task<IReadOnlyList<EvcVerificationTest>> ListAsync() {
 			return Task.FromResult(
 						(IReadOnlyList<EvcVerificationTest>)Collection.FindAll().ToList());
 		}
@@ -60,10 +59,11 @@ namespace Prover.Storage.LiteDb
 
 		//public Task<int> CountAsync(IQuerySpecification<T> spec) => throw new NotImplementedException();
 
-		private IQueryable<EvcVerificationTest> ApplySpecification(IQuerySpecification<EvcVerificationTest> spec)
-		{
-			return SpecificationEvaluator<EvcVerificationTest>.GetQuery((IQueryable<EvcVerificationTest>)Collection.Query(), spec);
-		}
+		//private IQueryable<EvcVerificationTest> ApplySpecification(IQuerySpecification<EvcVerificationTest> spec)
+		//{
+		//	//(IQueryable<EvcVerificationTest>)
+		//	return 
+		//}
 
 		//private IQueryable<T> ApplySpecification(IQuerySpecification<T> spec)
 		//{

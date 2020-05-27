@@ -15,15 +15,12 @@ using Prover.Shared.Storage.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace Prover.Modules.DevTools.Storage
-{
-	internal class DataGenerator : ViewModelBase, IDevToolsMenuItem
-	{
+namespace Prover.Modules.DevTools.Storage {
+	internal class DataGenerator : ViewModelBase, IDevToolsMenuItem {
 		private readonly IAsyncRepository<EvcVerificationTest> _repository;
 		private CompositeDisposable _cleanup;
 
-		public DataGenerator(IAsyncRepository<EvcVerificationTest> repository)
-		{
+		public DataGenerator(IAsyncRepository<EvcVerificationTest> repository) {
 			_repository = repository;
 			Command = ReactiveCommand.Create(StartStopGenerator);
 		}
@@ -34,49 +31,42 @@ namespace Prover.Modules.DevTools.Storage
 		/// <inheritdoc />
 		[Reactive] public ICommand Command { get; set; }
 
-		private void StartStopGenerator()
-		{
-			if (_cleanup == null || _cleanup.IsDisposed)
-			{
+		private void StartStopGenerator() {
+			if (_cleanup == null || _cleanup.IsDisposed) {
 				_cleanup = new CompositeDisposable();
 				StartGenerator().DisposeWith(_cleanup);
 				Description = "Stop data generator";
 				return;
 			}
 
-			if (_cleanup != null && !_cleanup.IsDisposed)
-			{
+			if (_cleanup != null && !_cleanup.IsDisposed) {
 				StopGenerator();
 				Description = "Start data generator";
 				return;
 			}
 		}
 
-		private void StopGenerator()
-		{
+		private void StopGenerator() {
 			_cleanup?.Dispose();
 			Logger.LogDebug("Stopped data generator...");
 		}
 
-		private IDisposable StartGenerator()
-		{
+		private IDisposable StartGenerator() {
 			Logger.LogDebug("Starting data generator...");
 
 			var numOfDeviceSamples = DeviceTemplates.Devices.Count;
 			var random = new Random(DateTime.Now.Millisecond * DateTime.UtcNow.Hour);
 
-			return ThreadPoolScheduler.Instance.ScheduleRecurringAction(TimeSpan.FromSeconds(random.Next(0, 5)), async () =>
-			{
+			return ThreadPoolScheduler.Instance.ScheduleRecurringAction(TimeSpan.FromSeconds(random.Next(1, 5)), () => {
+
 				var test = CreateVerification();
-				await _repository.UpsertAsync(test);
-
 				Logger.LogDebug($" Generated verification with test date: {test.TestDateTime:g}");
+				_repository.UpsertAsync(test);
 
-				await VerificationEvents.OnSave.Publish(test);
+				//await VerificationEvents.OnSave.Publish(test);
 			});
 
-			EvcVerificationTest CreateVerification()
-			{
+			EvcVerificationTest CreateVerification() {
 				var device = GetRandomDevice();
 
 				var test = device.NewVerification();
@@ -88,8 +78,7 @@ namespace Prover.Modules.DevTools.Storage
 
 			DeviceInstance GetRandomDevice() => DeviceTemplates.Devices[random.Next(0, numOfDeviceSamples - 1)];
 
-			void SetTestDateTimes(EvcVerificationTest test)
-			{
+			void SetTestDateTimes(EvcVerificationTest test) {
 				test.TestDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(random.Next(0, 30)));
 				test.SubmittedDateTime = test.TestDateTime.AddSeconds(random.Next(300, 720));
 			}

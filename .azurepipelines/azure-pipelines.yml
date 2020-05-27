@@ -1,0 +1,114 @@
+name: '$(CurrentVersion) build #$(Rev:r)'
+#name: $(Date:yy.M)$(Rev:.r)
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+resources:
+- repo: self
+  clean: false
+  fetchDepth: 5
+
+pool:
+  vmImage: 'windows-latest'
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+variables:
+- group: Version
+- name: GitVersion.SemVer
+  value: ''
+- name: GitVersion.NuGetVersion
+  value: ''
+- name: solution
+  value: '$(Build.Repository.LocalPath)\source\EvcProver.sln'
+- name: project
+  value: '$(Build.Repository.LocalPath)\source\Prover.UI.Desktop\Prover.UI.Desktop.csproj'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: verbosityLevel
+  value: 'minimal'
+- name: buildDir
+  value: '$(Build.Repository.LocalPath)\build\$(buildConfiguration)'
+- name: testsDir
+  value: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
+
+
+jobs:
+  - job: Windows
+    steps:
+
+    - task: GitVersion@5
+      inputs:
+        runtime: 'core'
+        updateAssemblyInfo: true
+
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        arguments: '$(solution) -p:Version=$(GitVersion.NuGetVersion) -p:FileVersion=$(GitVersion.SemVer) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+    
+    - task: VSTest@2
+      displayName: Tests
+      inputs:
+        testSelector: 'testAssemblies'  
+        testAssemblyVer2: |
+          **\*tests*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**   
+          !**\Tests.Shared.dll  
+        searchFolder: '$(testsDir)'
+        rerunFailedTests: True
+        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Binary Artifacts"
+      inputs:
+        targetPath: '$(buildDir)'
+        artifact: 'Binaries'
+        publishLocation: 'pipeline'
+
+    - task: PublishPipelineArtifact@1
+      displayName: "Publish Test Artifacts"
+      inputs:
+        targetPath: '$(testsDir)'
+        artifact: 'Tests'
+        publishLocation: 'pipeline'
+
+    - task: NuGetCommand@2
+      displayName: "Create Nuget package "
+      inputs:
+        command: 'pack'
+        packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
+        packDestination: '$(Build.ArtifactStagingDirectory)'
+        versioningScheme: 'byBuildNumber'
+        basePath: '$(buildDir)'
+
+    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(GitVersion.NuGetVersion).nupkg'
+      artifact: 'Packages'
+
+    # - task: gitmirror@0
+    #   inputs:
+    #     GitRepoUrl: 'https://$(githubPAT)@github.com/mcquaiga/EvcProver.git'
+#  - task: NuGetCommand@2
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+#     nuGetFeedType: 'internal'
+#     publishVstsFeed: 'd169e2dc-c70a-48fe-853c-a941145aceeb/3d72a775-f2fd-40d8-89b3-e80e3f1a8aa4'
+#     allowPackageConflicts: true
+
+  # - job: Package
+  #   dependsOn: Windows
+  #   steps:
+  #       - task: DownloadPipelineArtifact@2
+  #         inputs:
+  #           buildType: 'current'
+  #           artifactName: 'Binaries'
+  #           targetPath: '$(Pipeline.Workspace)'

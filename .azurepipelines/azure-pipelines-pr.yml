@@ -1,10 +1,6 @@
-name: $(Date:yy.M)$(Rev:.r)
+name: $(Build.BuildId)-$(Build.SourceBranchName)
 
-trigger:
-  batch: true
-  branches:
-    include:
-    - master
+trigger: none
 
 resources:
 - repo: self
@@ -33,7 +29,7 @@ jobs:
       displayName: Build
       inputs:
         command: 'build'
-        arguments: '$(solution) -p:Version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
+        arguments: '$(solution) -p:Version=1.0.$(Build.BuildId) -p:FileVersion=1.0.$(Build.BuildId) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     
     - task: VSTest@2
       displayName: Tests
@@ -61,4 +57,3 @@ jobs:
         PathtoPublish: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         ArtifactName: 'Tests'
         publishLocation: 'Container'
-          
