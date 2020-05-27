@@ -1,4 +1,4 @@
-name: '$(CurrentVersion) build #$(Rev:r)'
+name: 'build #$(Rev:r)'
 #name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
@@ -6,6 +6,7 @@ trigger:
   branches:
     include:
     - master
+    - develop
 
 resources:
 - repo: self
