@@ -3,15 +3,11 @@ using Prover.Shared;
 using Prover.Shared.Domain;
 
 namespace Prover.Modules.Clients.Core {
-	public class ClientCsvTemplate : EntityBase {
-		public ClientCsvTemplate() {
+	public class CsvTemplate : EntityBase {
+		public CsvTemplate() {
 		}
 
-		public ClientCsvTemplate(Client client) {
-			Client = client;
-		}
-
-		public Client Client { get; set; }
+		//public Client Client { get; set; }
 
 		public VerificationType VerificationType { get; set; }
 
@@ -19,6 +15,6 @@ namespace Prover.Modules.Clients.Core {
 
 		public VolumeInputType DriveType { get; set; }
 
-		public string CsvTemplate { get; set; }
+		public string Template { get; set; }
 	}
 }

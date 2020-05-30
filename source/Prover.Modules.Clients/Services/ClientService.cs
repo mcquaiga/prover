@@ -7,43 +7,57 @@ using Prover.Modules.Clients.Core.Interfaces;
 using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Modules.Clients.Core.Services {
-	public class ClientService {
-		private readonly IAsyncRepository<Client> _repository;
 
-		public ClientService(IAsyncRepository<Client> clientRepository, IClientItemsService itemsService, IClientCsvTemplateService csvTemplateService) {
+	public class RegionService {
+		private readonly IAsyncRepository<Region> _repository;
+
+		public RegionService(IAsyncRepository<Region> repository, IDeviceValidationRulesService validationService) {
+			_repository = repository;
+		}
+
+
+	}
+
+	public class OwnerService {
+		private readonly IAsyncRepository<Owner> _repository;
+
+		public OwnerService(IAsyncRepository<Owner> clientRepository,
+				IDeviceValidationRulesService validationService,
+				ICsvTemplateService csvTemplateService
+			) {
 			_repository = clientRepository;
 		}
 
-		public async Task<IEnumerable<Client>> GetAllClients() {
-			var clients = await _repository.ListAsync();
-			return clients;
+		public async Task<IEnumerable<Owner>> GetAllOwners() {
+			var Owners = await _repository.ListAsync();
+			return Owners;
 		}
 
-		public Task<Client> GetClient(Guid id) {
+		public Task<Owner> GetOwner(Guid id) {
 			return _repository.GetAsync(id);
 		}
 
-		public async Task<IEnumerable<Client>> GetActiveClients() {
-			return await _repository.QueryAsync(QuerySpec.Where<Client>(c => !c.Archived.HasValue));
+		public async Task<IEnumerable<Owner>> GetActiveOwner() {
+			return await _repository.QueryAsync(QuerySpec.Where<Owner>(c => !c.Archived.HasValue));
 		}
 
-		public Task<Client> Archive(Client client) {
-			client.Archived = DateTime.Now;
-			return _repository.UpsertAsync(client);
+		public Task<Owner> Archive(Owner owner) {
+			owner.Archived = DateTime.Now;
+			return _repository.UpsertAsync(owner);
 		}
 
-		public async Task<Client> CreateClient(string name, string registrationId, Address address) {
+		public async Task<Owner> CreateOwner(string name, string registrationId, Address address) {
 
-			var client = new Client() {
+			var client = new Owner() {
 				Name = name,
 				RegistrationId = registrationId,
 				Address = address
 			};
 
-			var clientItems = new ClientValidationRules(client);
-			var csvTemplate = new ClientCsvTemplate(client);
+			var clientItems = new DeviceValidationRules();
+			var csvTemplate = new CsvTemplate();
 
-			return _repository.UpsertAsync(client);
+			return await _repository.UpsertAsync(client);
 		}
 		//public async Task<bool> DeleteCsvTemplate(ClientCsvTemplate template) {
 		//	//await _csvTemplateStore.Delete(template);
@@ -55,9 +69,9 @@ namespace Prover.Modules.Clients.Core.Services {
 		//}
 	}
 
-	public interface IClientCsvTemplateService {
+	public interface ICsvTemplateService {
 	}
 
-	public interface IClientItemsService {
+	public interface IDeviceValidationRulesService {
 	}
 }

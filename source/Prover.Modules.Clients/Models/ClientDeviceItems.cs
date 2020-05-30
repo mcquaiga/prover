@@ -7,22 +7,18 @@ using Prover.Shared.Domain;
 
 namespace Prover.Modules.Clients.Core {
 
-	public enum ClientItemType {
-		Reset,
-		Verify
-	}
-	public class ClientValidationRules : EntityBase {
-		public ClientValidationRules() {
+	public class DeviceValidationRules : EntityBase {
+		public DeviceValidationRules() {
 		}
 
 
-		public ClientValidationRules(Client client) => Client = client ?? throw new NullReferenceException(nameof(client));
+		//public DeviceValidationRules(Client client) => Client = client ?? throw new NullReferenceException(nameof(client));
 
 		public ICollection<ItemValue> Items { get; set; } = new List<ItemValue>();
 
-		public Client Client { get; set; }
+		//public Client Client { get; set; }
 
-		public ClientItemType ItemFileType { get; set; }
+		//public ClientItemType ItemFileType { get; set; }
 
 		public IDevice DeviceType { get; set; }
 
