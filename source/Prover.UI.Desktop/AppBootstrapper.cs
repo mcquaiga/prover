@@ -47,15 +47,16 @@ namespace Prover.UI.Desktop {
 		public static void ConfigureAppServices(HostBuilderContext host, IServiceCollection services) {
 			services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
 			services.AddSingleton<UnhandledExceptionHandler>();
+
 			host.AddModuleServices(services);
+
 			Settings.AddServices(services, host);
 			StorageStartup.AddServices(services, host);
 			UserInterface.AddServices(services, host);
 			DeviceServices.AddServices(services, host);
 
-#if (!DEBUG)
-			services.AddUpdater(host);
-#endif
+			services.UpdateService(host);
+			//#endif
 		}
 
 		public static async Task StartAsync(string[] args) {
@@ -82,7 +83,10 @@ namespace Prover.UI.Desktop {
 
 		private static IHost ConfigureBuilder() {
 			var host = Host.CreateDefaultBuilder()
-						   .ConfigureHostConfiguration(config => { config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json"); })
+						   .ConfigureHostConfiguration(config => {
+							   config.AddJsonFile("appsettings.json")
+									 .AddJsonFile("appsettings.Development.json");
+						   })
 						   .ConfigureAppConfiguration((host, config) => {
 							   host.DiscoverModules();
 							   host.AddModuleConfigurations(config);

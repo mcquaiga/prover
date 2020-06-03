@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Octokit.Reactive;
+using Prover.Application.Interactions;
 using Prover.UI.Desktop.Common;
 
 namespace Prover.Updater {
@@ -16,12 +17,14 @@ namespace Prover.Updater {
 	public static class UpdaterServiceEx {
 		private const string AutoUpdateConfigKey = "AutoUpdate";
 
-		public static void AddUpdater(this IServiceCollection services, HostBuilderContext host) {
+		public static void UpdateService(this IServiceCollection services, HostBuilderContext host) {
+#if (!DEBUG)
 			var runUpdater = host.Configuration.GetValue<bool>(AutoUpdateConfigKey);
 			//var cronTime = host.Configuration.GetValue<string>(AppSettingsUpdateScheduleKey);
 
 			if (runUpdater)
 				services.AddHostedService(c => ActivatorUtilities.CreateInstance<UpdaterService>(c, CronSchedules.Hourly));
+#endif
 		}
 	}
 
@@ -49,7 +52,11 @@ namespace Prover.Updater {
 			try {
 
 				if (await _updateManager.CheckForUpdate()) {
+
 					await _updateManager.Update(cancellationToken);
+
+					await NotifyUpdated();
+
 					_logger.LogInformation("Update finished!");
 				}
 			}
@@ -58,12 +65,8 @@ namespace Prover.Updater {
 			}
 		}
 
-		private Task CheckForUpdate(CancellationToken cancellationToken) {
-
-			Task.Run(() => _updateManager.Update(cancellationToken));
-
-
-			return Task.CompletedTask;
+		public async Task NotifyUpdated() {
+			await Notifications.PersistentMessage.Handle($"New update installed. EVC Prover requires restart.");
 		}
 
 		/// <inheritdoc />

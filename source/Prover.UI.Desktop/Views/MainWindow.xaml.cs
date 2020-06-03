@@ -7,7 +7,9 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using DynamicData.Binding;
+using MaterialDesignThemes.Wpf;
 
 namespace Prover.UI.Desktop.Views {
 	/// <summary>
@@ -34,15 +36,29 @@ namespace Prover.UI.Desktop.Views {
 
 			});
 			RegisterNotificationInteractions();
-
 		}
 
+		public SnackbarMessageQueue PersistentMessageQueue { get; set; } = new SnackbarMessageQueue(TimeSpan.FromMinutes(5));
+
 		private void RegisterNotificationInteractions() {
+
 			Notifications.SnackBarMessage.RegisterHandler(async message => {
 				ViewModel.MessageQueue.Enqueue(message.Input);
 
 				message.SetOutput(Unit.Default);
 				await Task.CompletedTask;
+			});
+
+			PersistentNotificationSnackBar.MessageQueue = PersistentMessageQueue;
+
+			Notifications.PersistentMessage.RegisterHandler(message => {
+
+				PersistentMessageQueue.Enqueue(message.Input);
+				//PersistentNotificationSnackBar.IsActive = true;
+				//PersistentNotificationSnackBar.Message.ActionCommand = ReactiveCommand.Create(() => PersistentNotificationSnackBar.IsActive = false);
+
+				message.SetOutput(Unit.Default);
+				return Task.CompletedTask;
 			});
 
 			Notifications.SnackBarUpdates.RegisterHandler(async context => {
