@@ -47,6 +47,7 @@ jobs:
     - task: GitVersion@5
       inputs:
         runtime: 'core'
+        configFilePath: '$(Build.Repository.LocalPath)\GitVersion.yml'
         additionalArguments: '/output buildserver'
 
     - task: DotNetCoreCLI@2
