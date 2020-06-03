@@ -4,14 +4,11 @@ using Devices.Core.Interfaces;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Shared.Domain;
 
-namespace Prover.Application.Models.EvcVerifications
-{
-	public class VerificationBase : AggregateRoot<VerificationEntity>
-	{
+namespace Prover.Application.Models.EvcVerifications {
+	public class VerificationBase : AggregateRoot<VerificationEntity>, IVerification {
 		public VerificationBase() { }
 
-		public VerificationBase(DeviceInstance device)
-		{
+		public VerificationBase(DeviceInstance device) {
 			Device = device;
 			//SetupChildCollection(Tests);
 		}

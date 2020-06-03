@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Prover.Application.Models.EvcVerifications
-{
+namespace Prover.Application.Models.EvcVerifications {
 
-	public static class VerificationDefaults
-	{
-		static VerificationDefaults()
-		{
-			VerificationOptions = new VerificationTestOptions()
-			{
+	public static class VerificationDefaults {
+		static VerificationDefaults() {
+			VerificationOptions = new VerificationTestOptions() {
 				CorrectionTestDefinitions = new List<CorrectionTestDefinition>(CorrectionDefinition),
 				VolumeTestDefinitions = new List<VolumeTestDefinition> { VolumeDefinition }
 			};
@@ -44,35 +40,30 @@ namespace Prover.Application.Models.EvcVerifications
 				}
 		};
 
-		public static ProvingApparatus ProvingApparatus = new ProvingApparatus();
+		public static Prover ProvingApparatus = new Prover();
 
-		public class DefaultApparatus : ProvingApparatus
-		{
-			public DefaultApparatus()
-			{
+		public class DefaultApparatus : Prover {
+			public DefaultApparatus() {
 				Id = Guid.Parse("3a158629-3761-4fd3-9717-ed71afc6db9f");
 				DisplayName = "EVC Proving Apparatus";
-				ApparatusDescriptor = "EVC Proving Apparatus";
+				Descriptor = "EVC Proving Apparatus";
 			}
 		}
 	}
 
-	public class VerificationTestOptions
-	{
+	public class VerificationTestOptions {
 		public ICollection<CorrectionTestDefinition> CorrectionTestDefinitions { get; set; }
 
 		public ICollection<VolumeTestDefinition> VolumeTestDefinitions { get; set; }
 	}
 
-	public class VolumeTestDefinition
-	{
+	public class VolumeTestDefinition {
 		public ICollection<VolumeInputTestSample> VolumeInputTargets { get; set; }
 		public int Level { get; set; }
 
 	}
 
-	public class CorrectionTestDefinition
-	{
+	public class CorrectionTestDefinition {
 		#region Public Properties
 
 		public bool IsVolumeTest { get; set; } = false;
@@ -90,8 +81,7 @@ namespace Prover.Application.Models.EvcVerifications
 
 	}
 
-	public class VolumeInputTestSample
-	{
+	public class VolumeInputTestSample {
 		#region Public Properties
 
 		/// <summary>

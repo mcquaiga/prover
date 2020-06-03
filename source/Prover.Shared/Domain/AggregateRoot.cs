@@ -19,7 +19,7 @@ namespace Prover.Shared.Domain {
 
 		public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
 
-		public DateTime Created { get; set; } = DateTime.UtcNow;
+		public DateTime Created { get; set; } = DateTime.Now;
 
 		public DateTime? LastUpdated { get; set; }
 
@@ -34,10 +34,10 @@ namespace Prover.Shared.Domain {
 		}
 	}
 
-	public abstract class AggregateRoot<T> : AggregateRoot where T : class {
+	public abstract class AggregateRoot<TChild> : AggregateRoot where TChild : class {
 		private readonly Dictionary<Type, object> _childrenDicts = new Dictionary<Type, object>();
 
-		protected AggregateRoot(ICollection<T> children) {
+		protected AggregateRoot(ICollection<TChild> children) {
 			//_children = children;
 		}
 
@@ -50,14 +50,14 @@ namespace Prover.Shared.Domain {
 			GetType().GetTypeInfo().ImplementedInterfaces.Where(i => i.IsGenericType && i.IsTypeOf(typeof(IManyChildren<>))).ToList();
 		}
 
-		protected abstract ICollection<T> Children { get; }
+		protected abstract ICollection<TChild> Children { get; }
 
-		public virtual void AddChild(T entity) {
+		public virtual void AddChild(TChild entity) {
 			if (!Children.Contains(entity))
 				Children.Add(entity);
 		}
 
-		public virtual void AddChildren(IEnumerable<T> entities) {
+		public virtual void AddChildren(IEnumerable<TChild> entities) {
 			Children.AddRangeIfNotContains(entities.ToArray());
 		}
 

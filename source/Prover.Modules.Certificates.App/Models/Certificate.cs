@@ -12,11 +12,15 @@ namespace Prover.Modules.Certificates.Models {
 
 		public VerificationType VerificationType { get; set; }
 
-		public string Apparatus { get; set; }
+		//public string Apparatus { get; set; }
+
+		public Application.Models.EvcVerifications.Prover Apparatus { get; set; }
 
 		public long CerificateNumber { get; set; }
 
-		public Client Client { get; set; }
+		public Owner Owner { get; set; }
+
+		public Region Region { get; set; }
 	}
 
 

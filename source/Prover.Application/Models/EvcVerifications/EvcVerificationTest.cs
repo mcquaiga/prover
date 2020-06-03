@@ -7,20 +7,16 @@ using Newtonsoft.Json;
 using Prover.Application.Models.EvcVerifications.Verifications;
 using Prover.Shared.Domain;
 
-namespace Prover.Application.Models.EvcVerifications
-{
+namespace Prover.Application.Models.EvcVerifications {
 	/// <summary>
 	///     Defines the <see cref="EvcVerificationTest" />
 	/// </summary>
-	public class EvcVerificationTest : AggregateRoot<VerificationEntity>, IVerification ///, IManyChildren<VerificationEntity>
-	{
+	public class EvcVerificationTest : AggregateRoot<VerificationEntity>, IVerification {
 		private EvcVerificationTest() { }
 
 		[JsonConstructor]
-		public EvcVerificationTest(DeviceInstance device)
-		{
+		public EvcVerificationTest(DeviceInstance device) {
 			Device = device;
-			//SetupChildCollection(Tests);
 		}
 
 		public DateTime TestDateTime { get; set; } = DateTime.Now;
@@ -29,11 +25,9 @@ namespace Prover.Application.Models.EvcVerifications
 
 		public DateTime? ExportedDateTime { get; set; } = null;
 
-		public ProvingApparatus Prover { get; set; }
+		public ProverConfiguration ProverConfiguration { get; set; }
 
 		public DeviceInstance Device { get; protected set; }
-
-		//public IDevice DeviceType { get; protected set; }
 
 		public ICollection<VerificationEntity> Tests { get; set; } = new List<VerificationEntity>();
 
