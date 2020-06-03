@@ -87,11 +87,12 @@ jobs:
       inputs:
         command: 'pack'
         packagesToPack: '$(Build.Repository.LocalPath)\install\*.nuspec'
-        packDestination: '$(Build.ArtifactStagingDirectory)'
-        versioningScheme: 'byBuildNumber'
+        packDestination: '$(Build.ArtifactStagingDirectory)\Packages'
+        versioningScheme: 'byEnvVar'
+        versionEnvVar: 'GitVersion.SemVer'
         basePath: '$(buildDir)'
 
-    - publish: '$(Build.ArtifactStagingDirectory)\EvcProver.$(GitVersion.SemVer).nupkg'
+    - publish: '$(Build.ArtifactStagingDirectory)\Packages'
       artifact: 'Packages'
 
     # - task: gitmirror@0
