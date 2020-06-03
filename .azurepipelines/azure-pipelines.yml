@@ -1,4 +1,4 @@
-name: '$(CurrentVersion) build #$(Rev:r)'
+name: '$(GITVERSION_SemVer)'
 #name: $(Date:yy.M)$(Rev:.r)
 
 trigger:
@@ -6,6 +6,7 @@ trigger:
   branches:
     include:
     - master
+    - develop
 
 resources:
 - repo: self
@@ -46,7 +47,7 @@ jobs:
     - task: GitVersion@5
       inputs:
         runtime: 'core'
-        updateAssemblyInfo: true
+        additionalArguments: '/output buildserver'
 
     - task: DotNetCoreCLI@2
       displayName: Build
