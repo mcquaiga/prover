@@ -1,7 +1,12 @@
-# Prover
-Verify and approve Electronic Volume Correctors for Measurement Canada accreditation sealing.
+https://mcquaiga.vsrm.visualstudio.com/_apis/public/Release/badge/d169e2dc-c70a-48fe-853c-a941145aceeb/7/26
 
+# EVC Prover
+
+
+Verify and approve Electronic Volume Correctors for Measurement Canada accreditation sealing.
 Automated testing for rotary, mechanical and frequency inputs.
+
+
 
 Devices Supported:
 

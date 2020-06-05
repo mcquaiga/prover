@@ -13,13 +13,10 @@ using System;
 using Prover.Application.Interfaces;
 using Prover.UI.Desktop.Controls;
 
-namespace Prover.Modules.DevTools
-{
-	public class DevToolsStartup : IConfigureModule
-	{
+namespace Prover.Modules.DevTools {
+	public class DevToolsBootstrapper : IConfigureModule {
 		/// <inheritdoc />
-		private void AddServices(HostBuilderContext builder, IServiceCollection services)
-		{
+		private void AddServices(HostBuilderContext builder, IServiceCollection services) {
 			services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
 			services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
 			services.AddViewsAndViewModels();
@@ -41,16 +38,16 @@ namespace Prover.Modules.DevTools
 		//}
 
 		/// <inheritdoc />
-		public void ConfigureServices(HostBuilderContext builder, IServiceCollection services)
-		{
+		public void ConfigureServices(HostBuilderContext builder, IServiceCollection services) {
+			//if (builder.HostingEnvironment.IsDevelopment())
 			AddServices(builder, services);
 		}
 
 		/// <inheritdoc />
 
 		/// <inheritdoc />
-		public void ConfigureAppConfiguration(HostBuilderContext builder, IConfigurationBuilder config)
-		{
+		public void ConfigureAppConfiguration(HostBuilderContext builder, IConfigurationBuilder config) {
+			//if (builder.HostingEnvironment.IsDevelopment())
 			config.AddJsonFile("appsettings.DevTools.json");
 		}
 	}

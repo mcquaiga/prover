@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -39,7 +40,7 @@ namespace Prover.UI.Desktop {
 		public IHostApplicationLifetime LifetimeHost { get; }
 
 		public static AppBootstrapper Configure(string[] args) {
-			var host = ConfigureBuilder();
+			var host = ConfigureBuilder(args);
 			Instance = ActivatorUtilities.CreateInstance<AppBootstrapper>(host.Services);
 			return Instance;
 		}
@@ -47,15 +48,14 @@ namespace Prover.UI.Desktop {
 		public static void ConfigureAppServices(HostBuilderContext host, IServiceCollection services) {
 			services.AddSingleton<ISchedulerProvider, SchedulerProvider>();
 			services.AddSingleton<UnhandledExceptionHandler>();
-			host.AddModuleServices(services);
+
 			Settings.AddServices(services, host);
 			StorageStartup.AddServices(services, host);
 			UserInterface.AddServices(services, host);
 			DeviceServices.AddServices(services, host);
 
-#if (!DEBUG)
-			services.AddUpdater(host);
-#endif
+			services.UpdateService(host);
+			//#endif
 		}
 
 		public static async Task StartAsync(string[] args) {
@@ -80,26 +80,56 @@ namespace Prover.UI.Desktop {
 			//return Task.CompletedTask;
 		}
 
-		private static IHost ConfigureBuilder() {
-			var host = Host.CreateDefaultBuilder()
-						   .ConfigureHostConfiguration(config => { config.AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json"); })
-						   .ConfigureAppConfiguration((host, config) => {
-							   host.DiscoverModules();
-							   host.AddModuleConfigurations(config);
-						   })
-						   .ConfigureLogging((host, log) => {
-							   log.ClearProviders();
-							   log.Services.AddSplatLogging();
+		private static IHost ConfigureBuilder(string[] args) {
+			var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+			if (string.IsNullOrWhiteSpace(environment))
+				environment = "Production";
 
-							   if (host.HostingEnvironment.IsProduction())
-								   log.AddEventLog();
-							   else
-								   log.AddDebug();
-						   })
-						   .ConfigureServices((host, services) => { ConfigureAppServices(host, services); })
-						   .Build();
+			var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+												   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+												   .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+												   .AddEnvironmentVariables("DOTNET_")
+												   .AddCommandLine(args)
+												   .Build();
+
+			var builder = Host.CreateDefaultBuilder()
+							  .ConfigureHostConfiguration(c => c.AddConfiguration(config))
+							  .ConfigureAppConfiguration((host, config) => {
+								  host.DiscoverModules();
+								  host.AddModuleConfigurations(config);
+							  })
+							  .ConfigureLogging((host, log) => {
+								  log.ClearProviders();
+								  log.Services.AddSplatLogging();
+
+								  if (host.HostingEnvironment.IsProduction())
+									  log.AddEventLog();
+								  else
+									  log.AddDebug();
+							  })
+							  .ConfigureServices((host, services) => {
+								  host.AddModuleServices(services);
+								  ConfigureAppServices(host, services);
+							  })
+		;
+			var host = builder.Build();
 			host.Services.UseMicrosoftDependencyResolver();
 			return host;
+
+
+			//.ConfigureHostConfiguration(config => {
+			// host.DiscoverModules();
+			//})
+			//.ConfigureHostConfiguration(config => {
+			// host.AddModuleConfigurations(config);
+
+			// config.AddJsonFile("appsettings.json");
+			// config.AddJsonFile("appsettings.Development.json");
+			//})
+			//.ConfigureAppConfiguration((host, config) => {
+			// host.DiscoverModules(config);
+			// host.AddModuleConfigurations(config);
+			//})
 		}
 
 		private Task OnApplicationStarted() {
