@@ -132,6 +132,7 @@ namespace Prover.UI.Desktop.Communications
 			{
 				_logger.LogError(ex, "An error occured starting session with device.");
 				await EndSession();
+				throw ex;
 			}
 
 			return Device;
