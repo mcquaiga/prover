@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="XMQasXDhKs9Yk2i1r+a3xP/n1fA=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="buTt6icNeORrV8UA6BYf90XD8r5Cna1zUyrME1ZP2cg=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="DCRWebServiceSoap">
+    <bindingConfiguration bindingType="basicHttpBinding" name="DCRWebServiceSoap1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>DCRWebServiceSoap</serializedValue>
+          <serializedValue>DCRWebServiceSoap1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="DCRWebServiceSoap" contract="DCRWebService.DCRWebServiceSoap" bindingType="basicHttpBinding" address="http://dosdev/uniongas.dcrwebservice/dcrwebservice.asmx" bindingConfiguration="DCRWebServiceSoap">
+    <endpoint name="DCRWebServiceSoap1" contract="DCRWebService.DCRWebServiceSoap" bindingType="basicHttpBinding" address="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" bindingConfiguration="DCRWebServiceSoap1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://dosdev/uniongas.dcrwebservice/dcrwebservice.asmx</serializedValue>
+          <serializedValue>http://dos/uniongas.dcrwebservice/dcrwebservice.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -124,7 +124,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>DCRWebServiceSoap</serializedValue>
+          <serializedValue>DCRWebServiceSoap1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>DCRWebService.DCRWebServiceSoap</serializedValue>
@@ -187,7 +187,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>DCRWebServiceSoap</serializedValue>
+          <serializedValue>DCRWebServiceSoap1</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

@@ -6,32 +6,33 @@ using Prover.Core.VerificationTests.TestActions;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 using UnionGas.MASA.Validators;
-using UnionGas.MASA.Validators.CompanyNumber;
 
-namespace UnionGas.MASA
-{
-    public class UnionGasModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
+namespace UnionGas.MASA {
 
-            builder.RegisterType<DCRWebServiceCommunicator>()
-                .SingleInstance();
+	public class UnionGasModule : Module {
 
-            //Login service
-            builder.RegisterType<LoginService>()
-                .As<ILoginService<EmployeeDTO>>()
-                .SingleInstance();
+		#region Methods
 
+		protected override void Load(ContainerBuilder builder) {
+			builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
 
-            builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
+			builder.RegisterType<DCRWebServiceCommunicator>()
+				.SingleInstance();
 
-            builder.RegisterType<CompanyNumberValidationManager>()
-                .As<IEvcDeviceValidationAction>()
-                .AsSelf();
+			//Login service
+			builder.RegisterType<LoginService>()
+				.As<ILoginService<EmployeeDTO>>()
+				.SingleInstance();
 
-            builder.RegisterType<UserLoggedInValidator>().As<IValidator>();
-        }
-    }
+			builder.RegisterType<ExportToMasaManager>().As<IExportTestRun>();
+
+			builder.RegisterType<BarCodeValidationManager>()
+				.As<IEvcDeviceValidationAction>()
+				.AsSelf();
+
+			builder.RegisterType<UserLoggedInValidator>().As<IValidator>();
+		}
+
+		#endregion
+	}
 }

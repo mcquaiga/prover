@@ -2568,7 +2568,6 @@ namespace UnionGas.MASA.DCRWebService {
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string InventoryCodeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2591,7 +2590,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, EmitDefaultValue=false)]
         public string InventoryCode {
             get {
                 return this.InventoryCodeField;
@@ -2677,6 +2676,8 @@ namespace UnionGas.MASA.DCRWebService {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(UnionGas.MASA.DCRWebService.QARunEvcTestResult))]
     public partial class QARunTestResult : UnionGas.MASA.DCRWebService.TestResult {
         
+        private string barcodeField;
+        
         private int JobNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2694,7 +2695,20 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CommentsField;
         
-        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, EmitDefaultValue=false)]
+        public string barcode {
+            get {
+                return this.barcodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.barcodeField, value) != true)) {
+                    this.barcodeField = value;
+                    this.RaisePropertyChanged("barcode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=1)]
         public int JobNumber {
             get {
                 return this.JobNumberField;
@@ -2707,7 +2721,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
         public string EmployeeId {
             get {
                 return this.EmployeeIdField;
@@ -2720,7 +2734,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
         public string MeterClassCode {
             get {
                 return this.MeterClassCodeField;
@@ -2733,7 +2747,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=3)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
         public string FieldMeterDesc {
             get {
                 return this.FieldMeterDescField;
@@ -2746,7 +2760,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=4)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
         public string SubmitRunIndicator {
             get {
                 return this.SubmitRunIndicatorField;
@@ -2759,7 +2773,7 @@ namespace UnionGas.MASA.DCRWebService {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=5)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=6)]
         public string Comments {
             get {
                 return this.CommentsField;
@@ -4781,6 +4795,10 @@ namespace UnionGas.MASA.DCRWebService {
         
         private System.Nullable<int> NbrOfAdjustsField;
         
+        private System.Nullable<double> TempMultiplierField;
+        
+        private System.Nullable<double> MeterTempField;
+        
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
         public string SerialNumber {
             get {
@@ -5011,6 +5029,32 @@ namespace UnionGas.MASA.DCRWebService {
                 if ((this.NbrOfAdjustsField.Equals(value) != true)) {
                     this.NbrOfAdjustsField = value;
                     this.RaisePropertyChanged("NbrOfAdjusts");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=18)]
+        public System.Nullable<double> TempMultiplier {
+            get {
+                return this.TempMultiplierField;
+            }
+            set {
+                if ((this.TempMultiplierField.Equals(value) != true)) {
+                    this.TempMultiplierField = value;
+                    this.RaisePropertyChanged("TempMultiplier");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=19)]
+        public System.Nullable<double> MeterTemp {
+            get {
+                return this.MeterTempField;
+            }
+            set {
+                if ((this.MeterTempField.Equals(value) != true)) {
+                    this.MeterTempField = value;
+                    this.RaisePropertyChanged("MeterTemp");
                 }
             }
         }
@@ -6156,7 +6200,7 @@ namespace UnionGas.MASA.DCRWebService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedAcceptanceSampleMeterByInventoryCode", ReplyAction="*")]
         System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeResponse> GetValidatedAcceptanceSampleMeterByInventoryCodeAsync(UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByInventoryCodeRequest request);
         
-        // CODEGEN: Generating message contract since element name barcode from namespace http://tempuri.org/ is not marked nillable
+        // CODEGEN: Generating message contract since element name inventoryCode from namespace http://tempuri.org/ is not marked nillable
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedAcceptanceSampleMeterByBarcode", ReplyAction="*")]
         UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse GetValidatedAcceptanceSampleMeterByBarcode(UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest request);
         
@@ -6170,7 +6214,7 @@ namespace UnionGas.MASA.DCRWebService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedComplianceSampleMeterByInventoryCode", ReplyAction="*")]
         System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse> GetValidatedComplianceSampleMeterByInventoryCodeAsync(UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByInventoryCodeRequest request);
         
-        // CODEGEN: Generating message contract since element name barcodeNbr from namespace http://tempuri.org/ is not marked nillable
+        // CODEGEN: Generating message contract since element name inventoryCode from namespace http://tempuri.org/ is not marked nillable
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetValidatedComplianceSampleMeterByBarcode", ReplyAction="*")]
         UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeResponse GetValidatedComplianceSampleMeterByBarcode(UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequest request);
         
@@ -6253,6 +6297,13 @@ namespace UnionGas.MASA.DCRWebService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQAEvcTestResults", ReplyAction="*")]
         System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitQAEvcTestResultsResponse> SubmitQAEvcTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitQAEvcTestResultsRequest request);
+        
+        // CODEGEN: Generating message contract since element name tr from namespace http://tempuri.org/ is not marked nillable
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQASonixTestResults", ReplyAction="*")]
+        UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse SubmitQASonixTestResults(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SubmitQASonixTestResults", ReplyAction="*")]
+        System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse> SubmitQASonixTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -6749,15 +6800,19 @@ namespace UnionGas.MASA.DCRWebService {
     public partial class GetValidatedAcceptanceSampleMeterByBarcodeRequestBody {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public string inventoryCode;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
         public string barcode;
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
         public int jobNbr;
         
         public GetValidatedAcceptanceSampleMeterByBarcodeRequestBody() {
         }
         
-        public GetValidatedAcceptanceSampleMeterByBarcodeRequestBody(string barcode, int jobNbr) {
+        public GetValidatedAcceptanceSampleMeterByBarcodeRequestBody(string inventoryCode, string barcode, int jobNbr) {
+            this.inventoryCode = inventoryCode;
             this.barcode = barcode;
             this.jobNbr = jobNbr;
         }
@@ -6889,12 +6944,16 @@ namespace UnionGas.MASA.DCRWebService {
     public partial class GetValidatedComplianceSampleMeterByBarcodeRequestBody {
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public string inventoryCode;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
         public string barcodeNbr;
         
         public GetValidatedComplianceSampleMeterByBarcodeRequestBody() {
         }
         
-        public GetValidatedComplianceSampleMeterByBarcodeRequestBody(string barcodeNbr) {
+        public GetValidatedComplianceSampleMeterByBarcodeRequestBody(string inventoryCode, string barcodeNbr) {
+            this.inventoryCode = inventoryCode;
             this.barcodeNbr = barcodeNbr;
         }
     }
@@ -6959,11 +7018,19 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
         public string inventoryCode;
         
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string barcode;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public int jobNbr;
+        
         public GetValidatedEvcDeviceByInventoryCodeRequestBody() {
         }
         
-        public GetValidatedEvcDeviceByInventoryCodeRequestBody(string inventoryCode) {
+        public GetValidatedEvcDeviceByInventoryCodeRequestBody(string inventoryCode, string barcode, int jobNbr) {
             this.inventoryCode = inventoryCode;
+            this.barcode = barcode;
+            this.jobNbr = jobNbr;
         }
     }
     
@@ -7685,6 +7752,74 @@ namespace UnionGas.MASA.DCRWebService {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class SubmitQASonixTestResultsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQASonixTestResults", Namespace="http://tempuri.org/", Order=0)]
+        public UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequestBody Body;
+        
+        public SubmitQASonixTestResultsRequest() {
+        }
+        
+        public SubmitQASonixTestResultsRequest(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequestBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class SubmitQASonixTestResultsRequestBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public UnionGas.MASA.DCRWebService.DiaphragmTestResult tr;
+        
+        public SubmitQASonixTestResultsRequestBody() {
+        }
+        
+        public SubmitQASonixTestResultsRequestBody(UnionGas.MASA.DCRWebService.DiaphragmTestResult tr) {
+            this.tr = tr;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class SubmitQASonixTestResultsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="SubmitQASonixTestResultsResponse", Namespace="http://tempuri.org/", Order=0)]
+        public UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponseBody Body;
+        
+        public SubmitQASonixTestResultsResponse() {
+        }
+        
+        public SubmitQASonixTestResultsResponse(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponseBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class SubmitQASonixTestResultsResponseBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public string SubmitQASonixTestResultsResult;
+        
+        public SubmitQASonixTestResultsResponseBody() {
+        }
+        
+        public SubmitQASonixTestResultsResponseBody(string SubmitQASonixTestResultsResult) {
+            this.SubmitQASonixTestResultsResult = SubmitQASonixTestResultsResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface DCRWebServiceSoapChannel : UnionGas.MASA.DCRWebService.DCRWebServiceSoap, System.ServiceModel.IClientChannel {
     }
@@ -7892,9 +8027,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedAcceptanceSampleMeterByBarcode(request);
         }
         
-        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcode(string barcode, int jobNbr) {
+        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedAcceptanceSampleMeterByBarcode(string inventoryCode, string barcode, int jobNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody();
+            inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.barcode = barcode;
             inValue.Body.jobNbr = jobNbr;
             UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByBarcode(inValue);
@@ -7906,9 +8042,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedAcceptanceSampleMeterByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(string barcode, int jobNbr) {
+        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeResponse> GetValidatedAcceptanceSampleMeterByBarcodeAsync(string inventoryCode, string barcode, int jobNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedAcceptanceSampleMeterByBarcodeRequestBody();
+            inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.barcode = barcode;
             inValue.Body.jobNbr = jobNbr;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedAcceptanceSampleMeterByBarcodeAsync(inValue);
@@ -7944,9 +8081,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedComplianceSampleMeterByBarcode(request);
         }
         
-        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcode(string barcodeNbr) {
+        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedComplianceSampleMeterByBarcode(string inventoryCode, string barcodeNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody();
+            inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.barcodeNbr = barcodeNbr;
             UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByBarcode(inValue);
             return retVal.Body.GetValidatedComplianceSampleMeterByBarcodeResult;
@@ -7957,9 +8095,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedComplianceSampleMeterByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(string barcodeNbr) {
+        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeResponse> GetValidatedComplianceSampleMeterByBarcodeAsync(string inventoryCode, string barcodeNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByBarcodeRequestBody();
+            inValue.Body.inventoryCode = inventoryCode;
             inValue.Body.barcodeNbr = barcodeNbr;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedComplianceSampleMeterByBarcodeAsync(inValue);
         }
@@ -7969,10 +8108,12 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedEvcDeviceByInventoryCode(request);
         }
         
-        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedEvcDeviceByInventoryCode(string inventoryCode) {
+        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedEvcDeviceByInventoryCode(string inventoryCode, string barcode, int jobNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
+            inValue.Body.barcode = barcode;
+            inValue.Body.jobNbr = jobNbr;
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByInventoryCode(inValue);
             return retVal.Body.GetValidatedEvcDeviceByInventoryCodeResult;
         }
@@ -7982,10 +8123,12 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedEvcDeviceByInventoryCodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(string inventoryCode) {
+        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeResponse> GetValidatedEvcDeviceByInventoryCodeAsync(string inventoryCode, string barcode, int jobNbr) {
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeRequestBody();
             inValue.Body.inventoryCode = inventoryCode;
+            inValue.Body.barcode = barcode;
+            inValue.Body.jobNbr = jobNbr;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByInventoryCodeAsync(inValue);
         }
         
@@ -8239,6 +8382,31 @@ namespace UnionGas.MASA.DCRWebService {
             inValue.Body = new UnionGas.MASA.DCRWebService.SubmitQAEvcTestResultsRequestBody();
             inValue.Body.trs = trs;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitQAEvcTestResultsAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse UnionGas.MASA.DCRWebService.DCRWebServiceSoap.SubmitQASonixTestResults(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest request) {
+            return base.Channel.SubmitQASonixTestResults(request);
+        }
+        
+        public string SubmitQASonixTestResults(UnionGas.MASA.DCRWebService.DiaphragmTestResult tr) {
+            UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest inValue = new UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest();
+            inValue.Body = new UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequestBody();
+            inValue.Body.tr = tr;
+            UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitQASonixTestResults(inValue);
+            return retVal.Body.SubmitQASonixTestResultsResult;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse> UnionGas.MASA.DCRWebService.DCRWebServiceSoap.SubmitQASonixTestResultsAsync(UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest request) {
+            return base.Channel.SubmitQASonixTestResultsAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsResponse> SubmitQASonixTestResultsAsync(UnionGas.MASA.DCRWebService.DiaphragmTestResult tr) {
+            UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest inValue = new UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequest();
+            inValue.Body = new UnionGas.MASA.DCRWebService.SubmitQASonixTestResultsRequestBody();
+            inValue.Body.tr = tr;
+            return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).SubmitQASonixTestResultsAsync(inValue);
         }
     }
 }
