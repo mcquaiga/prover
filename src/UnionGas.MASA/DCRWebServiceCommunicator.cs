@@ -56,21 +56,21 @@ namespace UnionGas.MASA {
 		/// </summary>
 		/// <param name="companyNumber">The companyNumber <see cref="string"/></param>
 		/// <returns>The <see cref="Task{MeterDTO}"/></returns>
-		public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber) {
+		public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber, string barCodeNumber) {
 			if (string.IsNullOrEmpty(companyNumber))
 				throw new ArgumentNullException(nameof(companyNumber));
 
 			_log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
 
-			var request = new GetValidatedEvcDeviceByInventoryCodeRequest {
-				Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
+			var request = new GetValidatedComplianceSampleMeterByBarcodeRequest {
+				Body = new GetValidatedComplianceSampleMeterByBarcodeRequestBody(companyNumber, barCodeNumber)
 			};
 
 			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByInventoryCodeAsync(request))
+				await CallWebServiceMethod(() => _dcrWebService.GetValidatedComplianceSampleMeterByBarcodeAsync(request))
 					.ConfigureAwait(false);
 
-			return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+			return response.Body.GetValidatedComplianceSampleMeterByBarcodeResult;
 		}
 
 		/// <summary>
