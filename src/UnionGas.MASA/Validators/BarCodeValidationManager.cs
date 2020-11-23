@@ -51,7 +51,9 @@
 
 		public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null) {
 			try {
+
 				var barCode = OpenBarCodeDialog();
+
 				MeterDTO meterDto;
 				do {
 					meterDto = await _webService.FindMeterByCompanyNumber(instrument.InventoryNumber, barCode);

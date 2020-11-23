@@ -182,7 +182,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="UnionGasModule.cs" />
-    <Compile Include="Validators\BarCodeValidator.cs" />
     <Compile Include="Validators\BarCodeValidationManager.cs" />
     <Compile Include="Validators\CompanyNumber\CompanyNumberValidationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
