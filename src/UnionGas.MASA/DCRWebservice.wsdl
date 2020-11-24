@@ -92,7 +92,7 @@
          <s:element name="VerifyRotaryMeterIsInJob">
             <s:complexType>
                <s:sequence>
-                  <s:element minOccurs="1" maxOccurs="1" name="jobNumber" type="s:int" />
+                  <s:element minOccurs="1" maxOccurs="1" name="jobNumber" type="s:string" />
                   <s:element minOccurs="0" maxOccurs="1" name="bodyBarcode" type="s:string" />
                </s:sequence>
             </s:complexType>
@@ -108,7 +108,7 @@
             <s:complexType>
                <s:sequence>
                   <s:element minOccurs="0" maxOccurs="1" name="inventoryCode" type="s:string" />
-                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
+                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
                </s:sequence>
             </s:complexType>
          </s:element>
@@ -121,48 +121,47 @@
          </s:element>
          <s:complexType name="MeterDTO">
             <s:sequence>
-               <s:element minOccurs="1" maxOccurs="1" name="Id" nillable="true" type="s:int" />
-               <s:element minOccurs="0" maxOccurs="1" name="InventoryCode" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="BarcodeNumber" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
-               <s:element minOccurs="1" maxOccurs="1" name="InventoryStatusId" nillable="true" type="s:int" />
+               <s:element minOccurs="0" maxOccurs="1" name="Id" nillable="true" type="s:int" />
+               <s:element minOccurs="1" maxOccurs="1" name="InventoryCode" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="BarcodeNumber" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="SerialNumber" type="s:string" />
+               <s:element minOccurs="0" maxOccurs="1" name="InventoryStatusId" nillable="true" type="s:int" />
                <s:element minOccurs="0" maxOccurs="1" name="InventoryStatusDesc" type="s:string" />
-               <s:element minOccurs="1" maxOccurs="1" name="ModelId" nillable="true" type="s:int" />
-               <s:element minOccurs="0" maxOccurs="1" name="ModelName" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="ManufacturerName" type="s:string" />
+               <s:element minOccurs="0" maxOccurs="1" name="ModelId" nillable="true" type="s:int" />
+               <s:element minOccurs="1" maxOccurs="1" name="ModelName" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="ManufacturerName" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="InventoryCategoryCode" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="InventoryGroupCode" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="InventoryLocationId" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="InventoryGroupCode" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="InventoryLocationId" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="CisWhseCode" type="s:string" />
-               <s:element minOccurs="1" maxOccurs="1" name="InventoryVersionNbr" nillable="true" type="s:int" />
-               <s:element minOccurs="1" maxOccurs="1" name="InventoryVersionDate" nillable="true" type="s:dateTime" />
+               <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionNbr" nillable="true" type="s:int" />
+               <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionDate" nillable="true" type="s:dateTime" />
                <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionFirmware" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="ModuleInventoryCode" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="ModuleBarcodeNumber" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="ModuleSerialNumber" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="ModuleFirmware" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="ModuleModelName" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="ModuleModelName" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="ModuleManufacturerName" type="s:string" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveStartDate" nillable="true" type="s:dateTime" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveEndDate" nillable="true" type="s:dateTime" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveAtmosphericRdg" nillable="true" type="s:double" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveHiPressureRdg" nillable="true" type="s:double" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveChangeGearHigh" nillable="true" type="s:int" />
-               <s:element minOccurs="1" maxOccurs="1" name="PerformCurveChangeGearLow" nillable="true" type="s:int" />
-               <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:int" />
-               <s:element minOccurs="1" maxOccurs="1" name="PreviousTests" nillable="true" type="s:int" />
-               <s:element minOccurs="0" maxOccurs="1" name="MeterType" type="s:string" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveStartDate" nillable="true" type="s:dateTime" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveEndDate" nillable="true" type="s:dateTime" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveAtmosphericRdg" nillable="true" type="s:double" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveHiPressureRdg" nillable="true" type="s:double" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveChangeGearHigh" nillable="true" type="s:int" />
+               <s:element minOccurs="0" maxOccurs="1" name="PerformCurveChangeGearLow" nillable="true" type="s:int" />
+               <s:element minOccurs="0" maxOccurs="1" name="JobNumber" nillable="true" type="s:string" />
+               <s:element minOccurs="0" maxOccurs="1" name="PreviousTests" nillable="true" type="s:int" />
+               <s:element minOccurs="1" maxOccurs="1" name="MeterType" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="JobModel" type="s:string" />
                <s:element minOccurs="0" maxOccurs="1" name="JobCreator" type="s:string" />
-               <s:element minOccurs="0" maxOccurs="1" name="OutputType" type="s:string" />
+               <s:element minOccurs="1" maxOccurs="1" name="OutputType" type="s:string" />
             </s:sequence>
          </s:complexType>
          <s:element name="GetValidatedAcceptanceSampleMeterByBarcode">
             <s:complexType>
                <s:sequence>
-		  <s:element minOccurs="1" maxOccurs="1" name="inventoryCode" type="s:string" />
                   <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
-                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
+                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
                </s:sequence>
             </s:complexType>
          </s:element>
@@ -190,7 +189,6 @@
          <s:element name="GetValidatedComplianceSampleMeterByBarcode">
             <s:complexType>
                <s:sequence>
-		  <s:element minOccurs="1" maxOccurs="1" name="inventoryCode" type="s:string" />
                   <s:element minOccurs="1" maxOccurs="1" name="barcodeNbr" type="s:string" />
                </s:sequence>
             </s:complexType>
@@ -202,19 +200,18 @@
                </s:sequence>
             </s:complexType>
          </s:element>
-         <s:element name="GetValidatedEvcDeviceByInventoryCode">
+         <s:element name="GetValidatedEvcDeviceByBarcode">
             <s:complexType>
                <s:sequence>
-                  <s:element minOccurs="1" maxOccurs="1" name="inventoryCode" type="s:string" />
-		  <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
-                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
+                  <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
+                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
                </s:sequence>
             </s:complexType>
          </s:element>
-         <s:element name="GetValidatedEvcDeviceByInventoryCodeResponse">
+         <s:element name="GetValidatedEvcDeviceByBarcodeResponse">
             <s:complexType>
                <s:sequence>
-                  <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult" type="tns:MeterDTO" />
+                  <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByBarcodeResult" type="tns:MeterDTO" />
                </s:sequence>
             </s:complexType>
          </s:element>
@@ -250,7 +247,7 @@
          <s:element name="GetMeterDataByBarcode">
             <s:complexType>
                <s:sequence>
-                  <s:element minOccurs="0" maxOccurs="1" name="barcode" type="s:string" />
+                  <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
                </s:sequence>
             </s:complexType>
          </s:element>
@@ -264,7 +261,7 @@
          <s:element name="GetMeterListByJobNumber">
             <s:complexType>
                <s:sequence>
-                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
+                  <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
                </s:sequence>
             </s:complexType>
          </s:element>
@@ -451,7 +448,7 @@
                      <s:element minOccurs="1" maxOccurs="1" name="OpticalProof" nillable="true" type="s:double" />
                      <s:element minOccurs="0" maxOccurs="1" name="AverageTestMode" type="s:string" />
                      <s:element minOccurs="1" maxOccurs="1" name="MeterTempAverage" nillable="true" type="s:double" />
-                     <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:int" />
+                     <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:string" />
                      <s:element minOccurs="1" maxOccurs="1" name="NbrOfAdjusts" nillable="true" type="s:int" />
                      <s:element minOccurs="1" maxOccurs="1" name="TempMultiplier" nillable="true" type="s:double" />
                      <s:element minOccurs="1" maxOccurs="1" name="MeterTemp" nillable="true" type="s:double" />
@@ -513,7 +510,7 @@
                <s:extension base="tns:TestResult">
                   <s:sequence>
 		     <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
-                     <s:element minOccurs="1" maxOccurs="1" name="JobNumber" type="s:int" />
+                     <s:element minOccurs="1" maxOccurs="1" name="JobNumber" type="s:string" />
                      <s:element minOccurs="0" maxOccurs="1" name="EmployeeId" type="s:string" />
                      <s:element minOccurs="0" maxOccurs="1" name="MeterClassCode" type="s:string" />
                      <s:element minOccurs="0" maxOccurs="1" name="FieldMeterDesc" type="s:string" />
@@ -896,11 +893,11 @@
    <wsdl:message name="GetValidatedComplianceSampleMeterByBarcodeSoapOut">
       <wsdl:part name="parameters" element="tns:GetValidatedComplianceSampleMeterByBarcodeResponse" />
    </wsdl:message>
-   <wsdl:message name="GetValidatedEvcDeviceByInventoryCodeSoapIn">
-      <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByInventoryCode" />
+   <wsdl:message name="GetValidatedEvcDeviceByBarcodeSoapIn">
+      <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByBarcode" />
    </wsdl:message>
-   <wsdl:message name="GetValidatedEvcDeviceByInventoryCodeSoapOut">
-      <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByInventoryCodeResponse" />
+   <wsdl:message name="GetValidatedEvcDeviceByBarcodeSoapOut">
+      <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByBarcodeResponse" />
    </wsdl:message>
    <wsdl:message name="GetMeterDataByInventoryCodeSoapIn">
       <wsdl:part name="parameters" element="tns:GetMeterDataByInventoryCode" />
@@ -1019,10 +1016,10 @@ not.</wsdl:documentation>
          <wsdl:input message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapIn" />
          <wsdl:output message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapOut" />
       </wsdl:operation>
-      <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
+      <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
          <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open EVC job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
-         <wsdl:input message="tns:GetValidatedEvcDeviceByInventoryCodeSoapIn" />
-         <wsdl:output message="tns:GetValidatedEvcDeviceByInventoryCodeSoapOut" />
+         <wsdl:input message="tns:GetValidatedEvcDeviceByBarcodeSoapIn" />
+         <wsdl:output message="tns:GetValidatedEvcDeviceByBarcodeSoapOut" />
       </wsdl:operation>
       <wsdl:operation name="GetMeterDataByInventoryCode">
          <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
@@ -1174,8 +1171,8 @@ unsuccessful save.</wsdl:documentation>
             <soap:body use="literal" />
          </wsdl:output>
       </wsdl:operation>
-      <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
-         <soap:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByInventoryCode" style="document" />
+      <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
+         <soap:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByBarcode" style="document" />
          <wsdl:input>
             <soap:body use="literal" />
          </wsdl:input>
@@ -1375,8 +1372,8 @@ unsuccessful save.</wsdl:documentation>
             <soap12:body use="literal" />
          </wsdl:output>
       </wsdl:operation>
-      <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
-         <soap12:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByInventoryCode" style="document" />
+      <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
+         <soap12:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByBarcode" style="document" />
          <wsdl:input>
             <soap12:body use="literal" />
          </wsdl:input>
@@ -1487,10 +1484,10 @@ unsuccessful save.</wsdl:documentation>
    <wsdl:service name="DCRWebService">
       <wsdl:documentation>Data Capture Web Service CL2 version 5.15</wsdl:documentation>
       <wsdl:port name="DCRWebServiceSoap" binding="tns:DCRWebServiceSoap">
-         <soap:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
+         <soap:address location="http://vprv5027:8025/ASSETMTR_OSB/ProxyServices/ServicesPS/DCRWebservice" />
       </wsdl:port>
       <wsdl:port name="DCRWebServiceSoap12" binding="tns:DCRWebServiceSoap12">
-         <soap12:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
+         <soap12:address location="http://vprv5027:8025/ASSETMTR_OSB/ProxyServices/ServicesPS/DCRWebservice" />
       </wsdl:port>
    </wsdl:service>
 </wsdl:definitions>

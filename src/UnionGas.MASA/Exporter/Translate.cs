@@ -76,7 +76,7 @@ namespace UnionGas.MASA.Exporter {
 
 				IndexReading = 0,
 				Comments = string.Empty,
-				JobNumber = meterDto.JobNumber ?? -1,
+				JobNumber = meterDto.JobNumber ?? "-1",
 				ProverNumber = ProverNumberId.ToString(), //
 				MeterClassCode = "EV",
 				TestReason = "6",
@@ -145,7 +145,7 @@ namespace UnionGas.MASA.Exporter {
 
 				IndexReading = (int)instrument.Items.GetItem(98).NumericValue,
 				Comments = string.Empty,
-				JobNumber = !string.IsNullOrEmpty(instrument.JobId) ? int.Parse(instrument.JobId) : -1,
+				JobNumber = !string.IsNullOrEmpty(instrument.JobId) ? instrument.JobId.ToString() : "-1",
 				ProverNumber = ProverNumberId.ToString(), //
 				MeterClassCode = "EV",
 				TestReason = "6",

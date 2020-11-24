@@ -62,15 +62,17 @@ namespace UnionGas.MASA {
 
 			_log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
 
-			var request = new GetValidatedComplianceSampleMeterByBarcodeRequest {
-				Body = new GetValidatedComplianceSampleMeterByBarcodeRequestBody(companyNumber, barCodeNumber)
+			var request = new GetValidatedEvcDeviceByBarcodeRequest {
+				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(barCodeNumber, "")
 			};
 
+
+
 			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedComplianceSampleMeterByBarcodeAsync(request))
+				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
 					.ConfigureAwait(false);
 
-			return response.Body.GetValidatedComplianceSampleMeterByBarcodeResult;
+			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
 		}
 
 		/// <summary>
@@ -94,7 +96,7 @@ namespace UnionGas.MASA {
 		/// <param name="jobNumber">The jobNumber <see cref="int"/></param>
 		/// <returns>The <see cref="Task{IList{MeterDTO}}"/></returns>
 		public async Task<IList<MeterDTO>> GetOutstandingMeterTestsByJobNumber(int jobNumber) {
-			var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber));
+			var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber.ToString()));
 
 			var response = await CallWebServiceMethod(() => _dcrWebService.GetMeterListByJobNumberAsync(request))
 				.ConfigureAwait(false);

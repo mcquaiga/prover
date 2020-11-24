@@ -213,7 +213,7 @@
     <None Include="app.config" />
     <None Include="DCRWebservice.wsdl" />
     <None Include="packages.config" />
-    <None Include="Service References\DCRWebService\DCRWebservice.wsdl" />
+    <None Include="Service References\DCRWebService\DCRWebservice1.wsdl" />
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.EmployeeDTO.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -256,7 +256,7 @@
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.GetValidatedComplianceSampleMeterByInventoryCodeResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByInventoryCodeResponse.datasource">
+    <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.MeterDTO.datasource">
