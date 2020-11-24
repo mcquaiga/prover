@@ -56,7 +56,7 @@
 
 				MeterDTO meterDto;
 				do {
-					meterDto = await _webService.FindMeterByCompanyNumber(instrument.InventoryNumber, barCode);
+					meterDto = await _webService.FindMeterByBarCodeNumber(barCode);
 
 					if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
 						|| meterDto.InventoryCode != barCode || meterDto.SerialNumber.TrimStart('0') != barCode) {

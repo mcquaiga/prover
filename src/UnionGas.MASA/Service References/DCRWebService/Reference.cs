@@ -7013,15 +7013,11 @@ namespace UnionGas.MASA.DCRWebService {
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
         public string barcode;
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
-        public string jobNbr;
-        
         public GetValidatedEvcDeviceByBarcodeRequestBody() {
         }
         
-        public GetValidatedEvcDeviceByBarcodeRequestBody(string barcode, string jobNbr) {
+        public GetValidatedEvcDeviceByBarcodeRequestBody(string barcode) {
             this.barcode = barcode;
-            this.jobNbr = jobNbr;
         }
     }
     
@@ -8095,11 +8091,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedEvcDeviceByBarcode(request);
         }
         
-        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedEvcDeviceByBarcode(string barcode, string jobNbr) {
+        public UnionGas.MASA.DCRWebService.MeterDTO GetValidatedEvcDeviceByBarcode(string barcode) {
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequestBody();
             inValue.Body.barcode = barcode;
-            inValue.Body.jobNbr = jobNbr;
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeResponse retVal = ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByBarcode(inValue);
             return retVal.Body.GetValidatedEvcDeviceByBarcodeResult;
         }
@@ -8109,11 +8104,10 @@ namespace UnionGas.MASA.DCRWebService {
             return base.Channel.GetValidatedEvcDeviceByBarcodeAsync(request);
         }
         
-        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeResponse> GetValidatedEvcDeviceByBarcodeAsync(string barcode, string jobNbr) {
+        public System.Threading.Tasks.Task<UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeResponse> GetValidatedEvcDeviceByBarcodeAsync(string barcode) {
             UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequest inValue = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequest();
             inValue.Body = new UnionGas.MASA.DCRWebService.GetValidatedEvcDeviceByBarcodeRequestBody();
             inValue.Body.barcode = barcode;
-            inValue.Body.jobNbr = jobNbr;
             return ((UnionGas.MASA.DCRWebService.DCRWebServiceSoap)(this)).GetValidatedEvcDeviceByBarcodeAsync(inValue);
         }
         

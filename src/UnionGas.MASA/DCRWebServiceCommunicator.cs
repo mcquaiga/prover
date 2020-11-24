@@ -56,17 +56,38 @@ namespace UnionGas.MASA {
 		/// </summary>
 		/// <param name="companyNumber">The companyNumber <see cref="string"/></param>
 		/// <returns>The <see cref="Task{MeterDTO}"/></returns>
-		public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber, string barCodeNumber) {
+		public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber) {
 			if (string.IsNullOrEmpty(companyNumber))
 				throw new ArgumentNullException(nameof(companyNumber));
 
 			_log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
 
 			var request = new GetValidatedEvcDeviceByBarcodeRequest {
-				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(barCodeNumber, "")
+				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(companyNumber)
 			};
 
 
+
+			var response =
+				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
+					.ConfigureAwait(false);
+
+			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
+		}
+
+		/// The FindMeterByCompanyNumber
+		/// </summary>
+		/// <param name="companyNumber">The companyNumber <see cref="string"/></param>
+		/// <returns>The <see cref="Task{MeterDTO}"/></returns>
+		public async Task<MeterDTO> FindMeterByBarCodeNumber(string barCodeNumber) {
+			if (string.IsNullOrEmpty(barCodeNumber))
+				throw new ArgumentNullException(nameof(barCodeNumber));
+
+			_log.Debug($"Finding meter with bar code number {barCodeNumber}.");
+
+			var request = new GetValidatedEvcDeviceByBarcodeRequest {
+				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(barCodeNumber)
+			};
 
 			var response =
 				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
