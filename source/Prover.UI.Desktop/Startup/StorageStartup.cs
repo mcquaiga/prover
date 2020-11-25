@@ -17,7 +17,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Prover.UI.Desktop.Startup {
 	public partial class StorageStartup : IHostedService {
@@ -72,8 +71,8 @@ namespace Prover.UI.Desktop.Startup {
 		public static void AddRepositories(this IServiceCollection services, HostBuilderContext host) {
 
 			AddAzureCosmoDb(services, host);
-
 			AddLiteDb(services, host);
+
 			if (!host.Configuration.UseAzure()) {
 				services.AddSingleton<VerificationsLiteDbRepository>();
 				services.AddSingleton<Func<IAsyncRepository<EvcVerificationTest>>>(c => () => c.GetRequiredService<VerificationsLiteDbRepository>());
