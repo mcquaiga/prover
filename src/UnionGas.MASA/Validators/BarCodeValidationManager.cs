@@ -58,9 +58,8 @@
 				do {
 					meterDto = await _webService.FindMeterByBarCodeNumber(barCode);
 
-					if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
-						|| meterDto.InventoryCode != barCode || meterDto.SerialNumber.TrimStart('0') != barCode) {
-						_log.Warn($"Bar Code Number {barCode} not found in an open job.");
+					if (string.IsNullOrEmpty(meterDto?.JobNumber) || string.IsNullOrEmpty(meterDto?.SerialNumber)) {
+						_log.Warn($"Bar Code #{barCode} not found in an open job.");
 						barCode = (string)await Update(commClient, instrument, new CancellationTokenSource().Token);
 					}
 					else {
@@ -113,22 +112,27 @@
 		/// </summary>
 		/// <returns>The <see cref="string"/></returns>
 		private string OpenBarCodeDialog() {
-			while (true) {
-				BarCodeDialogViewModel dialog = _screenManager.ResolveViewModel<BarCodeDialogViewModel>();
-				bool? result = _screenManager.ShowDialog(dialog);
+			var barCodeNumber = string.Empty;
 
-				if (result.HasValue && result.Value) {
-					_log.Debug($"Bar Code #{dialog.BarCodeNumber} was entered.");
-					if (string.IsNullOrEmpty(dialog.BarCodeNumber)) {
-						continue;
+			Application.Current.Dispatcher.Invoke((Action)delegate {
+				while (true) {
+					BarCodeDialogViewModel dialog = _screenManager.ResolveViewModel<BarCodeDialogViewModel>();
+					bool? result = _screenManager.ShowDialog(dialog);
+
+					if (result.HasValue && result.Value) {
+						_log.Debug($"Bar Code #{dialog.BarCodeNumber} was entered.");
+						if (string.IsNullOrEmpty(dialog.BarCodeNumber)) {
+							continue;
+						}
+
+						barCodeNumber = dialog.BarCodeNumber;
 					}
 
-					return dialog.BarCodeNumber;
-				}
+					_log.Debug($"Skipping Bar Code verification.");
 
-				_log.Debug($"Skipping Bar Code verification.");
-				return string.Empty;
-			}
+				}
+			});
+			return barCodeNumber;
 		}
 
 		/// <summary>

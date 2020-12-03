@@ -66,8 +66,6 @@ namespace UnionGas.MASA {
 				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(companyNumber)
 			};
 
-
-
 			var response =
 				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
 					.ConfigureAwait(false);
