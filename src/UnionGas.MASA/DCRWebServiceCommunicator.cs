@@ -67,7 +67,7 @@ namespace UnionGas.MASA {
 			};
 
 			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
+				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcode(request))
 					.ConfigureAwait(false);
 
 			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
@@ -88,7 +88,7 @@ namespace UnionGas.MASA {
 			};
 
 			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcodeAsync(request))
+				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcode(request))
 					.ConfigureAwait(false);
 
 			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
@@ -100,10 +100,10 @@ namespace UnionGas.MASA {
 		/// <param name="username">The username <see cref="string"/></param>
 		/// <returns>The <see cref="Task{EmployeeDTO}"/></returns>
 		public async Task<EmployeeDTO> GetEmployee(string username) {
-			_log.Debug($"Getting employee with #{username} from MASA.");
+			_log.Debug($"Getting user '{username}' from Maximo.");
 
 			var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-			var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployeeAsync(employeeRequest))
+			var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployee(employeeRequest))
 				.ConfigureAwait(false);
 
 			return response.Body.GetEmployeeResult;
@@ -117,7 +117,7 @@ namespace UnionGas.MASA {
 		public async Task<IList<MeterDTO>> GetOutstandingMeterTestsByJobNumber(int jobNumber) {
 			var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber.ToString()));
 
-			var response = await CallWebServiceMethod(() => _dcrWebService.GetMeterListByJobNumberAsync(request))
+			var response = await CallWebServiceMethod(() => _dcrWebService.GetMeterListByJobNumber(request))
 				.ConfigureAwait(false);
 
 			return response.Body.GetMeterListByJobNumberResult.ToList();
@@ -137,7 +137,7 @@ namespace UnionGas.MASA {
 			);
 
 			var response = await CallWebServiceMethod(() =>
-					_dcrWebService.SubmitQAEvcTestResultsAsync(request))
+					_dcrWebService.SubmitQAEvcTestResults(request))
 				.ConfigureAwait(false);
 
 			if (string.Equals(response.Body.SubmitQAEvcTestResultsResult, "success",
@@ -156,14 +156,14 @@ namespace UnionGas.MASA {
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="webServiceMethod">The webServiceMethod <see cref="Func{Task{TResult}}"/></param>
 		/// <returns>The <see cref="Task{TResult}"/></returns>
-		private async Task<TResult> CallWebServiceMethod<TResult>(Func<Task<TResult>> webServiceMethod, CancellationTokenSource tokenSource = null) {
+		private async Task<TResult> CallWebServiceMethod<TResult>(Func<TResult> webServiceMethod, CancellationTokenSource tokenSource = null) {
 			try {
 				if (tokenSource == null)
 					tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
 
 				tokenSource.Token.ThrowIfCancellationRequested();
 
-				return await Task.Run(async () => await webServiceMethod.Invoke(), tokenSource.Token)
+				return await Task.Run(() => webServiceMethod.Invoke(), tokenSource.Token)
 					.ConfigureAwait(false);
 			}
 			catch (OperationCanceledException) {
