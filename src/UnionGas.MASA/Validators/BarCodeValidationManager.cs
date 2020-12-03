@@ -119,17 +119,22 @@
 					BarCodeDialogViewModel dialog = _screenManager.ResolveViewModel<BarCodeDialogViewModel>();
 					bool? result = _screenManager.ShowDialog(dialog);
 
-					if (result.HasValue && result.Value) {
-						_log.Debug($"Bar Code #{dialog.BarCodeNumber} was entered.");
-						if (string.IsNullOrEmpty(dialog.BarCodeNumber)) {
-							continue;
+					if (result.HasValue) {
+						if (result.Value && !string.IsNullOrEmpty(dialog.BarCodeNumber)) {
+							_log.Debug($"Bar Code #{dialog.BarCodeNumber} was entered.");
+							barCodeNumber = dialog.BarCodeNumber;
+							break;
 						}
 
-						barCodeNumber = dialog.BarCodeNumber;
+						if (!result.Value) {
+							_log.Debug($"Skipping Bar Code verification.");
+							break;
+						}
 					}
+					else {
+						_log.Debug($"Skipping Bar Code verification.");
 
-					_log.Debug($"Skipping Bar Code verification.");
-
+					}
 				}
 			});
 			return barCodeNumber;
