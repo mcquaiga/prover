@@ -213,7 +213,7 @@
     <None Include="app.config" />
     <None Include="DCRWebservice.wsdl" />
     <None Include="packages.config" />
-    <None Include="Service References\DCRWebService\DCRWebservice1.wsdl" />
+    <None Include="Service References\DCRWebService\DCRWebservice.wsdl" />
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.EmployeeDTO.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

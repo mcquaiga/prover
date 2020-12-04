@@ -106,6 +106,8 @@ namespace UnionGas.MASA {
 			var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployee(employeeRequest))
 				.ConfigureAwait(false);
 
+			_log.Debug($"Welcome, {response.Body.GetEmployeeResult?.EmployeeName}");
+
 			return response.Body.GetEmployeeResult;
 		}
 
@@ -136,8 +138,7 @@ namespace UnionGas.MASA {
 				new SubmitQAEvcTestResultsRequestBody(evcQaRuns.ToArray())
 			);
 
-			var response = await CallWebServiceMethod(() =>
-					_dcrWebService.SubmitQAEvcTestResults(request))
+			var response = await CallWebServiceMethod(() => _dcrWebService.SubmitQAEvcTestResults(request))
 				.ConfigureAwait(false);
 
 			if (string.Equals(response.Body.SubmitQAEvcTestResultsResult, "success",
@@ -158,6 +159,7 @@ namespace UnionGas.MASA {
 		/// <returns>The <see cref="Task{TResult}"/></returns>
 		private async Task<TResult> CallWebServiceMethod<TResult>(Func<TResult> webServiceMethod, CancellationTokenSource tokenSource = null) {
 			try {
+				_log.Debug($"Callling {SoapClient.Endpoint.Address}//{webServiceMethod.ToString()}");
 				if (tokenSource == null)
 					tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
 
@@ -172,11 +174,10 @@ namespace UnionGas.MASA {
 			}
 			catch (EndpointNotFoundException ex) {
 				var msg =
-					$"MASA Web service could not be reached. {Environment.NewLine} " +
+					$"Web service could not be reached. {Environment.NewLine} " +
 					$"Endpoint: {SoapClient.Endpoint.Address} {Environment.NewLine}";
 
 				_log.Error(ex, msg);
-
 				throw;
 			}
 			catch (Exception ex) {
