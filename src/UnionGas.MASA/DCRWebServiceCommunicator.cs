@@ -181,7 +181,7 @@ namespace UnionGas.MASA {
 				throw;
 			}
 			catch (Exception ex) {
-				_log.Error(ex, "An error occured contacting the web service.");
+				_log.Error(ex, $"An error occured contacting the web service. Exception: {ex.Message}");
 				throw;
 			}
 		}
