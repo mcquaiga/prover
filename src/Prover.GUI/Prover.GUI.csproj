@@ -15,7 +15,6 @@
     <WarningLevel>4</WarningLevel>
     <ExpressionBlendVersion>12.0.50716.0</ExpressionBlendVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -59,8 +58,8 @@
     <ApplicationIcon>Resources\clipboard-check-blue.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.9.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -118,8 +117,8 @@
     <Reference Include="ReactiveUI.WPF, Version=8.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveUI.WPF.8.7.1\lib\net461\ReactiveUI.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Splat, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Splat.5.0.1\lib\net461\Splat.dll</HintPath>
+    <Reference Include="Splat, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Splat.6.1.7\lib\net461\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -233,6 +232,7 @@
     <Compile Include="Screens\Dialogs\ProgressStatusDialog\VolumeTestStatusView.xaml.cs">
       <DependentUpon>VolumeTestStatusView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\IDisplayOnStartup.cs" />
     <Compile Include="Screens\IWindowSettings.cs" />
     <Compile Include="Screens\Modules\Certificates\Screens\EditCertificateView.xaml.cs">
       <DependentUpon>EditCertificateView.xaml</DependentUpon>
@@ -743,6 +743,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Screens\Modules\Certificates\Reports\Resources\enbridge_primary_logo.jpg" />
     <Resource Include="Screens\Modules\QAProver\Screens\Designer\sample_instrument.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -814,12 +815,12 @@
     if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
     xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -48,7 +48,9 @@
         /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
         /// <param name="loginService">The loginService<see cref="ILoginService{EmployeeDTO}"/></param>
         /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceCommunicator"/></param>
-        public ExportToMasaManager(TestRunService testRunService, ILoginService<EmployeeDTO> loginService, DCRWebServiceCommunicator dcrWebService)
+        public ExportToMasaManager(TestRunService testRunService, 
+            ILoginService<EmployeeDTO> loginService, 
+            DCRWebServiceCommunicator dcrWebService)
         {
             _testRunService = testRunService;
             _dcrWebService = dcrWebService;
@@ -102,13 +104,25 @@
         /// <returns>The <see cref="Task{bool}"/></returns>
         public async Task<bool> ExportFailedTest(string companyNumber)
         {
-            var meterDto = await _dcrWebService.FindMeterByCompanyNumber(companyNumber);
+            Log.Info($"Exporting failed test to MASA. Inventory # {companyNumber}");
+            try
+            {
+                var meterDto = await _dcrWebService.FindMeterByCompanyNumber(companyNumber);
 
-            if (meterDto == null)
-                throw new Exception($"Inventory #{companyNumber} was not be found on an open job.");
+                if (meterDto == null)
+                    throw new Exception($"Inventory #{companyNumber} could not be found on an open job.");
 
-            var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService.User.Id);
-            return await _dcrWebService.SendQaTestResults(new[] { failedTest });
+                var failedTest = Translate.CreateFailedTestForExport(meterDto, _loginService?.User?.Id);
+
+                return await _dcrWebService.SendQaTestResults(new[] {failedTest});
+            }
+            catch(Exception ex)
+            {
+                Log.Error($"Error exporting failed MASA QA test run. {Environment.NewLine}" +
+                          $"Exception: {ex}");
+            }
+
+            return false;
         }
 
         #endregion
