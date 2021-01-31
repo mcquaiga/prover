@@ -85,6 +85,12 @@ namespace Prover.Application.Dashboard
 		}
 
 		#endregion
+
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+
+		}
 	}
 }
 

@@ -1,16 +1,13 @@
-﻿using DynamicData;
-using Prover.Application.Extensions;
-using Prover.Calculations;
+﻿using Prover.Calculations;
 using Prover.Shared.Extensions;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Devices.Core.Items.ItemGroups;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Prover.Application.ViewModels.Corrections
 {
@@ -19,47 +16,6 @@ namespace Prover.Application.ViewModels.Corrections
 
 	}
 
-
-	public abstract class VerificationViewModel : VerifyViewModel, IAssertVerification
-	{
-
-		protected VerificationViewModel()
-		{
-			VerifiedObservable = Observable.Empty(false);
-
-			this.WhenAnyObservable(x => x.VerifiedObservable)
-				.Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
-				.ToPropertyEx(this, x => x.Verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
-		}
-
-		//protected VerificationViewModel(bool verified)
-		//{
-		//    VerifiedObservable = Observable.Empty(verified);
-
-		//    this.WhenAnyObservable(x => x.VerifiedObservable)
-		//        .Throttle(TimeSpan.FromMilliseconds(25), RxApp.TaskpoolScheduler)
-		//        .ToPropertyEx(this, x => x.Verified, verified, deferSubscription: true, scheduler: RxApp.MainThreadScheduler);
-		//}
-
-		public virtual extern bool Verified { [ObservableAsProperty] get; }
-
-		public IObservable<bool> VerifiedObservable { get; protected set; }
-
-		protected void RegisterVerificationsForVerified(ICollection<VerificationViewModel> verifications)
-		{
-			if (verifications == null || !verifications.Any())
-				return;
-
-			VerifiedObservable = verifications.AsObservableChangeSet()
-				.AutoRefresh(model => model.Verified)
-				.ToCollection()
-				.Select(x => x.Any() && x.All(y => y != null && y.Verified))
-				//.LogDebug(x => $"{GetType().Name} - Verified = {x}", Logger)
-				.LogErrors(Logger)
-				.LoggedCatch(this, VerifiedObservable)
-				.ObserveOn(RxApp.MainThreadScheduler);
-		}
-	}
 
 	public interface IAssertExpectedActual
 	{
@@ -86,19 +42,26 @@ namespace Prover.Application.ViewModels.Corrections
 		{
 			PassTolerance = passTolerance;
 
-			VerifiedObservable = this.WhenAnyValue(x => x.PercentError)
-				.Select(p => p.IsBetween(PassTolerance));
 
-
-			this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)
-				.ToPropertyEx(this, x => x.PercentError, 100m, true)
-				.DisposeWith(Cleanup);
 		}
 
 		[Reactive] public decimal PassTolerance { get; protected set; }
 		public extern decimal ExpectedValue { [ObservableAsProperty] get; }
 		public extern decimal ActualValue { [ObservableAsProperty] get; }
 		public extern decimal PercentError { [ObservableAsProperty] get; }
+
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
+
+			VerifiedObservable = this.WhenAnyValue(x => x.PercentError).Select(p => p.IsBetween(PassTolerance));
+
+			this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.PercentDeviation)
+				.ToPropertyEx(this, x => x.PercentError, 100m, true)
+				.DisposeWith(Cleanup);
+		}
 	}
 
 	public abstract class DeviationTestViewModel<T> : ViewModelWithIdBase, IAssertVerification, IDeviceItemsGroup<T>
@@ -112,6 +75,20 @@ namespace Prover.Application.ViewModels.Corrections
 		{
 			PassTolerance = passTolerance;
 
+
+		}
+
+		[Reactive] public T Items { get; set; }
+		[Reactive] public int PassTolerance { get; protected set; }
+		[Reactive] public int ActualValue { get; set; }
+		public extern int ExpectedValue { [ObservableAsProperty] get; }
+		public extern int Deviation { [ObservableAsProperty] get; }
+		public extern bool Verified { [ObservableAsProperty] get; }
+
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
 			this.WhenAnyValue(x => x.ExpectedValue, x => x.ActualValue, Calculators.Deviation)
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.Select(x => ActualValue == 0 && ExpectedValue == 0 ? 100 : x)
@@ -124,13 +101,6 @@ namespace Prover.Application.ViewModels.Corrections
 				.ToPropertyEx(this, x => x.Verified)
 				.DisposeWith(Cleanup);
 		}
-
-		[Reactive] public T Items { get; set; }
-		[Reactive] public int PassTolerance { get; protected set; }
-		[Reactive] public int ActualValue { get; set; }
-		public extern int ExpectedValue { [ObservableAsProperty] get; }
-		public extern int Deviation { [ObservableAsProperty] get; }
-		public extern bool Verified { [ObservableAsProperty] get; }
 	}
 
 	public abstract class ItemVarianceTestViewModel<T> : VarianceTestViewModel, IDeviceItemsGroup<T>
@@ -150,7 +120,8 @@ namespace Prover.Application.ViewModels.Corrections
 	public abstract class CorrectionTestViewModel<T> : ItemVarianceTestViewModel<T>
 		where T : class
 	{
-		protected readonly ReactiveCommand<Unit, decimal> UpdateFactor;
+		protected ReactiveCommand<Unit, decimal> UpdateFactor;
+		private CompositeDisposable _cleanup = new CompositeDisposable();
 
 		protected CorrectionTestViewModel()
 		{
@@ -158,29 +129,49 @@ namespace Prover.Application.ViewModels.Corrections
 
 		protected CorrectionTestViewModel(T items, decimal passTolerance) : base(items, passTolerance)
 		{
-			UpdateFactor = ReactiveCommand.Create<Unit, decimal>(_ => CalculatorFactory.Invoke().CalculateFactor());
 
-			UpdateFactor
-					.ToPropertyEx(this, x => x.ExpectedValue)
-				.DisposeWith(Cleanup);
 
-			UpdateFactor.DisposeWith(Cleanup);
 		}
 
 		protected abstract Func<ICorrectionCalculator> CalculatorFactory { get; }
 
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
+
+			UpdateFactor = ReactiveCommand.Create<Unit, decimal>(_ => CalculatorFactory.Invoke().CalculateFactor())
+										  .DisposeWith(cleanup);
+
+			UpdateFactor.ToPropertyEx(this, x => x.ExpectedValue)
+						.DisposeWith(cleanup);
+
+			UpdateFactor
+					.DisposeWith(cleanup);
+		}
+
+		/// <inheritdoc />
+		protected override void Dispose(bool isDisposing)
+		{
+			if (isDisposing)
+				_cleanup.Dispose();
+		}
+
 		//public IItemGroup TestItems { get; set; }
 	}
 
-	public class CorrectionVerificationsViewModel : ViewModelBase
-	{
-		public ICollection<VerificationTestPointViewModel> VerificationTests { get; set; } = new List<VerificationTestPointViewModel>();
+	//public class CorrectionVerificationsViewModel : ViewModelBase
+	//{
+	//	public ICollection<VerificationTestPointViewModel> VerificationTests { get; set; } = new List<VerificationTestPointViewModel>();
 
-		internal CorrectionVerificationsViewModel RefreshTests(ICollection<VerificationTestPointViewModel> testViewModels)
-		{
-			VerificationTests = testViewModels;
-			return this;
-		}
-	}
+	//	internal CorrectionVerificationsViewModel RefreshTests(ICollection<VerificationTestPointViewModel> testViewModels)
+	//	{
+	//		VerificationTests = testViewModels;
+	//		return this;
+	//	}
+
+
+	//}
 
 }

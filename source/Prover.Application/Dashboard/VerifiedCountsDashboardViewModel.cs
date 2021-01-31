@@ -21,19 +21,26 @@ namespace Prover.Application.Dashboard
 
 			shared.Select(x => x.Items.Count(test => test.Verified))
 				  .ToPropertyEx(this, model => model.Passed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
-				  .DisposeWith(Cleanup);
+				  .DisposeWith(DeactivateDisposer);
+
 			shared.Select(x => x.Items.Count(test => test.Verified == false))
 				  .ToPropertyEx(this, model => model.Failed, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
-				  .DisposeWith(Cleanup);
+				  .DisposeWith(DeactivateDisposer);
 
 			this.WhenAnyValue(x => x.Passed, x => x.Failed, (p, f) => p + f)
 				.ToPropertyEx(this, x => x.Total)
-				.DisposeWith(Cleanup);
+				.DisposeWith(DeactivateDisposer);
 		}
 
 		public extern int Passed { [ObservableAsProperty] get; }
 		public extern int Failed { [ObservableAsProperty] get; }
 		public extern int Total { [ObservableAsProperty] get; }
+
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+
+		}
 	}
 }
 

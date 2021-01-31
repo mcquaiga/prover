@@ -53,6 +53,10 @@ namespace Prover.UI.Desktop.Dialogs {
 
 		public ValidationContext ValidationContext { get; } = new ValidationContext();
 
+		protected override void HandleActivation(CompositeDisposable cleanup) {
+
+		}
+		
 		/// <inheritdoc />
 		protected override void Dispose(bool isDisposing) {
 			CloseCommand?.Dispose();

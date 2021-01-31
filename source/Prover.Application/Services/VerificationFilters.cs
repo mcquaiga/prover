@@ -35,7 +35,7 @@ namespace Prover.Application.Services
 
 		public static bool IsExportedOrArchived(this EvcVerificationTest test) => IsExported(test) || IsArchived(test);
 		public static bool IsNotArchived(this EvcVerificationTest test) => !test.IsArchived();
-		public static bool IsArchived(this EvcVerificationTest test) => test.ArchivedDateTime != null;
+		public static bool IsArchived(this EvcVerificationTest test) => test.Archived != null;
 		public static bool IsNotExported(this EvcVerificationTest test) => !test.IsExported();
 		public static bool IsExported(this EvcVerificationTest test) => test.ExportedDateTime != null;
 

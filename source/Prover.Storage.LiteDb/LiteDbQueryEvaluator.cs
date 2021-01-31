@@ -4,7 +4,7 @@ using Prover.Shared.Domain;
 using Prover.Shared.Storage.Interfaces;
 
 namespace Prover.Storage.LiteDb {
-	internal class LiteDbQueryEvaluator<T> where T : BaseEntity {
+	internal class LiteDbQueryEvaluator<T> where T : EntityBase {
 		private static ILiteQueryable<T> _query;
 		private static IQuerySpecification<T> _specification;
 

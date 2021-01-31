@@ -53,7 +53,7 @@ namespace Prover.Application.Specifications
 			return PredicateBuilder.Create<EvcVerificationTest>(test =>
 					(test.TestDateTime >= FromTestDate && test.TestDateTime <= ToTestDate)
 				&& (IncludeExported || test.ExportedDateTime == null)
-				&& (IncludeArchived || test.ArchivedDateTime == null)
+				&& (IncludeArchived || test.Archived == null)
 				);
 		}
 	}

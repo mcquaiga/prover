@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BuildOutputDir>..\..\build</BuildOutputDir>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>$(BuildOutputDir)\Release\</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Devices\Devices.Core\Devices.Core.csproj" />
+		<ProjectReference Include="..\Prover.Application\Prover.Application.csproj" />
+		<ProjectReference Include="..\Prover.Shared\Prover.Shared.csproj" />
+		<ProjectReference Include="..\Prover.UI.Desktop\Prover.UI.Desktop.csproj" />
+	</ItemGroup>
+
+</Project>

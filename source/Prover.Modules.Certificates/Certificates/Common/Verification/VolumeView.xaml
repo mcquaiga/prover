@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="Prover.GUI.Screens.Modules.Certificates.Common.Verification.VolumeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d"
+             d:DesignHeight="80" d:DesignWidth="350">
+
+    <StackPanel Orientation="Horizontal">
+        <Grid Margin="5, 5, 50, 5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock Foreground="Black" Text="T. Units: " FontWeight="Bold" />
+                <TextBlock Foreground="Black" x:Name="Instrument_Pressure_Units" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Foreground="Black" Text="Base T.: " FontWeight="Bold" />
+                <TextBlock Foreground="Black" x:Name="Instrument_Pressure_EvcBase" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBlock Foreground="Black" Text="T. Range: " FontWeight="Bold" />
+                <TextBlock Foreground="Black" x:Name="Instrument_Pressure_Range" />
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="43*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock />
+                <TextBlock Margin="0,2,0,0" FontWeight="Bold">%</TextBlock>
+                <TextBlock Margin="0,2,0,0" FontWeight="Bold">A</TextBlock>
+                <TextBlock Margin="0,2,0,0" FontWeight="Bold">G</TextBlock>
+            </StackPanel>
+            <ListBox MaxHeight="72" MinHeight="72"
+                     MinWidth="160" MaxWidth="160"
+                     Grid.Column="1" Margin="10, 0, 5, 0"
+                     Name="Tests"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     IsEnabled="False">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5,0,5,0" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="Control">
+                        <Setter Property="Focusable" Value="False" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Grid>
+    </StackPanel>
+</UserControl>

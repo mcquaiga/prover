@@ -10,62 +10,65 @@ using System.Reactive.Linq;
 
 namespace Prover.Application.ViewModels.Corrections
 {
-    public sealed class PressureFactorViewModel : CorrectionTestViewModel<PressureItems>
-    {
-        private const decimal Tolerance = Tolerances.PRESSURE_ERROR_TOLERANCE;
+	public sealed class PressureFactorViewModel : CorrectionTestViewModel<PressureItems>
+	{
+		private const decimal Tolerance = Tolerances.PRESSURE_ERROR_TOLERANCE;
 
-        private PressureFactorViewModel() { }
+		private PressureFactorViewModel() { }
 
-        public PressureFactorViewModel(PressureItems items, decimal gauge, decimal atmosphericGauge) : base(items, Tolerance)
-        {
-            Gauge = gauge;
+		public PressureFactorViewModel(PressureItems items, decimal gauge, decimal atmosphericGauge) : base(items, Tolerance)
+		{
+			Gauge = gauge;
 
-            if (Items.TransducerType == PressureTransducerType.Absolute)
-            {
-                AtmosphericGauge = atmosphericGauge;
-            }
+			if (Items.TransducerType == PressureTransducerType.Absolute)
+			{
+				AtmosphericGauge = atmosphericGauge;
+			}
 
-            _calculator = new PressureCalculator(Items, Gauge, AtmosphericGauge);
+			_calculator = new PressureCalculator(Items, Gauge, AtmosphericGauge);
 
-            this.WhenAnyValue(x => x.Items)
-                .Select(i => i.Factor)
-                .ToPropertyEx(this, x => x.ActualValue, Items.Factor)
-                .DisposeWith(Cleanup);
+		}
 
-            this.WhenAnyValue(x => x.Gauge, x => x.AtmosphericGauge,
-                (g, atm) =>
-                {
-                    _calculator.Gauge = g;
-                    _calculator.GaugeAtmospheric = atm;
-                    return Unit.Default;
-                })
-                .Throttle(TimeSpan.FromMilliseconds(100))
-                .InvokeCommand(UpdateFactor)
-                .DisposeWith(Cleanup);
+		public extern decimal AbsoluteGauge { [ObservableAsProperty] get; }
 
-            this.WhenAnyValue(x => x.Gauge, x => x.AtmosphericGauge, (g, atm) => g + atm)
-                .ToPropertyEx(this, x => x.AbsoluteGauge, deferSubscription: true, scheduler: RxApp.MainThreadScheduler)
-                .DisposeWith(Cleanup);
+		public bool ShowAbsolute => Items.TransducerType == PressureTransducerType.Absolute;
 
-            //PressureCalculator.GetGasPressure(items.TransducerType, gauge, atmosphericGauge);
-        }
+		[Reactive] public decimal Gauge { get; set; }
+		[Reactive] public decimal AtmosphericGauge { get; set; }
 
-        public extern decimal AbsoluteGauge { [ObservableAsProperty] get; }
+		protected override Func<ICorrectionCalculator> CalculatorFactory => () => _calculator;
 
-        public bool ShowAbsolute => Items.TransducerType == PressureTransducerType.Absolute;
+		public decimal GetTotalGauge()
+		{
+			return _calculator.GasPressure;
+		}
 
-        [Reactive] public decimal Gauge { get; set; }
-        [Reactive] public decimal AtmosphericGauge { get; set; }
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
 
-        protected override Func<ICorrectionCalculator> CalculatorFactory => () => _calculator;
+			this.WhenAnyValue(x => x.Items)
+				.Select(i => i.Factor)
+				.ToPropertyEx(this, x => x.ActualValue, Items.Factor)
+				.DisposeWith(cleanup);
 
-        public decimal GetTotalGauge()
-        {
-            return _calculator.GasPressure;
-        }
+			this.WhenAnyValue(x => x.Gauge, x => x.AtmosphericGauge,
+				(g, atm) =>
+				{
+					_calculator.Gauge = g;
+					_calculator.GaugeAtmospheric = atm;
+					return Unit.Default;
+				})
+				.Throttle(TimeSpan.FromMilliseconds(100))
+				.InvokeCommand(UpdateFactor)
+				.DisposeWith(cleanup);
 
+			this.WhenAnyValue(x => x.Gauge, x => x.AtmosphericGauge, (g, atm) => g + atm)
+				.ToPropertyEx(this, x => x.AbsoluteGauge, deferSubscription: true, scheduler: RxApp.MainThreadScheduler)
+				.DisposeWith(cleanup);
+		}
 
-        private readonly PressureCalculator _calculator;
-        private PressureCalculator Calculator() => new PressureCalculator(Items, Gauge, AtmosphericGauge);
-    }
+		private readonly PressureCalculator _calculator;
+		private PressureCalculator Calculator() => new PressureCalculator(Items, Gauge, AtmosphericGauge);
+	}
 }

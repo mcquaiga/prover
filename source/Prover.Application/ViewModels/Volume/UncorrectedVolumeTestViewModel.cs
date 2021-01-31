@@ -9,73 +9,88 @@ using System.Reactive.Linq;
 
 namespace Prover.Application.ViewModels.Volume
 {
-    public interface IUncorrectedVolumeTestViewModel
-    {
-        VolumeInputType DriveInputType { get; set; }
-        decimal AppliedInput { get; set; }
-        decimal UncorrectedInputVolume { get; }
-        decimal DriveRate { get; }
-        VolumeItems StartValues { get; set; }
-        VolumeItems EndValues { get; set; }
-        decimal StartReading { get; set; }
-        decimal EndReading { get; set; }
-        decimal Multiplier { get; set; }
-        PulseOutputTestViewModel PulseOutputTest { get; set; }
-        decimal PassTolerance { get; }
-        decimal ExpectedValue { get; }
-        decimal ActualValue { get; }
-        decimal PercentError { get; }
-        bool Verified { get; }
-        IObservable<bool> VerifiedObservable { get; }
-    }
+	public interface IUncorrectedVolumeTestViewModel
+	{
+		VolumeInputType DriveInputType { get; set; }
+		decimal AppliedInput { get; set; }
+		decimal UncorrectedInputVolume { get; }
+		decimal DriveRate { get; }
+		VolumeItems StartValues { get; set; }
+		VolumeItems EndValues { get; set; }
+		decimal StartReading { get; set; }
+		decimal EndReading { get; set; }
+		decimal Multiplier { get; set; }
+		PulseOutputTestViewModel PulseOutputTest { get; set; }
+		decimal PassTolerance { get; }
+		decimal ExpectedValue { get; }
+		decimal ActualValue { get; }
+		decimal PercentError { get; }
+		bool Verified { get; }
+		IObservable<bool> VerifiedObservable { get; }
+	}
 
-    public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModelBase, IDeviceStartAndEndValues<VolumeItems>, IUncorrectedVolumeTestViewModel
-    {
-        private const decimal Tolerance = Tolerances.UNCOR_ERROR_THRESHOLD;
+	public class UncorrectedVolumeTestViewModel : VolumeTestRunViewModelBase, IDeviceStartAndEndValues<VolumeItems>, IUncorrectedVolumeTestViewModel
+	{
+		private const decimal Tolerance = Tolerances.UNCOR_ERROR_THRESHOLD;
 
-        public UncorrectedVolumeTestViewModel(VolumeInputType inputType, VolumeItems startValues, VolumeItems endValues, decimal? driveRate = null)
-            : base(Tolerance, startValues, endValues)
-        {
-            DriveInputType = inputType;
+		public UncorrectedVolumeTestViewModel(VolumeInputType inputType, VolumeItems startValues, VolumeItems endValues, decimal? driveRate = null)
+			: base(Tolerance, startValues, endValues)
+		{
+			DriveInputType = inputType;
 
-            this.WhenAnyValue(x => x.StartReading, x => x.EndReading,
-                    (start, end) => VolumeCalculator.TotalVolume(start, end, startValues.UncorrectedMultiplier))
-                .ToPropertyEx(this, x => x.ActualValue).DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.AppliedInput)
-                .Select(_ => VolumeCalculator.TrueUncorrected(DriveRate, AppliedInput))
-                .ToPropertyEx(this, x => x.ExpectedValue).DisposeWith(Cleanup);
 
-            this.WhenAnyValue(x => x.ExpectedValue)
-                .ToPropertyEx(this, x => x.UncorrectedInputVolume).DisposeWith(Cleanup);
+			Multiplier = startValues.UncorrectedMultiplier;
 
-            this.WhenAnyValue(x => x.StartValues)
-                .Subscribe(v => StartReading = v.UncorrectedReading);
+			DriveRate = driveRate ?? startValues.DriveRate;
+		}
 
-            this.WhenAnyValue(x => x.EndValues)
-                .Subscribe(v => EndReading = v.UncorrectedReading);
+		public VolumeInputType DriveInputType { get; set; }
 
-            this.WhenAnyValue(x => x.StartReading)
-                .Subscribe(startReading => StartValues.UncorrectedReading = startReading);
+		[Reactive] public decimal AppliedInput { get; set; }
 
-            this.WhenAnyValue(x => x.EndReading)
-                .Subscribe(endReading => EndValues.UncorrectedReading = endReading);
+		public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
 
-            Multiplier = startValues.UncorrectedMultiplier;
+		protected override void Dispose(bool isDisposing)
+		{
+		}
 
-            DriveRate = driveRate ?? startValues.DriveRate;
-        }
+		public virtual decimal DriveRate { get; protected set; }
 
-        public VolumeInputType DriveInputType { get; set; }
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
 
-        [Reactive] public decimal AppliedInput { get; set; }
+			this.WhenAnyValue(x => x.StartReading, x => x.EndReading, (start, end) => VolumeCalculator.TotalVolume(start, end, StartValues.UncorrectedMultiplier))
+				.ToPropertyEx(this, x => x.ActualValue)
+				.DisposeWith(cleanup);
 
-        public extern decimal UncorrectedInputVolume { [ObservableAsProperty] get; }
+			this.WhenAnyValue(x => x.AppliedInput)
+				.Select(_ => VolumeCalculator.TrueUncorrected(DriveRate, AppliedInput))
+				.ToPropertyEx(this, x => x.ExpectedValue)
+				.DisposeWith(cleanup);
 
-        protected override void Dispose(bool isDisposing)
-        {
-        }
+			this.WhenAnyValue(x => x.ExpectedValue)
+				.ToPropertyEx(this, x => x.UncorrectedInputVolume)
+				.DisposeWith(cleanup);
 
-        public virtual decimal DriveRate { get; protected set; }
-    }
+			this.WhenAnyValue(x => x.StartValues)
+				.Subscribe(v => StartReading = v.UncorrectedReading)
+				.DisposeWith(cleanup);
+
+			this.WhenAnyValue(x => x.EndValues)
+				.Subscribe(v => EndReading = v.UncorrectedReading)
+				.DisposeWith(cleanup);
+
+			this.WhenAnyValue(x => x.StartReading)
+				.Subscribe(startReading => StartValues.UncorrectedReading = startReading)
+				.DisposeWith(cleanup);
+
+			this.WhenAnyValue(x => x.EndReading)
+				.Subscribe(endReading => EndValues.UncorrectedReading = endReading)
+				.DisposeWith(cleanup);
+		}
+	}
 }

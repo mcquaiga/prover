@@ -9,6 +9,7 @@ namespace Prover.Modules.UnionGas.Exporter.Views
 	/// <summary>
 	///     Interaction logic for ExporterView.xaml
 	/// </summary>
+	[SingleInstanceView]
 	public partial class ExporterView
 	{
 		private readonly Func<int, string> CountToStringConverter = value => value == 1 ? $"{value} test" : $"{value} tests";

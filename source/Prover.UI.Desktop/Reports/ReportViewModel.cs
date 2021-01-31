@@ -1,4 +1,5 @@
-﻿using Prover.Application.Interfaces;
+﻿using System.Reactive.Disposables;
+using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using Prover.UI.Desktop.ViewModels;
 using ReactiveUI;
@@ -16,5 +17,11 @@ namespace Prover.UI.Desktop.Reports
 		}
 
 		[Reactive] public ReactiveObject ContentViewModel { get; set; }
+
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+
+		}
 	}
 }

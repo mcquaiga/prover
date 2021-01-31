@@ -22,6 +22,7 @@ namespace Prover.Application.ViewModels.Volume
 
 		[Reactive] public VolumeItems StartValues { get; set; }
 		[Reactive] public VolumeItems EndValues { get; set; }
+
 		public CorrectedVolumeTestViewModel Corrected => AllTests().OfType<CorrectedVolumeTestViewModel>().FirstOrDefault();
 		public UncorrectedVolumeTestViewModel Uncorrected => AllTests().OfType<UncorrectedVolumeTestViewModel>().FirstOrDefault();
 
@@ -40,20 +41,16 @@ namespace Prover.Application.ViewModels.Volume
 		public void AddVerificationTest(VerificationViewModel verification)
 		{
 			_allTests.Add(verification);
-			RegisterVerificationsForVerified(_allTests);
 		}
 
-		//public void UpdateValues(DeviceType deviceType, ICollection<ItemValue> startValues, ICollection<ItemValue> endValues)
-		//{
-		//    foreach (var correctionin )
-		//    {
-		//        var itemType = correction.GetProperty(nameof(CorrectionTestViewModel<IItemGroup>.Items));
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
 
-		//        itemType?.SetValue(correction, deviceType.GetGroupValues(itemValues, itemType.PropertyType));
-		//    }
-
-		//    _items.Edit(update => update.AddOrUpdate(itemValues));
-		//}
+			RegisterVerificationsForVerified(_allTests);
+		}
 
 		protected abstract ICollection<VerificationViewModel> GetSpecificTests();
 	}

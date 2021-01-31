@@ -25,12 +25,18 @@ namespace Prover.Application.Dashboard
 			list.CountChanged
 				//.Throttle(TimeSpan.FromMilliseconds(150))
 				.Select(i => list.Items.Count(filter))
-				.ToPropertyEx(this, model => model.Value, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true).DisposeWith(Cleanup);
+				.ToPropertyEx(this, model => model.Value, 0, scheduler: RxApp.MainThreadScheduler, deferSubscription: true)
+				.DisposeWith(Cleanup);
 		}
 
 		public extern int Value { [ObservableAsProperty] get; }
 
 		//public IObservable<Func<EvcVerificationTest, bool>> ParentFilterObservable { get; }
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
 
+		}
 	}
 }

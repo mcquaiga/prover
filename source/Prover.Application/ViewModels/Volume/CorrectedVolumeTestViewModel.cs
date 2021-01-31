@@ -8,47 +8,58 @@ using System.Reactive.Disposables;
 
 namespace Prover.Application.ViewModels.Volume
 {
-    public class CorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
-    {
-        private const decimal Tolerance = Tolerances.COR_ERROR_THRESHOLD;
+	public class CorrectedVolumeTestViewModel : VolumeTestRunViewModelBase
+	{
+		private readonly ICalculateTrueCorrectedFactor _trueCorrectedFactor;
+		private const decimal Tolerance = Tolerances.COR_ERROR_THRESHOLD;
 
-        public CorrectedVolumeTestViewModel(IUncorrectedVolumeTestViewModel uncorrected,
-            ICalculateTrueCorrectedFactor trueCorrectedFactor, VolumeItems startValues, VolumeItems endValues)
-            : base(Tolerance, startValues, endValues)
-        {
-            Uncorrected = uncorrected;
+		public CorrectedVolumeTestViewModel(IUncorrectedVolumeTestViewModel uncorrected,
+			ICalculateTrueCorrectedFactor trueCorrectedFactor, VolumeItems startValues, VolumeItems endValues)
+			: base(Tolerance, startValues, endValues)
+		{
+			_trueCorrectedFactor = trueCorrectedFactor;
+			Uncorrected = uncorrected;
 
-            this.WhenAnyValue(x => x.StartReading, x => x.EndReading,
-                    (start, end) => VolumeCalculator.TotalVolume(start, end, startValues.CorrectedMultiplier))
-                .ToPropertyEx(this, x => x.ActualValue)
-                .DisposeWith(Cleanup);
+			Multiplier = startValues.CorrectedMultiplier;
+		}
 
-            trueCorrectedFactor.TrueCorrectedObservable
-                .ToPropertyEx(this, x => x.TotalCorrectionFactor, trueCorrectedFactor.TotalCorrectionFactor, true)
-                .DisposeWith(Cleanup);
+		[Reactive] public IUncorrectedVolumeTestViewModel Uncorrected { get; protected set; }
 
-            this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume, x => x.TotalCorrectionFactor,
-                    (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
-                .ToPropertyEx(this, x => x.ExpectedValue)
-                .DisposeWith(Cleanup);
+		public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
 
-            this.WhenAnyValue(x => x.StartValues)
-                .Subscribe(v => StartReading = v.CorrectedReading);
+		/// <param name="cleanup"></param>
+		/// <inheritdoc />
+		protected override void HandleActivation(CompositeDisposable cleanup)
+		{
+			base.HandleActivation(cleanup);
 
-            this.WhenAnyValue(x => x.EndValues)
-                .Subscribe(v => EndReading = v.CorrectedReading);
+			this.WhenAnyValue(x => x.StartReading, x => x.EndReading, (start, end) => VolumeCalculator.TotalVolume(start, end, StartValues.CorrectedMultiplier))
+				.ToPropertyEx(this, x => x.ActualValue)
+				.DisposeWith(cleanup);
 
-            this.WhenAnyValue(x => x.StartReading)
-                .Subscribe(startReading => StartValues.CorrectedReading = startReading);
+			_trueCorrectedFactor.TrueCorrectedObservable
+								.ToPropertyEx(this, x => x.TotalCorrectionFactor, _trueCorrectedFactor.TotalCorrectionFactor, true)
+								.DisposeWith(cleanup);
 
-            this.WhenAnyValue(x => x.EndReading)
-                .Subscribe(endReading => EndValues.CorrectedReading = endReading);
+			this.WhenAnyValue(x => x.Uncorrected.UncorrectedInputVolume, x => x.TotalCorrectionFactor, (input, factor) => VolumeCalculator.TrueCorrected(factor, input))
+				.ToPropertyEx(this, x => x.ExpectedValue)
+				.DisposeWith(cleanup);
 
-            Multiplier = startValues.CorrectedMultiplier;
-        }
+			this.WhenAnyValue(x => x.StartValues)
+				.Subscribe(v => StartReading = v.CorrectedReading)
+				.DisposeWith(cleanup);
 
-        [Reactive] public IUncorrectedVolumeTestViewModel Uncorrected { get; protected set; }
+			this.WhenAnyValue(x => x.EndValues)
+				.Subscribe(v => EndReading = v.CorrectedReading)
+				.DisposeWith(cleanup);
 
-        public extern decimal TotalCorrectionFactor { [ObservableAsProperty] get; }
-    }
+			this.WhenAnyValue(x => x.StartReading)
+				.Subscribe(startReading => StartValues.CorrectedReading = startReading)
+				.DisposeWith(cleanup);
+
+			this.WhenAnyValue(x => x.EndReading)
+				.Subscribe(endReading => EndValues.CorrectedReading = endReading)
+				.DisposeWith(cleanup);
+		}
+	}
 }
