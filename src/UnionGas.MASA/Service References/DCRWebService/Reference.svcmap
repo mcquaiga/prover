@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5035da29-a432-4c13-9ea8-a65e22456cd6" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="908d969d-ee79-4cc8-be90-cdd53654d329" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="C:\Users\adam\Dev\EvcProver\src\UnionGas.MASA\dcrwebservice.xml" Protocol="file" SourceId="1" />
+    <MetadataSource Address="C:\Users\mcqua\source\repos\EvcProver\src\UnionGas.MASA\DCRWebservice.wsdl" Protocol="file" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="dcrwebservice.wsdl" MetadataType="Wsdl" ID="846b0eaf-350a-464e-8b22-ed3bf3d96f64" SourceId="1" SourceUrl="file:///C:/Users/adam/Dev/EvcProver/src/UnionGas.MASA/dcrwebservice.xml" />
+    <MetadataFile FileName="DCRWebservice.wsdl" MetadataType="Wsdl" ID="7bd4cf4a-32da-4345-b76c-436751ca74ec" SourceId="1" SourceUrl="file:///C:/Users/mcqua/source/repos/EvcProver/src/UnionGas.MASA/DCRWebservice.wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
