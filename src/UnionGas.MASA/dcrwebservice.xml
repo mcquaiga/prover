@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsdl:documentation>Data Capture Web Service CL2 version 5.15</wsdl:documentation>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="GetCurrentlyConnectedDatabase">
@@ -92,7 +92,7 @@
       <s:element name="VerifyRotaryMeterIsInJob">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="jobNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="jobNumber" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="bodyBarcode" type="s:string" />
           </s:sequence>
         </s:complexType>
@@ -108,7 +108,7 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="inventoryCode" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -121,47 +121,47 @@
       </s:element>
       <s:complexType name="MeterDTO">
         <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="Id" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="InventoryCode" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="BarcodeNumber" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="SerialNumber" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="InventoryStatusId" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BarcodeNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryStatusId" nillable="true" type="s:int" />
           <s:element minOccurs="0" maxOccurs="1" name="InventoryStatusDesc" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="ModelId" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="ModelName" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="ManufacturerName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModelId" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ModelName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ManufacturerName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="InventoryCategoryCode" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="InventoryGroupCode" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="InventoryLocationId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryGroupCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryLocationId" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="CisWhseCode" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionNbr" nillable="true" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryVersionNbr" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryVersionDate" nillable="true" type="s:dateTime" />
           <s:element minOccurs="0" maxOccurs="1" name="InventoryVersionFirmware" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ModuleInventoryCode" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ModuleBarcodeNumber" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ModuleSerialNumber" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ModuleFirmware" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="ModuleModelName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ModuleModelName" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ModuleManufacturerName" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveStartDate" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveEndDate" nillable="true" type="s:dateTime" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveAtmosphericRdg" nillable="true" type="s:double" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveHiPressureRdg" nillable="true" type="s:double" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveChangeGearHigh" nillable="true" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="PerformCurveChangeGearLow" nillable="true" type="s:int" />
-          <s:element minOccurs="0" maxOccurs="1" name="JobNumber" nillable="true" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="PreviousTests" nillable="true" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="MeterType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveStartDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveEndDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveAtmosphericRdg" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveHiPressureRdg" nillable="true" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveChangeGearHigh" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformCurveChangeGearLow" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PreviousTests" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MeterType" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="JobModel" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="JobCreator" type="s:string" />
-          <s:element minOccurs="1" maxOccurs="1" name="OutputType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OutputType" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="GetValidatedAcceptanceSampleMeterByBarcode">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="barcode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -189,7 +189,7 @@
       <s:element name="GetValidatedComplianceSampleMeterByBarcode">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="barcodeNbr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="barcodeNbr" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -200,17 +200,17 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetValidatedEvcDeviceByBarcode">
+      <s:element name="GetValidatedEvcDeviceByInventoryCode">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="inventoryCode" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetValidatedEvcDeviceByBarcodeResponse">
+      <s:element name="GetValidatedEvcDeviceByInventoryCodeResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByBarcodeResult" type="tns:MeterDTO" />
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidatedEvcDeviceByInventoryCodeResult" type="tns:MeterDTO" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -246,7 +246,7 @@
       <s:element name="GetMeterDataByBarcode">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="barcode" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -260,7 +260,7 @@
       <s:element name="GetMeterListByJobNumber">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="jobNbr" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -447,17 +447,15 @@
               <s:element minOccurs="1" maxOccurs="1" name="OpticalProof" nillable="true" type="s:double" />
               <s:element minOccurs="0" maxOccurs="1" name="AverageTestMode" type="s:string" />
               <s:element minOccurs="1" maxOccurs="1" name="MeterTempAverage" nillable="true" type="s:double" />
-              <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="JobNumber" nillable="true" type="s:int" />
               <s:element minOccurs="1" maxOccurs="1" name="NbrOfAdjusts" nillable="true" type="s:int" />
-              <s:element minOccurs="1" maxOccurs="1" name="TempMultiplier" nillable="true" type="s:double" />
-              <s:element minOccurs="1" maxOccurs="1" name="MeterTemp" nillable="true" type="s:double" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="TestResult">
         <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="InventoryCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryCode" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="TestReason" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="ProverNumber" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="IndexReading" nillable="true" type="s:int" />
@@ -508,8 +506,7 @@
         <s:complexContent mixed="false">
           <s:extension base="tns:TestResult">
             <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="barcode" type="s:string" />
-              <s:element minOccurs="1" maxOccurs="1" name="JobNumber" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="JobNumber" type="s:int" />
               <s:element minOccurs="0" maxOccurs="1" name="EmployeeId" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="MeterClassCode" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="FieldMeterDesc" type="s:string" />
@@ -816,20 +813,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="SubmitQASonixTestResults">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="tr" type="tns:DiaphragmTestResult" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="SubmitQASonixTestResultsResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="SubmitQASonixTestResultsResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="GetCurrentlyConnectedDatabaseSoapIn">
@@ -892,11 +875,11 @@
   <wsdl:message name="GetValidatedComplianceSampleMeterByBarcodeSoapOut">
     <wsdl:part name="parameters" element="tns:GetValidatedComplianceSampleMeterByBarcodeResponse" />
   </wsdl:message>
-  <wsdl:message name="GetValidatedEvcDeviceByBarcodeSoapIn">
-    <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByBarcode" />
+  <wsdl:message name="GetValidatedEvcDeviceByInventoryCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByInventoryCode" />
   </wsdl:message>
-  <wsdl:message name="GetValidatedEvcDeviceByBarcodeSoapOut">
-    <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByBarcodeResponse" />
+  <wsdl:message name="GetValidatedEvcDeviceByInventoryCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetValidatedEvcDeviceByInventoryCodeResponse" />
   </wsdl:message>
   <wsdl:message name="GetMeterDataByInventoryCodeSoapIn">
     <wsdl:part name="parameters" element="tns:GetMeterDataByInventoryCode" />
@@ -958,32 +941,23 @@
   <wsdl:message name="SubmitQAEvcTestResultsSoapOut">
     <wsdl:part name="parameters" element="tns:SubmitQAEvcTestResultsResponse" />
   </wsdl:message>
-  <wsdl:message name="SubmitQASonixTestResultsSoapIn">
-    <wsdl:part name="parameters" element="tns:SubmitQASonixTestResults" />
-  </wsdl:message>
-  <wsdl:message name="SubmitQASonixTestResultsSoapOut">
-    <wsdl:part name="parameters" element="tns:SubmitQASonixTestResultsResponse" />
-  </wsdl:message>
   <wsdl:portType name="DCRWebServiceSoap">
     <wsdl:operation name="GetCurrentlyConnectedDatabase">
       <wsdl:input message="tns:GetCurrentlyConnectedDatabaseSoapIn" />
       <wsdl:output message="tns:GetCurrentlyConnectedDatabaseSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetEmployee">
-      <wsdl:documentation>This method returns a data transfer object (EmployeeDTO) for the employee number parameter passed in if found. It returns an empty data transfer object (EmployeeDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a data transfer object (EmployeeDTO) for the employee number parameter passed in if found. It returns an empty data transfer object (EmployeeDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetEmployeeSoapIn" />
       <wsdl:output message="tns:GetEmployeeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="ValidateProver">
-      <wsdl:documentation>This method returns a boolean indicating if the prover number passed in is valid or 
-
-
-not.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a boolean indicating if the prover number passed in is valid or not.</wsdl:documentation>
       <wsdl:input message="tns:ValidateProverSoapIn" />
       <wsdl:output message="tns:ValidateProverSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetTestReasons">
-      <wsdl:documentation>This method returns a list of test reason data transfer objects (TestReasonDTO) for the reason type passed in.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a list of test reason data transfer objects (TestReasonDTO) for the reason type passed in.</wsdl:documentation>
       <wsdl:input message="tns:GetTestReasonsSoapIn" />
       <wsdl:output message="tns:GetTestReasonsSoapOut" />
     </wsdl:operation>
@@ -996,42 +970,42 @@ not.</wsdl:documentation>
       <wsdl:output message="tns:VerifyRotaryMeterIsInJobSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByInventoryCode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedAcceptanceSampleMeterByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetValidatedAcceptanceSampleMeterByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedAcceptanceSampleMeterByBarcode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the barcode and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode and acceptance job number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedAcceptanceSampleMeterByBarcodeSoapIn" />
       <wsdl:output message="tns:GetValidatedAcceptanceSampleMeterByBarcodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByInventoryCode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedComplianceSampleMeterByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetValidatedComplianceSampleMeterByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetValidatedComplianceSampleMeterByBarcode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the barcode number passed in if found. The barcode must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode number passed in if found. The barcode must be in an open compliance job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapIn" />
       <wsdl:output message="tns:GetValidatedComplianceSampleMeterByBarcodeSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open EVC job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
-      <wsdl:input message="tns:GetValidatedEvcDeviceByBarcodeSoapIn" />
-      <wsdl:output message="tns:GetValidatedEvcDeviceByBarcodeSoapOut" />
+    <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. The inventory code must be in an open EVC job. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:input message="tns:GetValidatedEvcDeviceByInventoryCodeSoapIn" />
+      <wsdl:output message="tns:GetValidatedEvcDeviceByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByInventoryCode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByInventoryCodeSoapIn" />
       <wsdl:output message="tns:GetMeterDataByInventoryCodeSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByInventoryCodeAndSerialNumber">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the inventory code and serial number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the inventory code and serial number combination passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByInventoryCodeAndSerialNumberSoapIn" />
       <wsdl:output message="tns:GetMeterDataByInventoryCodeAndSerialNumberSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetMeterDataByBarcode">
-      <wsdl:documentation>This method returns a meter data transfer object (MeterDTO) for the barcode passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method returns a meter data transfer object (MeterDTO) for the barcode passed in if found. It returns an empty data transfer object (MeterDTO) if not found.</wsdl:documentation>
       <wsdl:input message="tns:GetMeterDataByBarcodeSoapIn" />
       <wsdl:output message="tns:GetMeterDataByBarcodeSoapOut" />
     </wsdl:operation>
@@ -1040,42 +1014,34 @@ not.</wsdl:documentation>
       <wsdl:output message="tns:GetMeterListByJobNumberSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="ParseProverTestFile">
-      <wsdl:documentation>This method is used to parse the test file created by the North Bay rotary and turbine provers. The test file is passed in as a string and is returned as a FileAsEntities object to be used by the North Bay Data Capture client application to present the test file data to the user.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to parse the test file created by the North Bay rotary and turbine provers. The test file is passed in as a string and is returned as a FileAsEntities object to be used by the North Bay Data Capture client application to present the test file data to the user.</wsdl:documentation>
       <wsdl:input message="tns:ParseProverTestFileSoapIn" />
       <wsdl:output message="tns:ParseProverTestFileSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitProdTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the Production Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the Production Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitProdTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitProdTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQADiaphragmTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the QA Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Snap provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQADiaphragmTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQADiaphragmTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQARotaryTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the QA Rotary provers to be saved in the database. A QARunRotaryTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a 
-
-
-unsuccessful save.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Rotary provers to be saved in the database. A QARunRotaryTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQARotaryTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQARotaryTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQATurbineTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the QA Turbine provers to be saved in the database. A QARunTurbineTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA Turbine provers to be saved in the database. A QARunTurbineTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQATurbineTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQATurbineTestResultsSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="SubmitQAEvcTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the QA EVC provers to be saved in the database. A list of QARunEvcTestResult objects is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to submit test results data from the QA EVC provers to be saved in the database. A list of QARunEvcTestResult objects is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
       <wsdl:input message="tns:SubmitQAEvcTestResultsSoapIn" />
       <wsdl:output message="tns:SubmitQAEvcTestResultsSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="SubmitQASonixTestResults">
-      <wsdl:documentation>This method is used to submit test results data from the QA Snap SONIX provers to be saved in the database. A DiaphragmTestResult object is passed in and a string is returned containing a 'success' message for a successful save or an exception message for a unsuccessful save.</wsdl:documentation>
-      <wsdl:input message="tns:SubmitQASonixTestResultsSoapIn" />
-      <wsdl:output message="tns:SubmitQASonixTestResultsSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DCRWebServiceSoap" type="tns:DCRWebServiceSoap">
@@ -1170,8 +1136,8 @@ unsuccessful save.</wsdl:documentation>
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
-      <soap:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByBarcode" style="document" />
+    <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
+      <soap:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByInventoryCode" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1262,15 +1228,6 @@ unsuccessful save.</wsdl:documentation>
     </wsdl:operation>
     <wsdl:operation name="SubmitQAEvcTestResults">
       <soap:operation soapAction="http://tempuri.org/SubmitQAEvcTestResults" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="SubmitQASonixTestResults">
-      <soap:operation soapAction="http://tempuri.org/SubmitQASonixTestResults" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1371,8 +1328,8 @@ unsuccessful save.</wsdl:documentation>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetValidatedEvcDeviceByBarcode">
-      <soap12:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByBarcode" style="document" />
+    <wsdl:operation name="GetValidatedEvcDeviceByInventoryCode">
+      <soap12:operation soapAction="http://tempuri.org/GetValidatedEvcDeviceByInventoryCode" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -1470,23 +1427,14 @@ unsuccessful save.</wsdl:documentation>
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="SubmitQASonixTestResults">
-      <soap12:operation soapAction="http://tempuri.org/SubmitQASonixTestResults" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="DCRWebService">
-    <wsdl:documentation>Data Capture Web Service CL2 version 5.15</wsdl:documentation>
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Data Capture Web Service CL2 version 5.08</wsdl:documentation>
     <wsdl:port name="DCRWebServiceSoap" binding="tns:DCRWebServiceSoap">
-      <soap:address location="http://vprv5027:8025/ASSETMTR_OSB/ProxyServices/ServicesPS/DCRWebservice" />
+      <soap:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
     </wsdl:port>
     <wsdl:port name="DCRWebServiceSoap12" binding="tns:DCRWebServiceSoap12">
-      <soap12:address location="http://vprv5027:8025/ASSETMTR_OSB/ProxyServices/ServicesPS/DCRWebservice" />
+      <soap12:address location="http://dos/uniongas.dcrwebservice/dcrwebservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

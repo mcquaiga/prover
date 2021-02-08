@@ -1,131 +1,183 @@
-﻿//namespace UnionGas.MASA.Validators.CompanyNumber
-//{
-//    using NLog;
-//    using Prover.CommProtocol.Common;
-//    using Prover.CommProtocol.Common.Items;
-//    using Prover.Core.Login;
-//    using Prover.Core.Models.Instruments;
-//    using Prover.Core.Services;
-//    using Prover.Core.VerificationTests.TestActions;
-//    using Prover.GUI.Screens;
-//    using System;
-//    using System.Reactive.Subjects;
-//    using System.ServiceModel;
-//    using System.Threading;
-//    using System.Threading.Tasks;
-//    using System.Windows;
-//    using UnionGas.MASA.DCRWebService;
-//    using UnionGas.MASA.Dialogs.CompanyNumberDialog;
-//    using LogManager = NLog.LogManager;
+﻿namespace UnionGas.MASA.Validators.CompanyNumber
+{
+    using NLog;
+    using Prover.CommProtocol.Common;
+    using Prover.CommProtocol.Common.Items;
+    using Prover.Core.Login;
+    using Prover.Core.Models.Instruments;
+    using Prover.Core.Services;
+    using Prover.Core.VerificationTests.TestActions;
+    using Prover.GUI.Screens;
+    using System;
+    using System.Reactive.Subjects;
+    using System.ServiceModel;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using UnionGas.MASA.DCRWebService;
+    using UnionGas.MASA.Dialogs.CompanyNumberDialog;
+    using LogManager = NLog.LogManager;
 
-// ///
-// <summary>
-// /// Defines the <see cref="BarCodeValidationManager"/> ///
-// </summary>
-// public class BarCodeValidationManager : IEvcDeviceValidationAction { public VerificationStep
-// VerificationStep =&gt; VerificationStep.PreVerification;
+    /// <summary>
+    /// Defines the <see cref="CompanyNumberValidationManager" />
+    /// </summary>
+    public class CompanyNumberValidationManager : IEvcDeviceValidationAction
+    {
+        public VerificationStep VerificationStep => VerificationStep.PreVerification;
 
-// /// <summary> /// Initializes a new instance of the <see cref="BarCodeValidationManager"/> class.
-// /// </summary> /// <param name="screenManager">The screenManager<see
-// cref="ScreenManager"/></param> /// <param name="testRunService">The testRunService<see
-// cref="TestRunService"/></param> /// <param name="webService">The webService<see
-// cref="DCRWebServiceSoap"/></param> /// <param name="loginService">The loginService<see
-// cref="ILoginService{EmployeeDTO}"/></param> public BarCodeValidationManager(ScreenManager
-// screenManager, TestRunService testRunService, DCRWebServiceCommunicator webService,
-// ILoginService<EmployeeDTO> loginService) { _screenManager = screenManager; _testRunService =
-// testRunService; _webService = webService; _loginService = loginService; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompanyNumberValidationManager"/> class.
+        /// </summary>
+        /// <param name="screenManager">The screenManager<see cref="ScreenManager"/></param>
+        /// <param name="testRunService">The testRunService<see cref="TestRunService"/></param>
+        /// <param name="webService">The webService<see cref="DCRWebServiceSoap"/></param>
+        /// <param name="loginService">The loginService<see cref="ILoginService{EmployeeDTO}"/></param>
+        public CompanyNumberValidationManager(ScreenManager screenManager, TestRunService testRunService, DCRWebServiceCommunicator webService, ILoginService<EmployeeDTO> loginService)
+        {
+            _screenManager = screenManager;
+            _testRunService = testRunService;
+            _webService = webService;
+            _loginService = loginService;
+        }
 
-// public async Task Execute(EvcCommunicationClient commClient, Instrument instrument,
-// CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null) { ItemValue
-// companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber); string
-// companyNumber = companyNumberItem.RawValue.TrimStart('0');
+        public async Task Execute(EvcCommunicationClient commClient, Instrument instrument, CancellationToken ct = new CancellationToken(), Subject<string> statusUpdates = null)
+        {
+            ItemValue companyNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber);
+            string companyNumber = companyNumberItem.RawValue.TrimStart('0');
 
-// ItemValue serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber); string
-// serialNumber = serialNumberItem.RawValue.TrimStart('0');
+            ItemValue serialNumberItem = instrument.Items.GetItem(ItemCodes.SiteInfo.SerialNumber);
+            string serialNumber = serialNumberItem.RawValue.TrimStart('0');
 
-// try { MeterDTO meterDto; do { meterDto = await _webService.FindMeterByCompanyNumber(companyNumber);
+            try
+            {
+                MeterDTO meterDto;
+                do
+                {
+                    meterDto = await _webService.FindMeterByCompanyNumber(companyNumber);
 
-// if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
-// || meterDto.InventoryCode != companyNumber || meterDto.SerialNumber.TrimStart('0') !=
-// serialNumber) { _log.Warn($"Inventory number {companyNumber} not found in an open job.");
-// companyNumber = (string)await Update(commClient, instrument, new
-// CancellationTokenSource().Token); } else { break; } } while (!string.IsNullOrEmpty(companyNumber));
+                    if (string.IsNullOrEmpty(meterDto?.InventoryCode) || string.IsNullOrEmpty(meterDto?.SerialNumber)
+                        || meterDto.InventoryCode != companyNumber || meterDto.SerialNumber.TrimStart('0') != serialNumber)
+                    {
+                        _log.Warn($"Inventory number {companyNumber} not found in an open job.");
+                        companyNumber = (string)await Update(commClient, instrument, new CancellationTokenSource().Token);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (!string.IsNullOrEmpty(companyNumber));
 
-// if (meterDto != null) { await UpdateInstrumentValues(instrument, meterDto); } } catch
-// (EndpointNotFoundException) { return; } }
+                if (meterDto != null)
+                {
+                    await UpdateInstrumentValues(instrument, meterDto);
+                }
+            }
+            catch (EndpointNotFoundException)
+            {
+                return;
+            }
+        }
 
-// ///
-// <summary>
-// /// Defines the _log ///
-// </summary>
-// private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        /// <summary>
+        /// Defines the _log
+        /// </summary>
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-// /// <summary> /// Defines the _loginService /// </summary> private readonly
-// ILoginService<EmployeeDTO> _loginService;
+        /// <summary>
+        /// Defines the _loginService
+        /// </summary>
+        private readonly ILoginService<EmployeeDTO> _loginService;
 
-// ///
-// <summary>
-// /// Defines the _screenManager ///
-// </summary>
-// private readonly ScreenManager _screenManager;
+        /// <summary>
+        /// Defines the _screenManager
+        /// </summary>
+        private readonly ScreenManager _screenManager;
 
-// ///
-// <summary>
-// /// Defines the _testRunService ///
-// </summary>
-// private readonly TestRunService _testRunService;
+        /// <summary>
+        /// Defines the _testRunService
+        /// </summary>
+        private readonly TestRunService _testRunService;
 
-// ///
-// <summary>
-// /// Defines the _webService ///
-// </summary>
-// private readonly DCRWebServiceCommunicator _webService;
+        /// <summary>
+        /// Defines the _webService
+        /// </summary>
+        private readonly DCRWebServiceCommunicator _webService;
 
-// /// <summary> /// The OpenCompanyNumberDialog /// </summary> /// <returns>The <see
-// cref="string"/></returns> private string OpenCompanyNumberDialog() { while (true) {
-// CompanyNumberDialogViewModel dialog =
-// _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>(); bool? result = _screenManager.ShowDialog(dialog);
+        /// <summary>
+        /// The OpenCompanyNumberDialog
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
+        private string OpenCompanyNumberDialog()
+        {
+            while (true)
+            {
+                CompanyNumberDialogViewModel dialog = _screenManager.ResolveViewModel<CompanyNumberDialogViewModel>();
+                bool? result = _screenManager.ShowDialog(dialog);
 
-// if (result.HasValue && result.Value) { _log.Debug($"New company number {dialog.CompanyNumber} was
-// entered."); if (string.IsNullOrEmpty(dialog.CompanyNumber)) { continue; }
+                if (result.HasValue && result.Value)
+                {
+                    _log.Debug($"New company number {dialog.CompanyNumber} was entered.");
+                    if (string.IsNullOrEmpty(dialog.CompanyNumber))
+                    {
+                        continue;
+                    }
 
-// return dialog.CompanyNumber; }
+                    return dialog.CompanyNumber;
+                }
 
-// _log.Debug($"Skipping inventory code verification."); return string.Empty; } }
+                _log.Debug($"Skipping inventory code verification.");
+                return string.Empty;
+            }
+        }
 
-// /// <summary> /// The Update /// </summary> /// <param name="evcCommunicationClient">The
-// evcCommunicationClient<see cref="EvcCommunicationClient"/></param> /// <param
-// name="instrument">The instrument<see cref="Instrument"/></param> /// <param name="ct">The ct<see
-// cref="CancellationToken"/></param> /// <returns>The <see cref="Task{object}"/></returns> private
-// async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument,
-// CancellationToken ct) { string newCompanyNumber = string.Empty;
+        /// <summary>
+        /// The Update
+        /// </summary>
+        /// <param name="evcCommunicationClient">The evcCommunicationClient<see cref="EvcCommunicationClient"/></param>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
+        /// <param name="ct">The ct<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task{object}"/></returns>
+        private async Task<object> Update(EvcCommunicationClient evcCommunicationClient, Instrument instrument, CancellationToken ct)
+        {
+            string newCompanyNumber = string.Empty;
 
-// Application.Current.Dispatcher.Invoke((Action)delegate { newCompanyNumber =
-// OpenCompanyNumberDialog(); });
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                newCompanyNumber = OpenCompanyNumberDialog();
+            });
 
-// if (string.IsNullOrEmpty(newCompanyNumber)) { return string.Empty; }
+            if (string.IsNullOrEmpty(newCompanyNumber))
+            {
+                return string.Empty;
+            }
 
-// await evcCommunicationClient.Connect(ct); bool response = await
-// evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
+            await evcCommunicationClient.Connect(ct);
+            bool response =
+                await
+                    evcCommunicationClient.SetItemValue(ItemCodes.SiteInfo.CompanyNumber, long.Parse(newCompanyNumber));
 
-// await evcCommunicationClient.Disconnect();
+            await evcCommunicationClient.Disconnect();
 
-// if (response) { instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue =
-// newCompanyNumber; await _testRunService.Save(instrument); }
+            if (response)
+            {
+                instrument.Items.GetItem(ItemCodes.SiteInfo.CompanyNumber).RawValue = newCompanyNumber;
+                await _testRunService.Save(instrument);
+            }
 
-// return newCompanyNumber; }
+            return newCompanyNumber;
+        }
 
-//        /// <summary>
-//        /// The UpdateInstrumentValues
-//        /// </summary>
-//        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
-//        /// <param name="meterDto">The meterDto<see cref="MeterDTO"/></param>
-//        /// <returns>The <see cref="Task"/></returns>
-//        private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)
-//        {
-//            instrument.JobId = meterDto?.JobNumber.ToString();
-//            instrument.EmployeeId = _loginService.User?.Id;
-//            await _testRunService.Save(instrument);
-//        }
-//    }
-//}
+        /// <summary>
+        /// The UpdateInstrumentValues
+        /// </summary>
+        /// <param name="instrument">The instrument<see cref="Instrument"/></param>
+        /// <param name="meterDto">The meterDto<see cref="MeterDTO"/></param>
+        /// <returns>The <see cref="Task"/></returns>
+        private async Task UpdateInstrumentValues(Instrument instrument, MeterDTO meterDto)
+        {
+            instrument.JobId = meterDto?.JobNumber.ToString();
+            instrument.EmployeeId = _loginService.User?.Id;
+            await _testRunService.Save(instrument);
+        }
+    }
+}
