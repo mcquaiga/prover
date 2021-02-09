@@ -126,7 +126,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Devices.DIO.MccDAQ\Devices.DIO.MccDAQ.csproj" />
 		<ProjectReference Include="..\Devices\Devices.Communications\Devices.Communications.csproj" />
 		<ProjectReference Include="..\Devices\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
 		<ProjectReference Include="..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />

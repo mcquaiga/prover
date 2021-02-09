@@ -30,7 +30,7 @@ namespace Prover.Application.Services {
 
 		private PulseOutputsListenerService(ILoggerFactory loggerFactory, IScheduler backgroundThread = null) {
 			_logger = loggerFactory?.CreateLogger(typeof(PulseOutputsListenerService)) ?? NullLogger.Instance;
-			_background = backgroundThread ?? Scheduler.Immediate;
+			_background = backgroundThread ?? Scheduler.Default;
 
 			SetupListeners();
 
@@ -82,34 +82,51 @@ namespace Prover.Application.Services {
 		}
 
 		public void Stop() {
+			_cancellation.Cancel();
 			_stopCleanup?.Dispose();
 			SetupListeners();
 		}
 
 		private IObservable<PulseChannel> PulseCheckerObservable() {
-			_cancellation = new CancellationTokenSource();
-			_cancellation.DisposeWith(_stopCleanup);
-
 			return Observable.Create<PulseChannel>(observer => {
 				var cleanup = new CompositeDisposable();
-				var ct = new CancellationTokenSource();
-				ct.DisposeWith(cleanup);
 
-				_background.Schedule(async () => {
-					while (!ct.IsCancellationRequested) {
-						_inputChannels.ForEach(channel => {
-							if (channel.CheckForPulse())
-								observer.OnNext(channel.Pulser);
-						});
-						await Task.Delay(25);
+				//_background.Schedule(() => {
+				//	while (!_cancellation.IsCancellationRequested) {
+				//		_inputChannels.ForEach(async channel => {
+				//			if (channel.CheckForPulse())
+				//				observer.OnNext(channel.Pulser);
+
+				//		});
+				//	}
+				//}).DisposeWith(cleanup);
+				_background.Schedule(() => {
+					while (!_cancellation.IsCancellationRequested) {
+						foreach (var input in _inputChannels) {
+							if (input.CheckForPulse())
+								observer.OnNext(input.Pulser);
+						}
 					}
-				});
+				}).DisposeWith(cleanup);
+
+
+				//_inputChannels.ForEach(channel => {
+				//	Task.Run(() => {
+				//		while (!_cancellation.IsCancellationRequested) {
+				//			if (channel.CheckForPulse())
+				//				observer.OnNext(channel.Pulser);
+				//		}
+				//	});
+				//});
 
 				return cleanup;
 			});
 		}
 
 		private void SetupListeners() {
+			_cancellation = new CancellationTokenSource();
+			//_cancellation.DisposeWith(_stopCleanup);
+
 			_listeners = PulseCheckerObservable().Publish();
 			PulseCountUpdates = _listeners.AsObservable();
 
