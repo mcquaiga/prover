@@ -134,7 +134,8 @@
 
 			ExportQaTestRunCommand = ReactiveCommand.CreateFromTask(ExportQaTestRun, canExport);
 
-			ExportQaTestRunCommand.ThrownExceptions
+			ExportQaTestRunCommand
+				.ThrownExceptions
 				.Subscribe(ex => {
 					MessageBox.Show("An error occured exporting the test. See logs for more details");
 					Log.Error(ex.InnerException);
@@ -244,7 +245,19 @@
 		/// </summary>
 		/// <returns>The <see cref="Task"/></returns>
 		private async Task AddCurrentUserToTest() {
+<<<<<<< Updated upstream
 
+=======
+			if (!_loginService.IsLoggedIn) {
+				await _loginService.GetLoginDetails();
+			}
+
+			if (_loginService.IsLoggedIn) {
+				Instrument.EmployeeId = _loginService.User.Id;
+				await _testRunService.Save(Instrument);
+				this.RaisePropertyChanged($"Instrument");
+			}
+>>>>>>> Stashed changes
 		}
 	}
 }
