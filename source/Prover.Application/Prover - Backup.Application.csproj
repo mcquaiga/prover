@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +25,9 @@
     <PackageReference Include="ReactiveUI" Version="13.1.1" />
     <PackageReference Include="ReactiveUI.Fody" Version="13.1.1" />
     <PackageReference Include="ReactiveUI.Validation" Version="2.1.1" />
-    <PackageReference Include="SerialPortStream" Version="2.2.2" />
+    <PackageReference Include="SerialPortStream" Version="2.2.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="Z.ExtensionMethods" Version="2.1.1" />
   </ItemGroup>
 

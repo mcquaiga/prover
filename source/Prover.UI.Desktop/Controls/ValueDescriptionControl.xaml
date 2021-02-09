@@ -28,7 +28,7 @@
 				<Setter Property="BorderBrush" Value="{StaticResource PrimaryHueDarkBrush}" />
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding Path=IsReadOnly}" Value="False">
-						<Setter Property="BorderBrush" Value="{StaticResource SecondaryAccentBrush}" />
+						<Setter Property="BorderBrush" Value="{StaticResource SecondaryHueMidBrush}" />
 					</DataTrigger>
 					<DataTrigger Binding="{Binding Path=IsReadOnly}" Value="True">
 						<Setter Property="BorderBrush" Value="{StaticResource PrimaryHueDarkBrush}" />

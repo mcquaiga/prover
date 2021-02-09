@@ -16,10 +16,8 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Prover.Application.Verifications.Volume
-{
-	public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable
-	{
+namespace Prover.Application.Verifications.Volume {
+	public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable {
 		private const int WaitTimeForResidualPulsesSeconds = 5;
 		protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
 		protected ILogger Logger;
@@ -32,8 +30,7 @@ namespace Prover.Application.Verifications.Volume
 			IAppliedInputVolume tachometerService,
 			PulseOutputsListenerService pulseListenerService,
 			IOutputChannel motorControl,
-			VolumeViewModelBase volumeTest)
-		{
+			VolumeViewModelBase volumeTest) {
 			Logger = logger ?? NullLogger<RotaryVolumeTestRunner>.Instance;
 			MotorControl = motorControl ?? throw new ArgumentNullException(nameof(motorControl));
 
@@ -45,8 +42,7 @@ namespace Prover.Application.Verifications.Volume
 
 			StartTest = ReactiveCommand.CreateFromTask(BeginVolumeVerification, outputScheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
 
-			InitiateTestCompletion = ReactiveCommand.Create(() =>
-			{
+			InitiateTestCompletion = ReactiveCommand.Create(() => {
 				Logger.LogDebug("Stopping test.");
 				MotorControl.SignalStop();
 
@@ -61,6 +57,7 @@ namespace Prover.Application.Verifications.Volume
 					.ObserveOn(RxApp.MainThreadScheduler)
 					.InvokeCommand(FinishTest)
 					.DisposeWith(Cleanup);
+
 			}, outputScheduler: RxApp.MainThreadScheduler);
 
 			FinishTest = ReactiveCommand.CreateFromTask(async () => { await CompleteVolumeVerification(); },
@@ -82,8 +79,7 @@ namespace Prover.Application.Verifications.Volume
 
 		public virtual int TargetUncorrectedPulses { get; } = 10;
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			Cleanup?.Dispose();
 		}
 
@@ -91,8 +87,7 @@ namespace Prover.Application.Verifications.Volume
 
 		public abstract Task<CancellationToken> PublishStartInteraction();
 
-		public virtual async Task CompleteVolumeVerification()
-		{
+		public virtual async Task CompleteVolumeVerification() {
 			Logger.LogDebug("Completing test...");
 			await TachometerService.GetAppliedInput();
 			PulseListenerService.Stop();
@@ -104,17 +99,16 @@ namespace Prover.Application.Verifications.Volume
 			VolumeTest.EndValues = DeviceManager.Device.DeviceType.GetGroup<VolumeItems>(endValues);
 		}
 
-		public virtual async Task BeginVolumeVerification()
-		{
+		public virtual async Task BeginVolumeVerification() {
 			Logger.LogInformation(
 				$"Starting {DeviceManager.Device.DriveType} volume test for {DeviceManager.Device.DeviceType}.");
 
+			await TachometerService.ResetAppliedInput();
 			var startValues = await DeviceManager.GetItemValues();
 			VolumeTest.StartValues = DeviceManager.Device.DeviceType.GetGroup<VolumeItems>(startValues);
 
 			var cancelToken = await PublishStartInteraction();
-			cancelToken.Register(() =>
-			{
+			cancelToken.Register(() => {
 				Logger.LogWarning("Cancelling test...");
 				MotorControl.SignalStop();
 				PulseListenerService.Stop();
@@ -125,10 +119,8 @@ namespace Prover.Application.Verifications.Volume
 
 		protected abstract Task ExecuteTestAsync();
 
-		protected virtual void UpdatePulseOutputTestCounts()
-		{
-			foreach (var test in VolumeTest.AllTests().OfType<VolumeTestRunViewModelBase>())
-			{
+		protected virtual void UpdatePulseOutputTestCounts() {
+			foreach (var test in VolumeTest.AllTests().OfType<VolumeTestRunViewModelBase>()) {
 				var pulseTest = test.PulseOutputTest;
 
 				var pulser = PulseListenerService.PulseChannels.FirstOrDefault(p => p.Channel == pulseTest.Items.Name);
@@ -138,8 +130,7 @@ namespace Prover.Application.Verifications.Volume
 			}
 		}
 
-		protected virtual void SynchVolume()
-		{
+		protected virtual void SynchVolume() {
 
 		}
 	}

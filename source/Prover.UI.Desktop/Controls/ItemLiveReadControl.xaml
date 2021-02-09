@@ -9,6 +9,8 @@
 	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:rxUi="http://reactiveui.net"
+	xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	d:DataContext="{d:DesignInstance liveRead:ItemLiveReadStatus,
 	                                 IsDesignTimeCreatable=False}"
 	d:DesignHeight="450"

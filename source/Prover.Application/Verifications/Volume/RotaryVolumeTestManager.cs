@@ -59,8 +59,7 @@ namespace Prover.Application.Verifications.Volume
 			Logger.LogDebug("Running automated volume test.");
 
 			PulseListenerService.StartListening()
-				.Where(p =>
-					p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+				.Where(p =>	p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
 				.Select(_ => Unit.Default)
 				.InvokeCommand(InitiateTestCompletion)
 				.DisposeWith(Cleanup);

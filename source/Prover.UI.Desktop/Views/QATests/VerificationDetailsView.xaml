@@ -6,6 +6,8 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:reactiveUi="http://reactiveui.net"
+	xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	xmlns:viewModels="clr-namespace:Prover.Application.ViewModels;assembly=Prover.Application"
 	x:Name="TestDetailsUserControl"
 	d:DataContext="{d:DesignInstance viewModels:EvcVerificationViewModel,
@@ -34,7 +36,7 @@
 			DockPanel.Dock="Right">
 			<reactiveUi:ViewModelViewHost
 				x:Name="SiteInfoContent"
-				Margin="8"
+				Margin="1"
 				HorizontalAlignment="Stretch"
 				HorizontalContentAlignment="Center" />
 			<!--<reactiveUi:ViewModelViewHost x:Name="CustomVerificationContent" />-->
@@ -45,7 +47,7 @@
 			Grid.Row="0"
 			Grid.Column="0"
 			Stretch="Uniform">
-			<Grid Margin="25,0,2,0" VerticalAlignment="Stretch">
+			<Grid Margin="5,0,2,0" VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
 					<RowDefinition Height="Auto" />

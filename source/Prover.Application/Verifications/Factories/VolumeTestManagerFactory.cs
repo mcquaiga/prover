@@ -1,5 +1,4 @@
-﻿using System;
-using Devices.Core.Items.ItemGroups;
+﻿using Devices.Core.Items.ItemGroups;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Hardware;
 using Prover.Application.Interfaces;
@@ -7,13 +6,11 @@ using Prover.Application.Services;
 using Prover.Application.Verifications.Volume;
 using Prover.Application.ViewModels;
 using Prover.Application.ViewModels.Volume.Rotary;
-using Prover.Shared;
 using Prover.Shared.Interfaces;
+using System;
 
-namespace Prover.Application.Verifications.Factories
-{
-	public interface IVolumeTestManagerFactory
-	{
+namespace Prover.Application.Verifications.Factories {
+	public interface IVolumeTestManagerFactory {
 		//VolumeTestManager CreateInstance(DeviceInstance device, VolumeViewModelBase volumeTest);
 		IVolumeTestManager CreateVolumeManager(EvcVerificationViewModel verificationTest);
 	}
@@ -46,11 +43,10 @@ namespace Prover.Application.Verifications.Factories
 	//}
 
 
-	public class AutomatedVolumeTestManagerFactory : IVolumeTestManagerFactory
-	{
+	public class AutomatedVolumeTestManagerFactory : IVolumeTestManagerFactory {
 		private readonly ILoggerFactory _loggerFactory;
 		private readonly IDeviceSessionManager _deviceManager;
-		private readonly Func<OutputChannelType, IOutputChannel> _outputChannelFactory;
+		private readonly IOutputChannelFactory _outputChannelFactory;
 		private readonly Func<PulseOutputsListenerService> _pulseOutputServiceFactory;
 		private readonly Func<IAppliedInputVolume> _tachometerServiceFactory;
 
@@ -58,9 +54,8 @@ namespace Prover.Application.Verifications.Factories
 			ILoggerFactory loggerFactory,
 			IDeviceSessionManager deviceManager,
 			Func<PulseOutputsListenerService> pulseOutputServiceFactory,
-			Func<OutputChannelType, IOutputChannel> outputChannelFactory,
-			Func<IAppliedInputVolume> tachometerServiceFactory = null)
-		{
+			IOutputChannelFactory outputChannelFactory,
+			Func<IAppliedInputVolume> tachometerServiceFactory = null) {
 			_loggerFactory = loggerFactory;
 			_deviceManager = deviceManager;
 
@@ -69,16 +64,13 @@ namespace Prover.Application.Verifications.Factories
 			_tachometerServiceFactory = tachometerServiceFactory;
 		}
 
-		public IVolumeTestManager CreateVolumeManager(EvcVerificationViewModel verificationTest)
-		{
+		public IVolumeTestManager CreateVolumeManager(EvcVerificationViewModel verificationTest) {
 			var tachometerService = _tachometerServiceFactory.Invoke();
 			var pulseOutputListener = GetPulseOutputListener(verificationTest.Device.ItemGroup<PulseOutputItems>());
-			var motorControl = _outputChannelFactory.Invoke(OutputChannelType.Motor);
+			var motorControl = _outputChannelFactory.CreateOutputChannel(OutputChannelType.Motor);
 
-			switch (verificationTest.VolumeTest)
-			{
-				case RotaryVolumeViewModel rotary:
-				{
+			switch (verificationTest.VolumeTest) {
+				case RotaryVolumeViewModel rotary: {
 					var logger = _loggerFactory.CreateLogger<RotaryVolumeTestRunner>();
 					return new RotaryVolumeTestRunner(logger, _deviceManager, tachometerService, pulseOutputListener, motorControl, rotary);
 				}
@@ -88,15 +80,13 @@ namespace Prover.Application.Verifications.Factories
 			throw new NotImplementedException("Missing VolumeManager implementation");
 		}
 
-		private PulseOutputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems)
-		{
+		private PulseOutputsListenerService GetPulseOutputListener(PulseOutputItems pulseOutputItems) {
 			var pulseService = _pulseOutputServiceFactory.Invoke();
 			pulseService.Initialize(pulseOutputItems);
 			return pulseService;
 		}
 
-		private IAppliedInputVolume GetTachometerService(string portName)
-		{
+		private IAppliedInputVolume GetTachometerService(string portName) {
 			if (string.IsNullOrEmpty(portName))
 				return new NullTachometerService();
 			return _tachometerServiceFactory.Invoke();

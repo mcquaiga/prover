@@ -8,20 +8,15 @@ using Prover.Application.Services;
 using Prover.Application.Verifications;
 using Prover.Application.Verifications.Corrections;
 using Prover.Application.Verifications.Factories;
-using Prover.Application.Verifications.Volume;
 using Prover.Application.ViewModels;
+using Prover.Externals.MccDaq;
 using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Communications;
-using Prover.UI.Desktop.ViewModels.Verifications;
 using System;
-using Microsoft.Extensions.Configuration;
 
-namespace Prover.UI.Desktop.Extensions
-{
-	internal static class DeviceServiceEx
-	{
-		public static void AddDeviceCommunication(this IServiceCollection services)
-		{
+namespace Prover.UI.Desktop.Extensions {
+	internal static class DeviceServiceEx {
+		public static void AddDeviceCommunication(this IServiceCollection services) {
 			services.AddSingleton<IDeviceSessionManager, DeviceSessionManager>();
 
 			// Port Setup
@@ -29,8 +24,7 @@ namespace Prover.UI.Desktop.Extensions
 			var clientFactory = new CommunicationsClientFactory(portFactory);
 
 			// Device Clients
-			services.AddSingleton<Func<DeviceType, ICommunicationsClient>>(c => (device) =>
-			{
+			services.AddSingleton<Func<DeviceType, ICommunicationsClient>>(c => (device) => {
 				var port = portFactory.Create(
 					ApplicationSettings.Local.InstrumentCommPort,
 					ApplicationSettings.Local.InstrumentBaudRate);
@@ -39,14 +33,13 @@ namespace Prover.UI.Desktop.Extensions
 			});
 		}
 
-		public static void AddPulseOutputListeners(this IServiceCollection services)
-		{
+		public static void AddPulseOutputListeners(this IServiceCollection services) {
 			services.AddTransient<PulseOutputsListenerService>();
 			services.AddSingleton<Func<PulseOutputsListenerService>>(c => c.GetService<PulseOutputsListenerService>);
 
-			//services.AddSingleton<DaqBoardChannelFactory>();
-			//services.AddSingleton<IInputChannelFactory, DaqBoardChannelFactory>();
-			//services.AddSingleton<IOutputChannelFactory, DaqBoardChannelFactory>();
+			services.AddSingleton<DaqBoardChannelFactory>();
+			services.AddSingleton<IInputChannelFactory>(c => c.GetService<DaqBoardChannelFactory>());
+			services.AddSingleton<IOutputChannelFactory>(c => c.GetService<DaqBoardChannelFactory>());
 
 			// Pulse Outputs
 			// Simulator
@@ -55,19 +48,15 @@ namespace Prover.UI.Desktop.Extensions
 			//services.AddSingleton<IOutputChannelFactory, SimulatorPulseChannelFactory>();
 		}
 
-		public static void AddVerificationManagers(this IServiceCollection services)
-		{
+		public static void AddVerificationManagers(this IServiceCollection services) {
 
-			services.AddTransient<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest =>
-			{
+			services.AddTransient<Func<EvcVerificationViewModel, IVolumeTestManager>>(c => evcTest => {
 				var volumeFactory = c.GetService<IVolumeTestManagerFactory>();
 				return volumeFactory.CreateVolumeManager(evcTest);
 			});
 
-			services.AddTransient<Func<EvcVerificationViewModel, IQaTestRunManager>>(c =>
-			{
-				return test =>
-				{
+			services.AddTransient<Func<EvcVerificationViewModel, IQaTestRunManager>>(c => {
+				return test => {
 					var volumeManager = c.GetService<IVolumeTestManagerFactory>()
 										 .CreateVolumeManager(test);
 
@@ -83,18 +72,16 @@ namespace Prover.UI.Desktop.Extensions
 			//services.AddTransient<IVolumeTestManager, RotaryVolumeTestRunner>();
 		}
 
-		public static void AddTachometer(this IServiceCollection services)
-		{
+		public static void AddTachometer(this IServiceCollection services) {
 			services.AddSingleton<Func<IAppliedInputVolume>>(c =>
-				() =>
-				{
+				() => {
 					if (ApplicationSettings.Local.TachIsNotUsed)
 						return new NullTachometerService();
 
 					return new TachometerService(
 						c.GetService<ILogger<TachometerService>>(),
 						ApplicationSettings.Local.TachCommPort,
-						c.GetService<Func<OutputChannelType, IOutputChannel>>().Invoke(OutputChannelType.Tachometer)
+						c.GetService<IOutputChannelFactory>().CreateOutputChannel(OutputChannelType.Tachometer)
 					);
 				});
 		}

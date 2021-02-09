@@ -60,7 +60,7 @@
 			Margin="5,0"
 			VerticalAlignment="Top"
 			Style="{StaticResource PrimaryTestHeaderStyle}"
-			Visibility="Collapsed" />
+			Visibility="Visible" />
 		<!--<TextBlock
             x:Name="TestLevelBlock"
             Grid.Row="0"
