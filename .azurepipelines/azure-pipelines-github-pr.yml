@@ -30,19 +30,17 @@ jobs:
       inputs:
         command: 'build'
         arguments: '$(solution) -p:Version=1.0.$(Build.BuildId) -p:FileVersion=1.0.$(Build.BuildId) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
-    
     - task: VSTest@2
-      displayName: Tests
       inputs:
-        testSelector: 'testAssemblies'  
+        testSelector: 'testAssemblies'
         testAssemblyVer2: |
           **\*tests*.dll
           !**\*TestAdapter.dll
           !**\obj\**   
-          !**\Tests.Shared.dll  
+          !**\Tests.Shared.dll
         searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
-        rerunFailedTests: True
-        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
+        otherConsoleOptions: '/Framework:net5.0-windows'
+        rerunFailedTests: true
 
     - task: PublishBuildArtifacts@1
       displayName: Publish Binaries Artifact
