@@ -245,9 +245,6 @@
 		/// </summary>
 		/// <returns>The <see cref="Task"/></returns>
 		private async Task AddCurrentUserToTest() {
-<<<<<<< Updated upstream
-
-=======
 			if (!_loginService.IsLoggedIn) {
 				await _loginService.GetLoginDetails();
 			}
@@ -257,7 +254,6 @@
 				await _testRunService.Save(Instrument);
 				this.RaisePropertyChanged($"Instrument");
 			}
->>>>>>> Stashed changes
 		}
 	}
 }
