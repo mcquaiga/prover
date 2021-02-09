@@ -89,13 +89,12 @@ namespace Prover.Application.Services {
 			return Observable.Create<PulseChannel>(observer => {
 				var cleanup = new CompositeDisposable();
 
-				_background.SchedulePeriodic(TimeSpan.FromMilliseconds(20), () => {
-					_inputChannels.ForEach(channel => {
+				_inputChannels.ForEach(channel => {
+					_background.SchedulePeriodic(TimeSpan.FromMilliseconds(CheckIntervalTime), () => {
 						if (channel.CheckForPulse())
 							observer.OnNext(channel.Pulser);
-
-					});
-				}).DisposeWith(cleanup);
+					}).DisposeWith(cleanup);
+				});
 				//_background.Schedule(() => {
 				//	while (!_cancellation.IsCancellationRequested) {
 				//		foreach (var input in _inputChannels) {

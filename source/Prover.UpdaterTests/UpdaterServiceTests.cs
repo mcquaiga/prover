@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Updater.Tests {
 
-	[TestClass()]
+	//[TestClass()]
 	public class UpdaterServiceTests {
 		private static GitHubUpdateManager _updater = new GitHubUpdateManager();
 
