@@ -15,7 +15,8 @@ namespace Prover.Externals.MccDaq {
 			UlStatErrorInfo = Board.DIn(ChannelType, out short value);
 
 			if (UlStatErrorInfo.Value == ErrorInfo.ErrorCode.NoErrors) {
-				Log.LogTrace("DAQ Input: P: {0} - C: {1} - Value: {2}", ChannelType, ChannelNum, value);
+				if (value != 255)
+					Log.LogDebug("DAQ Input: P: {0} - C: {1} - Value: {2}", ChannelType, ChannelNum, value);
 				return value;
 			}
 

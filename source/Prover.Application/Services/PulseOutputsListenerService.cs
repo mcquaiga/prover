@@ -30,7 +30,7 @@ namespace Prover.Application.Services {
 
 		private PulseOutputsListenerService(ILoggerFactory loggerFactory, IScheduler backgroundThread = null) {
 			_logger = loggerFactory?.CreateLogger(typeof(PulseOutputsListenerService)) ?? NullLogger.Instance;
-			_background = backgroundThread ?? Scheduler.Default;
+			_background = backgroundThread ?? TaskPoolScheduler.Default;
 
 			SetupListeners();
 
@@ -76,8 +76,6 @@ namespace Prover.Application.Services {
 			_listeners.Connect()
 				.DisposeWith(_stopCleanup);
 
-			//PulseCountUpdates.Subscribe().DisposeWith(_stopCleanup);
-
 			return PulseCountUpdates;
 		}
 
@@ -91,25 +89,35 @@ namespace Prover.Application.Services {
 			return Observable.Create<PulseChannel>(observer => {
 				var cleanup = new CompositeDisposable();
 
+				_background.SchedulePeriodic(TimeSpan.FromMilliseconds(20), () => {
+					_inputChannels.ForEach(channel => {
+						if (channel.CheckForPulse())
+							observer.OnNext(channel.Pulser);
+
+					});
+				}).DisposeWith(cleanup);
 				//_background.Schedule(() => {
 				//	while (!_cancellation.IsCancellationRequested) {
-				//		_inputChannels.ForEach(async channel => {
-				//			if (channel.CheckForPulse())
-				//				observer.OnNext(channel.Pulser);
-
-				//		});
+				//		foreach (var input in _inputChannels) {
+				//			if (input.CheckForPulse())
+				//				observer.OnNext(input.Pulser);
+				//		}
 				//	}
 				//}).DisposeWith(cleanup);
-				_background.Schedule(() => {
-					while (!_cancellation.IsCancellationRequested) {
-						foreach (var input in _inputChannels) {
-							if (input.CheckForPulse())
-								observer.OnNext(input.Pulser);
-						}
-					}
-				}).DisposeWith(cleanup);
+				//_background.AsLongRunning().ScheduleLongRunning(() => {
+				//	while (true) {
+				//		foreach (var input in _inputChannels) {
+				//			if (input.CheckForPulse())
+				//				observer.OnNext(input.Pulser);
+				//		}
+				//	}
+				//	return _cancellation;
+				//}).DisposeWith(cleanup);
 
 
+				//return cleanup;
+
+				// ** Working **
 				//_inputChannels.ForEach(channel => {
 				//	Task.Run(() => {
 				//		while (!_cancellation.IsCancellationRequested) {
@@ -140,7 +148,7 @@ namespace Prover.Application.Services {
 		private class PulseChannelListener : IDisposable {
 			private readonly IInputChannel _inputChannel;
 			private readonly int _offValue;
-			private bool _previousPulseOn;
+			private bool _previousPulseOn = false;
 
 			public PulseChannelListener(PulseOutputItems.ChannelItems items, IInputChannel channel) {
 				Pulser = new PulseChannel {

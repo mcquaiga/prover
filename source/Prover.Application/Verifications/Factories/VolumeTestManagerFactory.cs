@@ -56,6 +56,7 @@ namespace Prover.Application.Verifications.Factories {
 			Func<PulseOutputsListenerService> pulseOutputServiceFactory,
 			IOutputChannelFactory outputChannelFactory,
 			Func<IAppliedInputVolume> tachometerServiceFactory = null) {
+
 			_loggerFactory = loggerFactory;
 			_deviceManager = deviceManager;
 
