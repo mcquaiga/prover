@@ -1,159 +1,138 @@
-﻿using System;
+﻿using Prover.CommProtocol.Common;
+using Prover.CommProtocol.Common.IO;
+using Prover.CommProtocol.Common.Items;
+using Prover.CommProtocol.Common.Models.Instrument;
+using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using Prover.CommProtocol.Common;
-using Prover.CommProtocol.Common.IO;
-using Prover.CommProtocol.Common.Items;
-using Prover.CommProtocol.Common.Models.Instrument;
-using Prover.CommProtocol.MiHoneywell.Messaging.Requests;
 
-namespace Prover.CommProtocol.MiHoneywell.CommClients
-{
-    public class HoneywellClient : EvcCommunicationClient
-    {
-        protected Task LoadItemsTask { get; private set; }
+namespace Prover.CommProtocol.MiHoneywell.CommClients {
+	public class HoneywellClient : EvcCommunicationClient {
+		protected Task LoadItemsTask { get; private set; }
 
-        public HoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject)
-        {            
-        }
+		public HoneywellClient(ICommPort commPort, IEvcDevice instrumentType, ISubject<string> statusSubject) : base(commPort, instrumentType, statusSubject) {
+		}
 
-        public override bool IsConnected { get; protected set; }
-      
-        protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null)
-        {
-            await Task.Run(async () =>
-            {            
-                if (await WakeUpInstrument())
-                {
-                    var response = await ExecuteCommand(Commands.SignOn(InstrumentType, accessCode));
+		public override bool IsConnected { get; protected set; }
 
-                    if (response.IsSuccess)
-                    {
-                        IsConnected = true;
-                        Log.Info($"[{CommPort.Name}] Connected to {InstrumentType.Name}!");
-                    }
-                    else
-                    {
-                        IsConnected = false;
+		protected override async Task ConnectToInstrument(CancellationToken ct, string accessCode = null) {
+			await Task.Run(async () => {
+				await Task.Delay(200);
+				if (await WakeUpInstrument()) {
+					var response = await ExecuteCommand(Commands.SignOn(InstrumentType, accessCode));
 
-                        if (response.ResponseCode == ResponseCode.FramingError)
-                            await CommPort.Close();
-                        
-                        throw new Exception($"Error response {response.ResponseCode}");
-                    }
-                }
-            }, ct);          
-         
-        }
+					if (response.IsSuccess) {
+						IsConnected = true;
+						Log.Info($"[{CommPort.Name}] Connected to {InstrumentType.Name}!");
+					}
+					else {
+						IsConnected = false;
 
-        public override async Task Disconnect()
-        {
-            if (IsConnected)
-            {
-                var response = await ExecuteCommand(Commands.SignOffCommand());
+						if (response.ResponseCode == ResponseCode.FramingError)
+							await CommPort.Close();
 
-                if (response.IsSuccess)
-                    IsConnected = false;
-            }
-        }
+						throw new Exception($"Error response {response.ResponseCode}");
+					}
+				}
+			}, ct);
 
-        public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber)
-        {
-            var itemDetails = itemNumber;
-            var response = await ExecuteCommand(Commands.ReadItem(itemNumber.Number));
-            return new ItemValue(itemDetails, response.RawValue);
-        }
+		}
 
-        public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers)
-        {
-            var itemDetails = itemNumbers.ToList();
-            var items = itemDetails.GetAllItemNumbers().ToArray();
-            var results = new List<ItemValue>();
+		public override async Task Disconnect() {
+			if (IsConnected) {
+				var response = await ExecuteCommand(Commands.SignOffCommand());
 
-            if (items.Count() == 1)
-            {
-                var value = await GetItemValue(itemDetails[0]);
-                results.Add(value);
-                return results;
-            }
-            
-            items = items.OrderBy(x => x).ToArray();
+				if (response.IsSuccess)
+					IsConnected = false;
+			}
+		}
 
-            var y = 0;
+		public override async Task<ItemValue> GetItemValue(ItemMetadata itemNumber) {
+			var itemDetails = itemNumber;
+			var response = await ExecuteCommand(Commands.ReadItem(itemNumber.Number));
+			return new ItemValue(itemDetails, response.RawValue);
+		}
 
-            while (true)
-            {
-                var set = items.Skip(y).Take(15).ToList();
+		public override async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemNumbers) {
+			var itemDetails = itemNumbers.ToList();
+			var items = itemDetails.GetAllItemNumbers().ToArray();
+			var results = new List<ItemValue>();
 
-                if (!set.Any())
-                    break;
+			if (items.Count() == 1) {
+				var value = await GetItemValue(itemDetails[0]);
+				results.Add(value);
+				return results;
+			}
 
-                var response = await ExecuteCommand(Commands.ReadGroup(set));
-                foreach (var item in response.ItemValues)
-                {
-                    var metadata = itemDetails.FirstOrDefault(x => x.Number == item.Key);
-                    results.Add(new ItemValue(metadata, item.Value));
-                }
+			items = items.OrderBy(x => x).ToArray();
 
-                y += 15;
-            }
+			var y = 0;
 
-            return results;
-        }
+			while (true) {
+				var set = items.Skip(y).Take(15).ToList();
 
-        public override Task<IFrequencyTestItems> GetFrequencyItems()
-        {
-            throw new NotImplementedException();
-        }
+				if (!set.Any())
+					break;
 
-        public override async Task<bool> SetItemValue(int itemNumber, string value)
-        {
-            var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
+				var response = await ExecuteCommand(Commands.ReadGroup(set));
+				foreach (var item in response.ItemValues) {
+					var metadata = itemDetails.FirstOrDefault(x => x.Number == item.Key);
+					results.Add(new ItemValue(metadata, item.Value));
+				}
 
-            return result.IsSuccess;
-        }
+				y += 15;
+			}
 
-        public override async Task<bool> SetItemValue(int itemNumber, decimal value)
-            => await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
+			return results;
+		}
 
-        public override async Task<bool> SetItemValue(int itemNumber, long value)
-            => await SetItemValue(itemNumber, value.ToString());
+		public override Task<IFrequencyTestItems> GetFrequencyItems() {
+			throw new NotImplementedException();
+		}
 
-        public override async Task<bool> SetItemValue(string itemCode, long value)
-            => await SetItemValue(ItemDetails.GetItem(itemCode), value);
+		public override async Task<bool> SetItemValue(int itemNumber, string value) {
+			var result = await ExecuteCommand(Commands.WriteItem(itemNumber, value));
 
-        public override async Task<ItemValue> LiveReadItemValue(int itemNumber)
-        {
-            var itemDetails = ItemDetails.GetItem(itemNumber);
-            var response = await ExecuteCommand(Commands.LiveReadItem(itemNumber));
-            return new ItemValue(itemDetails, response.RawValue);
-        }
+			return result.IsSuccess;
+		}
 
-        private async Task<bool> WakeUpInstrument()
-        {
-            await ExecuteCommand(Commands.WakeupOne());
-            Thread.Sleep(150);
+		public override async Task<bool> SetItemValue(int itemNumber, decimal value)
+			=> await SetItemValue(itemNumber, value.ToString(CultureInfo.InvariantCulture));
 
-            try
-            {
-                var response = await ExecuteCommand(Commands.WakeupTwo());
+		public override async Task<bool> SetItemValue(int itemNumber, long value)
+			=> await SetItemValue(itemNumber, value.ToString());
 
-                if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError))
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                Thread.Sleep(200);
-                await ExecuteCommand(Commands.OkayToSend());
-            }
+		public override async Task<bool> SetItemValue(string itemCode, long value)
+			=> await SetItemValue(ItemDetails.GetItem(itemCode), value);
 
-            return false;
-        }
-    }
+		public override async Task<ItemValue> LiveReadItemValue(int itemNumber) {
+			var itemDetails = ItemDetails.GetItem(itemNumber);
+			var response = await ExecuteCommand(Commands.LiveReadItem(itemNumber));
+			return new ItemValue(itemDetails, response.RawValue);
+		}
+
+		private async Task<bool> WakeUpInstrument() {
+			await ExecuteCommand(Commands.WakeupOne());
+			await Task.Delay(250);
+
+			try {
+				var response = await ExecuteCommand(Commands.WakeupTwo());
+				await Task.Delay(200);
+				if (response.IsSuccess || (response.ResponseCode == ResponseCode.InvalidEnquiryError)) {
+					return true;
+				}
+			}
+			catch (Exception) {
+				Thread.Sleep(200);
+				await ExecuteCommand(Commands.OkayToSend());
+			}
+
+			return false;
+		}
+	}
 }
