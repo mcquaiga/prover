@@ -18,7 +18,7 @@ namespace Prover.UI.Desktop.Views.QATests.CorrectionTests
 
 			this.WhenActivated(d =>
 				{
-					this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"{value + 1}").DisposeWith(d);
+					this.OneWayBind(ViewModel, vm => vm.TestNumber, v => v.TestLevelBlock.Text, value => $"Level {value + 1}").DisposeWith(d);
 
 					this.OneWayBind(ViewModel, vm => vm.VerificationTests, v => v.TestItems.ItemsSource,
 						 tests => tests.Where(t =>

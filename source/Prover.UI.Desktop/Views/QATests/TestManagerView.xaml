@@ -93,8 +93,10 @@
 		<reactiveUi:ViewModelViewHost
 			x:Name="TestViewContent"
 			Grid.Row="0"
-			HorizontalContentAlignment="Center"
-			VerticalContentAlignment="Center">
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			HorizontalContentAlignment="Stretch"
+			VerticalContentAlignment="Stretch">
 			<reactiveUi:ViewModelViewHost.Resources />
 		</reactiveUi:ViewModelViewHost>
 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace Prover.Application.Services {
 
 		private PulseOutputsListenerService(ILoggerFactory loggerFactory, IScheduler backgroundThread = null) {
 			_logger = loggerFactory?.CreateLogger(typeof(PulseOutputsListenerService)) ?? NullLogger.Instance;
-			_background = backgroundThread ?? TaskPoolScheduler.Default;
+			_background = backgroundThread ?? RxApp.TaskpoolScheduler;
 
 			SetupListeners();
 

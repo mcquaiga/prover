@@ -131,7 +131,7 @@
 						Grid.Row="1"
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
-						Columns="3">
+						Columns="2">
 						<ContentControl
 							x:Name="CompanyNumberText"
 							Tag="Inventory #"

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Prover.Application.Extensions;
 using Prover.Application.Hardware;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -7,6 +8,7 @@ using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
+using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -50,13 +52,22 @@ namespace Prover.Application.Verifications.Volume {
 			await DeviceInteractions.StartVolumeTest.Handle(this);
 
 		protected override async Task ExecuteTestAsync() {
-			
+
 			Logger.LogDebug("Running automated volume test.");
 
 			PulseListenerService.StartListening()
 				.Where(p => p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+				.LogDebug(x => "Stopping test...")
+				.Do(_ => MotorControl.SignalStop())
+
+				.LogDebug(x => "Waiting for residual pulses...")
+				.Concat(PulseListenerService.PulseCountUpdates)
+				.Throttle(TimeSpan.FromSeconds(5))
 				.Select(_ => Unit.Default)
-				.InvokeCommand(InitiateTestCompletion)
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.OnErrorResumeNext(Observable.Empty<Unit>())
+				.InvokeCommand(FinishTest)
+				//.InvokeCommand(InitiateTestCompletion)
 				.DisposeWith(Cleanup);
 
 			MotorControl.SignalStart();

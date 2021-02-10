@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Prover.Application.Hardware {
-	public interface IAppliedInputVolume {
+	public interface IAppliedInputVolume : IDisposable {
 		/// <summary>
 		///     The ReadTach
 		/// </summary>
@@ -24,6 +24,10 @@ namespace Prover.Application.Hardware {
 	}
 
 	public class NullTachometerService : IAppliedInputVolume {
+		public void Dispose() {
+
+		}
+
 		public async Task<int> GetAppliedInput() {
 			await Task.CompletedTask;
 			return 0;
@@ -32,12 +36,14 @@ namespace Prover.Application.Hardware {
 		public async Task ResetAppliedInput() {
 			await Task.CompletedTask;
 		}
+
+
 	}
 
 	/// <summary>
 	///     Defines the <see cref="TachometerService" />
 	/// </summary>
-	public class TachometerService : IAppliedInputVolume, IDisposable {
+	public class TachometerService : IAppliedInputVolume {
 		/// <summary>
 		///     Defines the _outputBoard
 		/// </summary>
