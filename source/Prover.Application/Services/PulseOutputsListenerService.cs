@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Application.Services {
 	public class PulseOutputsListenerService : IDisposable {
-		private const double CheckIntervalTime = 32.5;
+		private const double CheckIntervalTime = 20;
 		private readonly IScheduler _background;
 		private readonly Func<PulseOutputChannel, IInputChannel> _channelFactoryFunc;
 		private readonly CompositeDisposable _fullCleanup = new CompositeDisposable();
@@ -93,11 +93,17 @@ namespace Prover.Application.Services {
 				var cleanup = new CompositeDisposable();
 
 				_inputChannels.ForEach(channel => {
-					_background.SchedulePeriodic(TimeSpan.FromMilliseconds(CheckIntervalTime), () => {
-						if (channel.CheckForPulse())
-							observer.OnNext(channel.Pulser);
-					}).DisposeWith(cleanup);
+					channel.ListenForPulses(observer, _cancellation);
 				});
+				//_background.SchedulePeriodic(TimeSpan.FromMilliseconds(CheckIntervalTime), () => {
+				//	_inputChannels.ForEach(async channel => {
+				//		await Task.Run(() => {
+				//			   	if (channel.CheckForPulse())
+				//			observer.OnNext(channel.Pulser);
+				//		})	;
+
+				//	});
+				//}).DisposeWith(cleanup);
 				//_background.Schedule(() => {
 				//	while (!_cancellation.IsCancellationRequested) {
 				//		foreach (var input in _inputChannels) {
@@ -180,6 +186,17 @@ namespace Prover.Application.Services {
 
 				_previousPulseOn = pulseOn;
 				return false;
+			}
+
+			public Task ListenForPulses(IObserver<PulseChannel> observer, CancellationTokenSource _cancellation) {
+				return Task.Run(async () => {
+					while (!_cancellation.IsCancellationRequested) {
+						if (CheckForPulse()) {
+							observer.OnNext(Pulser);
+						}
+						await Task.Delay(32);
+					}
+				}, _cancellation.Token);
 			}
 
 			public async Task<bool> CheckForPulseAsync(CancellationToken token) => await Task.Run(CheckForPulse, token);

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Application.Extensions;
 using Prover.Application.Hardware;
+using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
 using Prover.Application.Services;
 using Prover.Application.ViewModels.Volume;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Prover.Application.Verifications.Volume {
 	public abstract class AutomatedVolumeTestRunnerBase : IVolumeTestManager, IDisposable {
-		private const int WaitTimeForResidualPulsesSeconds = 5;
+		private const int WaitTimeForResidualPulsesSeconds = 10;
 		protected readonly CompositeDisposable Cleanup = new CompositeDisposable();
 		protected ILogger Logger;
 
@@ -110,7 +111,7 @@ namespace Prover.Application.Verifications.Volume {
 
 			PulseListenerService.Stop();
 			UpdatePulseOutputTestCounts();
-			VolumeTest.Uncorrected.AppliedInput = await TachometerService.GetAppliedInput();
+
 
 			await PublishCompleteInteraction();
 
@@ -121,36 +122,27 @@ namespace Prover.Application.Verifications.Volume {
 
 		public virtual async Task StartTest() {
 			var isSynced = false;
-			var cancelToken = await PublishStartInteraction();
-			cancelToken.Register(CancelTest);
-
 			Logger.LogInformation($"Starting {DeviceManager.Device.DriveType} volume test for {DeviceManager.Device.DeviceType}.");
+
+			await DeviceInteractions.SyncingVolumeTest.Handle(this);
+			//var cancelToken = await PublishStartInteraction();
+			//cancelToken.Register(CancelTest);
 			Logger.LogInformation($"Syncing...");
 			MotorControl.SignalStart();
 
-			PulseListenerService.StartListening()
-				// Sync Test
-				.Where(p => !isSynced && p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == 1)
-				.LogDebug(x => "Sync pulse received...")
-				.ObserveOn(RxApp.MainThreadScheduler)
-				.SubscribeOn(RxApp.MainThreadScheduler)
-				.Do(async _ => {
-					isSynced = true;
-					MotorControl.SignalStop();
+			var pulses = PulseListenerService.StartListening();
 
-					await TachometerService.ResetAppliedInput();
-
-					await BeginVolumeVerification();
-				})
-
-				.Subscribe();
-
-			PulseListenerService.PulseCountUpdates
+			pulses
 				.Where(p => isSynced && p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
-				.Do(_ => MotorControl.SignalStop())
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.SubscribeOn(RxApp.TaskpoolScheduler)
+				.Do(async _ => {
+					await Task.Run(() => MotorControl.SignalStop());
+					VolumeTest.Uncorrected.AppliedInput = await TachometerService.GetAppliedInput();
+				})
 				.LogDebug(x => "Stopping test...")
 				.LogDebug(x => "Waiting for residual pulses...")
-				//.Concat(PulseListenerService.PulseCountUpdates)
+
 				.Throttle(TimeSpan.FromSeconds(WaitTimeForResidualPulsesSeconds))
 				.Select(_ => Unit.Default)
 				.ObserveOn(RxApp.MainThreadScheduler)
@@ -159,10 +151,25 @@ namespace Prover.Application.Verifications.Volume {
 				.InvokeCommand(FinishTest)
 				.DisposeWith(Cleanup);
 
+			// Sync Test
+			await pulses
+				.Where(p => !isSynced && p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == 1)
+				.LogDebug(x => "Sync pulse received...")
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.SubscribeOn(RxApp.MainThreadScheduler)
+				.Do(async _ => {
+					isSynced = true;
+					MotorControl.SignalStop();
+					await TachometerService.ResetAppliedInput();
+					await BeginVolumeVerification();
+				});
+
+
+
+			//pulses.Subscribe();
 		}
 
 		public virtual async Task BeginVolumeVerification() {
-
 
 			Logger.LogInformation($"Starting {DeviceManager.Device.DriveType} volume test for {DeviceManager.Device.DeviceType}.");
 

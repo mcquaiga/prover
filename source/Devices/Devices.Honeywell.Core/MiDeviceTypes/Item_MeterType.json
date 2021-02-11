@@ -99,8 +99,8 @@
     },
     {
       "description": "Roots 56M",
-      "UnCorPulsesX10": "900",
-      "UnCorPulsesX100": "90",
+      "UnCorPulsesX10": "890",
+      "UnCorPulsesX100": "89",
       "MeterDisplacement": "0.8837000",
       "MountType": "LMMA",
       "ids": [

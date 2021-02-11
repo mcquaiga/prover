@@ -43,15 +43,16 @@
 			Margin="8"
 			HorizontalAlignment="Stretch"
 			Orientation="Vertical">
-			<Grid Margin="15" HorizontalAlignment="Stretch">
+			<materialDesign:PackIcon
+				x:Name="VerifiedStatusIcon"
+				Width="36"
+				Height="36"
+				Margin="5,0"
+				HorizontalAlignment="Center"
+				Style="{StaticResource PassFailIcon}" />
+			<Grid Margin="15,3" HorizontalAlignment="Stretch">
 
-				<materialDesign:PackIcon
-					x:Name="VerifiedStatusIcon"
-					Width="36"
-					Height="36"
-					Margin="5,0,25,0"
-					HorizontalAlignment="Left"
-					Style="{StaticResource PassFailIcon}" />
+
 
 				<StackPanel
 					Margin="4"

@@ -20,8 +20,8 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Border
-		Margin="5,2,2,0"
-		BorderThickness="3,0,0,0"
+		Margin="4,4,2,0"
+		BorderThickness="1,0,0,0"
 		DataContext="{Binding ElementName=ValueDescription}">
 		<Border.Style>
 			<Style TargetType="{x:Type Border}">
