@@ -11,17 +11,14 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace Prover.UI.Desktop.Communications
-{
-	public class DeviceSessionManager : IDeviceSessionManager, IActiveDeviceSessionManager
-	{
+namespace Prover.UI.Desktop.Communications {
+	public class DeviceSessionManager : IDeviceSessionManager, IActiveDeviceSessionManager {
 		private readonly Func<DeviceType, ICommunicationsClient> _commClientFactoryFunc;
 		private readonly ILogger<DeviceSessionManager> _logger;
 		private ICommunicationsClient _activeClient;
 
 		public DeviceSessionManager(ILogger<DeviceSessionManager> logger,
-			Func<DeviceType, ICommunicationsClient> commClientFactoryFunc)
-		{
+			Func<DeviceType, ICommunicationsClient> commClientFactoryFunc) {
 			_logger = logger;
 			_commClientFactoryFunc = commClientFactoryFunc;
 		}
@@ -29,10 +26,8 @@ namespace Prover.UI.Desktop.Communications
 		public DeviceInstance Device { get; private set; }
 		public bool SessionInProgress { get; private set; }
 
-		public async Task Connect()
-		{
-			if (!_activeClient.IsConnected)
-			{
+		public async Task Connect() {
+			if (!_activeClient.IsConnected) {
 				var cancelToken =
 					await DeviceInteractions.Connecting.Handle(_activeClient.StatusMessageObservable);
 
@@ -42,10 +37,8 @@ namespace Prover.UI.Desktop.Communications
 			}
 		}
 
-		public async Task Disconnect()
-		{
-			if (_activeClient.IsConnected)
-			{
+		public async Task Disconnect() {
+			if (_activeClient.IsConnected) {
 				await DeviceInteractions.Disconnecting.Handle(this);
 
 				await _activeClient.Disconnect();
@@ -57,8 +50,7 @@ namespace Prover.UI.Desktop.Communications
 		public async Task<ICollection<ItemValue>> DownloadCorrectionItems() =>
 			await DownloadCorrectionItems(GetItemsToDownload());
 
-		public async Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items)
-		{
+		public async Task<ICollection<ItemValue>> DownloadCorrectionItems(ICollection<ItemMetadata> items) {
 			await Connect();
 			var cancelToken = await DeviceInteractions.DownloadingItems.Handle(this);
 			var values = await _activeClient.GetItemsAsync(items);
@@ -67,8 +59,7 @@ namespace Prover.UI.Desktop.Communications
 			return values.ToList();
 		}
 
-		public async Task EndSession()
-		{
+		public async Task EndSession() {
 			if (_activeClient != null)
 				await _activeClient?.Disconnect();
 
@@ -77,8 +68,7 @@ namespace Prover.UI.Desktop.Communications
 			SessionInProgress = false;
 		}
 
-		public ICollection<ItemMetadata> GetItemsToDownload()
-		{
+		public ICollection<ItemMetadata> GetItemsToDownload() {
 			var compType = Device.Composition();
 			var items = new List<ItemMetadata>();
 
@@ -94,8 +84,7 @@ namespace Prover.UI.Desktop.Communications
 			return items;
 		}
 
-		public async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemsToDownload = null)
-		{
+		public async Task<IEnumerable<ItemValue>> GetItemValues(IEnumerable<ItemMetadata> itemsToDownload = null) {
 			await Connect();
 			var cancelToken = await DeviceInteractions.DownloadingItems.Handle(this);
 			var itemValues = await _activeClient.GetItemsAsync(itemsToDownload);
@@ -106,10 +95,8 @@ namespace Prover.UI.Desktop.Communications
 		public async Task<ItemValue> LiveReadItemValue(ItemMetadata item) =>
 			await _activeClient.LiveReadItemValue(item);
 
-		public async Task<DeviceInstance> StartSession(DeviceType deviceType)
-		{
-			if (SessionInProgress)
-			{
+		public async Task<DeviceInstance> StartSession(DeviceType deviceType) {
+			if (SessionInProgress) {
 				//var response = await Messages.ShowYesNo.Handle(
 				//    "Device session already in progress. Start new session?");
 
@@ -117,8 +104,7 @@ namespace Prover.UI.Desktop.Communications
 				await EndSession();
 			}
 
-			try
-			{
+			try {
 				_activeClient = _commClientFactoryFunc.Invoke(deviceType);
 
 				_activeClient.StatusMessageObservable
@@ -128,8 +114,7 @@ namespace Prover.UI.Desktop.Communications
 				Device = deviceType.Factory.CreateInstance(itemValues);
 				SessionInProgress = true;
 			}
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				_logger.LogError(ex, "An error occured starting session with device.");
 				await EndSession();
 			}
@@ -137,8 +122,7 @@ namespace Prover.UI.Desktop.Communications
 			return Device;
 		}
 
-		public async Task<ItemValue> WriteItemValue(ItemMetadata item, string value)
-		{
+		public async Task<ItemValue> WriteItemValue(ItemMetadata item, string value) {
 			await Connect();
 			var success = await _activeClient.SetItemValue(item.Number, value);
 

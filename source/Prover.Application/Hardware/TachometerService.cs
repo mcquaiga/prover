@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Prover.Shared.Interfaces;
 using RJCP.IO.Ports;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -115,7 +116,8 @@ namespace Prover.Application.Hardware {
 		/// </summary>
 		/// <returns>The <see cref="System.Threading.Tasks.Task{TResult}" /></returns>
 		public async Task ResetAppliedInput() {
-			_ = Task.Run(() => {
+			var tasks = new List<Task>();
+			tasks.Add(Task.Run(() => {
 				if (_serialPort == null)
 					return;
 
@@ -126,14 +128,20 @@ namespace Prover.Application.Hardware {
 				Thread.Sleep(50);
 				_serialPort.Write($"6{(char)13}");
 				_serialPort.DiscardInBuffer();
-			});
+			}));
 
-			_ = Task.Run(() => {
+			tasks.Add(Task.Run(() => {
 				_outputBoard?.SignalStart();
 				Thread.Sleep(500);
 				_outputBoard?.SignalStop();
 				Thread.Sleep(100);
-			});
+			}));
+
+			Task.WaitAll(tasks.ToArray());
+
+			if (await GetAppliedInput() > 0) {
+				await ResetAppliedInput();
+			}
 		}
 
 

@@ -56,8 +56,9 @@ namespace Prover.Application.Verifications.Volume {
 			Logger.LogDebug("Running automated volume test.");
 
 			PulseListenerService.StartListening()
-				.Where(p => p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
 				.LogDebug(x => "Stopping test...")
+				.Where(p => p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+
 				.Do(_ => MotorControl.SignalStop())
 
 				.LogDebug(x => "Waiting for residual pulses...")

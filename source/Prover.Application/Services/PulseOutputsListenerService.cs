@@ -86,6 +86,8 @@ namespace Prover.Application.Services {
 			SetupListeners();
 		}
 
+		public void ResetCounts() => _inputChannels.ForEach(i => i.Pulser.PulseCount = 0);
+
 		private IObservable<PulseChannel> PulseCheckerObservable() {
 			return Observable.Create<PulseChannel>(observer => {
 				var cleanup = new CompositeDisposable();

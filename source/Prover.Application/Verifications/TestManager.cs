@@ -34,7 +34,7 @@ namespace Prover.Application.Verifications {
 			ObservableLoggingExtensions.LogErrors(RunCorrectionVerifications.ThrownExceptions, "Error downloading items from instrument.")
 									   .Subscribe().DisposeWith(Cleanup);
 
-			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.BeginVolumeVerification).DisposeWith(Cleanup);
+			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.StartTest, outputScheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
 		}
 
 		//public IDeviceSessionManager DeviceManager { get; }
