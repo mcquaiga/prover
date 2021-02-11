@@ -111,7 +111,7 @@ namespace Prover.Application.Verifications.Volume {
 
 			PulseListenerService.Stop();
 			UpdatePulseOutputTestCounts();
-
+			VolumeTest.Uncorrected.AppliedInput = await TachometerService.GetAppliedInput();
 
 			await PublishCompleteInteraction();
 
@@ -138,7 +138,7 @@ namespace Prover.Application.Verifications.Volume {
 				.SubscribeOn(RxApp.TaskpoolScheduler)
 				.Do(async _ => {
 					await Task.Run(() => MotorControl.SignalStop());
-					VolumeTest.Uncorrected.AppliedInput = await TachometerService.GetAppliedInput();
+
 				})
 				.LogDebug(x => "Stopping test...")
 				.LogDebug(x => "Waiting for residual pulses...")
@@ -152,7 +152,7 @@ namespace Prover.Application.Verifications.Volume {
 				.DisposeWith(Cleanup);
 
 			// Sync Test
-			await pulses
+			pulses
 				.Where(p => !isSynced && p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == 1)
 				.LogDebug(x => "Sync pulse received...")
 				.ObserveOn(RxApp.MainThreadScheduler)
@@ -162,7 +162,7 @@ namespace Prover.Application.Verifications.Volume {
 					MotorControl.SignalStop();
 					await TachometerService.ResetAppliedInput();
 					await BeginVolumeVerification();
-				});
+				}).Subscribe();
 
 
 

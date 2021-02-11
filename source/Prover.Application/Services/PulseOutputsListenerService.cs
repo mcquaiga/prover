@@ -191,8 +191,8 @@ namespace Prover.Application.Services {
 			public Task ListenForPulses(IObserver<PulseChannel> observer, CancellationTokenSource _cancellation) {
 				return Task.Run(async () => {
 					while (!_cancellation.IsCancellationRequested) {
-						if (CheckForPulse()) {
-							observer.OnNext(Pulser);
+						if (await CheckForPulseAsync(_cancellation.Token)) {
+							await Task.Run(() => observer.OnNext(Pulser));
 						}
 						await Task.Delay(32);
 					}
