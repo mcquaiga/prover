@@ -1,66 +1,66 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <BuildPath>..\..\..\build\tests\</BuildPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<BuildPath>..\..\..\build\tests\</BuildPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(BuildPath)\Debug\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>$(BuildPath)\Debug\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(BuildPath)\Release\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>$(BuildPath)\Release\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-   
-  </PropertyGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 
-  <ItemGroup>
-    <None Remove="Test-MiniMax.json" />
-  </ItemGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Test-MiniMax.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Test-MiniMax.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ExpectedObjects" Version="2.3.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
-    <PackageReference Include="Moq" Version="4.13.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
-    <PackageReference Include="coverlet.collector" Version="1.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Reactive" Version="4.4.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Test-MiniMax.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\..\Tests\Tests.Shared\Testing.Shared.csproj" />
-    <ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
-    <ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
-    <ProjectReference Include="..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
-    <ProjectReference Include="..\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
-    <ProjectReference Include="..\Devices.Romet.Core\Devices.Romet.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="ExpectedObjects" Version="3.5.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+		<PackageReference Include="Moq" Version="4.16.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+		<PackageReference Include="coverlet.collector" Version="3.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Moq">
-      <HintPath>..\..\..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+		<ProjectReference Include="..\..\Tests\Tests.Shared\Testing.Shared.csproj" />
+		<ProjectReference Include="..\Devices.Communications\Devices.Communications.csproj" />
+		<ProjectReference Include="..\Devices.Core\Devices.Core.csproj" />
+		<ProjectReference Include="..\Devices.Honeywell.Comm\Devices.Honeywell.Comm.csproj" />
+		<ProjectReference Include="..\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+		<ProjectReference Include="..\Devices.Romet.Comm\Devices.Romet.Comm.csproj" />
+		<ProjectReference Include="..\Devices.Romet.Core\Devices.Romet.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Moq">
+			<HintPath>..\..\..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>

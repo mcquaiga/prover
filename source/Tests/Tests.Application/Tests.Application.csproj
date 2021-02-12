@@ -1,61 +1,62 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <BuildOutputDir>..\..\..\build\tests</BuildOutputDir>
-  </PropertyGroup>
+	<PropertyGroup>
+		<BuildOutputDir>..\..\..\build\tests</BuildOutputDir>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>$(BuildOutputDir)\Debug\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(BuildOutputDir)\Release\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>$(BuildOutputDir)\Release\</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="EntityFrameworkSqlDataAccess\**" />
-    <Compile Remove="Verifications\CustomActions\**" />
-    <EmbeddedResource Remove="EntityFrameworkSqlDataAccess\**" />
-    <EmbeddedResource Remove="Verifications\CustomActions\**" />
-    <None Remove="EntityFrameworkSqlDataAccess\**" />
-    <None Remove="Verifications\CustomActions\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="EntityFrameworkSqlDataAccess\**" />
+		<Compile Remove="Verifications\CustomActions\**" />
+		<EmbeddedResource Remove="EntityFrameworkSqlDataAccess\**" />
+		<EmbeddedResource Remove="Verifications\CustomActions\**" />
+		<None Remove="EntityFrameworkSqlDataAccess\**" />
+		<None Remove="Verifications\CustomActions\**" />
+	</ItemGroup>
 
 
-  <ItemGroup>
-    <PackageReference Include="DeepEqual" Version="2.0.0" />
-    <PackageReference Include="LiteDB" Version="5.0.7" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
-    <PackageReference Include="Microsoft.Reactive.Testing" Version="4.4.1" />
-    <PackageReference Include="MongoDB.Bson" Version="2.10.3" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.3" />
-    <PackageReference Include="Moq" Version="4.13.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
-    <PackageReference Include="coverlet.collector" Version="1.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DeepEqual" Version="2.0.0" />
+		<PackageReference Include="LiteDB" Version="5.0.10" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+		<PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
+		<PackageReference Include="MongoDB.Bson" Version="2.11.6" />
+		<PackageReference Include="MongoDB.Driver" Version="2.11.6" />
+		<PackageReference Include="Moq" Version="4.16.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+		<PackageReference Include="coverlet.collector" Version="3.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
-    <ProjectReference Include="..\..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
-    <ProjectReference Include="..\..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
-    <ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
-    <ProjectReference Include="..\..\Prover.DevTools\Prover.Modules.DevTools.csproj" />
-    <ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
-    <ProjectReference Include="..\..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
-    <ProjectReference Include="..\Tests.Shared\Testing.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Devices\Devices.Core\Devices.Core.csproj" />
+		<ProjectReference Include="..\..\Devices\Devices.Honeywell.Core\Devices.Honeywell.Core.csproj" />
+		<ProjectReference Include="..\..\Devices\Devices.Romet.Core\Devices.Romet.Core.csproj" />
+		<ProjectReference Include="..\..\Prover.Application\Prover.Application.csproj" />
+		<ProjectReference Include="..\..\Prover.DevTools\Prover.Modules.DevTools.csproj" />
+		<ProjectReference Include="..\..\Prover.Shared\Prover.Shared.csproj" />
+		<ProjectReference Include="..\..\Prover.Storage.LiteDb\Prover.Storage.LiteDb.csproj" />
+		<ProjectReference Include="..\Tests.Shared\Testing.Shared.csproj" />
+	</ItemGroup>
 
 </Project>

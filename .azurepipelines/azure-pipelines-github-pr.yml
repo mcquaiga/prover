@@ -31,6 +31,11 @@ jobs:
         command: 'build'
         arguments: '$(solution) -p:Version=1.0.$(Build.BuildId) -p:FileVersion=1.0.$(Build.BuildId) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        projects: 'source/*.sln'
+
     - task: VSTest@2
       displayName: Tests
       inputs:

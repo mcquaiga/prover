@@ -1,17 +1,15 @@
-using System;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Prover.Application.Extensions;
 using Prover.Application.Interfaces;
 using Prover.Application.ViewModels;
 using ReactiveUI;
+using System;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Threading.Tasks;
 
-namespace Prover.Application.Verifications
-{
-	public class TestManager : TestManagerBase, IQaTestRunManager, ITestManagersProvider
-	{
+namespace Prover.Application.Verifications {
+	public class TestManager : TestManagerBase, IQaTestRunManager, ITestManagersProvider {
 		public IVolumeTestManager VolumeTestManager { get; set; }
 		public ICorrectionTestsManager CorrectionVerifications { get; set; }
 
@@ -25,8 +23,7 @@ namespace Prover.Application.Verifications
 				IVerificationService verificationService,
 				IVolumeTestManager volumeTestManager,
 				ICorrectionTestsManager correctionVerificationRunner, EvcVerificationViewModel verificationViewModel = null)
-				: base(logger, screenManager, verificationService, verificationViewModel)
-		{
+				: base(logger, screenManager, verificationService, verificationViewModel) {
 			DeviceManager = deviceManager;
 
 			VolumeTestManager = volumeTestManager;
@@ -37,15 +34,13 @@ namespace Prover.Application.Verifications
 			ObservableLoggingExtensions.LogErrors(RunCorrectionVerifications.ThrownExceptions, "Error downloading items from instrument.")
 									   .Subscribe().DisposeWith(Cleanup);
 
-			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.BeginVolumeVerification).DisposeWith(Cleanup);
+			RunVolumeVerifications = ReactiveCommand.CreateFromTask(VolumeTestManager.StartTest, outputScheduler: RxApp.MainThreadScheduler).DisposeWith(Cleanup);
 		}
 
-		public IDeviceSessionManager DeviceManager { get; }
+		//public IDeviceSessionManager DeviceManager { get; }
 
-		protected override void Dispose(bool isDisposing)
-		{
-			if (isDisposing)
-			{
+		protected override void Dispose(bool isDisposing) {
+			if (isDisposing) {
 				DeviceManager?.EndSession();
 				base.Dispose(true);
 			}

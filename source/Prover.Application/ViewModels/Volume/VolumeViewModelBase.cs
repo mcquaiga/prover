@@ -6,14 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 
-namespace Prover.Application.ViewModels.Volume
-{
-	public abstract class VolumeViewModelBase : VerificationViewModel, IDeviceStartAndEndValues<VolumeItems>
-	{
+namespace Prover.Application.ViewModels.Volume {
+	public abstract class VolumeViewModelBase : VerificationViewModel, IDeviceStartAndEndValues<VolumeItems> {
 		private ICollection<VerificationViewModel> _allTests = new List<VerificationViewModel>();
 
-		protected VolumeViewModelBase(VolumeItems startValues, VolumeItems endValues)
-		{
+		protected VolumeViewModelBase(VolumeItems startValues, VolumeItems endValues) {
 			Id = Guid.Empty;
 
 			StartValues = startValues;
@@ -32,17 +29,28 @@ namespace Prover.Application.ViewModels.Volume
 
 		public virtual ICollection<VerificationViewModel> AllTests() => _allTests;
 
-		protected override void Dispose(bool isDisposing)
-		{
+		protected override void Dispose(bool isDisposing) {
 			AllTests().ForEach(t => t.DisposeWith(Cleanup));
 		}
 
-		public void AddVerificationTest(VerificationViewModel verification)
-		{
+		public void AddVerificationTest(VerificationViewModel verification) {
 			_allTests.Add(verification);
 			RegisterVerificationsForVerified(_allTests);
 		}
 
+
+		public void UpdateStartValues(VolumeItems startValues) {
+
+			StartValues = startValues;
+			Corrected.StartValues = startValues;
+			Uncorrected.StartValues = startValues;
+		}
+
+		public void UpdateEndValues(VolumeItems endValues) {
+			EndValues = endValues;
+			Corrected.EndValues = endValues;
+			Uncorrected.EndValues = endValues;
+		}
 		//public void UpdateValues(DeviceType deviceType, ICollection<ItemValue> startValues, ICollection<ItemValue> endValues)
 		//{
 		//    foreach (var correctionin )

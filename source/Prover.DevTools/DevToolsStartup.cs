@@ -1,24 +1,21 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Prover.Application.Interactions;
-using Prover.Modules.DevTools.Hardware;
+using Prover.Application.Interfaces;
 using Prover.Modules.DevTools.Importer;
 using Prover.Modules.DevTools.SampleData;
 using Prover.Modules.DevTools.Storage;
 using Prover.Shared;
-using Prover.Shared.Interfaces;
 using Prover.UI.Desktop.Extensions;
-using System;
-using Prover.Application.Interfaces;
-using Prover.UI.Desktop.Controls;
 
 namespace Prover.Modules.DevTools {
 	public class DevToolsBootstrapper : IConfigureModule {
 		/// <inheritdoc />
 		private void AddServices(HostBuilderContext builder, IServiceCollection services) {
-			services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
-			services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);
+			//services.AddSingleton<Func<PulseOutputChannel, IInputChannel>>(c => channel => SimulatedInputChannel.PulseInputSimulators[channel]);
+			//services.AddSingleton<Func<OutputChannelType, IOutputChannel>>(c => channel => SimulatedOutputChannel.OutputSimulators[channel]);	
+
+
 			services.AddViewsAndViewModels();
 			services.AddSingleton<IDevToolsMenuItem, DataGenerator>();
 			services.AddSingleton<IDevToolsMenuItem, DataImporter>();

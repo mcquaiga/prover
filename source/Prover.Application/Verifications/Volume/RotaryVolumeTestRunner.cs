@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Prover.Application.Extensions;
 using Prover.Application.Hardware;
 using Prover.Application.Interactions;
 using Prover.Application.Interfaces;
@@ -7,16 +8,15 @@ using Prover.Application.ViewModels.Volume.Rotary;
 using Prover.Shared;
 using Prover.Shared.Interfaces;
 using ReactiveUI;
+using System;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Prover.Application.Verifications.Volume
-{
-	public class RotaryVolumeTestRunner : AutomatedVolumeTestRunnerBase
-	{
+namespace Prover.Application.Verifications.Volume {
+	public class RotaryVolumeTestRunner : AutomatedVolumeTestRunnerBase {
 		public RotaryVolumeTestRunner(
 				ILogger<RotaryVolumeTestRunner> logger,
 				IDeviceSessionManager deviceManager,
@@ -24,8 +24,7 @@ namespace Prover.Application.Verifications.Volume
 				PulseOutputsListenerService pulseListenerService,
 				IOutputChannel motorControl,
 				RotaryVolumeViewModel rotaryVolume)
-			: base(logger, deviceManager, tachometerService, pulseListenerService, motorControl, rotaryVolume)
-		{
+			: base(logger, deviceManager, tachometerService, pulseListenerService, motorControl, rotaryVolume) {
 			//TachometerService = tachometerService;
 			RotaryVolume = rotaryVolume;
 		}
@@ -34,10 +33,8 @@ namespace Prover.Application.Verifications.Volume
 
 		public override int TargetUncorrectedPulses
 		{
-			get
-			{
-				switch (DeviceManager.Device.Items.Volume.UncorrectedMultiplier)
-				{
+			get {
+				switch (DeviceManager.Device.Items.Volume.UncorrectedMultiplier) {
 					case 10:
 						return RotaryVolume.RotaryMeterTest.Items.MeterType.UnCorPulsesX10;
 					case 100:
@@ -54,15 +51,24 @@ namespace Prover.Application.Verifications.Volume
 		public override async Task<CancellationToken> PublishStartInteraction() =>
 			await DeviceInteractions.StartVolumeTest.Handle(this);
 
-		protected override async Task ExecuteTestAsync()
-		{
+		protected override async Task ExecuteTestAsync() {
+
 			Logger.LogDebug("Running automated volume test.");
 
 			PulseListenerService.StartListening()
-				.Where(p =>
-					p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+				.LogDebug(x => "Stopping test...")
+				.Where(p => p.Items.ChannelType == PulseOutputType.UncVol && p.PulseCount == TargetUncorrectedPulses)
+
+				.Do(_ => MotorControl.SignalStop())
+
+				.LogDebug(x => "Waiting for residual pulses...")
+				.Concat(PulseListenerService.PulseCountUpdates)
+				.Throttle(TimeSpan.FromSeconds(5))
 				.Select(_ => Unit.Default)
-				.InvokeCommand(InitiateTestCompletion)
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.OnErrorResumeNext(Observable.Empty<Unit>())
+				.InvokeCommand(FinishTest)
+				//.InvokeCommand(InitiateTestCompletion)
 				.DisposeWith(Cleanup);
 
 			MotorControl.SignalStart();

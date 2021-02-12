@@ -192,3 +192,5 @@ src/.vs/EvcProver/v15/sqlite3/storage.ide
 /source/.idea/**/**
 /tools/SampleData/ExportedTests/**.json
 /tools/SampleData/ExportedTests*/**
+/source/Prover.UI.Desktop/appsettings.Development.json
+/source/Prover.UI.Desktop/appsettings.json
