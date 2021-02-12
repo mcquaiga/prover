@@ -48,11 +48,13 @@ jobs:
       inputs:
         runtime: 'core'
         additionalArguments: '/output buildserver'
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: 'restore'
-        projects: '**/*.csproj'
-        feedsToUse: 'config'
+      
+   # - task: DotNetCoreCLI@2
+   #   displayName: Restore
+    #  inputs:
+     #   command: 'restore'
+      #  projects: '**/*.csproj'
+       # feedsToUse: 'config'
         
     - task: DotNetCoreCLI@2
       displayName: Build
@@ -60,18 +62,12 @@ jobs:
         command: 'build'
         arguments: '$(solution) --configuration $(buildConfiguration) --verbosity $(verbosityLevel)'     
     #-p:Version=$(GitVersion.NuGetVersion) -p:FileVersion=$(GitVersion.SemVer)
-    - task: VSTest@2
-      displayName: Tests
+    
+    - task: DotNetCoreCLI@2
       inputs:
-        testSelector: 'testAssemblies'  
-        testAssemblyVer2: |
-          **\*tests*.dll
-          !**\*TestAdapter.dll
-          !**\obj\**   
-          !**\Tests.Shared.dll  
-        searchFolder: '$(testsDir)'
-        rerunFailedTests: True
-        otherConsoleOptions: '/Framework:net5.0-windows,Version=v5.0'   
+        command: 'test'
+        projects: '**/*.csproj'
+        testRunTitle: 'Tests'
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Binary Artifacts"
