@@ -12,7 +12,7 @@ using System.Reactive.Linq;
 using Tests.Shared;
 
 namespace Tests.Application.ExternalDevices.DInOutBoards {
-	[TestClass]
+	//[TestClass]
 	public class PulseInputsListenerServiceTests {
 		private PulseOutputItems.ChannelItems _channelAItems;
 		private Mock<IInputChannel> _channelAMock;
