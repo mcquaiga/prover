@@ -45,6 +45,7 @@ jobs:
           !**\*TestAdapter.dll
           !**\obj\**   
           !**\Tests.Shared.dll  
+          !**/ref/**
         searchFolder: '$(Build.Repository.LocalPath)\build\tests\$(buildConfiguration)'
         rerunFailedTests: True
 
