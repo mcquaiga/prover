@@ -71,7 +71,8 @@ jobs:
           **\*tests*.dll
           !**\*TestAdapter.dll
           !**\obj\**   
-          !**\Tests.Shared.dll  
+          !**\Tests.Shared.dll 
+          !**/ref/** 
         searchFolder: '$(testsDir)'
         rerunFailedTests: True
         #otherConsoleOptions: '/Framework:net5.0-windows,Version=v5.0'   
