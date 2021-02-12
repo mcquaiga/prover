@@ -48,7 +48,12 @@ jobs:
       inputs:
         runtime: 'core'
         additionalArguments: '/output buildserver'
-
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+        feedsToUse: 'config'
+        
     - task: DotNetCoreCLI@2
       displayName: Build
       inputs:
@@ -66,7 +71,7 @@ jobs:
           !**\Tests.Shared.dll  
         searchFolder: '$(testsDir)'
         rerunFailedTests: True
-        otherConsoleOptions: '/Framework:.NETCoreApp,Version=v3.1'   
+        otherConsoleOptions: '/Framework:net5.0-windows,Version=v5.0'   
 
     - task: PublishPipelineArtifact@1
       displayName: "Publish Binary Artifacts"
