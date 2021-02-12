@@ -13,6 +13,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 
 		public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct) {
 			ct.ThrowIfCancellationRequested();
+			await Task.Delay(250);
 			try {
 				await CommClient.Connect(ct);
 
