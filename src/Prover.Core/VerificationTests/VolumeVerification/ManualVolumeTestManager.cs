@@ -30,8 +30,7 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 		}
 
 		public override Task ExecuteSyncTest(CancellationToken ct) {
-			return Task.Run(() => {
-			}, ct);
+			return Task.CompletedTask;
 		}
 
 		public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct) {
@@ -50,10 +49,13 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 			RunningTest = true;
 			ResetPulseCounts(VolumeTest);
 
-			return Task.Run(() => {
-				while (RunningTest || ct.IsCancellationRequested) {
-				}
-			}, ct);
+			return Task.CompletedTask;
+			//return Task.Run(() =>
+			// {
+			//     while (RunningTest || ct.IsCancellationRequested)
+			//     {
+			//     }
+			// }, ct);
 		}
 	}
 }
