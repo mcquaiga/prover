@@ -43,7 +43,7 @@
 			Status.OnNext("Completing volume test...");
 
 			ct.ThrowIfCancellationRequested();
-
+			await Task.Delay(250);
 			try {
 
 				if (!CommClient.IsConnected) {

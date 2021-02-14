@@ -12,8 +12,12 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 		}
 
 		public override async Task CompleteTest(ITestActionsManager testActionsManager, CancellationToken ct) {
+
+			Status.OnNext("Completing volume test...");
 			ct.ThrowIfCancellationRequested();
+
 			await Task.Delay(250);
+
 			try {
 				await CommClient.Connect(ct);
 
@@ -23,6 +27,8 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 				if (VolumeTest.VerificationTest.FrequencyTest != null) {
 					VolumeTest.VerificationTest.FrequencyTest.PostTestItemValues = await CommClient.GetFrequencyItems();
 				}
+
+				await testActionsManager.ExecuteValidations(TestActions.VerificationStep.PostVolumeVerification, CommClient, VolumeTest.Instrument);
 			}
 			finally {
 				await CommClient.Disconnect();
@@ -34,15 +40,24 @@ namespace Prover.Core.VerificationTests.VolumeVerification {
 		}
 
 		public override async Task PreTest(EvcCommunicationClient commClient, VolumeTest volumeTest, ITestActionsManager testActionsManager, CancellationToken ct) {
-			await CommClient.Connect(ct);
 
-			VolumeTest.Items = await CommClient.GetVolumeItems();
+			await Task.Run(async () => {
+				CommClient = commClient;
+				VolumeTest = volumeTest;
 
-			if (VolumeTest.VerificationTest.FrequencyTest != null) {
-				VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
-			}
+				await CommClient.Connect(ct);
 
-			await CommClient.Disconnect();
+				await testActionsManager.ExecuteValidations(TestActions.VerificationStep.PreVolumeVerification, CommClient, VolumeTest.Instrument);
+
+				VolumeTest.Items = await CommClient.GetVolumeItems();
+
+				if (VolumeTest.VerificationTest.FrequencyTest != null) {
+					VolumeTest.VerificationTest.FrequencyTest.PreTestItemValues = await CommClient.GetFrequencyItems();
+				}
+
+				await CommClient.Disconnect();
+			});
+
 		}
 
 		public override Task RunTest(CancellationToken ct) {
