@@ -1,73 +1,77 @@
 ﻿<UserControl
-    x:Class="Prover.GUI.Screens.Dialogs.ProgressStatusDialog.LiveReadStatusView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Prover.GUI.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Prover.GUI.Screens.Dialogs.ProgressStatusDialog"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
-    d:DesignWidth="450"
-    mc:Ignorable="d">
+	x:Class="Prover.GUI.Screens.Dialogs.ProgressStatusDialog.LiveReadStatusView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:Prover.GUI.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:Prover.GUI.Screens.Dialogs.ProgressStatusDialog"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DesignHeight="450"
+	d:DesignWidth="450"
+	mc:Ignorable="d">
 
-    <StackPanel
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Orientation="Horizontal">
+	<StackPanel
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center"
+		Orientation="Horizontal">
 
-        <StackPanel Margin="5" Orientation="Horizontal">
-            <materialDesign:PackIcon
-                Width="36"
-                Height="36"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Kind="Gauge" />
-            <StackPanel Margin="4" Orientation="Vertical">
-                <!--<TextBlock
+		<StackPanel Margin="5" Orientation="Horizontal">
+			<materialDesign:PackIcon
+				Width="36"
+				Height="36"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Kind="Gauge" />
+			<StackPanel Margin="4" Orientation="Vertical">
+				<!--<TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
                     Text="P" />-->
-                <controls:ValueDescriptionControl
-                    IsReadOnly="True"
-                    Label="Actual"
-                    Value="{Binding LiveReadStatus.PressureActual, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=80.00}" />
-                <controls:ValueDescriptionControl
-                    IsReadOnly="True"
-                    Label="Target"
-                    Value="{Binding LiveReadStatus.PressureTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=80.00}" />
-            </StackPanel>
-        </StackPanel>
+				<controls:ValueDescriptionControl
+					FontSize="24"
+					IsReadOnly="True"
+					Label="Actual"
+					Value="{Binding LiveReadStatus.PressureActual, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=80.00}" />
+				<controls:ValueDescriptionControl
+					FontSize="24"
+					IsReadOnly="True"
+					Label="Target"
+					Value="{Binding LiveReadStatus.PressureTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=80.00}" />
+			</StackPanel>
+		</StackPanel>
 
-        <StackPanel Margin="5" Orientation="Horizontal">
-            <materialDesign:PackIcon
-                Width="36"
-                Height="36"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Kind="Thermometer" />
-            <StackPanel Margin="4" Orientation="Vertical">
-                <!--<TextBlock
+		<StackPanel Margin="5" Orientation="Horizontal">
+			<materialDesign:PackIcon
+				Width="36"
+				Height="36"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Kind="Thermometer" />
+			<StackPanel Margin="4" Orientation="Vertical">
+				<!--<TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Style="{DynamicResource MaterialDesignHeadlineTextBlock}"
                     Text="T" />-->
 
-                <controls:ValueDescriptionControl
-                    IsReadOnly="True"
-                    Label="Actual"
-                    Value="{Binding LiveReadStatus.TempActual, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
+				<controls:ValueDescriptionControl
+					FontSize="24"
+					IsReadOnly="True"
+					Label="Actual"
+					Value="{Binding LiveReadStatus.TempActual, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
 
 
-                <controls:ValueDescriptionControl
-                    IsReadOnly="True"
-                    Label="Target"
-                    Value="{Binding LiveReadStatus.TempTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
+				<controls:ValueDescriptionControl
+					FontSize="24"
+					IsReadOnly="True"
+					Label="Target"
+					Value="{Binding LiveReadStatus.TempTarget, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=32.00}" />
 
-            </StackPanel>
-        </StackPanel>
+			</StackPanel>
+		</StackPanel>
 
 
-    </StackPanel>
+	</StackPanel>
 </UserControl>

@@ -1,191 +1,184 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using NLog;
 using UnionGas.MASA.DCRWebService;
 
-namespace UnionGas.MASA {
+namespace UnionGas.MASA
+{
+    /// <summary>
+    ///     Defines the <see cref="DCRWebServiceCommunicator" />
+    /// </summary>
+    public class DCRWebServiceCommunicator
+    {
+        #region Constructors
 
-	/// <summary>
-	/// Defines the <see cref="DCRWebServiceCommunicator"/>
-	/// </summary>
-	public class DCRWebServiceCommunicator {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DCRWebServiceCommunicator" /> class.
+        /// </summary>
+        /// <param name="dcrWebService">The dcrWebService<see cref="DCRWebServiceSoap" /></param>
+        public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService)
+        {
+            _dcrWebService = dcrWebService;
+        }
 
-		#region Constructors
+        #endregion
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DCRWebServiceCommunicator"/> class.
-		/// </summary>
-		/// <param name="dcrWebService">The dcrWebService <see cref="DCRWebServiceSoap"/></param>
-		public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService) {
-			_dcrWebService = dcrWebService;
-		}
+        #region Properties
 
-		#endregion
+        /// <summary>
+        ///     Gets the SoapClient
+        /// </summary>
+        public DCRWebServiceSoapClient SoapClient => (DCRWebServiceSoapClient) _dcrWebService;
 
-		#region Properties
+        #endregion
 
-		/// <summary>
-		/// Gets the SoapClient
-		/// </summary>
-		public DCRWebServiceSoapClient SoapClient => (DCRWebServiceSoapClient)_dcrWebService;
+        #region Fields
 
-		#endregion
+        /// <summary>
+        ///     Defines the _dcrWebService
+        /// </summary>
+        private readonly DCRWebServiceSoap _dcrWebService;
 
-		#region Fields
+        /// <summary>
+        ///     Defines the _log
+        /// </summary>
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-		/// <summary>
-		/// Defines the _dcrWebService
-		/// </summary>
-		private readonly DCRWebServiceSoap _dcrWebService;
+        #endregion
 
-		/// <summary>
-		/// Defines the _log
-		/// </summary>
-		private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        #region Methods
 
-		#endregion
+        /// <summary>
+        ///     The FindMeterByCompanyNumber
+        /// </summary>
+        /// <param name="companyNumber">The companyNumber<see cref="string" /></param>
+        /// <returns>The <see cref="Task{MeterDTO}" /></returns>
+        public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber)
+        {
+            if (string.IsNullOrEmpty(companyNumber))
+                throw new ArgumentNullException(nameof(companyNumber));
 
-		#region Methods
+            _log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
 
-		/// <summary>
-		/// The FindMeterByCompanyNumber
-		/// </summary>
-		/// <param name="companyNumber">The companyNumber <see cref="string"/></param>
-		/// <returns>The <see cref="Task{MeterDTO}"/></returns>
-		public async Task<MeterDTO> FindMeterByCompanyNumber(string companyNumber) {
-			if (string.IsNullOrEmpty(companyNumber))
-				throw new ArgumentNullException(nameof(companyNumber));
+            var request = new GetValidatedEvcDeviceByInventoryCodeRequest
+            {
+                Body = new GetValidatedEvcDeviceByInventoryCodeRequestBody(companyNumber)
+            };
 
-			_log.Debug($"Finding meter with inventory number {companyNumber} in MASA.");
+            var response =
+                await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByInventoryCodeAsync(request))
+                    .ConfigureAwait(false);
 
-			var request = new GetValidatedEvcDeviceByBarcodeRequest {
-				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(companyNumber)
-			};
+            return response.Body.GetValidatedEvcDeviceByInventoryCodeResult;
+        }
 
-			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcode(request))
-					.ConfigureAwait(false);
+        /// <summary>
+        ///     The GetEmployee
+        /// </summary>
+        /// <param name="username">The username<see cref="string" /></param>
+        /// <returns>The <see cref="Task{EmployeeDTO}" /></returns>
+        public async Task<EmployeeDTO> GetEmployee(string username)
+        {
+            _log.Debug($"Getting employee with #{username} from MASA.");
 
-			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
-		}
+            var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
+            var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployeeAsync(employeeRequest))
+                .ConfigureAwait(false);
 
-		/// The FindMeterByCompanyNumber
-		/// </summary>
-		/// <param name="companyNumber">The companyNumber <see cref="string"/></param>
-		/// <returns>The <see cref="Task{MeterDTO}"/></returns>
-		public async Task<MeterDTO> FindMeterByBarCodeNumber(string barCodeNumber) {
-			if (string.IsNullOrEmpty(barCodeNumber))
-				throw new ArgumentNullException(nameof(barCodeNumber));
+            return response.Body.GetEmployeeResult;
+        }
 
-			_log.Debug($"Finding meter with bar code number {barCodeNumber}.");
+        /// <summary>
+        ///     The GetOutstandingMeterTestsByJobNumber
+        /// </summary>
+        /// <param name="jobNumber">The jobNumber<see cref="int" /></param>
+        /// <returns>The <see cref="Task{IList{MeterDTO}}" /></returns>
+        public async Task<IList<MeterDTO>> GetOutstandingMeterTestsByJobNumber(int jobNumber)
+        {
+            var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber));
 
-			var request = new GetValidatedEvcDeviceByBarcodeRequest {
-				Body = new GetValidatedEvcDeviceByBarcodeRequestBody(barCodeNumber)
-			};
+            var response = await CallWebServiceMethod(() => _dcrWebService.GetMeterListByJobNumberAsync(request))
+                .ConfigureAwait(false);
 
-			var response =
-				await CallWebServiceMethod(() => _dcrWebService.GetValidatedEvcDeviceByBarcode(request))
-					.ConfigureAwait(false);
+            return response.Body.GetMeterListByJobNumberResult.ToList();
+        }
 
-			return response.Body.GetValidatedEvcDeviceByBarcodeResult;
-		}
+        /// <summary>
+        ///     The SendResultsToWebService
+        /// </summary>
+        /// <param name="evcQaRuns">The evcQaRuns<see cref="IEnumerable{QARunEvcTestResult}" /></param>
+        /// <returns>The <see cref="Task{bool}" /></returns>
+        public async Task<bool> SendQaTestResults(ICollection<QARunEvcTestResult> evcQaRuns)
+        {
+            if (evcQaRuns == null || !evcQaRuns.Any())
+                throw new ArgumentOutOfRangeException(nameof(evcQaRuns));
 
-		/// <summary>
-		/// The GetEmployee
-		/// </summary>
-		/// <param name="username">The username <see cref="string"/></param>
-		/// <returns>The <see cref="Task{EmployeeDTO}"/></returns>
-		public async Task<EmployeeDTO> GetEmployee(string username) {
-			_log.Debug($"Getting user '{username}' from Maximo.");
+            var request = new SubmitQAEvcTestResultsRequest(
+                new SubmitQAEvcTestResultsRequestBody(evcQaRuns.ToArray())
+            );
 
-			var employeeRequest = new GetEmployeeRequest(new GetEmployeeRequestBody(username));
-			var response = await CallWebServiceMethod(() => _dcrWebService.GetEmployee(employeeRequest))
-				.ConfigureAwait(false);
+            var response = await CallWebServiceMethod(() =>
+                    _dcrWebService.SubmitQAEvcTestResultsAsync(request))
+                .ConfigureAwait(false);
 
-			_log.Debug($"Welcome, {response.Body.GetEmployeeResult?.EmployeeName}");
+            if (string.Equals(response.Body.SubmitQAEvcTestResultsResult, "success",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                _log.Info("Web service returned successfully!");
+                return true;
+            }
 
-			return response.Body.GetEmployeeResult;
-		}
+            _log.Error($"Web service return an error: {Environment.NewLine} {response.Body}");
+            return false;
+        }
 
-		/// <summary>
-		/// The GetOutstandingMeterTestsByJobNumber
-		/// </summary>
-		/// <param name="jobNumber">The jobNumber <see cref="int"/></param>
-		/// <returns>The <see cref="Task{IList{MeterDTO}}"/></returns>
-		public async Task<IList<MeterDTO>> GetOutstandingMeterTestsByJobNumber(int jobNumber) {
-			var request = new GetMeterListByJobNumberRequest(new GetMeterListByJobNumberRequestBody(jobNumber.ToString()));
+        /// <summary>
+        ///     The CallWebServiceMethod
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="webServiceMethod">The webServiceMethod<see cref="Func{Task{TResult}}" /></param>
+        /// <returns>The <see cref="Task{TResult}" /></returns>
+        private async Task<TResult> CallWebServiceMethod<TResult>(Func<Task<TResult>> webServiceMethod, CancellationTokenSource tokenSource = null)
+        {
+            try
+            {
+                if (tokenSource == null)
+                    tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
 
-			var response = await CallWebServiceMethod(() => _dcrWebService.GetMeterListByJobNumber(request))
-				.ConfigureAwait(false);
+                tokenSource.Token.ThrowIfCancellationRequested();
 
-			return response.Body.GetMeterListByJobNumberResult.ToList();
-		}
+                return await Task.Run(async () => await webServiceMethod.Invoke(), tokenSource.Token)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                _log.Warn("Timed out contacting the web service.");
+                throw;
+            }
 
-		/// <summary>
-		/// The SendResultsToWebService
-		/// </summary>
-		/// <param name="evcQaRuns">The evcQaRuns <see cref="IEnumerable{QARunEvcTestResult}"/></param>
-		/// <returns>The <see cref="Task{bool}"/></returns>
-		public async Task<bool> SendQaTestResults(ICollection<QARunEvcTestResult> evcQaRuns) {
-			if (evcQaRuns == null || !evcQaRuns.Any())
-				throw new ArgumentOutOfRangeException(nameof(evcQaRuns));
+            catch (EndpointNotFoundException ex)
+            {
+                var msg =
+                    $"MASA Web service could not be reached. {Environment.NewLine} " +
+                    $"Endpoint: {SoapClient.Endpoint.Address} {Environment.NewLine}";
 
-			var request = new SubmitQAEvcTestResultsRequest(
-				new SubmitQAEvcTestResultsRequestBody(evcQaRuns.ToArray())
-			);
+                _log.Error(ex, msg);
+                
+                throw;
+            }
 
-			var response = await CallWebServiceMethod(() => _dcrWebService.SubmitQAEvcTestResults(request))
-				.ConfigureAwait(false);
+            catch (Exception ex)
+            {
+                _log.Error(ex, "An error occured contacting the web service.");
+                throw;
+            }
+        }
 
-			if (string.Equals(response.Body.SubmitQAEvcTestResultsResult, "success",
-				StringComparison.OrdinalIgnoreCase)) {
-				_log.Info("Web service returned successfully!");
-				return true;
-			}
-
-			_log.Error($"Web service return an error: {Environment.NewLine} {response.Body}");
-			return false;
-		}
-
-		/// <summary>
-		/// The CallWebServiceMethod
-		/// </summary>
-		/// <typeparam name="TResult"></typeparam>
-		/// <param name="webServiceMethod">The webServiceMethod <see cref="Func{Task{TResult}}"/></param>
-		/// <returns>The <see cref="Task{TResult}"/></returns>
-		private async Task<TResult> CallWebServiceMethod<TResult>(Func<TResult> webServiceMethod, CancellationTokenSource tokenSource = null) {
-			try {
-				_log.Debug($"Callling {SoapClient.Endpoint.Address}//{webServiceMethod.ToString()}");
-				if (tokenSource == null)
-					tokenSource = new CancellationTokenSource(new TimeSpan(0, 0, 0, 3));
-
-				tokenSource.Token.ThrowIfCancellationRequested();
-
-				return await Task.Run(() => webServiceMethod.Invoke(), tokenSource.Token)
-					.ConfigureAwait(false);
-			}
-			catch (OperationCanceledException) {
-				_log.Warn("Timed out contacting the web service.");
-				throw;
-			}
-			catch (EndpointNotFoundException ex) {
-				var msg =
-					$"Web service could not be reached. {Environment.NewLine} " +
-					$"Endpoint: {SoapClient.Endpoint.Address} {Environment.NewLine}";
-
-				_log.Error(ex, msg);
-				throw;
-			}
-			catch (Exception ex) {
-				_log.Error(ex, $"An error occured contacting the web service. Exception: {ex.Message}");
-				throw;
-			}
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }
