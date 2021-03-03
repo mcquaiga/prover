@@ -1,50 +1,50 @@
 ﻿<UserControl
-    x:Class="Prover.GUI.Screens.Dialogs.ProgressStatusDialogView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cal="http://www.caliburnproject.org"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="250"
-    d:DesignWidth="300"
-    mc:Ignorable="d">
-    <Grid
-        MinWidth="300"
-        MinHeight="250"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
+	x:Class="Prover.GUI.Screens.Dialogs.ProgressStatusDialogView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:cal="http://www.caliburnproject.org"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DesignHeight="250"
+	d:DesignWidth="300"
+	mc:Ignorable="d">
+	<Grid
+		MinWidth="300"
+		MinHeight="250"
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="50" />
+		</Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            Margin="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource MaterialDesignTitleTextBlock}"
-            Text="{Binding HeaderText, FallbackValue='Starting test...'}" />
+		<TextBlock
+			Grid.Row="0"
+			Margin="10"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Bottom"
+			Style="{DynamicResource MaterialDesignTitleTextBlock}"
+			Text="{Binding HeaderText, FallbackValue='Starting test...'}" />
 
-        <ContentControl
-            Grid.Row="1"
-            Margin="0,8"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            cal:View.Context="{Binding ContentItem, Mode=TwoWay}"
-            cal:View.Model="{Binding}" />
+		<ContentControl
+			Grid.Row="1"
+			Margin="0,8"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			cal:View.Context="{Binding ContentItem, Mode=TwoWay}"
+			cal:View.Model="{Binding}" />
 
-        <Button
-            Grid.Row="2"
-            Margin="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Command="{Binding CancelCommand}"
-            Content="Abort"
-            Style="{DynamicResource MaterialDesignFlatButton}" />
+		<Button
+			Grid.Row="2"
+			Margin="10"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			Command="{Binding CancelCommand}"
+			Content="Abort"
+			Style="{DynamicResource MaterialDesignFlatButton}" />
 
-    </Grid>
+	</Grid>
 </UserControl>
 
 

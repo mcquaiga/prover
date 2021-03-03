@@ -14,293 +14,266 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews
-{
-    public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest>
-    {
-        public long AppliedInput
-        {
-            get => _appliedInput;
-            set => this.RaiseAndSetIfChanged(ref _appliedInput, value);
-        }
+namespace Prover.GUI.Screens.Modules.QAProver.Screens.PTVerificationViews {
+	public class VolumeTestViewModel : TestRunViewModelBase<Core.Models.Instruments.VolumeTest> {
+		public long AppliedInput
+		{
+			get => _appliedInput;
+			set => this.RaiseAndSetIfChanged(ref _appliedInput, value);
+		}
 
-        public Brush CorrectedPercentColour =>
-                        Volume?.CorrectedHasPassed == true
-                            ? Brushes.White
-                            : (SolidColorBrush)new BrushConverter().ConvertFrom("#DC6156");
+		public Brush CorrectedPercentColour =>
+						Volume?.CorrectedHasPassed == true
+							? Brushes.White
+							: (SolidColorBrush)new BrushConverter().ConvertFrom("#DC6156");
 
-        public int CorrectedPulseCount
-        {
-            get => _correctedPulseCount;
-            set => this.RaiseAndSetIfChanged(ref _correctedPulseCount, value);
-        }
+		public int CorrectedPulseCount
+		{
+			get => _correctedPulseCount;
+			set => this.RaiseAndSetIfChanged(ref _correctedPulseCount, value);
+		}
 
-        public bool DisplayButtons => _displayButtons.Value;
+		public bool DisplayButtons => _displayButtons.Value;
 
-        public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
+		public decimal? EndCorrected => Volume.AfterTestItems.Corrected();
 
-        public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
+		public decimal? EndUncorrected => Volume.AfterTestItems.Uncorrected();
 
-        public EnergyTestViewModel EnergyTestItem { get; set; }
+		public EnergyTestViewModel EnergyTestItem { get; set; }
 
-        public FrequencyTestViewModel FrequencyTestItem { get; set; }
+		public FrequencyTestViewModel FrequencyTestItem { get; set; }
 
-        public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
+		public bool IsAutoVolumeTest => TestManager?.VolumeTestManager is AutoVolumeTestManager;
 
-        public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
+		public bool IsManualVolumeTest => TestManager?.VolumeTestManager is ManualVolumeTestManager;
 
-        public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
+		public RotaryMeterTestViewModel MeterDisplacementItem { get; set; }
 
-        public Brush MeterDisplacementPercentColour
-        {
-            get
-            {
-                RotaryDrive rotaryDrive = Volume?.DriveType as RotaryDrive;
-                return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
-            }
-        }
+		public Brush MeterDisplacementPercentColour
+		{
+			get {
+				RotaryDrive rotaryDrive = Volume?.DriveType as RotaryDrive;
+				return rotaryDrive?.Meter.MeterDisplacementHasPassed == true ? Brushes.Green : Brushes.Red;
+			}
+		}
 
-        public ReactiveCommand PostVolumeTestCommand { get; set; }
+		public ReactiveCommand PostVolumeTestCommand { get; set; }
 
-        public ReactiveCommand PreVolumeTestCommand { get; set; }
+		public ReactiveCommand PreVolumeTestCommand { get; set; }
 
-        public ReactiveCommand RunVolumeTestCommand { get; set; }
+		public ReactiveCommand RunVolumeTestCommand { get; set; }
 
-        public decimal? StartCorrected => Volume.Items?.Corrected();
+		public decimal? StartCorrected => Volume.Items?.Corrected();
 
-        public decimal? StartUncorrected => Volume.Items?.Uncorrected();
+		public decimal? StartUncorrected => Volume.Items?.Uncorrected();
 
-        public IQaRunTestManager TestManager { get; set; }
+		public IQaRunTestManager TestManager { get; set; }
 
-        public decimal? TrueCorrected
-        {
-            get
-            {
-                if (Volume.TrueCorrected != null)
-                {
-                    return decimal.Round(Volume.TrueCorrected.Value, 4);
-                }
+		public decimal? TrueCorrected
+		{
+			get {
+				if (Volume.TrueCorrected != null) {
+					return decimal.Round(Volume.TrueCorrected.Value, 4);
+				}
 
-                return null;
-            }
-        }
+				return null;
+			}
+		}
 
-        public Brush UnCorrectedPercentColour
-                    =>
-                        Volume?.UnCorrectedHasPassed == true
-                            ? Brushes.White
-                            : (SolidColorBrush)new BrushConverter().ConvertFrom("#DC6156");
+		public Brush UnCorrectedPercentColour
+					=>
+						Volume?.UnCorrectedHasPassed == true
+							? Brushes.White
+							: (SolidColorBrush)new BrushConverter().ConvertFrom("#DC6156");
 
-        public int UncorrectedPulseCount
-        {
-            get => _uncorrectedPulseCount;
-            set => this.RaiseAndSetIfChanged(ref _uncorrectedPulseCount, value);
-        }
+		public int UncorrectedPulseCount
+		{
+			get => _uncorrectedPulseCount;
+			set => this.RaiseAndSetIfChanged(ref _uncorrectedPulseCount, value);
+		}
 
-        /// <summary>
-        /// Gets or sets the ViewContext
-        /// </summary>
-        public string ViewContext
-        {
-            get { return _viewContext; }
-            set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
-        }
+		/// <summary>
+		/// Gets or sets the ViewContext
+		/// </summary>
+		public string ViewContext
+		{
+			get { return _viewContext; }
+			set { this.RaiseAndSetIfChanged(ref _viewContext, value); }
+		}
 
-        public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
+		public string CorrectedMultiplierDescription => Instrument.CorrectedMultiplierDescription();
 
-        public string DriveRateDescription => Instrument.DriveRateDescription();
+		public string DriveRateDescription => Instrument.DriveRateDescription();
 
-        public decimal? EvcCorrected => Volume.EvcCorrected;
+		public decimal? EvcCorrected => Volume.EvcCorrected;
 
-        public decimal? EvcUncorrected => Volume.EvcUncorrected;
+		public decimal? EvcUncorrected => Volume.EvcUncorrected;
 
-        public Instrument Instrument => Volume.Instrument;
+		public Instrument Instrument => Volume.Instrument;
 
-        public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
+		public decimal? TrueUncorrected => decimal.Round(Volume.TrueUncorrected.Value, 4);
 
-        public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
+		public string UnCorrectedMultiplierDescription => Instrument.UnCorrectedMultiplierDescription();
 
-        public Core.Models.Instruments.VolumeTest Volume { get; }
+		public Core.Models.Instruments.VolumeTest Volume { get; }
 
-        public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
-                    Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null, ISubject<VerificationTest> changeObservable = null)
-                    : base(screenManager, eventAggregator, volumeTest, changeObservable)
-        {
-            Volume = volumeTest;
-            TestManager = qaRunTestManager;
+		public VolumeTestViewModel(ScreenManager screenManager, IEventAggregator eventAggregator,
+					Core.Models.Instruments.VolumeTest volumeTest, IQaRunTestManager qaRunTestManager = null, ISubject<VerificationTest> changeObservable = null)
+					: base(screenManager, eventAggregator, volumeTest, changeObservable) {
+			Volume = volumeTest;
+			TestManager = qaRunTestManager;
 
-            AppliedInput = (long)Volume.AppliedInput;
-            UncorrectedPulseCount = Volume.UncPulseCount;
-            CorrectedPulseCount = Volume.CorPulseCount;
+			AppliedInput = (long)Volume.AppliedInput;
+			UncorrectedPulseCount = Volume.UncPulseCount;
+			CorrectedPulseCount = Volume.CorPulseCount;
 
-            var canRunTestCommand = this.WhenAny(x => x.TestManager, tm => tm != null);
-            canRunTestCommand.ToProperty(this, model => model.DisplayButtons, out _displayButtons);
+			var canRunTestCommand = this.WhenAny(x => x.TestManager, tm => tm != null);
+			canRunTestCommand.ToProperty(this, model => model.DisplayButtons, out _displayButtons);
 
-            CreateDriveSpecificViews();
+			CreateDriveSpecificViews();
 
-            if (TestManager != null)
-            {
-                if (TestManager?.VolumeTestManager is ManualVolumeTestManager
-                    || TestManager?.VolumeTestManager is FrequencyVolumeTestManager)
-                {
-                    var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
-                        .Select(x => x == TestStep.PreTest);
-                    PreVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                        "Starting Volume Test...", RunPreVolumeTest, canRunPreTest);
+			if (TestManager != null) {
+				if (TestManager?.VolumeTestManager is ManualVolumeTestManager || TestManager?.VolumeTestManager is FrequencyVolumeTestManager) {
 
-                    var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep)
-                        .Select(x => x == TestStep.PostTest || x == TestStep.PreTest);
-                    PostVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                        "Finishing Volume Test...", RunPostVolumeTest, canRunPostTest);
+					var canRunPreTest = this.WhenAnyValue(x => x.ManualVolumeTestStep).Select(x => x == TestStep.PreTest);
 
-                    ManualVolumeTestStep = TestStep.PreTest;
-                }
+					PreVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+						"Starting Volume Test...", RunPreVolumeTest, canRunPreTest);
 
-                if (TestManager?.VolumeTestManager is AutoVolumeTestManager)
-                {
-                    RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
-                        "Running Volume Test...", RunTest, canRunTestCommand);
+					var canRunPostTest = this.WhenAnyValue(x => x.ManualVolumeTestStep).Select(x => x == TestStep.PostTest || x == TestStep.PreTest);
 
-                    RunVolumeTestCommand.ThrownExceptions
-                        .Subscribe(ex => Log.Error(ex));
-                }
+					PostVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+						"Finishing Volume Test...", RunPostVolumeTest, canRunPostTest);
 
-                this.WhenAnyValue(x => x.AppliedInput)
-                    .Subscribe(i =>
-                    {
-                        Volume.AppliedInput = i;
-                        ChangedEvent.OnNext(TestRun.VerificationTest);
-                    });
+					ManualVolumeTestStep = TestStep.PreTest;
+				}
 
-                this.WhenAnyValue(x => x.UncorrectedPulseCount)
-                    .Subscribe(i =>
-                    {
-                        Volume.UncPulseCount = i;
+				if (TestManager?.VolumeTestManager is AutoVolumeTestManager) {
+					RunVolumeTestCommand = DialogDisplayHelpers.ProgressStatusDialogCommand(eventAggregator,
+						"Running Volume Test...", RunTest, canRunTestCommand);
 
-                        ChangedEvent.OnNext(TestRun.VerificationTest);
-                    });
+					RunVolumeTestCommand.ThrownExceptions
+						.Subscribe(ex => Log.Error(ex));
+				}
 
-                this.WhenAnyValue(x => x.CorrectedPulseCount)
-                    .Subscribe(i =>
-                    {
-                        Volume.CorPulseCount = i;
-                        ChangedEvent.OnNext(TestRun.VerificationTest);
-                    });
-            }
-        }
+				this.WhenAnyValue(x => x.AppliedInput)
+					.Subscribe(i => {
+						Volume.AppliedInput = i;
+						ChangedEvent.OnNext(TestRun.VerificationTest);
+					});
 
-        public async Task RunTest(IObserver<string> status, CancellationToken ct)
-        {
-            try
-            {
-                //TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
-                await TestManager.RunVolumeTest(ct);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex,
-                    $"An error occured during the verification test. See exception for details. {ex.Message}");
-            }
-            finally
-            {
-                AppliedInput = (long)Volume.AppliedInput;
-                UncorrectedPulseCount = Volume.UncPulseCount;
-                CorrectedPulseCount = Volume.CorPulseCount;
+				this.WhenAnyValue(x => x.UncorrectedPulseCount)
+					.Subscribe(i => {
+						Volume.UncPulseCount = i;
 
-                EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
-            }
-        }
+						ChangedEvent.OnNext(TestRun.VerificationTest);
+					});
 
-        internal enum TestStep
-        {
-            PreTest,
-            PostTest
-        }
+				this.WhenAnyValue(x => x.CorrectedPulseCount)
+					.Subscribe(i => {
+						Volume.CorPulseCount = i;
+						ChangedEvent.OnNext(TestRun.VerificationTest);
+					});
+			}
+		}
 
-        internal TestStep ManualVolumeTestStep
-        {
-            get => _manualVolumeTestStep;
-            set => this.RaiseAndSetIfChanged(ref _manualVolumeTestStep, value);
-        }
+		public async Task RunTest(IObserver<string> status, CancellationToken ct) {
+			try {
+				//TestManager.VolumeTestManager.StatusMessage.Subscribe(status);
+				await TestManager.RunVolumeTest(ct);
+			}
+			catch (Exception ex) {
+				Log.Error(ex,
+					$"An error occured during the verification test. See exception for details. {ex.Message}");
+			}
+			finally {
+				AppliedInput = (long)Volume.AppliedInput;
+				UncorrectedPulseCount = Volume.UncPulseCount;
+				CorrectedPulseCount = Volume.CorPulseCount;
 
-        protected override void RaisePropertyChangeEvents()
-        {
-            NotifyOfPropertyChange(() => TrueCorrected);
-            NotifyOfPropertyChange(() => TrueUncorrected);
-            NotifyOfPropertyChange(() => StartUncorrected);
-            NotifyOfPropertyChange(() => EndUncorrected);
-            NotifyOfPropertyChange(() => StartCorrected);
-            NotifyOfPropertyChange(() => EndCorrected);
-            NotifyOfPropertyChange(() => EvcUncorrected);
-            NotifyOfPropertyChange(() => EvcCorrected);
-            NotifyOfPropertyChange(() => StartCorrected);
-            NotifyOfPropertyChange(() => UnCorrectedPercentColour);
-            NotifyOfPropertyChange(() => CorrectedPercentColour);
-            NotifyOfPropertyChange(() => Volume);
-        }
+				EventAggregator.PublishOnUIThread(VerificationTestEvent.Raise());
+			}
+		}
 
-        private const string PulseInputCardViewContext = "PulseInputCard";
+		internal enum TestStep {
+			PreTest,
+			PostTest
+		}
 
-        private const string StandardCardViewContext = "CardNew";
+		internal TestStep ManualVolumeTestStep
+		{
+			get => _manualVolumeTestStep;
+			set => this.RaiseAndSetIfChanged(ref _manualVolumeTestStep, value);
+		}
 
-        private readonly ObservableAsPropertyHelper<bool> _displayButtons;
+		protected override void RaisePropertyChangeEvents() {
+			NotifyOfPropertyChange(() => TrueCorrected);
+			NotifyOfPropertyChange(() => TrueUncorrected);
+			NotifyOfPropertyChange(() => StartUncorrected);
+			NotifyOfPropertyChange(() => EndUncorrected);
+			NotifyOfPropertyChange(() => StartCorrected);
+			NotifyOfPropertyChange(() => EndCorrected);
+			NotifyOfPropertyChange(() => EvcUncorrected);
+			NotifyOfPropertyChange(() => EvcCorrected);
+			NotifyOfPropertyChange(() => StartCorrected);
+			NotifyOfPropertyChange(() => UnCorrectedPercentColour);
+			NotifyOfPropertyChange(() => CorrectedPercentColour);
+			NotifyOfPropertyChange(() => Volume);
+		}
 
-        private long _appliedInput;
+		private const string PulseInputCardViewContext = "PulseInputCard";
 
-        private int _correctedPulseCount;
+		private const string StandardCardViewContext = "CardNew";
 
-        private TestStep _manualVolumeTestStep;
+		private readonly ObservableAsPropertyHelper<bool> _displayButtons;
 
-        private int _uncorrectedPulseCount;
+		private long _appliedInput;
 
-        /// <summary>
-        /// Defines the _viewContext
-        /// </summary>
-        private string _viewContext;
+		private int _correctedPulseCount;
 
-        private void CreateDriveSpecificViews()
-        {
-            ViewContext = StandardCardViewContext;
+		private TestStep _manualVolumeTestStep;
 
-            if (Volume?.DriveType is MechanicalDrive)
-            {
-                EnergyTestItem = new EnergyTestViewModel(EventAggregator, ((MechanicalDrive)Volume.DriveType).Energy);
-            }
-            else if (Volume?.DriveType is RotaryDrive)
-            {
-                MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Volume.DriveType);
-            }
+		private int _uncorrectedPulseCount;
 
-            if (Volume?.VerificationTest.FrequencyTest != null)
-            {
-                ViewContext = PulseInputCardViewContext;
-                FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest, ChangedEvent, TestManager);
-            }
-        }
+		/// <summary>
+		/// Defines the _viewContext
+		/// </summary>
+		private string _viewContext;
 
-        private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct)
-        {
-            try
-            {
-                await TestManager.DownloadPostVolumeTest(ct);
-                ManualVolumeTestStep = TestStep.PreTest;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex,
-                    $"An error occured during the verification test. See exception for details. {ex.Message}");
-            }
-            finally
-            {
-                ChangedEvent.OnNext(TestRun.VerificationTest);
-            }
-        }
+		private void CreateDriveSpecificViews() {
+			ViewContext = StandardCardViewContext;
 
-        private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct)
-        {
-            await TestManager.DownloadPreVolumeTest(ct);
-            ManualVolumeTestStep = TestStep.PostTest;
-            ChangedEvent.OnNext(TestRun.VerificationTest);
-        }
-    }
+			if (Volume?.DriveType is MechanicalDrive) {
+				EnergyTestItem = new EnergyTestViewModel(EventAggregator, ((MechanicalDrive)Volume.DriveType).Energy);
+			}
+			else if (Volume?.DriveType is RotaryDrive) {
+				MeterDisplacementItem = new RotaryMeterTestViewModel((RotaryDrive)Volume.DriveType);
+			}
+
+			if (Volume?.VerificationTest.FrequencyTest != null) {
+				ViewContext = PulseInputCardViewContext;
+				FrequencyTestItem = new FrequencyTestViewModel(ScreenManager, EventAggregator, Volume.VerificationTest.FrequencyTest, ChangedEvent, TestManager);
+			}
+		}
+
+		private async Task RunPostVolumeTest(IObserver<string> status, CancellationToken ct) {
+			try {
+				await TestManager.DownloadPostVolumeTest(ct);
+				ManualVolumeTestStep = TestStep.PreTest;
+			}
+			catch (Exception ex) {
+				Log.Error(ex,
+					$"An error occured during the verification test. See exception for details. {ex.Message}");
+			}
+			finally {
+				ChangedEvent.OnNext(TestRun.VerificationTest);
+			}
+		}
+
+		private async Task RunPreVolumeTest(IObserver<string> status, CancellationToken ct) {
+			await TestManager.DownloadPreVolumeTest(ct);
+			ManualVolumeTestStep = TestStep.PostTest;
+			ChangedEvent.OnNext(TestRun.VerificationTest);
+		}
+	}
 }
