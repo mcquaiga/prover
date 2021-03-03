@@ -1,22 +1,22 @@
 ﻿using Caliburn.Micro;
 using Prover.GUI.Screens;
 
-namespace UnionGas.MASA.Dialogs.CompanyNumberDialog {
+namespace UnionGas.MASA.Dialogs.BarCodeDialog {
 
-	public class CompanyNumberDialogViewModel : ViewModelBase {
+	public class BarCodeDialogViewModel : ViewModelBase {
 
 		#region Constructors
 
-		public CompanyNumberDialogViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
+		public BarCodeDialogViewModel(ScreenManager screenManager, IEventAggregator eventAggregator)
 			: base(screenManager, eventAggregator) {
-			CompanyNumber = string.Empty;
+			BarCodeNumber = string.Empty;
 		}
 
 		#endregion
 
 		#region Properties
 
-		public string CompanyNumber { get; set; }
+		public string BarCodeNumber { get; set; }
 
 		#endregion
 

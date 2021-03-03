@@ -12,7 +12,6 @@
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -121,6 +120,10 @@
     <Compile Include="Migrations\201904061226096_Init.cs" />
     <Compile Include="Migrations\201904061226096_Init.Designer.cs">
       <DependentUpon>201904061226096_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011231634486_barcode.cs" />
+    <Compile Include="Migrations\202011231634486_barcode.Designer.cs">
+      <DependentUpon>202011231634486_barcode.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Instruments\DriveTypes\Energy.cs" />
     <Compile Include="Models\Instruments\DriveTypes\PulseInputSensor.cs" />
@@ -253,6 +256,9 @@
     <EmbeddedResource Include="Migrations\201904061226096_Init.resx">
       <DependentUpon>201904061226096_Init.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011231634486_barcode.resx">
+      <DependentUpon>202011231634486_barcode.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -262,12 +268,10 @@
     if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
     xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
-  
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-  
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
