@@ -1,356 +1,384 @@
-﻿<UserControl x:Class="Prover.GUI.Screens.Modules.Certificates.Reports.CertificateReportView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="http://www.caliburnproject.org"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             FontSize="10"
-             Height="816" Width="1056">
-    <Viewbox Stretch="Uniform"
-             Width="1056"
-             Height="816">
-        <Grid Margin="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="660" />
-                <RowDefinition Height="50" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1040" />
-            </Grid.ColumnDefinitions>
-            
-            <Border Grid.Row="0"
-                    BorderBrush="{StaticResource BorderBrushColor}"
-                    BorderThickness="0 0 0 1"                    
-                    Padding="6"
-                    Margin="2">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.2*" />
-                        <ColumnDefinition Width="0.6*" />
-                        <ColumnDefinition Width="0.2*" />
-                    </Grid.ColumnDefinitions>
+﻿<UserControl
+	x:Class="Prover.GUI.Screens.Modules.Certificates.Reports.CertificateReportView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:cal="http://www.caliburnproject.org"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Width="1056"
+	Height="816"
+	FontSize="10"
+	mc:Ignorable="d">
+	<Viewbox
+		Width="1056"
+		Height="816"
+		Stretch="Uniform">
+		<Grid Margin="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="660" />
+				<RowDefinition Height="50" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1040" />
+			</Grid.ColumnDefinitions>
 
-                    <materialDesign:Card Grid.Column="0"
-                                         HorizontalAlignment="Stretch"
-                                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                                         Grid.Row="0">
-                        <StackPanel Orientation="Vertical"
-                                    Margin="2">
-                            <Border Background="{StaticResource BorderBrushColor}"
-                                    Padding="2">
-                                <TextBlock FontSize="10"
-                                           Text="Accredited Meter Verifier"/>
-                            </Border>
+			<Border
+				Grid.Row="0"
+				Margin="2"
+				Padding="6"
+				BorderBrush="{StaticResource BorderBrushColor}"
+				BorderThickness="0,0,0,1">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="0.2*" />
+						<ColumnDefinition Width="0.6*" />
+						<ColumnDefinition Width="0.2*" />
+					</Grid.ColumnDefinitions>
 
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image Width="36"
-                                       Margin="4"
-                                       VerticalAlignment="Center"
-                                       Source="Resources/crwall_logo.jpg" />
-                                <TextBlock Margin="4 2"
-                                           Grid.Column="1">
-                                    <TextBlock FontWeight="DemiBold">
-                                        C.R. Wall and Co. Inc.
-                                    </TextBlock><LineBreak />
-                                    55 Thompson Dr. <LineBreak />
-                                    Cambridge, ON
-                                    N1T 2E4 <LineBreak/>
-                                    Accreditation #: <TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak/>
-                                    District: London
-                                </TextBlock>
-                            </Grid>
-                        </StackPanel>
-                    </materialDesign:Card>
+					<materialDesign:Card
+						Grid.Row="0"
+						Grid.Column="0"
+						HorizontalAlignment="Stretch"
+						materialDesign:ShadowAssist.ShadowDepth="Depth0">
+						<StackPanel Margin="2" Orientation="Vertical">
+							<Border Padding="2" Background="{StaticResource BorderBrushColor}">
+								<TextBlock FontSize="10" Text="Accredited Meter Verifier" />
+							</Border>
 
-                    <materialDesign:Card Grid.Column="2"
-                                         Grid.Row="0"
-                                         HorizontalAlignment="Stretch"
-                                         materialDesign:ShadowAssist.ShadowDepth="Depth0">
-                        <StackPanel Orientation="Vertical"
-                                    Margin="2">
-                            <Border Background="{StaticResource BorderBrushColor}"
-                                    Padding="2">
-                                <TextBlock FontSize="10"
-                                           Text="Owner"/>
-                            </Border>
-                            <TextBlock Text="{Binding Client.Name}"
-                                       FontWeight="DemiBold"
-                                       FontSize="10" 
-                                       Margin="2 0"/>
-                            <TextBlock Text="{Binding Client.Address}"
-                                       TextWrapping="WrapWithOverflow"
-                                       FontSize="10" 
-                                       Margin="2 0"/>
-                            <TextBlock Text="Contractors Reg. #: "
-                                       Margin="2 0">
-                                <TextBlock Text="{Binding Client.RegistrationNumber}"
-                                           TextWrapping="WrapWithOverflow"
-                                           FontSize="10" />
-                            </TextBlock>
-                        </StackPanel>
-                    </materialDesign:Card>
+							<Grid HorizontalAlignment="Stretch">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<Image
+									Width="36"
+									Margin="4"
+									VerticalAlignment="Center"
+									Source="Resources/enbridge_primary_logo.jpg" />
+								<TextBlock Grid.Column="1" Margin="4,2">
+									<TextBlock FontWeight="DemiBold">
+										Enbridge Gas Inc.
+									</TextBlock><LineBreak />
+									500 Consumers Road<LineBreak />
+									North York, Ontario<LineBreak />
+									Canada M2J 1P8<LineBreak />
+									Accreditation #:
+									<TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak />
 
-                    <Grid Grid.Row="0"
-                          Grid.Column="1"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.35*" />
-                            <ColumnDefinition Width="0.3*" />
-                            <ColumnDefinition Width="0.35*" />
-                        </Grid.ColumnDefinitions>
+								</TextBlock>
+							</Grid>
+						</StackPanel>
+					</materialDesign:Card>
 
-                        <TextBlock FontSize="14"
-                                   Grid.Row="0"
-                                   Grid.RowSpan="2"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center">
-                            Inspection Certificate <LineBreak />
-                            Gas Meters
-                        </TextBlock>
-                        
-                        <StackPanel Grid.Column="1"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center">
-                                <TextBlock FontSize="14" 
-                                           FontWeight="DemiBold"
-                                           HorizontalAlignment="Center">
-                                    No. <TextBlock Text="{Binding Path=Certificate.Number, FallbackValue=100}" />
-                                </TextBlock>
-                                <TextBlock FontSize="14"
-                                       HorizontalAlignment="Center"
-                                       Text="{Binding Path=CertificateDate, FallbackValue=01/01/2017}" />
-                        </StackPanel>
-                        
-                        <TextBlock FontSize="14"
-                                   Grid.Row="0"
-                                   Grid.RowSpan="2"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Grid.Column="2">
-                            Certificate d'Inspection <LineBreak />
-                            Compteurs de Gaz
-                        </TextBlock>
+					<materialDesign:Card
+						Grid.Row="0"
+						Grid.Column="2"
+						HorizontalAlignment="Stretch"
+						materialDesign:ShadowAssist.ShadowDepth="Depth0">
+						<StackPanel Margin="2" Orientation="Vertical">
+							<Border Padding="2" Background="{StaticResource BorderBrushColor}">
+								<TextBlock FontSize="10" Text="Owner" />
+							</Border>
+							<TextBlock
+								Margin="2,0"
+								FontSize="10"
+								FontWeight="DemiBold"
+								Text="{Binding Client.Name}" />
+							<TextBlock
+								Margin="2,0"
+								FontSize="10"
+								Text="{Binding Client.Address}"
+								TextWrapping="WrapWithOverflow" />
+							<TextBlock Margin="2,0" Text="Contractors Reg. #: ">
+								<TextBlock
+									FontSize="10"
+									Text="{Binding Client.RegistrationNumber}"
+									TextWrapping="WrapWithOverflow" />
+							</TextBlock>
+						</StackPanel>
+					</materialDesign:Card>
 
-                        <UniformGrid Rows="1"
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="3"
-                                    HorizontalAlignment="Stretch">
-                            <StackPanel Grid.Row="2"
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="2"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Bottom">
-                                <TextBlock Text="{Binding Certificate.Apparatus}"
-                                           HorizontalAlignment="Center"
-                                           FontSize="10"
-                                           TextWrapping="WrapWithOverflow"/>
-                                <TextBlock Text="Measuring apparatus (Std) no. - Nº des appareils (étalon)"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Center"
-                                           Foreground="{StaticResource SecondaryTextColor}"
-                                           FontSize="8"/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="2"
-                                        Grid.Column="2"                                    
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Bottom">
-                                <TextBlock Text="Honeywell Mercury Instruments"
-                                           HorizontalAlignment="Center"
-                                           FontSize="10"
-                                           TextWrapping="WrapWithOverflow"/>
-                                <TextBlock Text="Device Manufacturer - Fabricant de l'appareil "
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Center"
-                                           Foreground="{StaticResource SecondaryTextColor}"
-                                           FontSize="8"/>
-                            </StackPanel>
-                        </UniformGrid>
-                        
-                    </Grid>
+					<Grid
+						Grid.Row="0"
+						Grid.Column="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.35*" />
+							<ColumnDefinition Width="0.3*" />
+							<ColumnDefinition Width="0.35*" />
+						</Grid.ColumnDefinitions>
 
-                   
-                </Grid>
-            </Border>
+						<TextBlock
+							Grid.Row="0"
+							Grid.RowSpan="2"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							FontSize="14">
+							Inspection Certificate<LineBreak />
+							Gas Meters</TextBlock>
 
-            <Viewbox Grid.Row="1"
-                     Stretch="Uniform"
-                     VerticalAlignment="Top">
-                <ListBox HorizontalContentAlignment="Stretch"
-                         VerticalContentAlignment="Top"
-                         VerticalAlignment="Top"
-                         ItemsSource="{Binding Instruments}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <ContentControl cal:View.Model="{Binding}"
-                                            Width="Auto" />
+						<StackPanel
+							Grid.Row="0"
+							Grid.RowSpan="2"
+							Grid.Column="1"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center">
+							<TextBlock
+								HorizontalAlignment="Center"
+								FontSize="14"
+								FontWeight="DemiBold">
+								No.
+								<TextBlock Text="{Binding Path=Certificate.Number, FallbackValue=100}" />
+							</TextBlock>
+							<TextBlock
+								HorizontalAlignment="Center"
+								FontSize="14"
+								Text="{Binding Path=CertificateDate, FallbackValue=01/01/2017}" />
+						</StackPanel>
 
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                        <Border BorderThickness="0 0 0 1"
-                                                BorderBrush="{StaticResource BorderBrushColor}">
-                                            <ContentPresenter />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
-            </Viewbox>
+						<TextBlock
+							Grid.Row="0"
+							Grid.RowSpan="2"
+							Grid.Column="2"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							FontSize="14">
+							Certificate d'Inspection<LineBreak />
+							Compteurs de Gaz</TextBlock>
 
-            <Border Grid.Row="2"
-                    BorderThickness="0 1 0 0"
-                    BorderBrush="{StaticResource BorderBrushColor}"
-                    Padding="4"
-                    Margin="2 4 2 2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.25*" />
-                        <ColumnDefinition Width="0.35*" />
-                        <ColumnDefinition Width="0.4*" />
-                    </Grid.ColumnDefinitions>
-                    <UniformGrid Columns="4"
-                                 VerticalAlignment="Stretch"
-                                 Margin="4 2"
-                                 Grid.Column="0">
-                        <Grid HorizontalAlignment="Center"
-                              VerticalAlignment="Stretch">
-                             <TextBlock Text="Insp. Type"
-                                       HorizontalAlignment="Center"
-                                       FontSize="8"
-                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}" />
-                            <TextBlock Text="{Binding Path=Certificate.VerificationType, FallbackValue=New}"
-                                       VerticalAlignment="Center"
-                                       FontSize="10"
-                                       HorizontalAlignment="Center"/>
-                        </Grid>
-                        <Grid HorizontalAlignment="Center"
-                              VerticalAlignment="Stretch">
-                             <TextBlock Text="Inspected" 
-                                        FontSize="8"
-                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}"/>
-                            <TextBlock Text="{Binding Path=Certificate.InstrumentCount, FallbackValue=8}"
-                                       VerticalAlignment="Center"
-                                       FontSize="10"
-                                       HorizontalAlignment="Center" />
-                           
-                        </Grid>
+						<UniformGrid
+							Grid.Row="2"
+							Grid.Column="0"
+							Grid.ColumnSpan="3"
+							HorizontalAlignment="Stretch"
+							Rows="1">
+							<StackPanel
+								Grid.Row="2"
+								Grid.Column="0"
+								Grid.ColumnSpan="2"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Bottom">
+								<TextBlock
+									HorizontalAlignment="Center"
+									FontSize="10"
+									Text="{Binding Certificate.Apparatus}"
+									TextWrapping="WrapWithOverflow" />
+								<TextBlock
+									HorizontalAlignment="Center"
+									VerticalAlignment="Bottom"
+									FontSize="8"
+									Foreground="{StaticResource SecondaryTextColor}"
+									Text="Measuring apparatus (Std) no. - Nº des appareils (étalon)" />
+							</StackPanel>
+							<StackPanel
+								Grid.Row="2"
+								Grid.Column="2"
+								HorizontalAlignment="Stretch"
+								VerticalAlignment="Bottom">
+								<TextBlock
+									HorizontalAlignment="Center"
+									FontSize="10"
+									Text="Honeywell Mercury Instruments"
+									TextWrapping="WrapWithOverflow" />
+								<TextBlock
+									HorizontalAlignment="Center"
+									VerticalAlignment="Bottom"
+									FontSize="8"
+									Foreground="{StaticResource SecondaryTextColor}"
+									Text="Device Manufacturer - Fabricant de l'appareil " />
+							</StackPanel>
+						</UniformGrid>
 
-                        <Grid VerticalAlignment="Stretch"
-                              HorizontalAlignment="Center">
-                            <TextBlock Text="Ver'd./Vérifié" 
-                                       VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       FontSize="8"/>
-                            <TextBlock Text="{Binding NumberOfTestsPassed, FallbackValue=5}"
-                                       VerticalAlignment="Center"
-                                       FontSize="10"
-                                       HorizontalAlignment="Center" />
-                        </Grid>
+					</Grid>
 
-                        <Grid VerticalAlignment="Stretch"
-                              HorizontalAlignment="Center">
-                             <TextBlock Text="Rej'd./Rejecte" 
-                                        FontSize="8"
-                                        VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}"/>
-                            <TextBlock Text="{Binding NumberOfTestsFailed, FallbackValue=3}"
-                                       HorizontalAlignment="Center"
-                                       FontSize="10"
-                                       VerticalAlignment="Center"/>
-                           
-                        </Grid>
-                    </UniformGrid>
 
-                    <Border Grid.Column="1"
-                            Margin="4 2"
-                            BorderThickness="1 0"
-                            VerticalAlignment="Stretch"
-                            BorderBrush="{StaticResource BorderBrushColor}">
-                        <Grid VerticalAlignment="Stretch"
-                              Margin="2 0">
-                            <TextBlock Text="Comments"
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       VerticalAlignment="Top"
-                                       HorizontalAlignment="Left"
-                                       FontSize="8" />
-                            <TextBlock VerticalAlignment="Bottom"
-                                       Text="L1 = P-high T-low | L2 = P-mid T-mid | L3 = P-low T-high"
-                                       Foreground="{StaticResource SecondaryTextColor}"
-                                       HorizontalAlignment="Center"                                       
-                                       FontSize="10"/>
-                        </Grid>
-                       
-                    </Border>
+				</Grid>
+			</Border>
 
-                    <Grid Grid.Column="2"
-                          VerticalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.25*" />
-                            <ColumnDefinition Width="0.5*" />
-                            <ColumnDefinition Width="0.3*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid HorizontalAlignment="Left"
-                                    VerticalAlignment="Stretch"
-                                    Margin="2 2"
-                                    Grid.Column="0">
-                            <TextBlock Text="Tested By/Vérifié(s)"
-                                       VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       FontSize="8"/>
-                            <TextBlock Text="{Binding Path=Certificate.TestedBy, FallbackValue='Adam McQuaig'}"
-                                       VerticalAlignment="Center"/>
-                        </Grid>
-                        <Grid Grid.Column="1"
-                                    VerticalAlignment="Stretch"
-                                    Margin="2 2">
-                            <TextBlock Text="Acting on behalf of Accredited Meter Verifier, C.R. Wall and Co. Inc."
-                                       VerticalAlignment="Bottom"
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       FontSize="7"/>
-                            <TextBlock Text="Signature" 
-                                       VerticalAlignment="Top"
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       FontSize="8"/>
-                        </Grid>
-                        <Grid Grid.Column="2"
-                                    VerticalAlignment="Stretch"
-                                    Margin="2 2">
-                            <TextBlock Text="Print" 
-                                       Foreground="{StaticResource PrimaryTextColor}"
-                                       VerticalAlignment="Top"
-                                       FontSize="8"/>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Border>
-        </Grid>
-    </Viewbox>
+			<Viewbox
+				Grid.Row="1"
+				VerticalAlignment="Top"
+				Stretch="Uniform">
+				<ListBox
+					VerticalAlignment="Top"
+					HorizontalContentAlignment="Stretch"
+					VerticalContentAlignment="Top"
+					ItemsSource="{Binding Instruments}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<ContentControl Width="Auto" cal:View.Model="{Binding}" />
+
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+					<ListBox.ItemContainerStyle>
+						<Style TargetType="{x:Type ListBoxItem}">
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type ListBoxItem}">
+										<Border BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="0,0,0,1">
+											<ContentPresenter />
+										</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</ListBox.ItemContainerStyle>
+				</ListBox>
+			</Viewbox>
+
+			<Border
+				Grid.Row="2"
+				Margin="2,4,2,2"
+				Padding="4"
+				BorderBrush="{StaticResource BorderBrushColor}"
+				BorderThickness="0,1,0,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="0.25*" />
+						<ColumnDefinition Width="0.35*" />
+						<ColumnDefinition Width="0.4*" />
+					</Grid.ColumnDefinitions>
+					<UniformGrid
+						Grid.Column="0"
+						Margin="4,2"
+						VerticalAlignment="Stretch"
+						Columns="4">
+						<Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Insp. Type" />
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="10"
+								Text="{Binding Path=Certificate.VerificationType, FallbackValue=New}" />
+						</Grid>
+						<Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Inspected" />
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="10"
+								Text="{Binding Path=Certificate.InstrumentCount, FallbackValue=8}" />
+
+						</Grid>
+
+						<Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Ver'd./Vérifié" />
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="10"
+								Text="{Binding NumberOfTestsPassed, FallbackValue=5}" />
+						</Grid>
+
+						<Grid HorizontalAlignment="Center" VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Rej'd./Rejecte" />
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="10"
+								Text="{Binding NumberOfTestsFailed, FallbackValue=3}" />
+
+						</Grid>
+					</UniformGrid>
+
+					<Border
+						Grid.Column="1"
+						Margin="4,2"
+						VerticalAlignment="Stretch"
+						BorderBrush="{StaticResource BorderBrushColor}"
+						BorderThickness="1,0">
+						<Grid Margin="2,0" VerticalAlignment="Stretch">
+							<TextBlock
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Comments" />
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Bottom"
+								FontSize="10"
+								Foreground="{StaticResource SecondaryTextColor}"
+								Text="L1 = P-high T-low | L2 = P-mid T-mid | L3 = P-low T-high" />
+						</Grid>
+
+					</Border>
+
+					<Grid Grid.Column="2" VerticalAlignment="Stretch">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.25*" />
+							<ColumnDefinition Width="0.5*" />
+							<ColumnDefinition Width="0.3*" />
+						</Grid.ColumnDefinitions>
+						<Grid
+							Grid.Column="0"
+							Margin="2,2"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Tested By/Vérifié(s)" />
+							<TextBlock VerticalAlignment="Center" Text="{Binding Path=Certificate.TestedBy, FallbackValue='Adam McQuaig'}" />
+						</Grid>
+						<Grid
+							Grid.Column="1"
+							Margin="2,2"
+							VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Bottom"
+								FontSize="7"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Acting on behalf of Accredited Meter Verifier, C.R. Wall and Co. Inc." />
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Signature" />
+						</Grid>
+						<Grid
+							Grid.Column="2"
+							Margin="2,2"
+							VerticalAlignment="Stretch">
+							<TextBlock
+								VerticalAlignment="Top"
+								FontSize="8"
+								Foreground="{StaticResource PrimaryTextColor}"
+								Text="Print" />
+						</Grid>
+					</Grid>
+				</Grid>
+			</Border>
+		</Grid>
+	</Viewbox>
 </UserControl>
