@@ -65,11 +65,11 @@
 									<TextBlock FontWeight="DemiBold">
 										Enbridge Gas Inc.
 									</TextBlock><LineBreak />
-									500 Consumers Road<LineBreak />
-									North York, Ontario<LineBreak />
-									Canada M2J 1P8<LineBreak />
-									Accreditation #:
-									<TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak />
+									North Bay, ON<LineBreak />
+									P1B 8K7<LineBreak />
+									Accreditation #: A0676<LineBreak />
+									MC Registration #: 92897<LineBreak />
+									<!--<TextBlock Text="{Binding McRegistrationNumber}" /><LineBreak />-->
 
 								</TextBlock>
 							</Grid>
