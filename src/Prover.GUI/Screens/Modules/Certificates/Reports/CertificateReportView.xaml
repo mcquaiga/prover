@@ -63,8 +63,9 @@
 									Source="Resources/enbridge_primary_logo.jpg" />
 								<TextBlock Grid.Column="1" Margin="4,2">
 									<TextBlock FontWeight="DemiBold">
-										Enbridge Gas Inc.
+										Enbridge Gas Inc. (Union Gas)
 									</TextBlock><LineBreak />
+									36 Charles St East<LineBreak />
 									North Bay, ON<LineBreak />
 									P1B 8K7<LineBreak />
 									Accreditation #: A0676<LineBreak />
