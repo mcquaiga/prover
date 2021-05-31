@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
@@ -22,6 +23,9 @@ namespace UnionGas.MASA {
 		/// <param name="dcrWebService">The dcrWebService <see cref="DCRWebServiceSoap"/></param>
 		public DCRWebServiceCommunicator(DCRWebServiceSoap dcrWebService) {
 			_dcrWebService = dcrWebService;
+			SoapClient.ClientCredentials.UserName.UserName = ConfigurationManager.AppSettings["Username"];
+			SoapClient.ClientCredentials.UserName.Password = ConfigurationManager.AppSettings["Password"];
+			SoapClient.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.PeerOrChainTrust;
 		}
 
 		#endregion
