@@ -133,6 +133,11 @@
     <Compile Include="Dialogs\BarCodeDialog\BarCodeDialogViewModel.cs" />
     <Compile Include="Exporter\ExportToMasaManager.cs" />
     <Compile Include="ExportManagerModule.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Exporter\ExportTestsView.xaml.cs">
       <DependentUpon>ExportTestsView.xaml</DependentUpon>
     </Compile>
@@ -214,6 +219,10 @@
     <None Include="app.config" />
     <None Include="DCRWebservice.wsdl" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Service References\DCRWebService\DCRWebservice.wsdl" />
     <None Include="Service References\DCRWebService\UnionGas.MASA.DCRWebService.EmployeeDTO.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

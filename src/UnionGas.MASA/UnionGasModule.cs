@@ -3,7 +3,6 @@ using Prover.Core.ExternalIntegrations;
 using Prover.Core.ExternalIntegrations.Validators;
 using Prover.Core.Login;
 using Prover.Core.VerificationTests.TestActions;
-using System.Configuration;
 using UnionGas.MASA.DCRWebService;
 using UnionGas.MASA.Exporter;
 using UnionGas.MASA.Validators;
@@ -19,8 +18,8 @@ namespace UnionGas.MASA {
 			builder.Register(c => {
 				var proxy = new DCRWebServiceSoapClient("DCRWebServiceSoap");
 
-				proxy.ClientCredentials.UserName.UserName = ConfigurationManager.AppSettings["Username"];
-				proxy.ClientCredentials.UserName.Password = ConfigurationManager.AppSettings["Password"];
+				proxy.ClientCredentials.UserName.UserName = Properties.Settings.Default.Username;
+				proxy.ClientCredentials.UserName.Password = Properties.Settings.Default.Password;
 
 				proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.PeerOrChainTrust;
 
