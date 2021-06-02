@@ -17,10 +17,11 @@ namespace UnionGas.MASA {
 		protected override void Load(ContainerBuilder builder) {
 			//builder.RegisterInstance<DCRWebServiceSoap>(new DCRWebServiceSoapClient("DCRWebServiceSoap"));
 			builder.Register(c => {
-				var proxy = new DCRWebServiceSoapClient();
+				var proxy = new DCRWebServiceSoapClient("DCRWebServiceSoap");
 
 				proxy.ClientCredentials.UserName.UserName = ConfigurationManager.AppSettings["Username"];
 				proxy.ClientCredentials.UserName.Password = ConfigurationManager.AppSettings["Password"];
+
 				proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.PeerOrChainTrust;
 
 				return proxy;
