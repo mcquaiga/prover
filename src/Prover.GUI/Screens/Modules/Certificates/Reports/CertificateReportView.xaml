@@ -14,20 +14,20 @@
 		Width="1056"
 		Height="816"
 		Stretch="Uniform">
-		<Grid Margin="4">
+		<Grid Margin="1">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="660" />
 				<RowDefinition Height="50" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="1040" />
+				<ColumnDefinition Width="1056" />
 			</Grid.ColumnDefinitions>
 
 			<Border
 				Grid.Row="0"
-				Margin="2"
-				Padding="6"
+				Margin="1"
+				Padding="2"
 				BorderBrush="{StaticResource BorderBrushColor}"
 				BorderThickness="0,0,0,1">
 				<Grid>
