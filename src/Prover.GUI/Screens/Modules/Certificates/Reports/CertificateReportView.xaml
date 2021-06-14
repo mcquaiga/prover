@@ -90,7 +90,8 @@
 								Margin="2,0"
 								FontSize="10"
 								FontWeight="DemiBold"
-								Text="{Binding Client.Name}" />
+								Text="{Binding Client.Name}"
+								TextWrapping="WrapWithOverflow" />
 							<TextBlock
 								Margin="2,0"
 								FontSize="10"
@@ -350,7 +351,7 @@
 								FontSize="8"
 								Foreground="{StaticResource PrimaryTextColor}"
 								Text="Tested By/Vérifié(s)" />
-							<TextBlock VerticalAlignment="Center" Text="{Binding Path=Certificate.TestedBy, FallbackValue='Adam McQuaig'}" />
+							<TextBlock VerticalAlignment="Center" Text="{Binding Path=Certificate.TestedBy, FallbackValue=''}" />
 						</Grid>
 						<Grid
 							Grid.Column="1"
@@ -360,7 +361,7 @@
 								VerticalAlignment="Bottom"
 								FontSize="7"
 								Foreground="{StaticResource PrimaryTextColor}"
-								Text="Acting on behalf of Accredited Meter Verifier, C.R. Wall and Co. Inc." />
+								Text="Acting on behalf of Accredited Meter Verifier, Enbridge Gas Inc." />
 							<TextBlock
 								VerticalAlignment="Top"
 								FontSize="8"
