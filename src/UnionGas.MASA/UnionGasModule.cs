@@ -20,7 +20,6 @@ namespace UnionGas.MASA {
 
 				//proxy.ClientCredentials.UserName.UserName = Properties.Settings.Default.Username;
 				//proxy.ClientCredentials.UserName.Password = Properties.Settings.Default.Password;
-
 				//proxy.ClientCredentials.ServiceCertificate.Authentication.CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.PeerOrChainTrust;
 
 				return proxy;
