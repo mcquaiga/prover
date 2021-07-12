@@ -30,7 +30,7 @@ namespace UnionGas.MASA.Exporter {
 
 			return new QARunEvcTestResult {
 				InstrumentType = meterDto.ModelName.Validate(),
-				InventoryCode = meterDto.InventoryCode.Validate("0").PadLeft(7, '0'),
+				InventoryCode = meterDto.InventoryCode.Validate("0"),
 				TestDate = DateTime.Now,
 				DriveType = string.Empty,
 				MeterType = meterDto.MeterType.Validate(),
