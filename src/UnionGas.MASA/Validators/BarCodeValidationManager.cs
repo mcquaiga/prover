@@ -54,6 +54,9 @@
 
 				var barCode = OpenBarCodeDialog();
 
+				if (string.IsNullOrEmpty(barCode))
+					return;
+
 				MeterDTO meterDto;
 				do {
 					meterDto = await _webService.FindMeterByBarCodeNumber(barCode);
