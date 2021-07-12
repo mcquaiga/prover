@@ -30,7 +30,7 @@ namespace UnionGas.MASA.Exporter {
 
 			return new QARunEvcTestResult {
 				InstrumentType = meterDto.ModelName.Validate(),
-				InventoryCode = meterDto.InventoryCode.Validate("0").PadLeft(7, '0'),
+				InventoryCode = meterDto.InventoryCode.Validate("0"),
 				TestDate = DateTime.Now,
 				DriveType = string.Empty,
 				MeterType = meterDto.MeterType.Validate(),
@@ -92,7 +92,7 @@ namespace UnionGas.MASA.Exporter {
 
 			var qaRun = new QARunEvcTestResult {
 				InstrumentType = instrument.InstrumentType.Name,
-				InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture).PadLeft(7, '0'),
+				InventoryCode = instrument.SiteNumber2.ToString(CultureInfo.InvariantCulture),
 				TestDate = instrument.TestDateTime,
 				DriveType = instrument.VolumeTest.DriveTypeDiscriminator,
 				MeterType = instrument.VolumeTest.DriveTypeDiscriminator == "Rotary"
